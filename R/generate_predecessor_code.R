@@ -1,6 +1,6 @@
 predecessor_mutate <-  function(.self, rename_var, source_var, action_name) {
   glue::glue('
- # PREDECESSOR: {toupper(action_name)} -----------------------------------------------------
+ # {toupper(action_name)} -----------------------------------------------------
 
   {.self} <- {.self} |> dplyr::mutate({toupper(rename_var)} = {toupper(source_var)})
 
@@ -46,7 +46,7 @@ predecessor_left_join <- function(.self, join_dataset, var_to_add, by_vars, acti
 
   left_join_code <- glue::glue(
     "
-    # PREDECESSOR: {toupper(action_name)} -----------------------------------------------------
+    # {toupper(action_name)} -----------------------------------------------------
 
     {.self} <- {.self} |>
         dplyr::left_join({join_dataset} |> dplyr::select({select_expr}),
