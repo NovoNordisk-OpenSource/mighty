@@ -8,7 +8,6 @@
 #' @examples
 classify_external_data_domains_2 <- function(vector) {
   classified_vector <- vapply(vector, function(x) {
-
     if (grepl("^ad", x)) {
       return("adam")
     }
@@ -22,10 +21,27 @@ classify_external_data_domains_2 <- function(vector) {
     if (x == "self") {
       return("self")
     }
+    browser()
     stop("classify_external_data_domains: Unknown domain \"",
          x,
          "\"")
   }, FUN.VALUE = character(1)) |> unname()
 
   return(classified_vector)
+}
+
+classify_external_data_domains <- function(vector) {
+  result <- character(length(vector))
+  result[grepl("^ad", vector)] <-  "adam"
+  result[grepl("^md", vector)] <- "md"
+  result[nchar(vector) == 2 | vector == "relrec"] <- "sdtm"
+  result[vector == "self"] <- "self"
+
+  # Check for unclassified values
+  unclassified <- which(result == "")
+  if(length(unclassified) > 0) {
+    stop("classify_external_data_domains: Unknown domain(s): ",
+         paste(vector[unclassified], collapse=", "))
+  }
+  return(result)
 }

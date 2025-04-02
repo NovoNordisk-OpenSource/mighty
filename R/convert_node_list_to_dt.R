@@ -8,13 +8,11 @@
 #' @examples
 convert_node_list_to_dt <- function(nodes){
 
-  nodes <- nodes |>
+  nodes_2 <- nodes |>
     replace_self_with_domain() |>
     flatten_top_two_levels() |>
     add_attributes()
-
-
-  purrr::imap(nodes, function(node_i, nm){
+  purrr::imap(nodes_2, function(node_i, nm){
 
     data.table::data.table(
       node_id = nm,
