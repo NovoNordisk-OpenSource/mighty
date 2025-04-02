@@ -2,7 +2,7 @@ Package: mighty
 Title: What the Package Does (One Line, Title Case)
 Version: 0.0.0.9000
 Authors@R: c(
-    person("Matthew", "Phelps", role = c("aut", "cre")),
+    person("Matthew", "Phelps", email = "mewp@novonordisk.com", role = c("aut", "cre")),
     person("Nicolai", "Skov Johnsen", role = "ctb"),
     person("Aksel", "Thomsen", role = "ctb")
   )
@@ -24,6 +24,6 @@ Imports:
 Suggests: 
     knitr,
     rmarkdown,
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
     pharmaversesdtm
 Config/testthat/edition: 3
