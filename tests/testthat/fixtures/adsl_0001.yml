@@ -1,0 +1,116 @@
+init:
+  adsl:
+    core_domains:
+      - dm
+    filter_domain:
+      dm: NA
+    filter_global:
+      - 'STUDYID == "CDISCPILOT01"'
+      - 'DOMAIN == "DM"'
+    filter_depend_cols:
+      - self.studyid
+      - self.domain
+nodes:
+  adsl:
+    pred_01:
+      code_id: NA
+      depend_cols: self.arm
+      depend_rows: NA
+      outputs: self.planned_arm
+      parameters: NA
+    pred_02:
+      code_id: NA
+      depend_cols: self.USUBJID
+      depend_rows: NA
+      outputs: self.USUBJID
+      parameters: NA
+    pred_07:
+      code_id: NA
+      depend_cols: self.SITEID
+      depend_rows: NA
+      outputs: self.SITEID
+      parameters: NA
+    der_02:
+      code_id: arm_group_01
+      depend_cols: NA
+      depend_rows: NA
+      outputs: NA
+      parameters: NA
+    der_06:
+      code_id: arm_category_01
+      depend_cols: NA
+      depend_rows: NA
+      outputs: NA
+      parameters: NA
+    der_05:
+      code_id: arm_match_01
+      depend_cols: NA
+      depend_rows: NA
+      outputs: NA
+      parameters: NA
+    der_01:
+      code_id: age_crop_01
+      depend_cols: NA
+      depend_rows: NA
+      outputs: NA
+      parameters: NA
+    der_08:
+      code_id: age_diff_01
+      depend_cols: NA
+      depend_rows: NA
+      outputs: NA
+      parameters: NA
+    der_09:
+      code_id: age_diff_02
+      depend_cols: NA
+      depend_rows: NA
+      outputs: NA
+      parameters: NA
+    # der_10:
+    #   code_id: age_group_01
+    #   depend_cols: NA
+    #   depend_rows: NA
+    #   outputs: NA
+    #   parameters: cut_points = c(60, 70)
+    der_04:
+      code_id: race_x_siteid_01
+      depend_cols: NA
+      depend_rows: NA
+      outputs: NA
+      parameters: NA
+    der_03:
+      code_id: arm_01
+      depend_cols: NA
+      depend_rows: NA
+      outputs: NA
+      parameters: NA
+    der_23:
+      code_id: min_aval_01
+      depend_cols: NA
+      depend_rows: NA
+      outputs: NA
+      parameters: NA
+    der_27:
+      code_id: newfl_01
+      depend_cols: NA
+      depend_rows: NA
+      outputs: NA
+      parameters: NA
+    der_20:
+      code_id: newfl_02
+      depend_cols: NA
+      depend_rows: NA
+      outputs: NA
+      parameters: NA
+    der_07:
+      code_id: newfl_03
+      depend_cols: NA
+      depend_rows: NA
+      outputs: NA
+      parameters: NA
+    pred_08:
+      code_id: NA
+      depend_cols: self.STUDYID
+      depend_rows: NA
+      outputs: self.STUDYID
+      parameters: NA

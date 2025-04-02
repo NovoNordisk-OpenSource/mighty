@@ -11,6 +11,19 @@ License: Apache License (>= 2)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
+Imports: 
+    data.table,
+    tidyr,
+    igraph,
+    tools,
+    yaml,
+    dplyr,
+    labelled,
+    combinat,
+    checkmate,
 Suggests: 
+    knitr,
+    rmarkdown,
     testthat (>= 3.0.0)
+    pharmaversesdtm
 Config/testthat/edition: 3
