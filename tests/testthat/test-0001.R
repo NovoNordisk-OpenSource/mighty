@@ -1,5 +1,6 @@
 test_that("Complex test", {
-  # SETUP
+
+  # SETUP ----------------------------------------------------------------------
   ui_path <- c(
     test_path("fixtures", "init_0001.yml"),
     test_path("fixtures", "adsl_0001.yml"),
@@ -14,23 +15,25 @@ test_that("Complex test", {
   domain_keys_path <- system.file("standards", "domain_keys.yml", package = "mighty")
   output_path <- withr::local_tempdir()
 
-  # ACT
+  # ACT ------------------------------------------------------------------------
+
   actual <- make_adam_program(ui_path,
                               std_lib_path,
                               domain_keys_path,
                               output_path,
                               data_connection = "pharmaverse")
 
-  # EXPECT
 
   x <- list.files(output_path, full.names = TRUE)
-  # EXPECT data values ------------------------------------------------------
+browser()
+  # EXPECT data values ---------------------------------------------------------
+
   # Execute code and run expectations on the final outputed ADaM tables
   lapply(x, source)
   expect_snapshot_value(adsl, style = "json2")
   expect_snapshot_value(adlb, style = "json2")
 
-  # EXPECT programs ------------------------------------------------------
+  # EXPECT programs -----------------------------------------------------------
 
   # These are very sensitive expectations that will fail when any character is
   # changed in the program. They are mostly usefuly to highlight what changes
@@ -41,7 +44,7 @@ test_that("Complex test", {
   expect_snapshot_value(programs$`2_adlb.R`, style = "json2")
   expect_snapshot_value(programs$`3_adlb.R`, style = "json2")
 
-  # EXPECT Topology ------------------------------------------------------
+  # EXPECT Topology ------------------------------------------------------------
 
   # These tests ensure that the parts of the topology that cannot change, do not
   # change. Some parts of the topology can change without any meaningful impact
