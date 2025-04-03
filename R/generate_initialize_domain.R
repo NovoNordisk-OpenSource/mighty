@@ -74,7 +74,8 @@ generate_initialize_domain <-  function(.self,
   }
 
   select_expr <- if (!is.null(keep_vars)) {
-    glue::glue("{.self} <- dplyr::select({.self}, {toupper(paste(unique(keep_vars), collapse = ', '))})")
+    glue::glue("# Select domain specific predecessors
+               {.self} <- dplyr::select({.self}, {toupper(paste(unique(keep_vars), collapse = ', '))})")
   } else {
     NULL
   }
