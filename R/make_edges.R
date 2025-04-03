@@ -14,8 +14,8 @@ make_edges <- function(nodes, primary_domain = "adsl") {
   # to ID the parent node
   parents_expanded <- nodes[, rbindlist(depend_cols_complete), by = node_id][, .(node_id, full_name)] |>
     data.table::setnames(c("node_id", "parent_column"))
-  parents_expanded[["node_id"]] <- tolower(parents_expanded[["node_id"]])
-  parents_expanded[["parent_column"]] <- tolower(parents_expanded[["parent_column"]])
+  parents_expanded[["node_id"]] <- parents_expanded[["node_id"]]
+  parents_expanded[["parent_column"]] <- parents_expanded[["parent_column"]]
 
   # This is a list matching each node id to the columns it produces. We can use
   # this to match the column to the node in the parents_expanded data.table. We
@@ -24,8 +24,8 @@ make_edges <- function(nodes, primary_domain = "adsl") {
   # topology.
   children_expanded <- nodes[type != "row", rbindlist(outputs_complete), by = node_id][, .(node_id, full_name)] |>
     data.table::setnames(c("node_id", "child_column"))
-  children_expanded[["node_id"]] <- tolower(children_expanded[["node_id"]])
-  children_expanded[["child_column"]] <- tolower(children_expanded[["child_column"]])
+  children_expanded[["node_id"]] <- children_expanded[["node_id"]]
+  children_expanded[["child_column"]] <- children_expanded[["child_column"]]
 
   edges <- data.table::merge.data.table(
     parents_expanded,

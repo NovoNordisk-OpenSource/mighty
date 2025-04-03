@@ -19,8 +19,7 @@ enrich_with_external_dependencies <- function(nodes, init_metadata) {
     if (i$action == "domain_init") {
 
       # Identify the columns dependencies
-      filter_depend_cols <- init_metadata[[i$domain]][["filter_depend_cols"]] |>
-        tolower()
+      filter_depend_cols <- init_metadata[[i$domain]][["filter_depend_cols"]]
 
       if (all(!is.na(filter_depend_cols))) {
 

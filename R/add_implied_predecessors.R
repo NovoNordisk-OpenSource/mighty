@@ -29,14 +29,12 @@ extract_implied_predecessors_i <- function(nodes_domain_i) {
   all_dependencies <- nodes_domain_i[, depend_cols] |>
     extract_("full_name") |>
     unlist() |>
-    tolower() |>
     unique()
   potiential_predecessors <- grep("self\\.", all_dependencies, value = TRUE)
 
   output <- nodes_domain_i[, outputs] |>
     extract_("full_name") |>
     unlist() |>
-    tolower() |>
     unique()
 
   implied_predecessors <- setdiff(potiential_predecessors, output)

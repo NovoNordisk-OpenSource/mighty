@@ -14,9 +14,9 @@ nodes:
   adsl:
     pred_01:
       code_id: NA
-      depend_cols: self.arm
+      depend_cols: self.ARM
       depend_rows: NA
-      outputs: self.planned_arm
+      outputs: self.PLANNED_ARM
       parameters: NA
     pred_02:
       code_id: NA
