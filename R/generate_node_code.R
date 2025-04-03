@@ -50,9 +50,9 @@ generate_node_code <- function(nodes_program_i,
       next
     }
     if (node_i$type == "predecessor") {
-      is_mutate <- node_i$depend_cols[[1]] |> nrow() == 1
+      is_mutate <- node_i$depend_cols_complete[[1]] |> nrow() == 1
       if (is_mutate) {
-        depends <- node_i[["depend_cols"]][[1]][["column_name"]]
+        depends <- node_i[["depend_cols_complete"]][[1]][["column_name"]]
         outputs <- node_i[["outputs"]][[1]][["column_name"]]
         program[[i]] <- predecessor_mutate(
           node_i$domain,
@@ -62,15 +62,14 @@ generate_node_code <- function(nodes_program_i,
         )
         next
       }
-
-      depends <- node_i[["depend_cols"]][[1]][["full_name"]]
-      outputs <- node_i[["outputs"]][[1]][["full_name"]]
-      x <- pre_process_predecessor_left_join(depends, outputs, domain_keys)
+      depends <- node_i[["depend_cols_complete"]][[1]][["full_name"]]
+      outputs <- node_i[["outputs_complete"]][[1]][["full_name"]]
+      x <- pre_process_predecessor_left_join(depends, outputs, node_i$domain, domain_keys)
       program[[i]] <- predecessor_left_join(
         .self = node_i$domain,
         join_dataset = x$join_dataset,
-        var_to_add = toupper(x$var_to_add),
-        by_vars = toupper(x$by_vars),
+        var_to_add = x$var_to_add,
+        by_vars = x$by_vars,
         action_name = node_i$action,
         output_var = x$output_var
       )

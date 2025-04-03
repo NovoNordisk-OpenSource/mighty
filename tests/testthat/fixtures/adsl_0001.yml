@@ -8,8 +8,8 @@ init:
       - 'STUDYID == "CDISCPILOT01"'
       - 'DOMAIN == "DM"'
     filter_depend_cols:
-      - self.studyid
-      - self.domain
+      - self.STUDYID
+      - self.DOMAIN
 nodes:
   adsl:
     pred_01:

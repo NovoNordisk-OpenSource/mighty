@@ -26,13 +26,14 @@ extract_implied_predecessors_i <- function(nodes_domain_i) {
   # User-defined predecessors are ignored because they can't consume other
   # predecessors by definition
 
-  all_dependencies <- nodes_domain_i[, depend_cols] |>
+  all_dependencies <- nodes_domain_i[, depend_cols_complete] |>
     extract_("full_name") |>
     unlist() |>
     unique()
-  potiential_predecessors <- grep("self\\.", all_dependencies, value = TRUE)
+  domain_i <- nodes_domain_i$domain[1]
+  potiential_predecessors <- grep(paste0(domain_i, "\\."), all_dependencies, value = TRUE)
 
-  output <- nodes_domain_i[, outputs] |>
+  output <- nodes_domain_i[, outputs_complete] |>
     extract_("full_name") |>
     unlist() |>
     unique()
@@ -41,13 +42,12 @@ extract_implied_predecessors_i <- function(nodes_domain_i) {
 
   n_preds <- length(implied_predecessors)
   io_data_model <- lapply(implied_predecessors,function(x){
-    data_model_columnn(sub("self\\.", "", x),"self",x)
+    data_model_columnn(sub(paste0(domain_i, "\\."), "", x), "self", x)
   })
 
   # Replace "self." with the domain name
-  implied_predecessors_complete_name <- gsub("self\\.", paste0(nodes_domain_i$domain[1], "."), implied_predecessors)
-  io_data_model_complete_name <- lapply(implied_predecessors_complete_name,function(x){
-    data_model_columnn(sub("self\\.", "", x),nodes_domain_i$domain[1],x)
+  io_data_model_complete_name <- lapply(implied_predecessors, function(x) {
+    data_model_columnn(sub(paste0(domain_i, "\\."), "", x), domain_i, x)
   })
 
   # Create new rows for the implied predecessors
@@ -59,8 +59,7 @@ extract_implied_predecessors_i <- function(nodes_domain_i) {
     setnames(names(nodes_domain_i))
   x[, `:=`(domain = rep(nodes_domain_i$domain[1], n_preds),
            type = rep("implied_predecessor", n_preds),
-           node_id = implied_predecessors_complete_name,
-           depend_cols = io_data_model,
+           node_id = implied_predecessors,
            outputs = io_data_model,
            depend_cols_complete = io_data_model_complete_name,
            outputs_complete = io_data_model_complete_name)]

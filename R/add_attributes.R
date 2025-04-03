@@ -7,8 +7,7 @@
 #' @examples
 add_attributes <- function(input_list) {
 
-  fields <- c("depend_cols",
-              "depend_cols_complete",
+  fields <- c("depend_cols_complete",
               "outputs",
               "outputs_complete")
 

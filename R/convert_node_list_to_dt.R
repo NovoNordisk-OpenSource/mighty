@@ -22,7 +22,6 @@ convert_node_list_to_dt <- function(nodes){
       action = node_i$action,
       code_id = node_i$code_id,
       type = node_i$type,
-      depend_cols = list(node_i$depend_cols),
       depend_rows = list(node_i$depend_rows),
       parameters = list(node_i$parameters),
       origin = node_i$origin,
