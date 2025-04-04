@@ -33,17 +33,13 @@ extract_implied_predecessors_i <- function(nodes_domain_i) {
   domain_i <- nodes_domain_i$domain[1]
   potiential_predecessors <- grep(paste0(domain_i, "\\."), all_dependencies, value = TRUE)
 
-  output <- nodes_domain_i[, outputs_complete] |>
+  output <- nodes_domain_i[, outputs] |>
     extract_("full_name") |>
     unlist() |>
     unique()
 
   implied_predecessors <- setdiff(potiential_predecessors, output)
-
   n_preds <- length(implied_predecessors)
-  io_data_model <- lapply(implied_predecessors,function(x){
-    data_model_columnn(sub(paste0(domain_i, "\\."), "", x), "self", x)
-  })
 
   # Replace "self." with the domain name
   io_data_model_complete_name <- lapply(implied_predecessors, function(x) {
@@ -60,9 +56,8 @@ extract_implied_predecessors_i <- function(nodes_domain_i) {
   x[, `:=`(domain = rep(nodes_domain_i$domain[1], n_preds),
            type = rep("implied_predecessor", n_preds),
            node_id = implied_predecessors,
-           outputs = io_data_model,
            depend_cols = io_data_model_complete_name,
-           outputs_complete = io_data_model_complete_name)]
+           outputs = io_data_model_complete_name)]
 
   # Add them back to the nodes
   rbindlist(list(nodes_domain_i, x))

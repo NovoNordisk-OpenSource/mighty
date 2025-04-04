@@ -8,8 +8,7 @@
 add_attributes <- function(input_list) {
 
   fields <- c("depend_cols",
-              "outputs",
-              "outputs_complete")
+              "outputs")
 
   out <- lapply(input_list, function(node_i) {
     for(field in fields){

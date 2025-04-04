@@ -41,7 +41,7 @@ create_domain_init_node_i <- function(core_vars_domain_i,
                               domain_init_data[[nm]]$core_domains,
                               stringsAsFactors = FALSE)
   full_name <- paste0(core_var_tmp$Var2, ".", core_var_tmp$Var1)
-  cor_variables_i <- data_model_columnn(
+  core_variables_i <- data_model_columnn(
     column_name = core_var_tmp$Var1,
     domain = core_var_tmp$Var2,
     full_name = full_name
@@ -61,10 +61,9 @@ create_domain_init_node_i <- function(core_vars_domain_i,
     action = action_name,
     code_id = NA_character_,
     type = "domain_init",
-    depend_cols = list(cor_variables_i),
+    depend_cols = list(core_variables_i),
     outputs = list(outputs_i),
-    outputs_complete = list(outputs_i),
-    core_variables = list(cor_variables_i),
+    core_variables = list(core_variables_i),
     core_domains = list(domain_init_data[[nm]]$core_domains),
     filter_per_domain = list(domain_init_data[[nm]]$filter_domain),
     filter_global = list(domain_init_data[[nm]]$filter_global)

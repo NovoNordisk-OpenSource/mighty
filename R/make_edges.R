@@ -22,7 +22,7 @@ make_edges <- function(nodes, primary_domain = "adsl") {
   # exclude rows, because they cannot add NEW columns, they can only modify
   # existing columms. Otherwise we can get circular dependencies in the
   # topology.
-  children_expanded <- nodes[type != "row", rbindlist(outputs_complete), by = node_id][, .(node_id, full_name)] |>
+  children_expanded <- nodes[type != "row", rbindlist(outputs), by = node_id][, .(node_id, full_name)] |>
     data.table::setnames(c("node_id", "child_column"))
   children_expanded[["node_id"]] <- children_expanded[["node_id"]]
   children_expanded[["child_column"]] <- children_expanded[["child_column"]]
