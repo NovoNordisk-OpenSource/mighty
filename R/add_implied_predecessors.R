@@ -48,7 +48,7 @@ extract_implied_predecessors_i <- function(nodes_domain_i) {
 
   # Create new rows for the implied predecessors
   x <- data.table::data.table(matrix(
-    NA,
+    NA_character_,
     nrow = n_preds,
     ncol = ncol(nodes_domain_i)
   )) |>

@@ -20,8 +20,7 @@ update_predecessors <- function(nodes, path_mappings) {
       action_i <- x[["action"]][[i]]
 
       # Impute missing values for predecessor
-      x[i, type := "column"]
-      x[i, origin := "predecessor"]
+      x[i, type := "predecessor"]
 
       # Domain of dependent column
       dep_domain <- x[["depend_cols"]][[i]][["domain"]]

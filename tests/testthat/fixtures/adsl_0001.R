@@ -1,6 +1,5 @@
 #!-!
-# type: column
-# origin: derivation
+# type: derivation
 # depend_cols:
 #   - self.PLANNED_ARM
 # outputs:
@@ -17,8 +16,7 @@ arm_group_01 <- function(.self) {
 }
 
 #!-!
-# type: column
-# origin: derivation
+# type: derivation
 # depend_cols:
 #   - self.ARM_GRP1
 # outputs:
@@ -35,8 +33,7 @@ arm_category_01 <- function(.self) {
 }
 
 #!-!
-# type: column
-# origin: derivation
+# type: derivation
 # depend_cols:
 #   - self.PLANNED_ARM
 #   - self.ACTARM
@@ -52,8 +49,7 @@ arm_match_01 <- function(.self) {
 }
 
 #!-!
-# type: column
-# origin: derivation
+# type: derivation
 # depend_cols:
 #   - self.AGE
 # outputs:
@@ -66,8 +62,7 @@ age_crop_01 <- function(.self) {
 }
 
 #!-!
-# type: column
-# origin: derivation
+# type: derivation
 # depend_cols:
 #   - self.AGE
 #   - self.age2
@@ -81,8 +76,7 @@ age_diff_01 <- function(.self) {
 }
 
 #!-!
-# type: column
-# origin: derivation
+# type: derivation
 # depend_cols:
 #   - self.AGE_DIFF1
 #   - self.PLANNED_ARM
@@ -96,8 +90,7 @@ age_diff_02 <- function(.self) {
 }
 
 #!-!
-# type: column
-# origin: derivation
+# type: derivation
 # depend_cols:
 #   - self.age2
 # outputs:
@@ -116,8 +109,7 @@ age_group_01 <- function(.self, cut_points) {
 }
 
 #!-!
-# type: column
-# origin: derivation
+# type: derivation
 # depend_cols:
 #   - self.RACE
 #   - self.SITEID
@@ -131,8 +123,7 @@ race_x_siteid_01 <- function(.self) {
 }
 
 #!-!
-# type: column
-# origin: derivation
+# type: derivation
 # depend_cols:
 #   - self.PLANNED_ARM
 #   - self.USUBJID
@@ -148,8 +139,7 @@ arm_01 <- function(.self) {
 }
 
 #!-!
-# type: column
-# origin: derivation
+# type: derivation
 # depend_cols:
 #   - self.USUBJID
 #   - adlb.USUBJID
@@ -172,8 +162,7 @@ min_aval_01 <- function(.self, adlb) {
 }
 
 #!-!
-# type: column
-# origin: derivation
+# type: derivation
 # depend_cols:
 #   - self.DTHFL
 #   - self.PLANNED_ARM
@@ -194,8 +183,7 @@ newfl_01 <- function(.self) {
 }
 
 #!-!
-# type: column
-# origin: derivation
+# type: derivation
 # depend_cols:
 #   - self.USUBJID
 #   - self.COUNTRY
@@ -218,8 +206,7 @@ newfl_02 <- function(.self, adlb) {
 }
 
 #!-!
-# type: column
-# origin: derivation
+# type: derivation
 # depend_cols:
 #   - self.NEWFL01
 #   - self.NEWFL02

@@ -32,9 +32,8 @@ make_adam_program <- function(path_ui_data,
 
   # Enrich predecessors in UI data with auto-generated metadata
   nodes_2 <- update_predecessors(nodes, path_domain_keys)
-  nodes_3 <- collapse_origin_type_columns(nodes_2)
 
-  nodes_4 <- add_implied_predecessors(nodes_3)
+  nodes_4 <- add_implied_predecessors(nodes_2)
   core_vars <- extract_sdtm_core_variables(nodes_4)
   # extract_sdtm_core_variables_2(nodes_4)
   nodes_5 <- create_domain_initialize_nodes(nodes_4, core_vars, domain_initialization_metadata)
