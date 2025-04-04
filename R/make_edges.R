@@ -12,7 +12,7 @@ make_edges <- function(nodes, primary_domain = "adsl") {
   # column is not the same as a "node" in this framework. So we will then have
   # to match each column to a node that produces that column. That will allow us
   # to ID the parent node
-  parents_expanded <- nodes[, rbindlist(depend_cols_complete), by = node_id][, .(node_id, full_name)] |>
+  parents_expanded <- nodes[, rbindlist(depend_cols), by = node_id][, .(node_id, full_name)] |>
     data.table::setnames(c("node_id", "parent_column"))
   parents_expanded[["node_id"]] <- parents_expanded[["node_id"]]
   parents_expanded[["parent_column"]] <- parents_expanded[["parent_column"]]

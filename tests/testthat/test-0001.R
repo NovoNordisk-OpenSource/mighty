@@ -16,7 +16,7 @@ test_that("Complex test", {
   output_path <- withr::local_tempdir()
 
   # ACT ------------------------------------------------------------------------
-browser()
+
   actual <- make_adam_program(ui_path,
                               std_lib_path,
                               domain_keys_path,

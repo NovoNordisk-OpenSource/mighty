@@ -8,7 +8,7 @@ generate_program <- function(program_order,
   # data.table to get the program_id for each node. Then sort the nodes by
   # program_id and rank.
   keep_only_from_program_order <- c("type", "domain")
-  nodes <- merge(program_order[, .(node_id,
+  nodes_and_programs <- merge(program_order[, .(node_id,
                                    domain,
                                    program_id,
                                    rank,
@@ -23,7 +23,7 @@ generate_program <- function(program_order,
   sdtm_dataset_list <- list_all_(type = "sdtm", trial_metadata)
   adam_dataset_list <- list_all_(type = "adam", trial_metadata)
 
-  nodes_split <- split(nodes, by = "program_id")
+  nodes_split <- split(nodes_and_programs, by = "program_id")
 
   programs <- lapply(
     nodes_split,

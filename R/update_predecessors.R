@@ -24,14 +24,14 @@ update_predecessors <- function(nodes, path_mappings) {
       x[i, origin := "predecessor"]
 
       # Domain of dependent column
-      dep_domain <- x[["depend_cols_complete"]][[i]][["domain"]]
+      dep_domain <- x[["depend_cols"]][[i]][["domain"]]
 
       # If the dependent column originates from an external domain, then add
       # addition dependent columns
       if (domain_i != dep_domain) {
 
-        # Update depend_cols_complete
-        new_dep_cols_complete <- lapply(pk[[dep_domain]], function(x) {
+        # Update depend_cols
+        new_dep_cols <- lapply(pk[[dep_domain]], function(x) {
           data.table(
             column_name = c(x, x),
             domain = c(domain_i, dep_domain),
@@ -39,8 +39,8 @@ update_predecessors <- function(nodes, path_mappings) {
             full_name =  paste(c(domain_i, dep_domain), x, sep = ".")
           )
         }) |> rbindlist()
-        x[["depend_cols_complete"]][[i]] <- rbind(x[["depend_cols_complete"]][[i]],
-                                                  new_dep_cols_complete)
+        x[["depend_cols"]][[i]] <- rbind(x[["depend_cols"]][[i]],
+                                                  new_dep_cols)
       }
     }
   }

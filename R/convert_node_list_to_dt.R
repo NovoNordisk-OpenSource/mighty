@@ -26,8 +26,8 @@ convert_node_list_to_dt <- function(nodes){
       parameters = list(node_i$parameters),
       origin = node_i$origin,
       outputs = list(node_i$outputs),
-      depend_cols_complete = list(node_i$depend_cols_complete),
-      outputs_complete = list(node_i$outputs_complete)
+      depend_cols = list(node_i$depend_cols),
+      outputs_complete = list(node_i$outputs)
     )
   }) |> data.table::rbindlist(fill = TRUE)
 

@@ -26,7 +26,7 @@ extract_implied_predecessors_i <- function(nodes_domain_i) {
   # User-defined predecessors are ignored because they can't consume other
   # predecessors by definition
 
-  all_dependencies <- nodes_domain_i[, depend_cols_complete] |>
+  all_dependencies <- nodes_domain_i[, depend_cols] |>
     extract_("full_name") |>
     unlist() |>
     unique()
@@ -61,7 +61,7 @@ extract_implied_predecessors_i <- function(nodes_domain_i) {
            type = rep("implied_predecessor", n_preds),
            node_id = implied_predecessors,
            outputs = io_data_model,
-           depend_cols_complete = io_data_model_complete_name,
+           depend_cols = io_data_model_complete_name,
            outputs_complete = io_data_model_complete_name)]
 
   # Add them back to the nodes

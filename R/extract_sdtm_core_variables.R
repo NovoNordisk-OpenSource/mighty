@@ -23,7 +23,7 @@ extract_sdtm_core_variables_i <- function(nodes_domain_i) {
     output_other_nodes <- nodes_domain_i[-i][type != "row", outputs_complete] |>
       extract_("full_name") |>
       unlist()
-    potentials <- nodes_domain_i[i, depend_cols_complete] |>
+    potentials <- nodes_domain_i[i, depend_cols] |>
       extract_("full_name") |>
       unlist() |>
       setdiff(output_other_nodes) |>
@@ -60,7 +60,7 @@ extract_sdtm_core_variables_i_2 <- function(nodes_domain_i) {
     if(node_i$type == "row") {
       next
     }
-    depend_cols <- node_i$depend_cols_complete[[1]]
+    depend_cols <- node_i$depend_cols[[1]]
     outputs <- node_i$outputs[[1]]
     # Node has only a single parent and single child
     single <- (nrow(depend_cols) == nrow(outputs)) == 1
