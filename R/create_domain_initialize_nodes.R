@@ -2,7 +2,6 @@
 #' @description Adds new nodes representing the domain initialization steps, and
 #' removes the corresponding nodes that represent the SDTM core variables
 #' @param nodes
-#' @param core_vars
 #' @param domain_init_data
 #'
 #' @return
@@ -10,7 +9,10 @@
 #'
 #' @examples
 
-create_domain_initialize_nodes <- function(nodes, core_vars, domain_init_data) {
+create_domain_initialize_nodes <- function(nodes, domain_init_data) {
+
+  core_vars <- extract_sdtm_core_variables(nodes)
+
   domain_init_nodes <- purrr::imap(core_vars,
                                    create_domain_init_node_i,
                                    nodes,

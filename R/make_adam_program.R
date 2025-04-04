@@ -34,9 +34,9 @@ make_adam_program <- function(path_ui_data,
   nodes_2 <- update_predecessors(nodes, path_domain_keys)
 
   nodes_4 <- add_implied_predecessors(nodes_2)
-  core_vars <- extract_sdtm_core_variables(nodes_4)
+
   # extract_sdtm_core_variables_2(nodes_4)
-  nodes_5 <- create_domain_initialize_nodes(nodes_4, core_vars, domain_initialization_metadata)
+  nodes_5 <- create_domain_initialize_nodes(nodes_4, domain_initialization_metadata)
   # This is done before external deps nodes are added (at the moment) because we
   # don't need to explicitly track the external deps in the topology
   edges <- make_edges(nodes_5)
