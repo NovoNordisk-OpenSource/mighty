@@ -35,27 +35,27 @@ make_adam_program <- function(path_ui_data,
 
   # Enrich UI data with predecessors that are not stated in the UI data and that
   # are required for the derivations to be run
-  nodes_4 <- add_implied_predecessors(nodes_2)
+  nodes_3 <- add_implied_predecessors(nodes_2)
 
   # Create an initialization action per domain that consumes predecessors
-  nodes_5 <- create_domain_initialize_nodes(nodes_4, ui_data_2$init)
+  nodes_4 <- create_domain_initialize_nodes(nodes_3, ui_data_2$init)
 
-  # This is done before external deps nodes are added (at the moment) because we
-  # don't need to explicitly track the external deps in the topology
+  # Add information about external dependencies to the initialization action
+  nodes_5 <- enrich_with_external_dependencies(nodes_4, ui_data_2$init)
+
+  # Identify the edges in the topology
   edges <- make_edges(nodes_5)
 
-  topo_order_names <- weighted_node_topo_sort(edges, nodes_5, primary_domain = "adsl")
+  nodes_topo_order <- weighted_node_topo_sort(edges, nodes_5, primary_domain = "adsl")
+  program_order <- group_nodes_optimal(nodes_topo_order, nodes_5, edges = edges)
 
-  program_order <- group_nodes_optimal(topo_order_names, nodes_5, edges = edges)
-
-  nodes_6 <- enrich_with_external_dependencies(nodes_5, ui_data_2$init)
-  program_order_2 <- add_program_init_nodes(program_order, nodes_6)
-  program_order_3 <- add_nodes_to_load_external_data(program_order_2, nodes_6)
+  program_order_2 <- add_program_init_nodes(program_order, nodes_5)
+  program_order_3 <- add_nodes_to_load_external_data(program_order_2, nodes_5)
 
   data_connection <- match.arg(data_connection)
   programs <- generate_program(
     program_order_3,
-    nodes_6,
+    nodes_5,
     domain_keys = yaml::read_yaml(path_domain_keys),
     std_library_path = path_std_lib,
     ui_data_2$trial_metadata,
