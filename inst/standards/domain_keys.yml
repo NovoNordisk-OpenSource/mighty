@@ -1,14 +1,14 @@
 adsl:
- - usubjid
+ - USUBJID
 ex:
- - usubjid
+ - USUBJID
 mdparam:
- - studyid
- - topiccd
+ - STUDYID
+ - TOPICCD
 mdvisit:
- - studyid
- - avisitn
+ - STUDYID
+ - AVISITN
 mdflow:
- - studyid
- - avisitn
- - topiccd
+ - STUDYID
+ - AVISITN
+ - TOPICCD

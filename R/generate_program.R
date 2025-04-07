@@ -56,9 +56,10 @@ rename_programs <- function(programs, nodes_split) {
 list_all_sdtm_datasets <- function(trial_metadata) {
   # Generate list of all SDTM datasets in the current study so later we can
   # check if a specific supp dataset exists
+  
   sdtm_path <-
-    sdtm_connector <- connector::connector_fs$new(path = sdtm_path)
-  sdtm_connector |> connector::cnt_list_content()
+    sdtm_connector <- connector::connector_fs()(path = sdtm_path)
+  sdtm_connector |> connector::list_content_cnt()
 
 }
 list_all_ <- function(type = c("sdtm", "adam"), trial_metadata) {
@@ -78,8 +79,9 @@ list_all_ <- function(type = c("sdtm", "adam"), trial_metadata) {
   # This is needed when testing and referencing trial data locations that don't
   # exist, or the testing environment doesn't have access to
   result <- tryCatch({
-    connector::connector_fs$new(path = path) |>
-      connector::cnt_list_content()
+    
+    connector::connector_fs(path = path) |>
+      connector::list_content_cnt()
   }, error = function(e) {
     if (grepl("directory.*does not.*exist", e$message, ignore.case = TRUE)) {
       return(NULL)

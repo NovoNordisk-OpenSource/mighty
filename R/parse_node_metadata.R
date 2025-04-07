@@ -1,6 +1,6 @@
 parse_node_metadata <- function(file_path) {
 
-  lines <- readLines(file_path, warn = FALSE) |> trimws() |> tolower()
+  lines <- readLines(file_path, warn = FALSE) |> trimws()
   out <- list()
   current_function <- NULL
   current_metadata <- NULL

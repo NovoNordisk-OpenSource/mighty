@@ -41,11 +41,11 @@ arm_category_01 <- function(.self) {
 #   - self.PLANNED_ARM
 #   - self.ACTARM
 # outputs:
-#   - self.ARM_MATCH
+#   - self.arm_match
 #!-!
 arm_match_01 <- function(.self) {
   .self <- .self |>
-    dplyr::mutate(ARM_MATCH = ifelse(
+    dplyr::mutate(arm_match = ifelse(
       PLANNED_ARM ==  ACTARM, "Match", "Mismatch"
     ))
   return(.self)
@@ -57,11 +57,11 @@ arm_match_01 <- function(.self) {
 # depend_cols:
 #   - self.AGE
 # outputs:
-#   - self.AGE2
+#   - self.age2
 #!-!
 age_crop_01 <- function(.self) {
   .self <- .self |>
-    dplyr::mutate(AGE2 = ifelse(AGE>80, 80, AGE))
+    dplyr::mutate(age2 = ifelse(AGE>80, 80, AGE))
   return(.self)
 }
 
@@ -70,13 +70,13 @@ age_crop_01 <- function(.self) {
 # origin: derivation
 # depend_cols:
 #   - self.AGE
-#   - self.AGE2
+#   - self.age2
 # outputs:
 #   - self.AGE_DIFF1
 #!-!
 age_diff_01 <- function(.self) {
   .self <- .self |>
-    dplyr::mutate(AGE_DIFF1 = AGE-AGE2)
+    dplyr::mutate(AGE_DIFF1 = AGE-age2)
   return(.self)
 }
 
@@ -99,14 +99,14 @@ age_diff_02 <- function(.self) {
 # type: column
 # origin: derivation
 # depend_cols:
-#   - self.AGE2
+#   - self.age2
 # outputs:
 #   - self.AGE_GRP1
 #!-!
 age_group_01 <- function(.self, cut_points) {
   .self <- .self |>
     dplyr::mutate(AGE_GRP1 = cut(
-      AGE2,
+      age2,
       breaks = c(-Inf, cut_points, Inf),
       labels = 1:(length(cut_points) + 1),
       right = FALSE
@@ -199,7 +199,7 @@ newfl_01 <- function(.self) {
 # depend_cols:
 #   - self.USUBJID
 #   - self.COUNTRY
-#   - self.ARM_MATCH
+#   - self.arm_match
 #   - adlb.USUBJID
 #   - adlb.LBTEST
 # outputs:
@@ -212,7 +212,7 @@ newfl_02 <- function(.self, adlb) {
     unique()
   .self <- .self |>
     dplyr::mutate(NEWFL02 = ifelse(!is.na(COUNTRY) &
-                                     ARM_MATCH == "MATCH" &
+                                     arm_match == "MATCH" &
                                      USUBJID %in% subids, 1, 0))
   return(.self)
 }
