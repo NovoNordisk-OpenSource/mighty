@@ -15,11 +15,11 @@ test_that("perfomance", {
   output_path <- withr::local_tempdir()
 
   # ACT
-  browser()
-  profvis::profvis({generate_adam_code(ui_path,
+
+  generate_adam_code(ui_path,
                               std_lib_path,
                               domain_keys_path,
                               output_path,
-                              data_connection = "pharmaverse")})
+                              data_connection = "pharmaverse")
 
 })
