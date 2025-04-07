@@ -26,6 +26,8 @@ make_adam_program <- function(path_ui_data,
     lapply(parse_node_metadata) |>
     unlist(recursive = FALSE) |>
     update_ui_data(ui_data_1)
+
+  # Convert UI data with metadata to a data.table
   nodes <- convert_node_list_to_dt(ui_data_2$nodes)
 
   # Enrich predecessors in UI data with auto-generated metadata
@@ -42,11 +44,9 @@ make_adam_program <- function(path_ui_data,
   # don't need to explicitly track the external deps in the topology
   edges <- make_edges(nodes_5)
 
-  unique_edges <- edges[, .SD[1], by = .(parent_node, node_id)][, .(parent_node, node_id)]
-  graph <- igraph::graph_from_data_frame(unique_edges, directed = TRUE, vertices = nodes_5[, .(node_id, domain)])
-  topo_order_names <- weighted_node_topo_sort(graph, primary_domain = "adsl")
-  vertex_metadata <- nodes_5[, .(node_id, domain, type)]
-  program_order <- group_nodes_optimal(topo_order_names, vertex_metadata, edges = edges)
+  topo_order_names <- weighted_node_topo_sort(edges, nodes_5, primary_domain = "adsl")
+
+  program_order <- group_nodes_optimal(topo_order_names, nodes_5, edges = edges)
 
   nodes_6 <- enrich_with_external_dependencies(nodes_5, ui_data_2$init)
   program_order_2 <- add_program_init_nodes(program_order, nodes_6)
@@ -61,7 +61,10 @@ make_adam_program <- function(path_ui_data,
     ui_data_2$trial_metadata,
     data_connection
   )
-
   write_adam_programs(programs, path_output)
-  return(list(program_order=program_order, edges=edges, program_order_complete = program_order_3, data_model = ui_data_2$nodes))
+
+  return(list(program_order = program_order,
+              edges = edges,
+              program_order_complete = program_order_3,
+              data_model = ui_data_2$nodes))
 }

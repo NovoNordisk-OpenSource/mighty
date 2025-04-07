@@ -50,8 +50,10 @@ make_edges <- function(nodes, primary_domain = "adsl") {
   }
 
 
+  # Remove edges that are reflective
+  edges2 <- edges[node_id != parent_node]
 
-  # Only return edges that are not reflective
-  edges[node_id != parent_node]
+  # Only return unique edges
+  edges2[, .SD[1], by = .(parent_node, node_id)][, .(parent_node, node_id)]
 
 }

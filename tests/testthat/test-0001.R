@@ -27,7 +27,7 @@ test_that("Complex test", {
   x <- list.files(output_path, full.names = TRUE)
   programs <- lapply(x, readLines)
   names(programs) <- basename(x)
-browser()
+
   # EXPECT data values ---------------------------------------------------------
 
   # Execute code and run expectations on the final outputed ADaM tables
