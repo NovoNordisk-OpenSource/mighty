@@ -104,9 +104,9 @@ nodes:
       parameters: NA
     pred_05:
       code_id: NA
-      depend_cols: adsl.RACE_SITEID
+      depend_cols: adsl.RACE_COUNTRY
       depend_rows: NA
-      outputs: self.RACE_SITEID
+      outputs: self.RACE_COUNTRY
       parameters: NA
     pred_06:
       code_id: NA

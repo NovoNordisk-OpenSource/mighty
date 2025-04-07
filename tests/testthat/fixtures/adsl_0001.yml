@@ -73,7 +73,7 @@ nodes:
     #   outputs: NA
     #   parameters: cut_points = c(60, 70)
     der_04:
-      code_id: race_x_siteid_01
+      code_id: race_x_country_01
       depend_cols: NA
       depend_rows: NA
       outputs: NA

@@ -112,13 +112,13 @@ age_group_01 <- function(.self, cut_points) {
 # type: derivation
 # depend_cols:
 #   - self.RACE
-#   - self.SITEID
+#   - self.COUNTRY
 # outputs:
-#   - self.RACE_SITEID
+#   - self.RACE_COUNTRY
 #!-!
-race_x_siteid_01 <- function(.self) {
+race_x_country_01 <- function(.self) {
   .self <- .self |>
-    dplyr::mutate(RACE_SITEID = paste0(RACE, "-", SITEID))
+    dplyr::mutate(RACE_COUNTRY = paste0(RACE, "-", COUNTRY))
   return(.self)
 }
 
