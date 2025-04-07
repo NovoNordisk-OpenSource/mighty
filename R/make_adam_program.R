@@ -46,25 +46,31 @@ make_adam_program <- function(path_ui_data,
   # Identify the edges in the topology
   edges <- make_edges(nodes_5)
 
+  # Identify topological order
   nodes_topo_order <- weighted_node_topo_sort(edges, nodes_5, primary_domain = "adsl")
-  program_order <- group_nodes_optimal(nodes_topo_order, nodes_5, edges = edges)
 
-  program_order_2 <- add_program_init_nodes(program_order, nodes_5)
-  program_order_3 <- add_nodes_to_load_external_data(program_order_2, nodes_5)
+  # Group actions into programs that can be run as batches in a sequence
+  program_sequence <- group_nodes_optimal(nodes_topo_order, nodes_5, edges)
 
+  # Add initialization actions to the program sequence
+  program_sequence_2 <- add_program_init_nodes(program_sequence, nodes_5)
+
+  # Add action to import external dependencies to the program sequence
+  program_sequence_3 <- add_nodes_to_load_external_data(program_sequence_2, nodes_5)
+
+  # Write the programs to the output path
   data_connection <- match.arg(data_connection)
   programs <- generate_program(
-    program_order_3,
+    program_sequence_3,
     nodes_5,
-    domain_keys = yaml::read_yaml(path_domain_keys),
-    std_library_path = path_std_lib,
+    yaml::read_yaml(path_domain_keys),
+    path_std_lib,
     ui_data_2$trial_metadata,
     data_connection
   )
   write_adam_programs(programs, path_output)
 
-  return(list(program_order = program_order,
+  return(list(program_sequence = program_sequence_3,
               edges = edges,
-              program_order_complete = program_order_3,
               data_model = ui_data_2$nodes))
 }
