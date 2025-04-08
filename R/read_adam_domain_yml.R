@@ -1,6 +1,10 @@
+read_adam_specs <- function(paths){
+  lapply(paths, read_adam_domain_yml)
+}
+
+
 read_adam_domain_yml <- function(yml) {
   x <- yaml::read_yaml(yml)
-
   # Name elements in the list
   names(x$column_metadata) <- lapply(x$column_metadata, function(i){i$column})
   if(!is.null(x$row_actions)){
@@ -28,8 +32,9 @@ read_adam_domain_yml <- function(yml) {
     }
     return(i)
   })
-
-  return(out)
+  return(list(columns = out,
+              domain = x$table_metadata$table,
+              keys = x$table_metadata$keys))
 
 
 }

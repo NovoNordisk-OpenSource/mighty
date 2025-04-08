@@ -32,8 +32,8 @@ classify_external_data_domains_2 <- function(vector) {
 
 classify_external_data_domains <- function(vector) {
   result <- character(length(vector))
-  result[grepl("^ad", vector)] <-  "adam"
-  result[grepl("^md", vector)] <- "md"
+  result[grepl("^ad", vector, ignore.case = TRUE)] <-  "adam"
+  result[grepl("^md", vector, ignore.case = TRUE)] <- "md"
   result[nchar(vector) == 2 | vector == "relrec"] <- "sdtm"
   result[vector == "self"] <- "self"
 

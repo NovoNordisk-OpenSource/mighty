@@ -14,21 +14,23 @@ generate_adam_code <- function(path_ui_data,
                               path_std_lib,
                               path_domain_keys,
                               path_output,
-                              data_connection = c("connector", "pharmaverse")) {
+                              data_connection = c("connector", "pharmaverse"),
+                              trial_metadata_path) {
 
   # Data from UI containing explicit user input
   ui_data_1 <- path_ui_data |>
     merge_yaml_files() |>
     parse_ui_data()
 
+  domain_initialization_metadata <- ui_data_1$init
+  trial_metadata <- yaml::read_yaml(inti_yml_path)
   # Enrich derivations in UI data with associated metadata from standard nodes
   ui_data_2 <- path_std_lib |>
     lapply(parse_node_metadata) |>
     unlist(recursive = FALSE) |>
     update_ui_data(ui_data_1)
-  domain_initialization_metadata <- ui_data_2$init
-  trial_metadata <- ui_data_2$trial_metadata
-  nodes <- convert_node_list_to_dt(ui_data_2$nodes)
+
+
 browser()
   # Enrich predecessors in UI data with auto-generated metadata
   nodes_2 <- update_predecessors(nodes, path_domain_keys)
