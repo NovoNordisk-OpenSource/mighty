@@ -34,7 +34,8 @@ read_adam_domain_yml <- function(yml) {
   })
   return(list(columns = out,
               domain = x$table_metadata$table,
-              keys = x$table_metadata$keys))
+              keys = x$table_metadata$keys,
+              init = x$init))
 
 
 }
