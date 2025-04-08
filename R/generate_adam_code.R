@@ -29,7 +29,7 @@ generate_adam_code <- function(path_ui_data,
   domain_initialization_metadata <- ui_data_2$init
   trial_metadata <- ui_data_2$trial_metadata
   nodes <- convert_node_list_to_dt(ui_data_2$nodes)
-
+browser()
   # Enrich predecessors in UI data with auto-generated metadata
   nodes_2 <- update_predecessors(nodes, path_domain_keys)
   nodes_3 <- collapse_origin_type_columns(nodes_2)

@@ -12,20 +12,20 @@ column_metadata:
   - column: USUBJID
     source: DM.USUBJID
 
+  - column: ARM_GRP1
+    label: "some text"
+    code_id: arm_group_01
+
+  - column: ARM_CAT1
+    label: "some text"
+    code_id: arm_category_01
+
   - column: NEWFL01
-    label: "some text"
-    code_id: newfl_01
-
-  - column: NEWREA01
-    label: "some text"
-    code_id: newfl_01
-
-  - column: NEWREA012
     label: "some text"
     depend_rows:
       - row_add_1
       - row_add_2
-    code_id: newfl_02
+    code_id: newfl_01
 
 
 referenced_domains:

@@ -4,7 +4,7 @@
 # depend_cols:
 #   - self.PLANNED_ARM
 # outputs:
-#   - self.ARM_GRP1
+#   - ARM_GRP1
 #!-!
 arm_group_01 <- function(.self) {
   .self <- .self |>
@@ -22,7 +22,7 @@ arm_group_01 <- function(.self) {
 # depend_cols:
 #   - self.ARM_GRP1
 # outputs:
-#   - self.ARM_CAT1
+#   - ARM_CAT1
 #!-!
 arm_category_01 <- function(.self) {
   .self <- .self |>
@@ -179,8 +179,8 @@ min_aval_01 <- function(.self, adlb) {
 #   - self.PLANNED_ARM
 #   - self.AGE_DIFF1
 # outputs:
-#   - self.NEWFL01
-#   - self.NEWREA01
+#   - NEWFL01
+#   - NEWREA01
 #!-!
 newfl_01 <- function(.self) {
   # Extract the minimum AVAL value for each SUBJID
