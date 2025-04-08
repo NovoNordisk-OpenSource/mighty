@@ -1,4 +1,7 @@
-predecessor_mutate <-  function(.self, rename_var, source_var, action_name) {
+predecessor_mutate <-  function(.self, rename_var, source_var, node_id) {
+
+  action_name <- sub(".*\\.", "", node_id)
+
   glue::glue('
  # {toupper(action_name)} -----------------------------------------------------
 
@@ -37,12 +40,14 @@ pre_process_predecessor_left_join <- function(depend_cols, outputs, domain, doma
   ))
 }
 
-predecessor_left_join <- function(.self, join_dataset, var_to_add, by_vars, action_name, output_var) {
-  by_vars_str <- paste(sprintf('"%s"', by_vars), collapse = ", ")
+predecessor_left_join <- function(.self, join_dataset, var_to_add, by_vars, node_id, output_var) {
 
+  by_vars_str <- paste(sprintf('"%s"', by_vars), collapse = ", ")
   select_expr <- c(by_vars, var_to_add) |>
     unique() |>
     paste0(collapse = ", ")
+
+  action_name <- sub(".*\\.", "", node_id)
 
   left_join_code <- glue::glue(
     "

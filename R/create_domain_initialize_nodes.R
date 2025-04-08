@@ -54,12 +54,9 @@ create_domain_init_node_i <- function(core_vars_domain_i,
     full_name = paste0(nm, ".", core_vars_domain_i)
   )
 
-  action_name <- "domain_init"
-
   new_node_i[, `:=`(
     node_id = paste0(nm, ".domain_init"),
     domain = nm,
-    action = action_name,
     code_id = NA_character_,
     type = "domain_init",
     depend_cols = list(core_variables_i),

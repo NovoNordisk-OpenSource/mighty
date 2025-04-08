@@ -56,10 +56,10 @@ generate_node_code <- function(nodes_program_i,
         depends <- node_i[["depend_cols"]][[1]][["column_name"]]
         outputs <- node_i[["outputs"]][[1]][["column_name"]]
         program[[i]] <- predecessor_mutate(
-          node_i$domain,
+          .self = node_i$domain,
           rename_var = outputs,
           source_var = depends,
-          action_name = node_i$action
+          node_id = node_i$node_id
         )
         next
       }
@@ -71,7 +71,7 @@ generate_node_code <- function(nodes_program_i,
         join_dataset = x$join_dataset,
         var_to_add = x$var_to_add,
         by_vars = x$by_vars,
-        action_name = node_i$action,
+        node_id = node_i$node_id,
         output_var = x$output_var
       )
       next
@@ -80,10 +80,9 @@ generate_node_code <- function(nodes_program_i,
     if (node_i$type == "derivation" || node_i$type == "row") {
       program[[i]] <- parse_into_chunks(
         code_id = node_i$code_id,
-        action = node_i$node_id,
+        node_id = node_i$node_id,
         domain_name = node_i$domain,
-        env = std_code_env,
-        action_name = node_i$action
+        env = std_code_env
       )
       next
     }

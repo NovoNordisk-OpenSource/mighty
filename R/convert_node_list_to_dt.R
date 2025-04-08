@@ -8,18 +8,17 @@
 #' @examples
 convert_node_list_to_dt <- function(nodes){
 
-  nodes <- nodes |>
+  nodes_flat <- nodes |>
     replace_self_with_domain() |>
     flatten_top_two_levels() |>
     add_attributes()
 
 
-  purrr::imap(nodes, function(node_i, nm){
+  purrr::imap(nodes_flat, function(node_i, nm){
 
     data.table::data.table(
       node_id = nm,
       domain = node_i$domain,
-      action = node_i$action,
       code_id = node_i$code_id,
       type = node_i$type,
       depend_rows = list(node_i$depend_rows),

@@ -16,7 +16,7 @@ test_that("Complex test", {
   output_path <- withr::local_tempdir()
 
   # ACT ------------------------------------------------------------------------
-#debugonce(make_adam_program)
+
   actual <- make_adam_program(ui_path,
                               std_lib_path,
                               domain_keys_path,
@@ -26,7 +26,6 @@ test_that("Complex test", {
   x <- list.files(output_path, full.names = TRUE)
   programs <- lapply(x, readLines)
   names(programs) <- basename(x)
-  do.call(file.edit, as.list(x))
 
   # EXPECT data values ---------------------------------------------------------
 

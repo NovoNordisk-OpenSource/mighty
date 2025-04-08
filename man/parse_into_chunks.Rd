@@ -4,10 +4,10 @@
 \alias{parse_into_chunks}
 \title{Parse into chunks}
 \usage{
-parse_into_chunks(code_id, action, domain_name, env, action_name)
+parse_into_chunks(code_id, node_id, domain_name, env)
 }
 \arguments{
-\item{action_name}{}
+\item{env}{}
 }
 \description{
 Parse into chunks
