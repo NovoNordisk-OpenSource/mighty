@@ -65,7 +65,7 @@ make_adam_program <- function(path_ui_data,
     nodes_5,
     yaml::read_yaml(path_domain_keys),
     path_std_lib,
-    ui_data_2$trial_metadata,
+    ui_data_2,
     data_connection
   )
   write_adam_programs(programs, path_output)

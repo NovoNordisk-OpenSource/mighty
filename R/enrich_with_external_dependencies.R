@@ -52,6 +52,6 @@ enrich_with_external_dependencies <- function(nodes, init_metadata) {
   }
 
   out <- copy(nodes)
-  out[, external_dependencies := list(add_external_by_nodes_i(.SD)), by =
+  out[, depend_cols_ext := list(add_external_by_nodes_i(.SD)), by =
         seq_len(nrow(out))]
 }

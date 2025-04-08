@@ -18,16 +18,12 @@ create_domain_initialize_nodes <- function(nodes, domain_init_data) {
                                    nodes,
                                    domain_init_data) |>
     rbindlist()
+
   # The domain init nodes replace the predecessor nodes
   nodes_to_remove <- domain_init_nodes[, outputs] |>
     extract_("full_name") |>
     unlist()
   nodes_subset <- nodes[!node_id %in% nodes_to_remove]
-  nodes_subset[, `:=`(
-    core_domains = NA_character_,
-    filter_per_domain = NA_character_,
-    filter_global = NA_character_
-  )]
   rbind(nodes_subset, domain_init_nodes)
 }
 
@@ -58,11 +54,10 @@ create_domain_init_node_i <- function(core_vars_domain_i,
     node_id = paste0(nm, ".domain_init"),
     domain = nm,
     code_id = NA_character_,
+    depend_rows = NA_character_,
+    parameters = NA_character_,
     type = "domain_init",
     depend_cols = list(core_variables_i),
-    outputs = list(outputs_i),
-    core_domains = list(domain_init_data[[nm]]$core_domains),
-    filter_per_domain = list(domain_init_data[[nm]]$filter_domain),
-    filter_global = list(domain_init_data[[nm]]$filter_global)
+    outputs = list(outputs_i)
   )]
 }

@@ -47,12 +47,12 @@ add_nodes_to_load_external_data <- function(program_order, nodes) {
 #'
 #' @examples
 external_dependencies_per_program <- function(program_order, nodes) {
-  x <- program_order[nodes[, .(node_id, external_dependencies)], on = .(node_id)] |>
+  x <- program_order[nodes[, .(node_id, depend_cols_ext)], on = .(node_id)] |>
     setorder(program_id, rank)
-  nodes_by_domain <- split(x[, .(node_id, external_dependencies, program_id)], by =
+  nodes_by_domain <- split(x[, .(node_id, depend_cols_ext, program_id)], by =
                              "program_id")
   lapply(nodes_by_domain, function(i) {
-    i[, rbindlist(external_dependencies), by = node_id]
+    i[, rbindlist(depend_cols_ext), by = node_id]
   })
 
 }

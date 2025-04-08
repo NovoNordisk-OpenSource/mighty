@@ -29,7 +29,7 @@ test_that("Complex test", {
 
   # EXPECT data values ---------------------------------------------------------
 
-  # Execute code and run expectations on the final outputed ADaM tables
+  # Execute code and run expectations on the final outputted ADaM tables
   lapply(x, source)
   expect_snapshot_value(adsl, style = "json2")
   expect_snapshot_value(adlb, style = "json2")

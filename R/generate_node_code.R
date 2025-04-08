@@ -15,11 +15,13 @@
 generate_node_code <- function(nodes_program_i,
                                domain_keys,
                                std_code_env,
-                               trial_metadata,
+                               ui_data,
                                sdtm_dataset_list,
                                adam_dataset_list,
                                data_connection) {
   program <- list()
+
+  trial_metadata <- ui_data$trial_metadata
 
   for (i in seq_len(nrow(nodes_program_i))) {
     node_i <- nodes_program_i[i]
@@ -35,11 +37,12 @@ generate_node_code <- function(nodes_program_i,
       next
     }
     if (node_i$type == "domain_init") {
+      domain_metadata <- ui_data$init[[node_i$domain]]
       program[[i]] <- generate_initialize_domain(
         .self = node_i$domain,
-        core_domains = unlist(node_i$core_domains),
-        filter_per_domain = node_i$filter_per_domain,
-        filter_global = node_i$filter_global[[1]],
+        core_domains = unlist(domain_metadata$core_domains),
+        domain_filter = domain_metadata$filter_domain[[1]],
+        filter_global = domain_metadata$filter_global,
         keep_vars = node_i$outputs[[1]]$column_name
       )
       next

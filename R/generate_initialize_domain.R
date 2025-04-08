@@ -14,7 +14,7 @@
 #' @examples
 generate_initialize_domain <-  function(.self,
                                         core_domains,
-                                        filter_per_domain = NULL,
+                                        domain_filter = NULL,
                                         filter_global = NULL,
                                         keep_vars = NULL) {
 
@@ -35,8 +35,6 @@ generate_initialize_domain <-  function(.self,
     domain_filter_collapsed <- paste(domain_filter, collapse = " &&\n")
     glue::glue("{domain_var}_tmp <- {domain_var} |> dplyr::filter({domain_filter_collapsed})")
   }
-
-  domain_filter <- filter_per_domain[[1]]
 
   stopifnot("Domain filters must be set to NA if not used" =
               length(domain_filter) == length(core_domains))
