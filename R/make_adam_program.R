@@ -33,20 +33,20 @@ make_adam_program <- function(path_ui_data,
   # Enrich predecessors in UI data with auto-generated metadata
   nodes_2 <- update_predecessors(nodes, path_domain_keys)
 
-  # Enrich UI data with predecessors that are not stated in the UI data and that
-  # are required for the derivations to be run
+  # Enrich UI data with predecessor actions that are not stated in the UI data
+  # and that are required for the derivations to be run
   nodes_3 <- add_implied_predecessors(nodes_2)
 
-  # Create an initialization action per domain that consumes predecessors
+  # Create an initialization action per domain that consumes predecessor actions
   nodes_4 <- create_domain_initialize_nodes(nodes_3, ui_data_2$init)
 
   # Add information about external dependencies to the initialization action
   nodes_5 <- enrich_with_external_dependencies(nodes_4, ui_data_2$init)
 
-  # Identify the edges in the topology
+  # Identify edges in the topology graph
   edges <- make_edges(nodes_5)
 
-  # Identify topological order
+  # Identify topological order of actions
   nodes_topo_order <- weighted_node_topo_sort(edges, nodes_5, primary_domain = "adsl")
 
   # Group actions into programs that can be run as batches in a sequence

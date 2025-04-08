@@ -16,7 +16,7 @@ test_that("Complex test", {
   output_path <- withr::local_tempdir()
 
   # ACT ------------------------------------------------------------------------
-
+#debugonce(make_adam_program)
   actual <- make_adam_program(ui_path,
                               std_lib_path,
                               domain_keys_path,
@@ -27,7 +27,7 @@ test_that("Complex test", {
   programs <- lapply(x, readLines)
   names(programs) <- basename(x)
   do.call(file.edit, as.list(x))
-  browser()
+
   # EXPECT data values ---------------------------------------------------------
 
   # Execute code and run expectations on the final outputed ADaM tables

@@ -40,7 +40,7 @@ generate_node_code <- function(nodes_program_i,
         core_domains = unlist(node_i$core_domains),
         filter_per_domain = node_i$filter_per_domain,
         filter_global = node_i$filter_global[[1]],
-        keep_vars = node_i$core_variables[[1]]$column_name
+        keep_vars = node_i$outputs[[1]]$column_name
       )
       next
     }

@@ -24,7 +24,6 @@ create_domain_initialize_nodes <- function(nodes, domain_init_data) {
     unlist()
   nodes_subset <- nodes[!node_id %in% nodes_to_remove]
   nodes_subset[, `:=`(
-    core_variables = NA_character_,
     core_domains = NA_character_,
     filter_per_domain = NA_character_,
     filter_global = NA_character_
@@ -65,7 +64,6 @@ create_domain_init_node_i <- function(core_vars_domain_i,
     type = "domain_init",
     depend_cols = list(core_variables_i),
     outputs = list(outputs_i),
-    core_variables = list(core_variables_i),
     core_domains = list(domain_init_data[[nm]]$core_domains),
     filter_per_domain = list(domain_init_data[[nm]]$filter_domain),
     filter_global = list(domain_init_data[[nm]]$filter_global)
