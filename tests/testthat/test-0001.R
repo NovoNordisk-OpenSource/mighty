@@ -80,5 +80,7 @@ test_that("Complex test", {
 
   # Storing the data.table in the snapshot causes warnings, maybe due to
   # internal attributes use by data.table. So we convert to data.frame
-  expect_snapshot_value(as.data.frame(actual$program_sequence[, .(domain, node_id, program_id, rank)]), style = "json2")
+  expect_snapshot_value(
+    as.data.frame(actual$program_sequence[, .(domain, node_id, program_id, rank)]),
+    style = "json2")
 })
