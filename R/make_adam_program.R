@@ -33,8 +33,8 @@ make_adam_program <- function(path_ui_data,
   # Enrich predecessors in UI data with auto-generated metadata
   nodes_2 <- update_predecessors(nodes_1, path_domain_keys)
 
-  # Enrich UI data with predecessor actions that are not stated in the UI data
-  # and that are required for the derivations to be run
+  # Enrich UI data with required predecessor actions not in the UI data and that
+  # are required for the derivations to be run
   nodes_3 <- add_implied_predecessors(nodes_2)
 
   # Create an initialization action per domain that consumes predecessor actions
