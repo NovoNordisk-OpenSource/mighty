@@ -5,9 +5,9 @@ init:
     filter_domain:
       lb: NA
     filter_global:
-      - '!is.na(SITEID)'
+      - '!is.na(SEX)'
     filter_depend_cols:
-      - adsl.SITEID
+      - adsl.SEX
 nodes:
   adlb:
     der_11:

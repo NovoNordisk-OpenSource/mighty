@@ -40,8 +40,8 @@ generate_node_code <- function(nodes_program_i,
       domain_metadata <- ui_data$init[[node_i$domain]]
       program[[i]] <- generate_initialize_domain(
         .self = node_i$domain,
-        core_domains = unlist(domain_metadata$core_domains),
-        domain_filter = domain_metadata$filter_domain[[1]],
+        core_domains = domain_metadata$core_domains,
+        domain_filter = domain_metadata$filter_domain,
         filter_global = domain_metadata$filter_global,
         keep_vars = node_i$outputs[[1]]$column_name
       )

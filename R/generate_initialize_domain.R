@@ -44,7 +44,7 @@ generate_initialize_domain <-  function(.self,
   # Generate row_bind expression if there are multiple core domains
   if (length(core_domains) > 1) {
     bind_expr <-  glue::glue(
-      "{.self} <- dplyr::bind_rows({paste(paste0(core_domains, '_tmp'), collapse = ', ')}) |> dplyr::as_tibble()
+      "{.self} <- rbind({paste(paste0(core_domains, '_tmp'), collapse = ', ')}) |> dplyr::as_tibble()
       rm({paste(paste0(core_domains, '_tmp'), collapse=', ')})"
     )
   } else {
