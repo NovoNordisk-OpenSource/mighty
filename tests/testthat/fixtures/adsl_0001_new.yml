@@ -25,6 +25,9 @@ column_metadata:
   - column: USUBJID
     source: DM.USUBJID
 
+  - column: PLANNED_ARM
+    source: self.ARM
+
   - column: ARM_GRP1
     label: "some text"
     code_id: arm_group_01

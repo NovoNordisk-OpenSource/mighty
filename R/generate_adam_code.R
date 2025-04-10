@@ -30,7 +30,7 @@ generate_adam_code <- function(path_ui_data,
     add_node_id()
 
 
-
+browser()
 # Enrich predecessors in UI data with auto-generated metadata
 nodes_2 <- update_predecessors(nodes_1, path_domain_keys)
 

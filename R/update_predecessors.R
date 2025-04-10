@@ -1,4 +1,9 @@
 #' @title Update predecessors
+#' @description
+#' Ensures that external domains
+#'
+#' Additional details...
+#'
 #' @param nodes
 #' @param path_mappings
 #'
@@ -17,7 +22,6 @@ update_predecessors <- function(nodes, path_mappings) {
     if (is.na(x[["code_id"]][[i]])) {
 
       domain_i <- x[["domain"]][[i]]
-      action_i <- x[["action"]][[i]]
 
       # Impute missing values for predecessor
       x[i, type := "predecessor"]
@@ -34,8 +38,7 @@ update_predecessors <- function(nodes, path_mappings) {
           data.table(
             column_name = c(x, x),
             domain = c(domain_i, dep_domain),
-            domain_type = c("adam", classify_external_data_domains_2(dep_domain)),
-            full_name =  paste(c(domain_i, dep_domain), x, sep = ".")
+            domain_type = c("adam", classify_external_data_domains(dep_domain))
           )
         }) |> rbindlist()
         x[["depend_cols"]][[i]] <- rbind(x[["depend_cols"]][[i]],
