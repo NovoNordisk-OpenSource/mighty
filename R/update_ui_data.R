@@ -51,5 +51,5 @@ add_node_id <- function(nodes){
   for(i in seq_len(nrow(nodes))){
     nodes[i, node_id := paste0(domain, "-", paste0(unlist(outputs),collapse = "-"))]
   }
-
+return(nodes)
 }
