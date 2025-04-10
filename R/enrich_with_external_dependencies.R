@@ -13,10 +13,10 @@ enrich_with_external_dependencies <- function(nodes, init_metadata) {
   add_external_by_nodes_i <- function(i) {
 
     # This will include all "side-loaded" and "core" variables
-    dep <- i$depend_cols[[1]][domain != "self"]
+    dep <- i$depend_cols[[1]][domain != i$domain]
 
     # Special case: For domain_init, we need to add the column dependencies from the global filters
-    if (i$action == "domain_init") {
+    if (i$type == "domain_init") {
 
       # Identify the columns dependencies
       filter_depend_cols <- init_metadata[[i$domain]][["filter_depend_cols"]]
@@ -52,6 +52,6 @@ enrich_with_external_dependencies <- function(nodes, init_metadata) {
   }
 
   out <- copy(nodes)
-  out[, external_dependencies := list(add_external_by_nodes_i(.SD)), by =
+  out[, depend_cols_ext := list(add_external_by_nodes_i(.SD)), by =
         seq_len(nrow(out))]
 }

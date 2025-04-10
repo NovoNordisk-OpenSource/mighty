@@ -15,6 +15,7 @@
 #' @examples
 add_implied_predecessors <- function(nodes) {
   nodes_by_domain <- split(nodes, by = "domain")
+  browser()
   nodes_with_implied_predecessors <- lapply(nodes_by_domain, extract_implied_predecessors_i) |>
     rbindlist()
 
@@ -25,45 +26,36 @@ add_implied_predecessors <- function(nodes) {
 extract_implied_predecessors_i <- function(nodes_domain_i) {
   # User-defined predecessors are ignored because they can't consume other
   # predecessors by definition
-
+browser()
   all_dependencies <- nodes_domain_i[, depend_cols] |>
-    extract_("full_name") |>
-    unlist() |>
-    unique()
-  potiential_predecessors <- grep("self\\.", all_dependencies, value = TRUE)
-
-  output <- nodes_domain_i[, outputs] |>
-    extract_("full_name") |>
-    unlist() |>
-    unique()
+    rbindlist()
+  domain_i <- nodes_domain_i$domain[1]
+  potiential_predecessors <- all_dependencies[domain==domain_i, column_name]
+if(length(potiential_predecessors)==0){
+  return(nodes_domain_i)
+}
+  output <- nodes_domain_i[, outputs] |> unlist() |> unique()
 
   implied_predecessors <- setdiff(potiential_predecessors, output)
-
   n_preds <- length(implied_predecessors)
-  io_data_model <- lapply(implied_predecessors,function(x){
-    data_model_columnn(sub("self\\.", "", x),"self",x)
-  })
 
   # Replace "self." with the domain name
-  implied_predecessors_complete_name <- gsub("self\\.", paste0(nodes_domain_i$domain[1], "."), implied_predecessors)
-  io_data_model_complete_name <- lapply(implied_predecessors_complete_name,function(x){
-    data_model_columnn(sub("self\\.", "", x),nodes_domain_i$domain[1],x)
+  io_data_model_complete_name <- lapply(implied_predecessors, function(x) {
+    data_model_columnn(sub(paste0(domain_i, "\\."), "", x), domain_i, x)
   })
 
   # Create new rows for the implied predecessors
   x <- data.table::data.table(matrix(
-    NA,
+    NA_character_,
     nrow = n_preds,
     ncol = ncol(nodes_domain_i)
   )) |>
     setnames(names(nodes_domain_i))
   x[, `:=`(domain = rep(nodes_domain_i$domain[1], n_preds),
            type = rep("implied_predecessor", n_preds),
-           node_id = implied_predecessors_complete_name,
-           depend_cols = io_data_model,
-           outputs = io_data_model,
-           depend_cols_complete = io_data_model_complete_name,
-           outputs_complete = io_data_model_complete_name)]
+           node_id = implied_predecessors,
+           depend_cols = io_data_model_complete_name,
+           outputs = io_data_model_complete_name)]
 
   # Add them back to the nodes
   rbindlist(list(nodes_domain_i, x))

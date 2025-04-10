@@ -2,14 +2,17 @@ init:
   adsl:
     core_domains:
       - dm
+      - dm_vaccine
     filter_domain:
-      dm: NA
+      dm: '!is.na(AGEU)'
+      dm_vaccine: NA
     filter_global:
       - 'STUDYID == "CDISCPILOT01"'
       - 'DOMAIN == "DM"'
     filter_depend_cols:
-      - self.studyid
-      - self.domain
+      - self.STUDYID
+      - self.DOMAIN
+      - self.AGEU
 nodes:
   adsl:
     pred_01:
@@ -26,9 +29,9 @@ nodes:
       parameters: NA
     pred_07:
       code_id: NA
-      depend_cols: self.SITEID
+      depend_cols: self.SEX
       depend_rows: NA
-      outputs: self.SITEID
+      outputs: self.SEX
       parameters: NA
     der_02:
       code_id: arm_group_01
@@ -66,14 +69,8 @@ nodes:
       depend_rows: NA
       outputs: NA
       parameters: NA
-    # der_10:
-    #   code_id: age_group_01
-    #   depend_cols: NA
-    #   depend_rows: NA
-    #   outputs: NA
-    #   parameters: cut_points = c(60, 70)
     der_04:
-      code_id: race_x_siteid_01
+      code_id: race_x_country_01
       depend_cols: NA
       depend_rows: NA
       outputs: NA

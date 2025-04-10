@@ -12,7 +12,7 @@ make_edges <- function(nodes, primary_domain = "adsl") {
   # column is not the same as a "node" in this framework. So we will then have
   # to match each column to a node that produces that column. That will allow us
   # to ID the parent node
-  parents_expanded <- nodes[, rbindlist(depend_cols_complete), by = node_id][, .(node_id, full_name)] |>
+  parents_expanded <- nodes[, rbindlist(depend_cols), by = node_id][, .(node_id, full_name)] |>
     data.table::setnames(c("node_id", "parent_column"))
   parents_expanded[["node_id"]] <- parents_expanded[["node_id"]]
   parents_expanded[["parent_column"]] <- parents_expanded[["parent_column"]]
@@ -22,7 +22,7 @@ make_edges <- function(nodes, primary_domain = "adsl") {
   # exclude rows, because they cannot add NEW columns, they can only modify
   # existing columms. Otherwise we can get circular dependencies in the
   # topology.
-  children_expanded <- nodes[type != "row", rbindlist(outputs_complete), by = node_id][, .(node_id, full_name)] |>
+  children_expanded <- nodes[type != "row", rbindlist(outputs), by = node_id][, .(node_id, full_name)] |>
     data.table::setnames(c("node_id", "child_column"))
   children_expanded[["node_id"]] <- children_expanded[["node_id"]]
   children_expanded[["child_column"]] <- children_expanded[["child_column"]]
@@ -50,8 +50,10 @@ make_edges <- function(nodes, primary_domain = "adsl") {
   }
 
 
+  # Remove edges that are reflective
+  edges2 <- edges[node_id != parent_node]
 
-  # Only return edges that are not reflective
-  edges[node_id != parent_node]
+  # Only return unique edges
+  edges2[, .SD[1], by = .(parent_node, node_id)][, .(parent_node, node_id)]
 
 }

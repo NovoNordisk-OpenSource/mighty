@@ -2,13 +2,13 @@ generate_program <- function(program_order,
                              nodes,
                              domain_keys,
                              std_library_path,
-                             trial_metadata,
+                             ui_data,
                              data_connection) {
   # Merge the program_id and rank column from program_order onto nodes
   # data.table to get the program_id for each node. Then sort the nodes by
   # program_id and rank.
   keep_only_from_program_order <- c("type", "domain")
-  nodes <- merge(program_order[, .(node_id,
+  nodes_and_programs <- merge(program_order[, .(node_id,
                                    domain,
                                    program_id,
                                    rank,
@@ -20,17 +20,17 @@ generate_program <- function(program_order,
   std_library_path |>
     lapply(source, local = std_code_env)
 
-  sdtm_dataset_list <- list_all_(type = "sdtm", trial_metadata)
-  adam_dataset_list <- list_all_(type = "adam", trial_metadata)
+  sdtm_dataset_list <- list_all_(type = "sdtm", ui_data$trial_metadata)
+  adam_dataset_list <- list_all_(type = "adam", ui_data$trial_metadata)
 
-  nodes_split <- split(nodes, by = "program_id")
+  nodes_split <- split(nodes_and_programs, by = "program_id")
 
   programs <- lapply(
     nodes_split,
     generate_node_code,
     domain_keys,
     std_code_env,
-    trial_metadata,
+    ui_data,
     sdtm_dataset_list,
     adam_dataset_list,
     data_connection

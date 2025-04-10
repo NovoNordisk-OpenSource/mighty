@@ -1,16 +1,21 @@
 #' Topological sort of a weighted directed graph
 #'
-#' @param g
-#' @param primary_domain
+#' @param edges
 #' @param nodes
+#' @param primary_domain
 #'
 #' @return
 #' @export
 #'
 #' @examples
-weighted_node_topo_sort <- function(g, primary_domain="adsl", nodes) {
-  # Weight the primary domain
+weighted_node_topo_sort <- function(edges, nodes, primary_domain = "adsl") {
 
+  # Create a directed graph from the edges and nodes
+  g <- igraph::graph_from_data_frame(edges,
+                                     directed = TRUE,
+                                     vertices = nodes[, .(node_id, domain)])
+
+  # Weight the primary domain
   starting_domain <- which(igraph::V(g)$domain == primary_domain)
   igraph::V(g)$weight <- 0
   igraph::V(g)[starting_domain]$weight <- 1

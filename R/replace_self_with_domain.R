@@ -21,8 +21,7 @@ replace_self_with_domain_i <- function(domain_element, domain_name){
     depends_values <- action[[type]]
     new_values <- paste0(domain_name, ".")
     new_text <- gsub("^self\\.", new_values, depends_values)
-    field <- paste0(type, "_complete")
-    action[[field]] <- new_text
+    action[[type]] <- new_text
     return(action)
   }
 

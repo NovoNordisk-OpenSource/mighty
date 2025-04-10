@@ -22,15 +22,13 @@ extract_sdtm_core_variables_i <- function(nodes_domain_i) {
   for (i in seq_len(nrow(nodes_domain_i))) {
     output_other_nodes <- nodes_domain_i[-i][type != "row", outputs] |>
       extract_("full_name") |>
-      unlist() |>
-      toupper()
+      unlist()
     potentials <- nodes_domain_i[i, depend_cols] |>
       extract_("full_name") |>
       unlist() |>
-      toupper() |>
       setdiff(output_other_nodes) |>
       unique()
-    core_variables_i <- potentials[grepl(pattern = "^self\\.", potentials,
+    core_variables_i <- potentials[grepl(pattern = paste0("^", nodes_domain_i$domain[[1]] , "\\."), potentials,
                                          ignore.case = TRUE)]
     core_variables <- c(core_variables, core_variables_i)
 

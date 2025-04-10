@@ -1,6 +1,5 @@
 #!-!
-# type: column
-# origin: derivation
+# type: derivation
 # depend_cols:
 #   - self.USUBJID
 #   - self.LBSEQ
@@ -41,7 +40,6 @@ lbtest_01 <- function(.self, lb, adsl) {
 
 #!-!
 # type: row
-# origin: NA
 # depend_cols:
 #   - self.LBTEST
 # outputs:
@@ -59,7 +57,6 @@ new_lbtest_01 <- function(.self) {
 
 #!-!
 # type: row
-# origin: NA
 # depend_cols:
 #   - self.LBTEST
 #   - self.AVALC
@@ -82,7 +79,6 @@ new_lbtest_02 <- function(.self) {
 
 #!-!
 # type: row
-# origin: NA
 # depend_cols:
 #   - self.LBTEST
 # outputs:
@@ -104,7 +100,6 @@ new_lbtest_03 <- function(.self) {
 
 #!-!
 # type: row
-# origin: NA
 # depend_cols:
 #   - self.LBTEST
 # outputs:
@@ -126,7 +121,6 @@ new_lbtest_04 <- function(.self) {
 
 #!-!
 # type: row
-# origin: NA
 # depend_cols:
 #   - self.LBTEST
 # outputs:
@@ -152,7 +146,6 @@ new_lbtest_05 <- function(.self) {
 
 #!-!
 # type: row
-# origin: NA
 # depend_cols:
 #   - self.LBTEST
 #   - self.AVAL
@@ -180,7 +173,6 @@ new_lbtest_06 <- function(.self) {
 
 #!-!
 # type: row
-# origin: NA
 # depend_cols:
 #   - self.AVAL
 # outputs:
@@ -198,7 +190,6 @@ new_aval_01 <- function(.self) {
 
 #!-!
 # type: row
-# origin: NA
 # depend_cols:
 #   - self.AVAL
 # outputs:
@@ -220,7 +211,6 @@ new_aval_02 <- function(.self) {
 
 #!-!
 # type: row
-# origin: NA
 # depend_cols:
 #   - self.AVAL
 #   - self.DOMAIN
@@ -243,7 +233,6 @@ new_aval_03 <- function(.self) {
 
 #!-!
 # type: row
-# origin: NA
 # depend_cols:
 #   - self.AVAL
 #   - self.AVALC
@@ -266,7 +255,6 @@ new_aval_04 <- function(.self) {
 
 #!-!
 # type: row
-# origin: NA
 # depend_cols:
 #   - self.VISITNUM
 # outputs:
@@ -288,7 +276,6 @@ new_visitnum_01 <- function(.self) {
 
 #!-!
 # type: row
-# origin: NA
 # depend_cols:
 #   - self.VISITNUM
 # outputs:
@@ -309,8 +296,7 @@ new_visitnum_02 <- function(.self) {
 }
 
 #!-!
-# type: column
-# origin: derivation
+# type: derivation
 # depend_cols:
 #   - self.AVAL
 # outputs:
@@ -326,8 +312,7 @@ aval_grp_01 <- function(.self) {
 }
 
 #!-!
-# type: column
-# origin: derivation
+# type: derivation
 # depend_cols:
 #   - self.AVAL_GRP
 # outputs:
@@ -343,8 +328,7 @@ aval_grp_02 <- function(.self) {
 
 
 #!-!
-# type: column
-# origin: derivation
+# type: derivation
 # depend_cols:
 # outputs:
 #!-!

@@ -15,7 +15,7 @@ classify_external_data_domains_2 <- function(vector) {
       return("md")
     }
     if(is.null(x)|is.na(x))browser()
-    if (nchar(x) == 2 || x=="relrec") {
+    if (nchar(x) == 2 || x=="relrec" || substr(x,1,3) =="dm_") {
       return("sdtm")
     }
     if (x == "self") {

@@ -1,24 +1,21 @@
 #' Parse into chunks
 #'
 #' @param code_id
-#' @param action
+#' @param node_id
 #' @param domain_name
 #' @param env
-#' @param action_name
 #'
 #' @return
 #' @export
 #'
 #' @examples
 parse_into_chunks <- function(code_id,
-                              action,
+                              node_id,
                               domain_name,
-                              env,
-                              action_name) {
+                              env) {
   f_def <- get(code_id, envir = env)
-  fn_name <- action
-  validate_std_action_return(f_def = f_def, fn_name =
-                               fn_name)
+  fn_name <- sub(".*\\.", "", node_id)
+  validate_std_action_return(f_def = f_def, fn_name = fn_name)
 
   # Convert functon to code chunk. We have to do it this way, and not use
   # `f_src_ref` in order to preserve any comments. This makes it harded to
@@ -46,7 +43,7 @@ parse_into_chunks <- function(code_id,
 
   out_glue <- glue::glue(
     '
-    # {toupper(action_name)} -----------------------------------------------------
+    # {toupper(fn_name)} -----------------------------------------------------
     {out}
     '
   )
