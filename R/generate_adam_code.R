@@ -17,51 +17,58 @@ generate_adam_code <- function(path_ui_data,
                               data_connection = c("connector", "pharmaverse"),
                               trial_metadata_path) {
 
-  # Data from UI containing explicit user input
+# Data from UI containing explicit user input
   ui_data_1 <- path_ui_data |>
     merge_yaml_files() |>
     parse_ui_data()
 
-  domain_initialization_metadata <- ui_data_1$init
-  trial_metadata <- yaml::read_yaml(inti_yml_path)
   # Enrich derivations in UI data with associated metadata from standard nodes
   ui_data_2 <- path_std_lib |>
     lapply(parse_node_metadata) |>
     unlist(recursive = FALSE) |>
     update_ui_data(ui_data_1)
 
+  # Convert UI data with metadata to a data.table
+  nodes_1 <- convert_node_list_to_dt(ui_data_2$nodes)
 
-browser()
   # Enrich predecessors in UI data with auto-generated metadata
-  nodes_2 <- update_predecessors(nodes, path_domain_keys)
-  nodes_3 <- collapse_origin_type_columns(nodes_2)
+  nodes_2 <- update_predecessors(nodes_1, path_domain_keys)
 
-  nodes_4 <- add_implied_predecessors(nodes_3)
-  core_vars <- extract_sdtm_core_variables(nodes_4)
-  # extract_sdtm_core_variables_2(nodes_4)
-  nodes_5 <- create_domain_initialize_nodes(nodes_4, core_vars, domain_initialization_metadata)
-  # This is done before external deps nodes are added (at the moment) because we
-  # don't need to explicitly track the external deps in the topology
+  # Enrich UI data with required predecessor actions not in the UI data and that
+  # are required for the derivations to be run
+  nodes_3 <- add_implied_predecessors(nodes_2)
+
+  # Create an initialization action per domain that consumes predecessor actions
+  nodes_4 <- create_domain_initialize_nodes(nodes_3, ui_data_2$init)
+
+  # Add information about external dependencies to the initialization action
+  nodes_5 <- enrich_with_external_dependencies(nodes_4, ui_data_2$init)
+
+  # Identify edges in the topology graph
   edges <- make_edges(nodes_5)
-  nodes_6 <- enrich_with_external_dependencies(nodes_5, ui_data_2$init)
 
-  unique_edges <- edges[, .SD[1], by = .(parent_node, node_id)][, .(parent_node, node_id)]
-  graph <- igraph::graph_from_data_frame(unique_edges, directed = TRUE, vertices = nodes_5[, .(node_id, domain)])
-  topo_order_names <- weighted_node_topo_sort(graph, primary_domain = "adsl")
-  vertex_metadata <- nodes_5[, .(node_id, domain, type)]
-  program_order <- group_nodes_optimal(topo_order_names, vertex_metadata, edges = edges)
+  # Identify topological order of actions
+  nodes_topo_order <- weighted_node_topo_sort(edges, nodes_5, primary_domain = "adsl")
 
-  program_order_2 <- add_program_init_nodes(program_order, nodes_6)
-  program_order_3 <- add_nodes_to_load_external_data(program_order_2, nodes_6)
+  # Group actions into programs that can be run as batches in a sequence
+  program_sequence_1 <- group_nodes_optimal(nodes_topo_order, nodes_5, edges)
 
+  # Add initialization actions to the program sequence
+  program_sequence_2 <- add_program_init_nodes(program_sequence_1, nodes_5)
+
+  # Add action to import external dependencies to the program sequence
+  program_sequence_3 <- add_nodes_to_load_external_data(program_sequence_2, nodes_5)
+
+  # Create programs
   data_connection <- match.arg(data_connection)
   programs <- generate_program(
-    program_order_3,
-    nodes_6,
-    domain_keys = yaml::read_yaml(path_domain_keys),
-    std_library_path = path_std_lib,
-    trial_metadata,
+    program_sequence_3,
+    nodes_5,
+    yaml::read_yaml(path_domain_keys),
+    path_std_lib,
+    ui_data_2,
     data_connection
   )
+
   return(list(programs = programs, program_order=program_order, edges=edges, program_order_complete = program_order_3, data_model = ui_data_2$nodes))
 }

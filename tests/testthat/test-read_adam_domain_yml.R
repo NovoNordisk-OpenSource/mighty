@@ -11,6 +11,7 @@ test_that("multiplication works", {
   )
 
   ui_yml <- read_adam_specs(ui_path)
+
   ui_table <- convert_yml_to_data_table(ui_yml)
   trial_metadata <- yaml::read_yaml(init_yml_path)
   nodes <- std_lib_path |>

@@ -25,10 +25,28 @@ x$outputs_from_code <- x$type_from_code <- x$depend_cols_from_code <- x$column <
 # For each depend_cols entry, add attribute information detailing:
 # - domain
 # - domain type
-x[,depend_cols:= lapply(depend_cols, domain_column_decorator)]
+
+x[,depend_cols:= lapply(depend_cols, depend_cols_nested_data_table)]
 return(x)
 }
 
+
+depend_cols_nested_data_table <- function(i){
+  result <- vector("list", length(i))
+  # Extract domains in one vectorized operation
+  elements <- unlist(i)
+  domains <- sub("\\.(.*)", "", elements)
+  column <- sub("^[^.]*\\.", "", elements)
+  domain_type <- classify_external_data_domains(domains)
+  data.table::data.table(column_name = column,
+                         domain = domains,
+                         domain_type = domain_type)
+}
+
+
+# This functon adds attributes to a list of depend_cols, However, for now (Apr
+# 2025), we're sticking with the old nested data.table approach, and may return
+# later to refactor to use lists + attributs if the data.tables prove to be slow
 domain_column_decorator <- function(i){
   result <- vector("list", length(i))
   # Extract domains in one vectorized operation

@@ -1,5 +1,7 @@
 read_adam_specs <- function(paths){
-  lapply(paths, read_adam_domain_yml)
+  lapply(paths, read_adam_domain_yml) |>
+    unlist(recursive = FALSE)
+
 }
 
 
@@ -32,10 +34,12 @@ read_adam_domain_yml <- function(yml) {
     }
     return(i)
   })
-  return(list(columns = out,
-              domain = x$table_metadata$table,
-              keys = x$table_metadata$keys,
-              init = x$init))
+  return_list <- list(columns = out,
+       domain = x$table_metadata$table,
+       keys = x$table_metadata$keys,
+       init = x$init)
+
+  return(setNames(list(return_list), return_list$domain))
 
 
 }
