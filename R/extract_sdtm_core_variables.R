@@ -18,12 +18,9 @@ extract_sdtm_core_variables <- function(nodes) {
 }
 
 extract_sdtm_core_variables_i <- function(nodes_domain_i) {
-  browser()
   # Core variables consit of the unique parent columns of all predecessor nodes
-  predecessor_depend_cols <- nodes_domain_i[type=="predecessor", depend_cols] |> unlist()
-  predecessor_depend_cols[names(predecessor_depend_cols) == "column_name"] |>
-    unique()
-
+  predecessor_depend_cols <- nodes_domain_i[type=="predecessor", depend_cols] |> rbindlist()
+  predecessor_depend_cols[domain == "core", column_name] |> unique()
 
 }
 

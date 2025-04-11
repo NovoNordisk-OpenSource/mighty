@@ -12,13 +12,13 @@
 create_domain_initialize_nodes <- function(nodes, domain_init_data) {
 
   core_vars <- extract_sdtm_core_variables(nodes)
-
+browser()
   domain_init_nodes <- purrr::imap(core_vars,
                                    create_domain_init_node_i,
                                    nodes,
                                    domain_init_data) |>
     rbindlist()
-browser()
+
   # The domain init nodes replace the predecessor nodes
   nodes_to_remove <- domain_init_nodes[, outputs] |>
     extract_("full_name") |>
@@ -32,23 +32,20 @@ create_domain_init_node_i <- function(core_vars_domain_i,
                                       nm,
                                       nodes,
                                       domain_init_data) {
+
   new_node_i <- data.table::data.table(matrix(ncol = ncol(nodes), nrow = 1)) |>
     data.table::setnames(names(nodes))
   core_var_tmp <- expand.grid(core_vars_domain_i,
                               domain_init_data[[nm]]$core_domains,
                               stringsAsFactors = FALSE)
-  full_name <- paste0(core_var_tmp$Var2, ".", core_var_tmp$Var1)
+
   core_variables_i <- data_model_columnn(
     column_name = core_var_tmp$Var1,
     domain = core_var_tmp$Var2,
-    full_name = full_name
+
   )
 
-  outputs_i <- data_model_columnn(
-    column_name = core_vars_domain_i,
-    domain = nm,
-    full_name = paste0(nm, ".", core_vars_domain_i)
-  )
+  outputs_i <- core_vars_domain_i
 
   new_node_i[, `:=`(
     node_id = paste0(nm, ".domain_init"),

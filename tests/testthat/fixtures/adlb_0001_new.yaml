@@ -10,16 +10,16 @@ table_metadata:
     Syntax is explained in column header notes of the template.'
 column_metadata:
   - column: USUBJID
-    source: LB.USUBJID
+    source: core.USUBJID
 
   - column: TRT01P
     source: ADSL.TRT01P
 
   - column: AVAL
-    source: LB.LBSTRESN
+    source: core.LBSTRESN
 
   - column: LBSEQ
-    source: LB.LBSEQ
+    source: core.LBSEQ
 
 
 

@@ -23,4 +23,3 @@ path_trial_metadata <- test_path("fixtures", "init_0001.yml")
                               data_connection = "pharmaverse")
 
 })
-

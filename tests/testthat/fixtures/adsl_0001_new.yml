@@ -18,21 +18,21 @@ init:
     - 'STUDYID == "CDISCPILOT01"'
     - 'DOMAIN == "DM"'
   filter_depend_cols:
-    - self.studyid
-    - self.domain
+    - core.studyid
+    - core.domain
 
 column_metadata:
   - column: USUBJID
-    source: self.USUBJID
+    source: core.USUBJID
 
   - column: PLANNED_ARM
-    source: self.ARM
+    source: core.ARM
 
   - column: ARM
-    source: self.ARM
+    source: core.ARM
 
   - column: DTHFL
-    source: self.DTHFL
+    source: core.DTHFL
 
   - column: ARM_GRP1
     label: "some text"
@@ -42,7 +42,7 @@ column_metadata:
     code_id: age_diff_01
 
   - column: AGE
-    source: DM.AGE
+    source: core.AGE
 
   - column: AGE2
     code_id: age_crop_01

@@ -37,6 +37,7 @@ depend_cols_nested_data_table <- function(i){
   elements <- unlist(i)
   domains <- sub("\\.(.*)", "", elements)
   column <- sub("^[^.]*\\.", "", elements)
+
   domain_type <- classify_external_data_domains(domains)
   data.table::data.table(column_name = column,
                          domain = domains,
@@ -66,7 +67,6 @@ domain_column_decorator <- function(i){
 
 
 add_node_id <- function(nodes){
-  browser()
   for(i in seq_len(nrow(nodes))){
     nodes[i, node_id := paste0(domain, "-", paste0(unlist(outputs),collapse = "-"))]
   }

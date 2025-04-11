@@ -32,10 +32,11 @@ classify_external_data_domains_2 <- function(vector) {
 
 classify_external_data_domains <- function(vector) {
   result <- character(length(vector))
+  result[!grepl("\\.", vector, ignore.case = TRUE)] <- "self"
   result[grepl("^ad", vector, ignore.case = TRUE)] <-  "adam"
   result[grepl("^md", vector, ignore.case = TRUE)] <- "md"
   result[nchar(vector) == 2 | vector == "relrec"] <- "sdtm"
-  result[vector == "self"] <- "self"
+  result[vector == "core"] <- "core"
 
   # Check for unclassified values
   unclassified <- which(result == "")

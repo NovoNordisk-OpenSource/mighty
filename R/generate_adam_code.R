@@ -23,6 +23,7 @@ generate_adam_code <- function(path_ui_data,
   ui_yml <- read_adam_specs(path_ui_data)
  ui_table <- convert_yml_to_data_table(ui_yml)
  trial_metadata <- yaml::read_yaml(path_trial_metadata)
+
  nodes_1 <- path_std_lib |>
     lapply(parse_node_metadata) |>
     unlist(recursive = FALSE) |>
@@ -33,7 +34,7 @@ generate_adam_code <- function(path_ui_data,
 
 # Enrich predecessors in UI data with auto-generated metadata
 nodes_2 <- update_predecessors(nodes_1, path_domain_keys)
-browser()
+
 # Check that, for each output, all dependencies listed in depend_cols with
 # domain =="self" are also present as outputs
 assert_all_dependencies_present(nodes_2)
