@@ -1,7 +1,7 @@
 #!-!
 # type: derivation
 # depend_cols:
-#   - self.PLANNED_ARM
+#   - PLANNED_ARM
 # outputs:
 #   - ARM_GRP1
 #!-!
@@ -18,7 +18,7 @@ arm_group_01 <- function(.self) {
 #!-!
 # type: derivation
 # depend_cols:
-#   - self.ARM_GRP1
+#   - ARM_GRP1
 # outputs:
 #   - ARM_CAT1
 #!-!
@@ -35,8 +35,8 @@ arm_category_01 <- function(.self) {
 #!-!
 # type: derivation
 # depend_cols:
-#   - self.PLANNED_ARM
-#   - self.ACTARM
+#   - PLANNED_ARM
+#   - ACTARM
 # outputs:
 #   - arm_match
 #!-!
@@ -51,7 +51,7 @@ arm_match_01 <- function(.self) {
 #!-!
 # type: derivation
 # depend_cols:
-#   - self.AGE
+#   - AGE
 # outputs:
 #   - AGE2
 #!-!
@@ -64,8 +64,8 @@ age_crop_01 <- function(.self) {
 #!-!
 # type: derivation
 # depend_cols:
-#   - self.AGE
-#   - self.AGE2
+#   - AGE
+#   - AGE2
 # outputs:
 #   - AGE_DIFF1
 #!-!
@@ -78,8 +78,8 @@ age_diff_01 <- function(.self) {
 #!-!
 # type: derivation
 # depend_cols:
-#   - self.AGE_DIFF1
-#   - self.PLANNED_ARM
+#   - AGE_DIFF1
+#   - PLANNED_ARM
 # outputs:
 #   - AGE_DIFF2
 #!-!
@@ -92,7 +92,7 @@ age_diff_02 <- function(.self) {
 #!-!
 # type: derivation
 # depend_cols:
-#   - self.AGE2
+#   - AGE2
 # outputs:
 #   - AGE_GRP1
 #!-!
@@ -111,8 +111,8 @@ age_group_01 <- function(.self, cut_points) {
 #!-!
 # type: derivation
 # depend_cols:
-#   - self.RACE
-#   - self.COUNTRY
+#   - RACE
+#   - COUNTRY
 # outputs:
 #   - RACE_COUNTRY
 #!-!
@@ -125,8 +125,8 @@ race_x_country_01 <- function(.self) {
 #!-!
 # type: derivation
 # depend_cols:
-#   - self.PLANNED_ARM
-#   - self.USUBJID
+#   - PLANNED_ARM
+#   - USUBJID
 # outputs:
 #   - NEW_ARM
 #!-!
@@ -141,7 +141,7 @@ arm_01 <- function(.self) {
 #!-!
 # type: derivation
 # depend_cols:
-#   - self.USUBJID
+#   - USUBJID
 #   - adlb.USUBJID
 #   - adlb.AVAL
 # outputs:
@@ -164,9 +164,9 @@ min_aval_01 <- function(.self, adlb) {
 #!-!
 # type: derivation
 # depend_cols:
-#   - self.DTHFL
-#   - self.PLANNED_ARM
-#   - self.AGE_DIFF1
+#   - DTHFL
+#   - PLANNED_ARM
+#   - AGE_DIFF1
 # outputs:
 #   - NEWFL01
 #   - NEWREA01
@@ -185,9 +185,9 @@ newfl_01 <- function(.self) {
 #!-!
 # type: derivation
 # depend_cols:
-#   - self.USUBJID
-#   - self.COUNTRY
-#   - self.arm_match
+#   - USUBJID
+#   - COUNTRY
+#   - arm_match
 #   - adlb.USUBJID
 #   - adlb.LBTEST
 # outputs:
@@ -208,8 +208,8 @@ newfl_02 <- function(.self, adlb) {
 #!-!
 # type: derivation
 # depend_cols:
-#   - self.NEWFL01
-#   - self.NEWFL02
+#   - NEWFL01
+#   - NEWFL02
 # outputs:
 #   - NEWFL03
 #   - NEWREA03

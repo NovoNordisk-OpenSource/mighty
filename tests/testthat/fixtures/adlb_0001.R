@@ -1,9 +1,9 @@
 #!-!
 # type: derivation
 # depend_cols:
-#   - self.USUBJID
-#   - self.LBSEQ
-#   - self.AVAL
+#   - USUBJID
+#   - LBSEQ
+#   - AVAL
 #   - lb.USUBJID
 #   - lb.LBSEQ
 #   - lb.LBTEST
@@ -41,7 +41,7 @@ lbtest_01 <- function(.self, lb, adsl) {
 #!-!
 # type: row
 # depend_cols:
-#   - self.LBTEST
+#   - LBTEST
 # outputs:
 #   - LBTEST
 #!-!
@@ -58,8 +58,8 @@ new_lbtest_01 <- function(.self) {
 #!-!
 # type: row
 # depend_cols:
-#   - self.LBTEST
-#   - self.AVALC
+#   - LBTEST
+#   - AVALC
 # outputs:
 #   - LBTEST
 #   - AVALC
@@ -80,7 +80,7 @@ new_lbtest_02 <- function(.self) {
 #!-!
 # type: row
 # depend_cols:
-#   - self.LBTEST
+#   - LBTEST
 # outputs:
 #   - LBTEST
 #!-!
@@ -101,7 +101,7 @@ new_lbtest_03 <- function(.self) {
 #!-!
 # type: row
 # depend_cols:
-#   - self.LBTEST
+#   - LBTEST
 # outputs:
 #   - LBTEST
 #!-!
@@ -122,7 +122,7 @@ new_lbtest_04 <- function(.self) {
 #!-!
 # type: row
 # depend_cols:
-#   - self.LBTEST
+#   - LBTEST
 # outputs:
 #   - LBTEST
 #!-!
@@ -147,8 +147,8 @@ new_lbtest_05 <- function(.self) {
 #!-!
 # type: row
 # depend_cols:
-#   - self.LBTEST
-#   - self.AVAL
+#   - LBTEST
+#   - AVAL
 # outputs:
 #   - LBTEST
 #!-!
@@ -174,7 +174,7 @@ new_lbtest_06 <- function(.self) {
 #!-!
 # type: row
 # depend_cols:
-#   - self.AVAL
+#   - AVAL
 # outputs:
 #   - AVAL
 #!-!
@@ -191,7 +191,7 @@ new_aval_01 <- function(.self) {
 #!-!
 # type: row
 # depend_cols:
-#   - self.AVAL
+#   - AVAL
 # outputs:
 #   - AVAL
 #!-!
@@ -212,8 +212,8 @@ new_aval_02 <- function(.self) {
 #!-!
 # type: row
 # depend_cols:
-#   - self.AVAL
-#   - self.DOMAIN
+#   - AVAL
+#   - DOMAIN
 # outputs:
 #   - AVAL
 #!-!
@@ -234,8 +234,8 @@ new_aval_03 <- function(.self) {
 #!-!
 # type: row
 # depend_cols:
-#   - self.AVAL
-#   - self.AVALC
+#   - AVAL
+#   - AVALC
 # outputs:
 #   - AVAL
 #!-!
@@ -256,7 +256,7 @@ new_aval_04 <- function(.self) {
 #!-!
 # type: row
 # depend_cols:
-#   - self.VISITNUM
+#   - VISITNUM
 # outputs:
 #   - VISITNUM
 #!-!
@@ -277,7 +277,7 @@ new_visitnum_01 <- function(.self) {
 #!-!
 # type: row
 # depend_cols:
-#   - self.VISITNUM
+#   - VISITNUM
 # outputs:
 #   - VISITNUM
 #!-!
@@ -298,7 +298,7 @@ new_visitnum_02 <- function(.self) {
 #!-!
 # type: derivation
 # depend_cols:
-#   - self.AVAL
+#   - AVAL
 # outputs:
 #   - AVAL_GRP
 #!-!
@@ -314,7 +314,7 @@ aval_grp_01 <- function(.self) {
 #!-!
 # type: derivation
 # depend_cols:
-#   - self.AVAL_GRP
+#   - AVAL_GRP
 # outputs:
 #   - AVAL_GRP2
 #!-!

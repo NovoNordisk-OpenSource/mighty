@@ -33,7 +33,7 @@ generate_adam_code <- function(path_ui_data,
 
 # Enrich predecessors in UI data with auto-generated metadata
 nodes_2 <- update_predecessors(nodes_1, path_domain_keys)
-
+browser()
 # Check that, for each output, all dependencies listed in depend_cols with
 # domain =="self" are also present as outputs
 assert_all_dependencies_present(nodes_2)

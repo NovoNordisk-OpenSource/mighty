@@ -23,16 +23,16 @@ init:
 
 column_metadata:
   - column: USUBJID
-    source: DM.USUBJID
+    source: self.USUBJID
 
   - column: PLANNED_ARM
     source: self.ARM
 
   - column: ARM
-    source: DM.ARM
+    source: self.ARM
 
   - column: DTHFL
-    source: DM.DTHFL
+    source: self.DTHFL
 
   - column: ARM_GRP1
     label: "some text"

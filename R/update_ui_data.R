@@ -66,6 +66,7 @@ domain_column_decorator <- function(i){
 
 
 add_node_id <- function(nodes){
+  browser()
   for(i in seq_len(nrow(nodes))){
     nodes[i, node_id := paste0(domain, "-", paste0(unlist(outputs),collapse = "-"))]
   }
