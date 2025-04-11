@@ -18,7 +18,7 @@ create_domain_initialize_nodes <- function(nodes, domain_init_data) {
                                    nodes,
                                    domain_init_data) |>
     rbindlist()
-
+browser()
   # The domain init nodes replace the predecessor nodes
   nodes_to_remove <- domain_init_nodes[, outputs] |>
     extract_("full_name") |>

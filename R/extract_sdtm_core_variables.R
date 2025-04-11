@@ -18,6 +18,7 @@ extract_sdtm_core_variables <- function(nodes) {
 }
 
 extract_sdtm_core_variables_i <- function(nodes_domain_i) {
+  browser()
   core_variables <- c()
   for (i in seq_len(nrow(nodes_domain_i))) {
     output_other_nodes <- nodes_domain_i[-i][type != "row", outputs] |>

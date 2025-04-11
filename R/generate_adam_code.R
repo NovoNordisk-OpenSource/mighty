@@ -38,9 +38,9 @@ nodes_2 <- update_predecessors(nodes_1, path_domain_keys)
 # domain =="self" are also present as outputs
 assert_all_dependencies_present(nodes_2)
 
-
+browser()
 # Create an initialization action per domain that consumes predecessor actions
-nodes_4 <- create_domain_initialize_nodes(nodes_3, ui_yml$init)
+nodes_3 <- create_domain_initialize_nodes(nodes_2, ui_yml$init)
 
 # Add information about external dependencies to the initialization action
 nodes_5 <- enrich_with_external_dependencies(nodes_4, ui_yml$init)
