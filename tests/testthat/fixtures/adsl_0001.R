@@ -38,7 +38,7 @@ arm_category_01 <- function(.self) {
 #   - self.PLANNED_ARM
 #   - self.ACTARM
 # outputs:
-#   - self.arm_match
+#   - arm_match
 #!-!
 arm_match_01 <- function(.self) {
   .self <- .self |>
@@ -81,7 +81,7 @@ age_diff_01 <- function(.self) {
 #   - self.AGE_DIFF1
 #   - self.PLANNED_ARM
 # outputs:
-#   - self.AGE_DIFF2
+#   - AGE_DIFF2
 #!-!
 age_diff_02 <- function(.self) {
   .self <- .self |>
@@ -94,7 +94,7 @@ age_diff_02 <- function(.self) {
 # depend_cols:
 #   - self.AGE2
 # outputs:
-#   - self.AGE_GRP1
+#   - AGE_GRP1
 #!-!
 age_group_01 <- function(.self, cut_points) {
   .self <- .self |>
@@ -114,7 +114,7 @@ age_group_01 <- function(.self, cut_points) {
 #   - self.RACE
 #   - self.COUNTRY
 # outputs:
-#   - self.RACE_COUNTRY
+#   - RACE_COUNTRY
 #!-!
 race_x_country_01 <- function(.self) {
   .self <- .self |>
@@ -128,7 +128,7 @@ race_x_country_01 <- function(.self) {
 #   - self.PLANNED_ARM
 #   - self.USUBJID
 # outputs:
-#   - self.NEW_ARM
+#   - NEW_ARM
 #!-!
 arm_01 <- function(.self) {
   .self <- .self |>
@@ -145,7 +145,7 @@ arm_01 <- function(.self) {
 #   - adlb.USUBJID
 #   - adlb.AVAL
 # outputs:
-#   - self.MIN_AVAL
+#   - MIN_AVAL
 #!-!
 min_aval_01 <- function(.self, adlb) {
   # Extract the minimum AVAL value for each SUBJID
@@ -191,7 +191,7 @@ newfl_01 <- function(.self) {
 #   - adlb.USUBJID
 #   - adlb.LBTEST
 # outputs:
-#   - self.NEWFL02
+#   - NEWFL02
 #!-!
 newfl_02 <- function(.self, adlb) {
   subids <- lb |>
@@ -211,8 +211,8 @@ newfl_02 <- function(.self, adlb) {
 #   - self.NEWFL01
 #   - self.NEWFL02
 # outputs:
-#   - self.NEWFL03
-#   - self.NEWREA03
+#   - NEWFL03
+#   - NEWREA03
 #!-!
 newfl_03 <- function(.self) {
   .self <- .self |>

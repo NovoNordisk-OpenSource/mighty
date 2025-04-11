@@ -10,7 +10,7 @@
 #   - adsl.USUBJID
 #   - adsl.PLANNED_ARM
 # outputs:
-#   - self.LBTEST
+#   - LBTEST
 #!-!
 lbtest_01 <- function(.self, lb, adsl) {
 
@@ -43,7 +43,7 @@ lbtest_01 <- function(.self, lb, adsl) {
 # depend_cols:
 #   - self.LBTEST
 # outputs:
-#   - self.LBTEST
+#   - LBTEST
 #!-!
 new_lbtest_01 <- function(.self) {
 
@@ -61,8 +61,8 @@ new_lbtest_01 <- function(.self) {
 #   - self.LBTEST
 #   - self.AVALC
 # outputs:
-#   - self.LBTEST
-#   - self.AVALC
+#   - LBTEST
+#   - AVALC
 #!-!
 new_lbtest_02 <- function(.self) {
 
@@ -82,7 +82,7 @@ new_lbtest_02 <- function(.self) {
 # depend_cols:
 #   - self.LBTEST
 # outputs:
-#   - self.LBTEST
+#   - LBTEST
 #!-!
 new_lbtest_03 <- function(.self) {
 
@@ -103,7 +103,7 @@ new_lbtest_03 <- function(.self) {
 # depend_cols:
 #   - self.LBTEST
 # outputs:
-#   - self.LBTEST
+#   - LBTEST
 #!-!
 new_lbtest_04 <- function(.self) {
 
@@ -124,7 +124,7 @@ new_lbtest_04 <- function(.self) {
 # depend_cols:
 #   - self.LBTEST
 # outputs:
-#   - self.LBTEST
+#   - LBTEST
 #!-!
 new_lbtest_05 <- function(.self) {
 
@@ -150,7 +150,7 @@ new_lbtest_05 <- function(.self) {
 #   - self.LBTEST
 #   - self.AVAL
 # outputs:
-#   - self.LBTEST
+#   - LBTEST
 #!-!
 new_lbtest_06 <- function(.self) {
 
@@ -176,7 +176,7 @@ new_lbtest_06 <- function(.self) {
 # depend_cols:
 #   - self.AVAL
 # outputs:
-#   - self.AVAL
+#   - AVAL
 #!-!
 new_aval_01 <- function(.self) {
 
@@ -193,7 +193,7 @@ new_aval_01 <- function(.self) {
 # depend_cols:
 #   - self.AVAL
 # outputs:
-#   - self.AVAL
+#   - AVAL
 #!-!
 new_aval_02 <- function(.self) {
 
@@ -215,7 +215,7 @@ new_aval_02 <- function(.self) {
 #   - self.AVAL
 #   - self.DOMAIN
 # outputs:
-#   - self.AVAL
+#   - AVAL
 #!-!
 new_aval_03 <- function(.self) {
 
@@ -237,7 +237,7 @@ new_aval_03 <- function(.self) {
 #   - self.AVAL
 #   - self.AVALC
 # outputs:
-#   - self.AVAL
+#   - AVAL
 #!-!
 new_aval_04 <- function(.self) {
 
@@ -258,7 +258,7 @@ new_aval_04 <- function(.self) {
 # depend_cols:
 #   - self.VISITNUM
 # outputs:
-#   - self.VISITNUM
+#   - VISITNUM
 #!-!
 new_visitnum_01 <- function(.self) {
 
@@ -279,7 +279,7 @@ new_visitnum_01 <- function(.self) {
 # depend_cols:
 #   - self.VISITNUM
 # outputs:
-#   - self.VISITNUM
+#   - VISITNUM
 #!-!
 new_visitnum_02 <- function(.self) {
 
@@ -300,7 +300,7 @@ new_visitnum_02 <- function(.self) {
 # depend_cols:
 #   - self.AVAL
 # outputs:
-#   - self.AVAL_GRP
+#   - AVAL_GRP
 #!-!
 aval_grp_01 <- function(.self) {
   .self <- .self |>
@@ -316,7 +316,7 @@ aval_grp_01 <- function(.self) {
 # depend_cols:
 #   - self.AVAL_GRP
 # outputs:
-#   - self.AVAL_GRP2
+#   - AVAL_GRP2
 #!-!
 aval_grp_02 <- function(.self) {
   .self <- .self |>
