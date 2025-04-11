@@ -15,6 +15,14 @@ column_metadata:
   - column: TRT01P
     source: ADSL.TRT01P
 
+  - column: AVAL
+    source: LB.LBSTRESN
+
+  - column: LBSEQ
+    source: LB.LBSEQ
+
+
+
   - column: LBTEST
     label: some text
     code_id: lbtest_01
