@@ -11,15 +11,15 @@ table_metadata:
 
 init:
   core_domains:
-    - dm
+    - DM
   filter_domain:
     dm: NA
   filter_global:
     - 'STUDYID == "CDISCPILOT01"'
     - 'DOMAIN == "DM"'
   filter_depend_cols:
-    - core.studyid
-    - core.domain
+    - core.STUDYID
+    - core.DOMAIN
 
 column_metadata:
   - column: USUBJID
@@ -53,9 +53,6 @@ column_metadata:
 
   - column: NEWFL01
     label: "some text"
-    depend_rows:
-      - row_add_1
-      - row_add_2
     code_id: newfl_01
 
 

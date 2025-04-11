@@ -4,11 +4,11 @@
 #   - USUBJID
 #   - LBSEQ
 #   - AVAL
-#   - lb.USUBJID
-#   - lb.LBSEQ
-#   - lb.LBTEST
-#   - adsl.USUBJID
-#   - adsl.PLANNED_ARM
+#   - LB.USUBJID
+#   - LB.LBSEQ
+#   - LB.LBTEST
+#   - ADSL.USUBJID
+#   - ADSL.PLANNED_ARM
 # outputs:
 #   - LBTEST
 #!-!

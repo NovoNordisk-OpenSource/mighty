@@ -8,6 +8,20 @@ table_metadata:
   comment: 'MODIFY, OPTIONAL to fill: To add a link to a reference, e.g. ADRG, SAP
     or a program file update source_documents tab in adam_cst_metdata_xxxx.xls template.
     Syntax is explained in column header notes of the template.'
+
+init:
+  core_domains:
+    - LB
+    - XL
+  filter_domain:
+    LB: NA
+  filter_global:
+    - 'STUDYID == "CDISCPILOT01"'
+    - 'DOMAIN == "DM"'
+  filter_depend_cols:
+    - core.STUDYID
+    - core.DOMAIN
+
 column_metadata:
   - column: USUBJID
     source: core.USUBJID
@@ -28,10 +42,15 @@ column_metadata:
     code_id: lbtest_01
     method: |-
       Some text
+    depend_rows:
+      - new_aval_01
 
 row_actions:
   - row: add_lbtest_01
     code_id: new_lbtest_01
+
+  - row: add_aval
+    code_id: new_aval_01
 
 
 referenced_domains:

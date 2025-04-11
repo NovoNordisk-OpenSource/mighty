@@ -26,15 +26,23 @@ x$outputs_from_code <- x$type_from_code <- x$depend_cols_from_code <- x$column <
 # - domain
 # - domain type
 
-x[,depend_cols:= lapply(depend_cols, depend_cols_nested_data_table)]
+x[,depend_cols:= purrr::map2(depend_cols, domain, depend_cols_nested_data_table)]
 return(x)
 }
 
 
-depend_cols_nested_data_table <- function(i){
+depend_cols_nested_data_table <- function(i, domain_i){
   result <- vector("list", length(i))
   # Extract domains in one vectorized operation
   elements <- unlist(i)
+  inx <- grepl("\\.", elements)
+  n_with_dot <- sum(inx)
+  if(n_with_dot==0){
+    data.table::data.table(column_name = elements,
+                           domain = domain_i,
+                           domain_type = classify_external_data_domains(domain_i))
+  }
+  if(n_with_dot == length(elements)){
   domains <- sub("\\.(.*)", "", elements)
   column <- sub("^[^.]*\\.", "", elements)
 
@@ -42,33 +50,26 @@ depend_cols_nested_data_table <- function(i){
   data.table::data.table(column_name = column,
                          domain = domains,
                          domain_type = domain_type)
-}
+  }
 
-
-# This functon adds attributes to a list of depend_cols, However, for now (Apr
-# 2025), we're sticking with the old nested data.table approach, and may return
-# later to refactor to use lists + attributs if the data.tables prove to be slow
-domain_column_decorator <- function(i){
-  result <- vector("list", length(i))
-  # Extract domains in one vectorized operation
-  elements <- unlist(i)
-  domains <- sub("\\.(.*)", "", elements)
-  column <- sub("^[^.]*\\.", "", elements)
+  elements_with_dot <- elements[inx]
+  elements_no_dot <- elements[!inx]
+  domains <- sub("\\.(.*)", "", elements_with_dot)
+  column <- sub("^[^.]*\\.", "", elements_with_dot)
   domain_type <- classify_external_data_domains(domains)
 
-  for (idx in seq_along(elements)) {
-    new_element <- column[idx]
-    attr(new_element, "domain") <- domains[idx]
-    attr(new_element, "domain_type") <- domain_type[idx]
-    result[[idx]] <- new_element
-  }
-  return(result)
+  list(data.table::data.table(column_name = column,
+                         domain = domains,
+                         domain_type = domain_type),
+  data.table::data.table(column_name = elements_no_dot,
+                         domain = domain_i,
+                         domain_type = classify_external_data_domains(domain_i))) |>
+    data.table::rbindlist()
+
 }
 
 
 add_node_id <- function(nodes){
-  for(i in seq_len(nrow(nodes))){
-    nodes[i, node_id := paste0(domain, "-", paste0(unlist(outputs),collapse = "-"))]
-  }
+  nodes[, node_id:= uuid::UUIDgenerate(n = nrow(nodes))]
 return(nodes)
 }
