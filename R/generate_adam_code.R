@@ -30,13 +30,14 @@ generate_adam_code <- function(path_ui_data,
     add_node_id()
 
 
-browser()
+
 # Enrich predecessors in UI data with auto-generated metadata
 nodes_2 <- update_predecessors(nodes_1, path_domain_keys)
 
-# Enrich UI data with required predecessor actions not in the UI data and that
-# are required for the derivations to be run
-nodes_3 <- add_implied_predecessors(nodes_2)
+# Check that, for each output, all dependencies listed in depend_cols with
+# domain =="self" are also present as outputs
+assert_all_dependencies_present(nodes_2)
+
 
 # Create an initialization action per domain that consumes predecessor actions
 nodes_4 <- create_domain_initialize_nodes(nodes_3, ui_yml$init)
