@@ -53,7 +53,7 @@ arm_match_01 <- function(.self) {
 # depend_cols:
 #   - self.AGE
 # outputs:
-#   - self.age2
+#   - AGE2
 #!-!
 age_crop_01 <- function(.self) {
   .self <- .self |>
@@ -65,9 +65,9 @@ age_crop_01 <- function(.self) {
 # type: derivation
 # depend_cols:
 #   - self.AGE
-#   - self.age2
+#   - self.AGE2
 # outputs:
-#   - self.AGE_DIFF1
+#   - AGE_DIFF1
 #!-!
 age_diff_01 <- function(.self) {
   .self <- .self |>
@@ -92,7 +92,7 @@ age_diff_02 <- function(.self) {
 #!-!
 # type: derivation
 # depend_cols:
-#   - self.age2
+#   - self.AGE2
 # outputs:
 #   - self.AGE_GRP1
 #!-!

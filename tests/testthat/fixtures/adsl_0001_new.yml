@@ -28,9 +28,24 @@ column_metadata:
   - column: PLANNED_ARM
     source: self.ARM
 
+  - column: ARM
+    source: DM.ARM
+
+  - column: DTHFL
+    source: DM.DTHFL
+
   - column: ARM_GRP1
     label: "some text"
     code_id: arm_group_01
+
+  - column: AGE_DIFF1
+    code_id: age_diff_01
+
+  - column: AGE
+    source: DM.AGE
+
+  - column: AGE2
+    code_id: age_crop_01
 
   - column: ARM_CAT1
     label: "some text"
