@@ -9,6 +9,7 @@
 #' @examples
 update_ui_data <- function(payload, ui_data) {
   metadata_from_active_code_ids <- payload[ui_data[!is.na(code_id),code_id]]
+
   metadata_from_active_code_ids_transposed <- purrr::list_transpose(metadata_from_active_code_ids)
   code_id_data <- data.table(code_id=names(metadata_from_active_code_ids),
              type = metadata_from_active_code_ids_transposed$type,
@@ -18,15 +19,34 @@ update_ui_data <- function(payload, ui_data) {
 # TODO: check if the outputs described by data match the columns specified in
 # the adam specs. For new, we just use the metadata supplied by the standard
 # components
+
 x <- merge(ui_data, code_id_data, by="code_id", suffixes = c("", "_from_code"), all.x = TRUE)
 x[!is.na(code_id),`:=` (depend_cols=depend_cols_from_code, type = type_from_code, outputs = outputs_from_code),]
 x$outputs_from_code <- x$type_from_code <- x$depend_cols_from_code <- x$column <- NULL
+
 
 # For each depend_cols entry, add attribute information detailing:
 # - domain
 # - domain type
 
 x[,depend_cols:= purrr::map2(depend_cols, domain, depend_cols_nested_data_table)]
+
+
+# TODO: Check for any missing dependencies and connect them to the problematic
+# columns
+dependencies <- purrr::map2(x$domain, x$depend_cols, function(domain, depend_col){
+  paste0(domain, ".", unlist(depend_col$column_name))
+}) |> unlist()
+outputs <- purrr::map2(x$domain, x$outputs, function(domain, output){
+  paste0(domain, ".", unlist(output))
+}) |> unlist()
+
+missing_parents <- setdiff(dependencies, outputs)
+if(length(missing_parents)>0){
+  browser()
+  stop("The following columns are parents of other columns, but are not in the ADaM spec:\n", paste0(missing_parents, collapse = "\n"))
+}
+
 return(x)
 }
 

@@ -142,8 +142,8 @@ arm_01 <- function(.self) {
 # type: derivation
 # depend_cols:
 #   - USUBJID
-#   - adlb.USUBJID
-#   - adlb.AVAL
+#   - ADLB.USUBJID
+#   - ADLB.AVAL
 # outputs:
 #   - MIN_AVAL
 #!-!
@@ -188,8 +188,8 @@ newfl_01 <- function(.self) {
 #   - USUBJID
 #   - COUNTRY
 #   - arm_match
-#   - adlb.USUBJID
-#   - adlb.LBTEST
+#   - ADLB.USUBJID
+#   - ADLB.LBTEST
 # outputs:
 #   - NEWFL02
 #!-!
