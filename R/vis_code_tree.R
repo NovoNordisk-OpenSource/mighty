@@ -4,7 +4,7 @@ vis_code_tree <- function(nodes, edges) {
              new = c("to", "from")) |>
     setorder(rank)
 
-browser()
+
   nodes_vs <- copy(nodes)
   nodes_vs <- setnames(nodes_vs, c("node_id", "type"), c("id", "group")) |>
     setorder(rank) |>
