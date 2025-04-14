@@ -70,6 +70,7 @@ depend_cols_nested_data_table <- function(i, domain_i){
 
 
 add_node_id <- function(nodes){
-  nodes[, node_id:= uuid::UUIDgenerate(n = nrow(nodes))]
+
+  nodes[, node_id:= paste(domain, "-", code_id, "-",uuid::UUIDgenerate(n = nrow(nodes)))]
 return(nodes)
 }

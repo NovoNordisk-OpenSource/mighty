@@ -37,13 +37,14 @@ generate_node_code <- function(nodes_program_i,
       next
     }
     if (node_i$type == "domain_init") {
-      domain_metadata <- ui_data$init[[node_i$domain]]
+      domain_metadata <- ui_data[[node_i$domain]]$init
+
       program[[i]] <- generate_initialize_domain(
         .self = node_i$domain,
         core_domains = domain_metadata$core_domains,
         domain_filter = domain_metadata$filter_domain,
         filter_global = domain_metadata$filter_global,
-        keep_vars = node_i$outputs[[1]]$column_name
+        keep_vars = node_i$outputs[[1]]
       )
       next
     }
@@ -54,10 +55,11 @@ generate_node_code <- function(nodes_program_i,
       next
     }
     if (node_i$type == "predecessor") {
+
       is_mutate <- node_i$depend_cols[[1]] |> nrow() == 1
       if (is_mutate) {
         depends <- node_i[["depend_cols"]][[1]][["column_name"]]
-        outputs <- node_i[["outputs"]][[1]][["column_name"]]
+        outputs <- node_i[["outputs"]][[1]]
         program[[i]] <- predecessor_mutate(
           .self = node_i$domain,
           rename_var = outputs,
@@ -67,6 +69,7 @@ generate_node_code <- function(nodes_program_i,
         next
       }
       depends <- node_i[["depend_cols"]][[1]][["full_name"]]
+      browser()
       outputs <- node_i[["outputs"]][[1]][["full_name"]]
       x <- pre_process_predecessor_left_join(depends, outputs, node_i$domain, domain_keys)
       program[[i]] <- predecessor_left_join(

@@ -8,7 +8,7 @@
 #' @export
 #'
 #' @examples
-weighted_node_topo_sort <- function(edges, nodes, primary_domain = "adsl") {
+weighted_node_topo_sort <- function(edges, nodes, primary_domain = "ADSL") {
 
   # Create a directed graph from the edges and nodes
   g <- igraph::graph_from_data_frame(edges,

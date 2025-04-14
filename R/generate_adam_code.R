@@ -45,12 +45,12 @@ generate_adam_code <- function(path_ui_data,
 
   # Add information about external dependencies to the initialization action
   nodes_5 <- enrich_with_external_dependencies(nodes_3, ui_init)
-
+browser()
   # Identify edges in the topology graph
   edges <- make_edges(nodes_5)
-browser()
+
   # Identify topological order of actions
-  nodes_topo_order <- weighted_node_topo_sort(edges, nodes_5, primary_domain = "adsl")
+  nodes_topo_order <- weighted_node_topo_sort(edges, nodes_5, primary_domain = "ADSL")
 
   # Group actions into programs that can be run as batches in a sequence
   program_sequence_1 <- group_nodes_optimal(nodes_topo_order, nodes_5, edges)
@@ -74,6 +74,7 @@ browser()
 
   return(
     list(
+      programs = programs,
       program_sequence = program_sequence_3,
       edges = edges,
       data_model = ui_yml$nodes

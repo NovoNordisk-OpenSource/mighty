@@ -15,11 +15,17 @@ path_trial_metadata <- test_path("fixtures", "init_0001.yml")
 
   # ACT
 
-  generate_adam_code(ui_path,
+  actual <- generate_adam_code(ui_path,
                               std_lib_path,
                      path_trial_metadata,
                               domain_keys_path,
                               output_path,
                               data_connection = "pharmaverse")
+  write_adam_programs(dir = output_path, programs = actual$programs)
+browser()
+x <- list.files(output_path, full.names = TRUE)
+do.call(file.edit, as.list(x))
+programs <- lapply(x, readLines)
+names(programs) <- basename(x)
 
 })

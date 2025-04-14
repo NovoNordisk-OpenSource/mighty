@@ -13,8 +13,12 @@ make_edges <- function(nodes, primary_domain = "adsl") {
   # to match each column to a node that produces that column. That will allow us
   # to ID the parent node
 
-  parents_expanded <- nodes[type != "domain_init", rbindlist(depend_cols), by = node_id][, .(node_id, column_name, domain)] |>
-    data.table::setnames(c("node_id", "parent_column", "parent_column_domain"))
+  parents_expanded <- nodes[, rbindlist(depend_cols), by = .(node_id, domain)][,-"domain_type"] |>
+    setnames(c("node_id", "domain", "parent_column", "parent_column_domain"))
+
+  # Need to replace "core" with domain of node
+  parents_expanded[parent_column_domain=="core", parent_column_domain:= domain]
+  parents_expanded <- parents_expanded[,.(node_id, parent_column, parent_column_domain)]
 
   # This is a list matching each node id to the columns it produces. We can use
   # this to match the column to the node in the parents_expanded data.table. We
@@ -52,7 +56,7 @@ make_edges <- function(nodes, primary_domain = "adsl") {
     # on multiple places
     new_row_edges <- nodes[!is.na(depend_rows), unlist(depend_rows), by=.(node_id,domain)]|>
       data.table::setnames(c( "node_id", "domain", "parent_node"))
-  browser()
+
     edges <- nodes[,.(code_id, node_id, domain)] |>
       merge(new_row_edges, by.x=c("code_id", "domain"), by.y=c("parent_node", "domain"), suffixes = c("_parent", "")) |>
       data.table::setnames(old = "node_id_parent", "parent_node") |>
@@ -65,6 +69,6 @@ make_edges <- function(nodes, primary_domain = "adsl") {
   edges2 <- edges[node_id != parent_node]
 
   # Only return unique edges
-  edges2[, .SD[1], by = .(parent_node, node_id)][, .(parent_node, node_id)]
+  edges2[, .SD[1], by = .(parent_node, node_id)]
 
 }

@@ -38,13 +38,13 @@ enrich_with_external_dependencies <- function(nodes, init_metadata) {
     )
 
     dep_init[["domain_type"]] <- rep(unique(dep$domain_type), nrow(dep_init))
-
+browser()
     # Column dependencies coming from ADSL
-    filter_depend_cols_adsl <- gsub("^adsl\\.", "", filter_depend_cols[grepl("^adsl\\.", filter_depend_cols)])
-    dep_init_adsl <- data.table::data.table(domain = "adsl",
+    filter_depend_cols_adsl <- gsub("^ADSL\\.", "", filter_depend_cols[grepl("^ADSL\\.", filter_depend_cols)])
+    dep_init_adsl <- data.table::data.table(domain = "ADSL",
                                             domain_type = "adam",
                                             column_name = filter_depend_cols_adsl)
-    dep_init_adsl[["column_name"]] <- gsub("^adsl\\.", "", dep_init_adsl[["full_name"]])
+    dep_init_adsl[["column_name"]] <- gsub("^ADSL\\.", "", dep_init_adsl[["full_name"]])
 
     # Combine the dependencies
     dep <- rbind(dep, dep_init, dep_init_adsl) |> unique()

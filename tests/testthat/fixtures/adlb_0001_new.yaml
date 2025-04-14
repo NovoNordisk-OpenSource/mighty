@@ -15,6 +15,7 @@ init:
     - XL
   filter_domain:
     LB: NA
+    XL: NA
   filter_global:
     - 'STUDYID == "CDISCPILOT01"'
     - 'DOMAIN == "DM"'
