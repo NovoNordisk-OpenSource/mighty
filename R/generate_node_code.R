@@ -69,7 +69,7 @@ generate_node_code <- function(nodes_program_i,
         next
       }
       depends <- node_i[["depend_cols"]][[1]][["full_name"]]
-      browser()
+
       outputs <- node_i[["outputs"]][[1]][["full_name"]]
       x <- pre_process_predecessor_left_join(depends, outputs, node_i$domain, domain_keys)
       program[[i]] <- predecessor_left_join(

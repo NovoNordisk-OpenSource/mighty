@@ -45,7 +45,7 @@ generate_adam_code <- function(path_ui_data,
 
   # Add information about external dependencies to the initialization action
   nodes_5 <- enrich_with_external_dependencies(nodes_3, ui_init)
-browser()
+
   # Identify edges in the topology graph
   edges <- make_edges(nodes_5)
 

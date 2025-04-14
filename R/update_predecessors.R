@@ -31,19 +31,18 @@ update_predecessors <- function(nodes, path_mappings) {
 
       # If the dependent column originates from an external domain, then add
       # addition dependent columns
-      # if (domain_i != dep_domain) {
-      #
-      #   # Update depend_cols
-      #   new_dep_cols <- lapply(pk[[dep_domain]], function(x) {
-      #     data.table(
-      #       column_name = c(x, x),
-      #       domain = c(domain_i, dep_domain),
-      #       domain_type = c("adam", classify_external_data_domains(dep_domain))
-      #     )
-      #   }) |> rbindlist()
-      #   x[["depend_cols"]][[i]] <- rbind(x[["depend_cols"]][[i]],
-      #                                             new_dep_cols)
-      # }
+      if (domain_i != dep_domain && dep_domain != "core") {
+        # Update depend_cols
+        new_dep_cols <- lapply(pk[[dep_domain]], function(x) {
+          data.table(
+            column_name = c(x, x),
+            domain = c(domain_i, dep_domain),
+            domain_type = c("adam", classify_external_data_domains(dep_domain))
+          )
+        }) |> rbindlist()
+        x[["depend_cols"]][[i]] <- rbind(x[["depend_cols"]][[i]],
+                                                  new_dep_cols)
+      }
     }
   }
   return(x)
