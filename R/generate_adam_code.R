@@ -71,6 +71,7 @@ generate_adam_code <- function(path_ui_data,
     data_connection
   )
 browser()
+vis_code_tree(program_sequence_1, edges)
   return(
     list(
       programs = programs,
