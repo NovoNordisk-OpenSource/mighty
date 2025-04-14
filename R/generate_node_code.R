@@ -68,10 +68,11 @@ generate_node_code <- function(nodes_program_i,
         )
         next
       }
-      depends <- node_i[["depend_cols"]][[1]][["full_name"]]
 
-      outputs <- node_i[["outputs"]][[1]][["full_name"]]
-      x <- pre_process_predecessor_left_join(depends, outputs, node_i$domain, domain_keys)
+      depend_columns <- node_i[["depend_cols"]][[1]][["column_name"]]
+      depend_domains <- node_i[["depend_cols"]][[1]][["domain"]]
+      outputs <- node_i[["outputs"]][[1]]
+      x <- pre_process_predecessor_left_join(depend_columns, depend_domains, outputs, node_i$domain, domain_keys)
       program[[i]] <- predecessor_left_join(
         .self = node_i$domain,
         join_dataset = x$join_dataset,

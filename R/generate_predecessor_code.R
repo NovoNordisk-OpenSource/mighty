@@ -18,18 +18,20 @@ predecessor_mutate <-  function(.self, rename_var, source_var, node_id) {
 #' @export
 #'
 
-pre_process_predecessor_left_join <- function(depend_cols, outputs, domain, domain_keys) {
-  # Extract the domain (everything before the first ".")
-  domains <- sub("\\..*", "", depend_cols) |> unique()
-  join_dataset <- domains[!grepl(domain, domains)]
+pre_process_predecessor_left_join <- function(depend_columns, depend_domains, outputs, domain, domain_keys) {
 
+  # Extract the domain (everything before the first ".")
+  depend_domains <- depend_domains |> unique()
+  join_dataset <- depend_domains[!grepl(domain, depend_domains)]
+  checkmate::assertTRUE(length(join_dataset)==1)
   by_vars <- domain_keys[[join_dataset]]
   if(is.null(by_vars)){
     stop("The domain keys for ", join_dataset, " are not defined")
   }
   # Remove the join variables from the depend_cols
   regexp <- paste0(by_vars, collapse = "|")
-  var_to_add <- depend_cols[!grepl(regexp, depend_cols)]
+  var_to_add <- depend_columns[!grepl(regexp, depend_columns)]
+
   # Remove all the domain prefixes
   var_to_add <- sub(".*\\.", "", var_to_add)
   return(list(
@@ -47,7 +49,7 @@ predecessor_left_join <- function(.self, join_dataset, var_to_add, by_vars, node
     unique() |>
     paste0(collapse = ", ")
 
-  action_name <- sub(".*\\.", "", node_id)
+  action_name <- node_id
 
   left_join_code <- glue::glue(
     "

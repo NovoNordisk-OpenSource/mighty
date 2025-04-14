@@ -35,10 +35,11 @@ create_domain_initialize_nodes <- function(nodes, domain_init_data) {
   inx <- inx_single_dependency & inx_pred
 
   # Make a temporary ID to match against the nodes_to_remove
-  nodes[, domain_init_cols_tmp := NA_character_]
-  nodes[inx, domain_init_cols_tmp := paste0(domain, "-", outputs)]
+  nodes_temp <- copy(nodes)
+  nodes_temp[, domain_init_cols_tmp := NA_character_]
+  nodes_temp[inx, domain_init_cols_tmp := paste0(domain, "-", outputs)]
 
-  nodes_subset <- nodes[!domain_init_cols_tmp %in% nodes_to_remove]
+  nodes_subset <- nodes_temp[!domain_init_cols_tmp %in% nodes_to_remove]
   nodes_subset[, domain_init_cols_tmp := NULL]
   rbind(nodes_subset, domain_init_nodes)
 }
