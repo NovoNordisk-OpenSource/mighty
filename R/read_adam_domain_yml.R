@@ -37,8 +37,8 @@ read_adam_domain_yml <- function(yml) {
   return_list <- list(columns = out,
        domain = x$table_metadata$table,
        keys = x$table_metadata$keys,
-       init = x$init)
-
+       init = x$init) |>
+  convert_to_NA_character()
   return(setNames(list(return_list), return_list$domain))
 
 

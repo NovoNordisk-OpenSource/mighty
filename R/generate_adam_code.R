@@ -30,8 +30,6 @@ generate_adam_code <- function(path_ui_data,
     update_ui_data(ui_table) |>
     add_node_id()
 
-
-
   # Enrich predecessors in UI data with auto-generated metadata
   nodes_2 <- update_predecessors(nodes_1, path_domain_keys)
 
@@ -72,7 +70,7 @@ generate_adam_code <- function(path_ui_data,
     ui_yml,
     data_connection
   )
-
+browser()
   return(
     list(
       programs = programs,
