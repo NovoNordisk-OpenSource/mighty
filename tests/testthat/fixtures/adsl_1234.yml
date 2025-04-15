@@ -52,6 +52,9 @@ column_metadata:
   - column: AGE_DIFF1
     code_id: age_diff_01
 
+  - column: AGE_DIFF2
+    code_id: age_diff_02
+
   - column: RACE_COUNTRY
     code_id: race_x_country_01
 
