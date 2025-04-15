@@ -27,6 +27,9 @@ column_metadata:
   - column: USUBJID
     source: core.USUBJID
 
+  - column: PLANNED_ARM
+    source: ADSL.PLANNED_ARM
+
   - column: AVAL
     source: core.LBSTRESN
 
@@ -52,7 +55,7 @@ column_metadata:
 
   - column: LBTEST
     label: some text
-    code_id: aval_grp_01
+    code_id: lbtest_01
     method: |-
       Some text
     depend_rows:
@@ -63,56 +66,52 @@ column_metadata:
     code_id: aval_grp_02
 
 row_actions:
+  - code_id: new_lbtest_01
 
-  - row: add_lbtest_01
-    code_id: new_lbtest_01
-
-  - row: new_lbtest_02
-    code_id: new_lbtest_02
+  - code_id: new_lbtest_02
     depend_rows:
       - new_lbtest_04
 
-  - row: new_lbtest_03
-    code_id: new_lbtest_03
+  - code_id: new_lbtest_03
+    depend_rows:
+        - new_lbtest_01
 
-  - row: new_lbtest_04
-    code_id: new_lbtest_04
+  - code_id: new_lbtest_04
+    depend_rows:
+      - new_lbtest_02
 
-  - row: new_lbtest_05
-    code_id: new_lbtest_05
+  - code_id: new_lbtest_05
     depend_rows:
       - new_lbtest_01
       - new_lbtest_02
 
-  - row: new_lbtest_06
-    code_id: new_lbtest_06
+  - code_id: new_lbtest_06
+    depend_rows:
+      - new_lbtest_03
 
-  - row: add_aval_01
-    code_id: new_aval_01
+  - code_id: new_aval_01
 
-  - row: add_aval_02
-    code_id: new_aval_02
+  - code_id: new_aval_02
     depend_rows:
       - new_aval_01
 
-  - row: add_aval_03
-    code_id: new_aval_03
+  - code_id: new_aval_03
 
-  - row: add_aval_04
-    code_id: new_aval_04
+  - code_id: new_aval_04
 
-  - row: add_visitnum_01
-    code_id: new_visitnum_01
+  - code_id: new_visitnum_01
 
-  - row: add_visitnum_02
-    code_id: new_visitnum_01
+  - code_id: new_visitnum_01
+    depend_rows:
+      - new_visitnum_01
 
+  - code_id: aval_grp_01
+    depend_rows:
+      - new_lbtest_01
 
-  - row: add_aval_grp_1
-    code_id: aval_grp_01
-
-  - row: add_aval_grp_2
-    code_id: aval_grp_02
+  - code_id: aval_grp_02
+    depend_rows:
+      - new_lbtest_01
 
 referenced_domains:
   - domain: LB

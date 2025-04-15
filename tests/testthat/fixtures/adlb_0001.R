@@ -332,7 +332,7 @@ aval_grp_02 <- function(.self) {
 # depend_cols:
 # outputs:
 #!-!
-copy_rows_01 <- function(.self) {
+ecopy_rows_01 <- function(.self) {
   .self <- rbind(.self, .self[1:10,])
   return(.self)
 }

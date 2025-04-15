@@ -43,8 +43,7 @@ outputs <- purrr::map2(x$domain, x$outputs, function(domain, output){
 
 missing_parents <- setdiff(dependencies, outputs)
 if(length(missing_parents)>0){
-  browser()
-  stop("The following columns are parents of other columns, but are not in the ADaM spec:\n", paste0(missing_parents, collapse = "\n"))
+  stop("\n\n The following columns are parents of other columns, but are not in the ADaM spec:\n", paste0(missing_parents, collapse = "\n"))
 }
 
 return(x)

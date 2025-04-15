@@ -10,7 +10,8 @@ read_adam_domain_yml <- function(yml) {
   # Name elements in the list
   names(x$column_metadata) <- lapply(x$column_metadata, function(i){i$column})
   if(!is.null(x$row_actions)){
-    names(x$row_actions) <- lapply(x$row_actions, function(i){i$row})
+
+    names(x$row_actions) <- lapply(x$row_actions, function(i){i$code_id})
     tmp <- c(x$column_metadata, x$row_actions)
   }
   else{
