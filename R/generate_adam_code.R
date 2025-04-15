@@ -25,6 +25,7 @@ generate_adam_code <- function(path_ui_data,
   ui_table <- convert_yml_to_data_table(ui_yml)
   trial_metadata <- yaml::read_yaml(path_trial_metadata)
 
+
   nodes_1 <- path_std_lib |>
     lapply(parse_node_metadata) |>
     unlist(recursive = FALSE) |>

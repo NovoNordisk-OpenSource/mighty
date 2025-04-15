@@ -10,6 +10,7 @@ assert_all_dependencies_present <- function(nodes) {
   if (columns_required_but_not_specified_in_ADaM_specs |> unlist() |> is.null()){
     return(TRUE)
   }
+  browser()
     stop("The following collumns are missing from their respective domains: \n",
     Filter(Negate(is.null), columns_required_but_not_specified_in_ADaM_specs) |>
       print() |>

@@ -38,11 +38,11 @@ arm_category_01 <- function(.self) {
 #   - PLANNED_ARM
 #   - ACTARM
 # outputs:
-#   - arm_match
+#   - ARM_MATCH
 #!-!
 arm_match_01 <- function(.self) {
   .self <- .self |>
-    dplyr::mutate(arm_match = ifelse(
+    dplyr::mutate(ARM_MATCH = ifelse(
       PLANNED_ARM ==  ACTARM, "Match", "Mismatch"
     ))
   return(.self)
