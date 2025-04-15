@@ -3,7 +3,7 @@ convert_yml_to_data_table <- function(yml_list){
     convert_yml_to_data_table_(i$columns, i$domain) |>
       merge_rows_with_same_code_id()
   }) |>
-    rbindlist()
+    data.table::rbindlist()
 }
 convert_yml_to_data_table_ <- function(nested_list, domain) {
   parent_names <- names(nested_list)

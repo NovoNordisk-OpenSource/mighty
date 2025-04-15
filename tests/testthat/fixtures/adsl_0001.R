@@ -193,8 +193,8 @@ newfl_01 <- function(.self) {
 # outputs:
 #   - NEWFL02
 #!-!
-newfl_02 <- function(.self, adlb) {
-  subids <- lb |>
+newfl_02 <- function(.self, ADLB) {
+  subids <- ADLB |>
     dplyr::filter(LBTEST == "Polychromasia") |>
     dplyr::pull(USUBJID) |>
     unique()
