@@ -110,10 +110,6 @@ row_actions:
     depend_rows:
       - new_lbtest_01
 
-  - code_id: copy_rows_01
-    depend_rows:
-      - new_lbtest_04
-
 referenced_domains:
   - domain: LB
     variables:

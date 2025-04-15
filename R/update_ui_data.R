@@ -37,7 +37,6 @@ x_no_rows <- x[(is.na(type)|type!="row")]
 dependencies <- purrr::map2(x$domain, x$depend_cols, function(domain_table, depend_col){
   # To take care for intre-table depencencies, use the parent table domain when
   # it's a "core" column, otherwise use the domain listed in the "depend_cols"
-
   a <- c()
   b <- c()
   if(depend_col[domain=="core", nrow(.SD)]>0){
@@ -56,8 +55,6 @@ outputs <- purrr::map2(x_no_rows$domain, x_no_rows$outputs, function(domain, out
 
 missing_parents <- setdiff(dependencies, outputs)
 if(length(missing_parents)>0){
-
-  purrr::pmap(list(x$domain,x$depend_cols, x$outputs), function(a,b,d){if("LBTEST" %in% b$column_name) browser()})
   stop("\n\n The following columns are parents of other columns, but are not in the ADaM spec:\n", paste0(missing_parents, collapse = "\n"))
 }
 
@@ -66,24 +63,29 @@ return(x)
 
 
 depend_cols_nested_data_table <- function(i, domain_i){
+
   result <- vector("list", length(i))
   # Extract domains in one vectorized operation
   elements <- unlist(i)
+
   inx <- grepl("\\.", elements)
   n_with_dot <- sum(inx)
   if(n_with_dot==0){
-    data.table::data.table(column_name = elements,
+    return(
+      data.table::data.table(column_name = elements,
                            domain = domain_i,
                            domain_type = classify_external_data_domains(domain_i))
+    )
   }
   if(n_with_dot == length(elements)){
   domains <- sub("\\.(.*)", "", elements)
   column <- sub("^[^.]*\\.", "", elements)
 
   domain_type <- classify_external_data_domains(domains)
-  data.table::data.table(column_name = column,
+  return(data.table::data.table(column_name = column,
                          domain = domains,
                          domain_type = domain_type)
+  )
   }
 
   elements_with_dot <- elements[inx]

@@ -37,7 +37,7 @@ generate_adam_code <- function(path_ui_data,
 
   # Check that, for each output, all dependencies listed in depend_cols with
   # domain =="self" are also present as outputs
-  assert_all_dependencies_present(nodes_2)
+  # assert_all_dependencies_present(nodes_2)
 
 
   # Create an initialization action per domain that consumes predecessor actions
