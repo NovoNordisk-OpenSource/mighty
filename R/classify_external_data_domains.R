@@ -7,6 +7,7 @@
 #'
 #' @examples
 classify_external_data_domains_2 <- function(vector) {
+  browser()
   classified_vector <- vapply(vector, function(x) {
     if (grepl("^ad", x)) {
       return("adam")
@@ -35,7 +36,7 @@ classify_external_data_domains <- function(vector) {
   result[!grepl("\\.", vector, ignore.case = TRUE)] <- "self"
   result[grepl("^ad", vector, ignore.case = TRUE)] <-  "adam"
   result[grepl("^md", vector, ignore.case = TRUE)] <- "md"
-  result[nchar(vector) == 2 | vector == "relrec"] <- "sdtm"
+  result[nchar(vector) == 2 | vector == "relrec" | grepl("^dm_", vector, ignore.case = TRUE)] <- "sdtm"
   result[vector == "core"] <- "core"
 
   # Check for unclassified values
