@@ -49,7 +49,7 @@ convert_yml_to_data_table_ <- function(nested_list, domain) {
   }
 
 
-  dt <- data.table(
+  dt <- data.table::data.table(
     column = unlist(parent_names_chr, recursive = FALSE),
     type = type_list,
     depend_cols = unlist(depend_cols_list, recursive = FALSE),

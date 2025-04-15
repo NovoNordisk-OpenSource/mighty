@@ -12,17 +12,17 @@
 # outputs:
 #   - LBTEST
 #!-!
-lbtest_01 <- function(.self, lb, adsl) {
+lbtest_01 <- function(.self, LB, ADSL) {
 
   # join with adsl, only derive lbtest if adsl.planned_arm != "" and
   # if aval is na them lbtest = "Invalid"
   .self <- .self |>
     dplyr::left_join(
-      lb |> dplyr::select(USUBJID, LBSEQ, LBTEST),
+      LB |> dplyr::select(USUBJID, LBSEQ, LBTEST),
       by = c("USUBJID" = "USUBJID", "LBSEQ" = "LBSEQ")
     ) |>
     dplyr::left_join(
-      adsl |> dplyr::select(USUBJID, PLANNED_ARM),
+      ADSL |> dplyr::select(USUBJID, PLANNED_ARM),
       by = "USUBJID"
     ) |>
     dplyr::mutate(

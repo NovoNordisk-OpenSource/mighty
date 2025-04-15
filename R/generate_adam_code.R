@@ -70,6 +70,7 @@ generate_adam_code <- function(path_ui_data,
     ui_yml,
     data_connection
   )
+  browser()
   return(
     list(
       programs = programs,
