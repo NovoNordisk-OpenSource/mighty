@@ -15,11 +15,9 @@ init:
   filter_domain:
     LB: NA
   filter_global:
-    - 'STUDYID == "CDISCPILOT01"'
-    - 'DOMAIN == "DM"'
+    - '!is.na(SEX)'
   filter_depend_cols:
-    - core.STUDYID
-    - core.DOMAIN
+    - ADSL.SEX
 
 column_metadata:
   - column: USUBJID
