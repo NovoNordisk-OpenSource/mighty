@@ -80,6 +80,9 @@ row_actions:
 
   - row: new_lbtest_05
     code_id: new_lbtest_05
+    depend_rows:
+      - new_lbtest_01
+      - new_lbtest_02
 
   - row: new_lbtest_06
     code_id: new_lbtest_06
@@ -89,6 +92,8 @@ row_actions:
 
   - row: add_aval_02
     code_id: new_aval_02
+    depend_rows:
+      - new_aval_01
 
   - row: add_aval_03
     code_id: new_aval_03
