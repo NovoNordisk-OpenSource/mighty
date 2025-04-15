@@ -69,6 +69,6 @@ make_edges <- function(nodes, primary_domain = "adsl") {
   edges2 <- edges[node_id != parent_node]
 
   # Only return unique edges
-  edges2[, .SD[1], by = .(parent_node, node_id)]
+  edges2[, .SD[1], by = .(parent_node, node_id)][,. (parent_node, node_id)]
 
 }

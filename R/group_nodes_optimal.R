@@ -9,6 +9,8 @@
 #'
 #' @examples
 group_nodes_optimal <- function(ordered_nodes, nodes, edges){
+  # When edges has additional columns, things go wrong
+  edges <- edges[,.(parent_node, node_id)]
 
   vertices <- nodes[, .(node_id, domain, type)]
 
