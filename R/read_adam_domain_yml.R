@@ -16,7 +16,6 @@ read_adam_domain_yml <- function(yml) {
   else{
     tmp <- x$column_metadata
   }
-
   # Restructure to match internal data model
   out <- lapply(tmp, function(i) {
     # rename the element "source" to "depend_col"

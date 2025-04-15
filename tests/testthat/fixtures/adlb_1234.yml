@@ -27,9 +27,6 @@ column_metadata:
   - column: USUBJID
     source: core.USUBJID
 
-  - column: TRT01P
-    source: ADSL.TRT01P
-
   - column: AVAL
     source: core.LBSTRESN
 
@@ -72,6 +69,8 @@ row_actions:
 
   - row: new_lbtest_02
     code_id: new_lbtest_02
+    depend_rows:
+      - new_lbtest_04
 
   - row: new_lbtest_03
     code_id: new_lbtest_03
