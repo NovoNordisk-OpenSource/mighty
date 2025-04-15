@@ -69,8 +69,6 @@ row_actions:
   - code_id: new_lbtest_01
 
   - code_id: new_lbtest_02
-    depend_rows:
-      - new_lbtest_04
 
   - code_id: new_lbtest_03
     depend_rows:
