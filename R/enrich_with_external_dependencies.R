@@ -44,7 +44,6 @@ enrich_with_external_dependencies <- function(nodes, init_metadata) {
     dep_init_adsl <- data.table::data.table(domain = "ADSL",
                                             domain_type = "adam",
                                             column_name = filter_depend_cols_adsl)
-    dep_init_adsl[["column_name"]] <- gsub("^ADSL\\.", "", dep_init_adsl[["full_name"]])
 
     # Combine the dependencies
     dep <- rbind(dep, dep_init, dep_init_adsl) |> unique()
