@@ -12,14 +12,17 @@ table_metadata:
 init:
   core_domains:
     - DM
+    - DM_VACCINE
   filter_domain:
-    dm: NA
+    dm: '!is.na(AGEU)'
+    dm_vaccine: NA
   filter_global:
     - 'STUDYID == "CDISCPILOT01"'
     - 'DOMAIN == "DM"'
   filter_depend_cols:
     - core.STUDYID
     - core.DOMAIN
+    - core.AGEU
 
 column_metadata:
   - column: USUBJID
