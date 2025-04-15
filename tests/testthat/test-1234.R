@@ -24,8 +24,9 @@ test_that("perfomance", {
   write_adam_programs(dir = output_path, programs = actual$programs)
 
   x <- list.files(output_path, full.names = TRUE)
-  do.call(file.edit, as.list(x))
-browser()
+  browser()
+  file.edit(x[[1]])
+
   programs <- lapply(x, readLines)
   names(programs) <- basename(x)
   # Check ADSL (program 1)
@@ -37,3 +38,4 @@ browser()
   expect_section_order(c("ADSL-PLANNED_ARM", "ADSL-AGE_DIFF1"), "ADSL-AGE_DIFF2", programs[["1_ADSL.R"]])
   expect_section_order(c("ADSL-PLANNED_ARM", "ADSL-AGE_DIFF1"), "ADSL-NEWFL01-NEWREA01", programs[["1_ADSL.R"]])
 })
+waldo::compare(head(ADSL), b)

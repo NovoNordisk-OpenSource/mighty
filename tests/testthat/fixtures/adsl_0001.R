@@ -57,7 +57,7 @@ arm_match_01 <- function(.self) {
 #!-!
 age_crop_01 <- function(.self) {
   .self <- .self |>
-    dplyr::mutate(age2 = ifelse(AGE>80, 80, AGE))
+    dplyr::mutate(AGE2 = ifelse(AGE>80, 80, AGE))
   return(.self)
 }
 
@@ -71,7 +71,7 @@ age_crop_01 <- function(.self) {
 #!-!
 age_diff_01 <- function(.self) {
   .self <- .self |>
-    dplyr::mutate(AGE_DIFF1 = AGE-age2)
+    dplyr::mutate(AGE_DIFF1 = AGE-AGE2)
   return(.self)
 }
 
@@ -99,7 +99,7 @@ age_diff_02 <- function(.self) {
 age_group_01 <- function(.self, cut_points) {
   .self <- .self |>
     dplyr::mutate(AGE_GRP1 = cut(
-      age2,
+      AGE2,
       breaks = c(-Inf, cut_points, Inf),
       labels = 1:(length(cut_points) + 1),
       right = FALSE
@@ -147,11 +147,11 @@ arm_01 <- function(.self) {
 # outputs:
 #   - MIN_AVAL
 #!-!
-min_aval_01 <- function(.self, adlb) {
+min_aval_01 <- function(.self, ADLB) {
   # Extract the minimum AVAL value for each SUBJID
   .self <- .self |>
     dplyr::left_join(
-      adlb |> dplyr::select(USUBJID, AVAL) |>
+      ADLB |> dplyr::select(USUBJID, AVAL) |>
         dplyr::group_by(USUBJID) |>
         dplyr::summarise(MIN_AVAL = min(AVAL)) |>
         dplyr::ungroup()
@@ -200,7 +200,7 @@ newfl_02 <- function(.self, ADLB) {
     unique()
   .self <- .self |>
     dplyr::mutate(NEWFL02 = ifelse(!is.na(COUNTRY) &
-                                     arm_match == "MATCH" &
+                                     ARM_MATCH == "MATCH" &
                                      USUBJID %in% subids, 1, 0))
   return(.self)
 }
