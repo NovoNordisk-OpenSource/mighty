@@ -70,13 +70,12 @@ generate_adam_code <- function(path_ui_data,
     ui_yml,
     data_connection
   )
-browser()
-vis_code_tree(program_sequence_1, edges)
   return(
     list(
       programs = programs,
       program_sequence = program_sequence_3,
       edges = edges,
+      data_for_visualization = program_sequence_1,
       data_model = ui_yml$nodes
     )
   )

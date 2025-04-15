@@ -22,10 +22,22 @@ test_that("perfomance", {
                                output_path,
                                data_connection = "pharmaverse")
   write_adam_programs(dir = output_path, programs = actual$programs)
-  browser()
+
   x <- list.files(output_path, full.names = TRUE)
   do.call(file.edit, as.list(x))
+  browser()
   programs <- lapply(x, readLines)
   names(programs) <- basename(x)
+
+
+  # Check ADSL (program 1)
+  expect_section_order("PRED_01", "DER_02", programs[["1_adsl.R"]])
+  expect_section_order(c("PRED_01", "PRED_02"), "DER_03", programs[["1_adsl.R"]])
+  expect_section_order("PRED_01", "DER_05", programs[["1_adsl.R"]])
+  expect_section_order("DER_02", "DER_06", programs[["1_adsl.R"]])
+  expect_section_order("DER_01", "DER_08", programs[["1_adsl.R"]])
+  expect_section_order(c("PRED_01", "DER_08"), "DER_09", programs[["1_adsl.R"]])
+  expect_section_order(c("PRED_01", "DER_08"), "DER_27", programs[["1_adsl.R"]])
+
 
 })

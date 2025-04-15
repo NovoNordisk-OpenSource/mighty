@@ -76,5 +76,5 @@ merge_rows_with_same_code_id <- function(x) {
   ), by = code_id]
 
   list(x[is.na(code_id)], result) |>
-    rbindlist(fill = TRUE)
+    data.table::rbindlist(fill = TRUE)
 }

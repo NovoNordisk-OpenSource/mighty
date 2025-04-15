@@ -27,17 +27,6 @@ extract_sdtm_core_variables_i <- function(nodes_domain_i) {
 
 
 
-# Foreign dependencies that are not predecessor variables
-extract_foreign <- function(nodes) {
-  # Collect all depends vars
-  extract_foreign_i <- function(domain_i) {
-    keep_vars <- lapply(domain_i, function(i) {
-      i$depends
-    }) |> unlist(recursive = FALSE) |> unname() |> toupper()
-    keep_vars[!grepl("^SELF\\.", keep_vars)] |> unique() |> sort()
-  }
-  lapply(nodes, extract_foreign_i)
-}
 
 add_initial_predecessors_to_metadata <- function(metadata_init, init_predecessors) {
   metadata_init <- purrr::map2(
