@@ -26,7 +26,7 @@ column_metadata:
   - column: VISITNUM
     source: core.VISITNUM
 
-  - column: PLANNED_ARM
+  - column: ARM
     source: ADSL.PLANNED_ARM
 
   - column: AVAL
@@ -98,7 +98,7 @@ row_actions:
 
   - code_id: new_visitnum_01
 
-  - code_id: new_visitnum_01
+  - code_id: new_visitnum_02
     depend_rows:
       - new_visitnum_01
 
@@ -109,6 +109,10 @@ row_actions:
   - code_id: aval_grp_02
     depend_rows:
       - new_lbtest_01
+
+  - code_id: copy_rows_01
+    depend_rows:
+      - new_lbtest_04
 
 referenced_domains:
   - domain: LB
