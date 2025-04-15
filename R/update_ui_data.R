@@ -89,11 +89,17 @@ depend_cols_nested_data_table <- function(i, domain_i){
 }
 
 
-add_node_id <- function(nodes){
 
-  for(i in seq_len(nrow(nodes))){
-    nodes[i, node_id:= paste0(domain, "-", paste0(unlist(outputs), collapse = "-"), "-", code_id)]
+add_node_id <- function(nodes) {
+  for (i in seq_len(nrow(nodes))) {
+    nodes[i, node_id := paste0(
+      domain,
+      "-",
+      ifelse(!is.na(outputs), paste0(unlist(outputs), collapse = "-")),
+      ifelse(!is.na(code_id), paste0("-", code_id), ""),
+      ifelse(!is.na(parameters), paste0("-", parameters), "")
+    )]
   }
 
-return(nodes)
+  return(nodes)
 }

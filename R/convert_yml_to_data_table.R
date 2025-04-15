@@ -31,7 +31,7 @@ convert_yml_to_data_table_ <- function(nested_list, domain) {
     else
       list(NA)
     parameters[[i]] <- if (!is.null(parent_data$parameters))
-      list(parent_data$paramenters)
+      list(parent_data$parameters)
     else
       list(NA)
     outputs_list[[i]] <- if (!is.null(parent_data$outputs))

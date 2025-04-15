@@ -67,5 +67,5 @@ create_domain_init_node_i <- function(core_vars_domain_i,
     type = "domain_init",
     depend_cols = list(core_variables_i),
     outputs = list(outputs_i)
-  )][, node_id := paste(domain, "-", "domain_init-")]
+  )][, node_id := paste0(domain, "-", "domain_init")]
 }
