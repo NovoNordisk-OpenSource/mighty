@@ -12,10 +12,8 @@ table_metadata:
 init:
   core_domains:
     - LB
-    - XL
   filter_domain:
     LB: NA
-    XL: NA
   filter_global:
     - 'STUDYID == "CDISCPILOT01"'
     - 'DOMAIN == "DM"'
@@ -37,7 +35,7 @@ column_metadata:
     source: core.LBSTRESN
 
   - column: AVALC
-    source: core.LBSTRESNC
+    source: core.LBSTRESC
 
   - column: STUDYID
     label: "some text"
@@ -50,8 +48,8 @@ column_metadata:
     source: core.LBSTRESN
 
 
-  - column: LBSTRESNC
-    source: core.LBSTRESNC
+  - column: LBSTRESC
+    source: core.LBSTRESC
 
   - column: DOMAIN
     source: core.DOMAIN
