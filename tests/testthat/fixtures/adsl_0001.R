@@ -187,7 +187,7 @@ newfl_01 <- function(.self) {
 # depend_cols:
 #   - USUBJID
 #   - COUNTRY
-#   - arm_match
+#   - ARM_MATCH
 #   - ADLB.USUBJID
 #   - ADLB.LBTEST
 # outputs:

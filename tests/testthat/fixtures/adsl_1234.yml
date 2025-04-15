@@ -92,14 +92,9 @@ column_metadata:
     label: "some text"
     source: core.ACTARM
 
-  - column: AVAL
-    label: "some text"
-    source: core.AVAL
-
   - column: COUNTRY
     label: "some text"
     source: core.COUNTRY
-
 
   - column: RACE
     label: "some text"

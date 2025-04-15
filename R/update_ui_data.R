@@ -32,18 +32,31 @@ x$outputs_from_code <- x$type_from_code <- x$depend_cols_from_code <- x$column <
 x[,depend_cols:= purrr::map2(depend_cols, domain, depend_cols_nested_data_table)]
 
 
-# TODO: Check for any missing dependencies and connect them to the problematic
-# columns
-dependencies <- purrr::map2(x$domain, x$depend_cols, function(domain, depend_col){
-  paste0(domain, ".", unlist(depend_col$column_name))
+# TODO: This does not account for when rows output
+x_no_rows <- x[(is.na(type)|type!="row")]
+dependencies <- purrr::map2(x$domain, x$depend_cols, function(domain_table, depend_col){
+  # To take care for intre-table depencencies, use the parent table domain when
+  # it's a "core" column, otherwise use the domain listed in the "depend_cols"
+
+  a <- c()
+  b <- c()
+  if(depend_col[domain=="core", nrow(.SD)]>0){
+    a <- depend_col[domain=="core", paste0(domain_table, ".", column_name)]
+  }
+  if(depend_col[domain!="core", nrow(.SD)]>0){
+    # TODO: Mention somewhere that this does take into account external data
+    # dependencies
+    b <- depend_col[grepl("^AD", domain), paste0(domain, ".", column_name)]
+  }
+  c(a,b)
 }) |> unlist()
-outputs <- purrr::map2(x$domain, x$outputs, function(domain, output){
+outputs <- purrr::map2(x_no_rows$domain, x_no_rows$outputs, function(domain, output){
   paste0(domain, ".", unlist(output))
 }) |> unlist()
 
 missing_parents <- setdiff(dependencies, outputs)
 if(length(missing_parents)>0){
-  browser()
+
   purrr::pmap(list(x$domain,x$depend_cols, x$outputs), function(a,b,d){if("LBTEST" %in% b$column_name) browser()})
   stop("\n\n The following columns are parents of other columns, but are not in the ADaM spec:\n", paste0(missing_parents, collapse = "\n"))
 }

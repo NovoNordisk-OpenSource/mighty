@@ -141,8 +141,8 @@ pharmaverse_sdtm <- function(sdtm_main, keep_vars) {
   if (supp_exists) {
     return(
       glue::glue(
-        "{sdtm_main}_supp <- pharmaversesdtm::{supp_dataset_name}
-  {sdtm_main} <- pharmaversesdtm::{sdtm_main} |>
+        "{sdtm_main}_supp <- pharmaversesdtm::{tolower(supp_dataset_name)}
+  {sdtm_main} <- pharmaversesdtm::{tolower(sdtm_main)} |>
     dplyr::select({keep_vars})
     rm({sdtm_main}_supp)"
       )
@@ -151,7 +151,7 @@ pharmaverse_sdtm <- function(sdtm_main, keep_vars) {
 
   return(
     glue::glue(
-      "{sdtm_main} <- pharmaversesdtm::{sdtm_main} |>
+      "{sdtm_main} <- pharmaversesdtm::{tolower(sdtm_main)} |>
     dplyr::select({keep_vars})"
     )
   )

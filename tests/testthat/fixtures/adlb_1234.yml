@@ -27,6 +27,9 @@ column_metadata:
   - column: USUBJID
     source: core.USUBJID
 
+  - column: VISITNUM
+    source: core.VISITNUM
+
   - column: PLANNED_ARM
     source: ADSL.PLANNED_ARM
 

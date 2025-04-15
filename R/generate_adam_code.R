@@ -48,7 +48,7 @@ generate_adam_code <- function(path_ui_data,
 
   # Identify edges in the topology graph
   edges <- make_edges(nodes_5)
-browser()
+
   # Identify topological order of actions
   nodes_topo_order <- weighted_node_topo_sort(edges, nodes_5, primary_domain = "ADSL")
 
@@ -72,7 +72,7 @@ browser()
     ui_yml,
     data_connection
   )
-  browser()
+
   return(
     list(
       programs = programs,
