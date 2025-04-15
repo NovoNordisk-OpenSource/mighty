@@ -10,6 +10,7 @@
 #' @export
 #'
 #' @examples
+#' @import data.table
 generate_adam_code <- function(path_ui_data,
                                path_std_lib,
                                path_trial_metadata,

@@ -25,7 +25,7 @@ test_that("perfomance", {
 
   x <- list.files(output_path, full.names = TRUE)
   do.call(file.edit, as.list(x))
-  browser()
+
   programs <- lapply(x, readLines)
   names(programs) <- basename(x)
   # Check ADSL (program 1)
