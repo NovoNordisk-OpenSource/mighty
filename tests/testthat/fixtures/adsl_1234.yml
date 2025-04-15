@@ -96,10 +96,6 @@ column_metadata:
     label: "some text"
     source: core.AVAL
 
-  - column: LBTEST
-    label: "some text"
-    source: core.LBTEST
-
   - column: COUNTRY
     label: "some text"
     source: core.COUNTRY
