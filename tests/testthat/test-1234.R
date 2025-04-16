@@ -25,7 +25,7 @@ test_that("perfomance", {
 
   x <- list.files(output_path, full.names = TRUE)
 
-  programs <- lapply(x, readLines)
+  programs <- x |> lapply(readLines)
   names(programs) <- basename(x)
   # Check ADSL (program 1)
   expect_section_order("ADSL-PLANNED_ARM", "ADSL-ARM_GRP1-ARM_GROUP_01", programs[["1_ADSL.R"]])
@@ -36,8 +36,10 @@ test_that("perfomance", {
   expect_section_order(c("ADSL-PLANNED_ARM", "ADSL-AGE_DIFF1-AGE_DIFF_01"), "ADSL-AGE_DIFF2-AGE_DIFF_02", programs[["1_ADSL.R"]])
   expect_section_order(c("ADSL-PLANNED_ARM", "ADSL-AGE_DIFF1-AGE_DIFF_01"), "ADSL-NEWFL01-NEWREA01-NEWFL_01", programs[["1_ADSL.R"]])
 
-  source(x[[1]])
-  expect_snapshot_value(x = ADSL, style = "json2")
+  x[[1]] |> source()
+
+  ADSL |>
+    expect_snapshot_value(style = "json2")
   # Check ADLB (program 2)
 
   expect_section_order(c("ADLB-AVAL", "ADLB-LBTEST-NEW_LBTEST_01"), "ADLB-AVAL_GRP-AVAL_GRP_01", programs[["2_ADLB.R"]])
@@ -54,14 +56,15 @@ test_that("perfomance", {
   expect_section_order(c("ADLB-AVAL", "ADLB-AVAL-NEW_AVAL_01"), "ADLB-AVAL-NEW_AVAL_02", programs[["2_ADLB.R"]])
   expect_section_order("ADLB-VISITNUM-NEW_VISITNUM_01", "ADLB-VISITNUM-NEW_VISITNUM_02", programs[["2_ADLB.R"]])
 
-  source(x[[2]])
-  expect_snapshot_value(x = ADLB, style = "json2")
+  x[[2]] |> source()
+  ADLB |> expect_snapshot_value(style = "json2")
 
 
   # Check ADSL (program 3)
   expect_section_order("ADSL-NEWFL02-NEWFL_02", "ADSL-NEWFL03-NEWREA03-NEWFL_03", programs[["3_ADSL.R"]])
-  source(x[[3]])
-  expect_snapshot_value(x = ADSL, style = "json2")
+  x[[3]] |> source()
+  ADSL |> expect_snapshot_value(style = "json2")
 
 })
+
 
