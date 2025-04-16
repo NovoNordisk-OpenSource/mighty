@@ -4,7 +4,7 @@ test_that("perfomance", {
     test_path("fixtures", "adsl_1234.yml"),
     test_path("fixtures", "adlb_1234.yml")
   )
-  path_trial_metadata <- test_path("fixtures", "init_0001.yml")
+  path_trial_metadata <- test_path("fixtures", "trial_metadata_1234.yml")
   std_lib_path <- c(
     testthat::test_path("fixtures", "adsl_0001.R"),
     testthat::test_path("fixtures", "adlb_0001.R")

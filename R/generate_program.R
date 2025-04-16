@@ -2,6 +2,7 @@ generate_program <- function(program_order,
                              nodes,
                              domain_keys,
                              std_library_path,
+                             trial_metadata,
                              ui_data,
                              data_connection) {
   # Merge the program_id and rank column from program_order onto nodes
@@ -20,8 +21,8 @@ generate_program <- function(program_order,
   std_library_path |>
     lapply(source, local = std_code_env)
 
-  sdtm_dataset_list <- list_all_(type = "sdtm", ui_data$trial_metadata)
-  adam_dataset_list <- list_all_(type = "adam", ui_data$trial_metadata)
+  sdtm_dataset_list <- list_all_(type = "sdtm", trial_metadata)
+  adam_dataset_list <- list_all_(type = "adam", trial_metadata)
 
   nodes_split <- split(nodes_and_programs, by = "program_id")
 
@@ -56,7 +57,7 @@ rename_programs <- function(programs, nodes_split) {
 list_all_sdtm_datasets <- function(trial_metadata) {
   # Generate list of all SDTM datasets in the current study so later we can
   # check if a specific supp dataset exists
-  
+
   sdtm_path <-
     sdtm_connector <- connector::connector_fs()(path = sdtm_path)
   sdtm_connector |> connector::list_content_cnt()
@@ -79,7 +80,7 @@ list_all_ <- function(type = c("sdtm", "adam"), trial_metadata) {
   # This is needed when testing and referencing trial data locations that don't
   # exist, or the testing environment doesn't have access to
   result <- tryCatch({
-    
+
     connector::connector_fs(path = path) |>
       connector::list_content_cnt()
   }, error = function(e) {

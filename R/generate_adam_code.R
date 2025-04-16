@@ -69,6 +69,7 @@ generate_adam_code <- function(path_ui_data,
     nodes_5,
     yaml::read_yaml(path_domain_keys),
     path_std_lib,
+    trial_metadata,
     ui_yml,
     data_connection
   )
