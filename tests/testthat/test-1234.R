@@ -24,8 +24,6 @@ test_that("perfomance", {
   write_adam_programs(dir = output_path, programs = actual$programs)
 
   x <- list.files(output_path, full.names = TRUE)
-  browser()
-  file.edit(x[[1]])
 
   programs <- lapply(x, readLines)
   names(programs) <- basename(x)
@@ -37,5 +35,22 @@ test_that("perfomance", {
   expect_section_order("ADSL-AGE2", "ADSL-AGE_DIFF1", programs[["1_ADSL.R"]])
   expect_section_order(c("ADSL-PLANNED_ARM", "ADSL-AGE_DIFF1"), "ADSL-AGE_DIFF2", programs[["1_ADSL.R"]])
   expect_section_order(c("ADSL-PLANNED_ARM", "ADSL-AGE_DIFF1"), "ADSL-NEWFL01-NEWREA01", programs[["1_ADSL.R"]])
+
+
+  # Check ADLB (program 2)
+  browser()
+  expect_section_order(c("ADLB-AVAL", "ADLB-LBTEST-NEW_LBTEST_01"), "ADLB-AVAL_GRP-AVAL_GRP_01", programs[["2_ADLB.R"]])
+  expect_section_order("ROW_01", "DER_11", programs[["2_ADLB.R"]])
+  expect_section_order(c("ADLB-LBTEST-NEW_LBTEST_01", "ADLB-AVAL_GRP-AVAL_GRP_01"), "DER_26", programs[["2_ADLB.R"]])
+  expect_section_order("ADLB-AVAL", "ROW_01", programs[["2_ADLB.R"]])
+  expect_section_order("ADLB-AVAL", "ROW_03", programs[["2_ADLB.R"]])
+  expect_section_order(c("ADLB-AVAL", "PRED_04"), "ROW_04", programs[["2_ADLB.R"]])
+  expect_section_order("DER_11", "ADLB-LBTEST-NEW_LBTEST_01", programs[["2_ADLB.R"]])
+  expect_section_order(c("PRED_04", "DER_11"), "ROW_06", programs[["2_ADLB.R"]])
+  expect_section_order("ROW_06", "ADLB-LBTEST-new_lbtest_04" , programs[["2_ADLB.R"]])
+  expect_section_order(c("ADLB-LBTEST-NEW_LBTEST_01", "ROW_06"), "ROW_08", programs[["2_ADLB.R"]])
+  expect_section_order(c("DER_11", "ADLB-LBTEST-NEW_LBTEST_01"), "ROW_09", programs[["2_ADLB.R"]])
+  expect_section_order(c("ADLB-AVAL", "ROW_01"), "ROW_10", programs[["2_ADLB.R"]])
+  expect_section_order("ROW_02", "ROW_11", programs[["2_ADLB.R"]])
 })
 waldo::compare(head(ADSL), b)
