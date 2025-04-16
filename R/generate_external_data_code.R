@@ -16,7 +16,7 @@ generate_external_data_code <- function(payload,
                                         adam_dataset_list,
                                         data_connection) {
   # for each element of payload, apply the following logic
-  by_domain <- split(payload, by = "domain")
+  by_domain <- split(payload, payload$domain)
   if (data_connection == "pharmaverse") {
     connector_setup <- NULL
     data_load_code <-
