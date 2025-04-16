@@ -29,6 +29,9 @@ column_metadata:
   - column: ARM
     source: ADSL.PLANNED_ARM
 
+  - column: RACE_COUNTRY
+    source: ADSL.RACE_COUNTRY
+
   - column: AVAL
     source: core.LBSTRESN
 
