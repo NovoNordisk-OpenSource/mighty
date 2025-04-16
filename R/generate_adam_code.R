@@ -30,7 +30,7 @@ generate_adam_code <- function(path_ui_data,
     lapply(parse_node_metadata) |>
     unlist(recursive = FALSE) |>
     update_ui_data(ui_table) |>
-    add_node_id()
+    add_node_id_fast()
 
   # Enrich predecessors in UI data with auto-generated metadata
   nodes_2 <- update_predecessors(nodes_1, path_domain_keys)

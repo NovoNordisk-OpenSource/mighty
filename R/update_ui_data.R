@@ -11,17 +11,12 @@ update_ui_data <- function(payload, ui_data) {
   metadata_from_active_code_ids <- payload[ui_data[!is.na(code_id), code_id]]
 
   metadata_from_active_code_ids_transposed <- purrr::list_transpose(metadata_from_active_code_ids)
-  code_id_data <- data.table(
+  code_id_data <- data.table::data.table(
     code_id = names(metadata_from_active_code_ids),
     type = metadata_from_active_code_ids_transposed$type,
     depend_cols = metadata_from_active_code_ids_transposed$depend_cols,
     outputs = metadata_from_active_code_ids_transposed$outputs
   )
-
-  # TODO: check if the outputs described by data match the columns specified in
-  # the adam specs. For new, we just use the metadata supplied by the standard
-  # components
-
 
   x <- merge(
     ui_data,
@@ -31,11 +26,12 @@ update_ui_data <- function(payload, ui_data) {
     all.x = TRUE
   )
   assert_outputs_identical(x)
+
+  # Consolidate columns for data that is redundant
   x[!is.na(code_id), `:=` (depend_cols = depend_cols_from_code,
                            type = type_from_code,
                            outputs = outputs_from_code), ]
   x$outputs_from_code <- x$type_from_code <- x$depend_cols_from_code <- x$column <- NULL
-
 
 
   x[, depend_cols := purrr::map2(depend_cols, domain, depend_cols_nested_data_table)]
@@ -102,14 +98,28 @@ depend_cols_nested_data_table <- function(i, domain_i) {
 
 add_node_id <- function(nodes) {
   for (i in seq_len(nrow(nodes))) {
+
     nodes[i, node_id := paste0(
       domain,
       "-",
-      ifelse(!is.na(outputs), paste0(unlist(outputs), collapse = "-")),
+      ifelse(!is.na(outputs), paste0(unlist(outputs), collapse = "-"), ""),
       ifelse(!is.na(code_id), paste0("-", code_id), ""),
       ifelse(!is.na(parameters), paste0("-", parameters), "")
     )]
   }
+
+  return(nodes)
+}
+
+add_node_id_fast <- function(nodes) {
+  formatted_outputs <- ifelse(!is.na(nodes$outputs), lapply(nodes$outputs, function(x) paste0(unlist(x), collapse = "-")), "")
+  formatted_code_id <- ifelse(!is.na(nodes$code_id), paste0("-", nodes$code_id), "")
+  formatted_parameters <- ifelse(!is.na(nodes$parameters), paste0("-", nodes$parameters), "")
+
+  nodes$node_id <- paste0(nodes$domain, "-",
+                          formatted_outputs,
+                          formatted_code_id,
+                          formatted_parameters)
 
   return(nodes)
 }
