@@ -73,12 +73,11 @@ column_metadata:
   - column: AGE
     source: core.AGE
 
-
   - column: NEWFL01
     label: "some text"
     code_id: newfl_01
 
-  - column: NEWFLRE01
+  - column: NEWREA01
     label: "some text"
     code_id: newfl_01
 
@@ -87,6 +86,10 @@ column_metadata:
     code_id: newfl_02
 
   - column: NEWFL03
+    label: "some text"
+    code_id: newfl_03
+
+  - column: NEWREA03
     label: "some text"
     code_id: newfl_03
 
