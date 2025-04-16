@@ -7,7 +7,7 @@
 #' @export
 #'
 #' @examples
-make_edges <- function(nodes, primary_domain = "adsl") {
+make_edges <- function(nodes, primary_domain = "ADSL") {
   # This gives a data.table showing which columns each node depends on. But a
   # column is not the same as a "node" in this framework. So we will then have
   # to match each column to a node that produces that column. That will allow us

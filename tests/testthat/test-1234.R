@@ -14,7 +14,6 @@ test_that("perfomance", {
   output_path <- withr::local_tempdir()
 
   # ACT
-
   actual <- generate_adam_code(ui_path,
                                std_lib_path,
                                path_trial_metadata,

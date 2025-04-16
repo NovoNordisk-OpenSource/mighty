@@ -1,4 +1,5 @@
 assert_all_parents_present <- function(x){
+
   x_no_rows <- x[(is.na(type)|type!="row")]
   dependencies <- purrr::map2(x$domain, x$depend_cols, function(domain_table, depend_col){
     # To take care for intre-table depencencies, use the parent table domain when
@@ -9,8 +10,6 @@ assert_all_parents_present <- function(x){
       a <- depend_col[domain=="core", paste0(domain_table, ".", column_name)]
     }
     if(depend_col[domain!="core", nrow(.SD)]>0){
-      # TODO: Mention somewhere that this does take into account external data
-      # dependencies
       b <- depend_col[grepl("^AD", domain), paste0(domain, ".", column_name)]
     }
     c(a,b)

@@ -57,8 +57,6 @@ create_domain_init_node_i <- function(core_vars_domain_i,
 
   core_variables_i <- data_model_columnn(column_name = core_var_tmp$Var1, domain = core_var_tmp$Var2)
 
-  outputs_i <- core_vars_domain_i
-
   new_node_i[, `:=`(
     domain = nm,
     code_id = NA_character_,
@@ -66,43 +64,7 @@ create_domain_init_node_i <- function(core_vars_domain_i,
     parameters = NA_character_,
     type = "domain_init",
     depend_cols = list(core_variables_i),
-    outputs = list(outputs_i)
+    outputs = list(core_vars_domain_i)
   )][, node_id := paste0(domain, "-", "domain_init")]
 }
 
-
-create_domain_initialize_nodes_fast <- function(nodes, domain_init_data) {
-
-  core_vars <- extract_sdtm_core_variables_fast(nodes)
-
-  domain_init_nodes <- purrr::imap(core_vars,
-                                   create_domain_init_node_i,
-                                   nodes,
-                                   domain_init_data) |>
-    rbindlist()
-
-  # The domain init nodes replace the predecessor nodes for core variables Need
-  # a data.table of dommain - column for both domain init nodes, and regular
-  # nodes Only nodes that have 1 depend_col are eligible, as those with multiple
-  # are either predecessor with renaming or derivations
-  nodes_to_remove <- domain_init_nodes[, outputs]  |>
-    purrr::map2(domain_init_nodes$domain, function(i, domain) {
-      paste0(domain, "-", i)
-    }) |> unlist()
-
-
-  # Nodes having only a single output & are predecessor nodes
-  inx_single_dependency <- vapply(nodes$depend_cols, function(i)
-    nrow(i) == 1, FUN.VALUE = logical(1L))
-  inx_pred <- nodes[, type == "predecessor"]
-  inx <- inx_single_dependency & inx_pred
-
-  # Make a temporary ID to match against the nodes_to_remove
-  nodes_temp <- copy(nodes)
-  nodes_temp[, domain_init_cols_tmp := NA_character_]
-  nodes_temp[inx, domain_init_cols_tmp := paste0(domain, "-", unlist(outputs))]
-
-  nodes_subset <- nodes_temp[!domain_init_cols_tmp %in% nodes_to_remove]
-  nodes_subset[, domain_init_cols_tmp := NULL]
-  rbind(nodes_subset, domain_init_nodes)
-}
