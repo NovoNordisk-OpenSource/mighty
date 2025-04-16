@@ -1,0 +1,27 @@
+assert_all_parents_present <- function(x){
+  x_no_rows <- x[(is.na(type)|type!="row")]
+  dependencies <- purrr::map2(x$domain, x$depend_cols, function(domain_table, depend_col){
+    # To take care for intre-table depencencies, use the parent table domain when
+    # it's a "core" column, otherwise use the domain listed in the "depend_cols"
+    a <- c()
+    b <- c()
+    if(depend_col[domain=="core", nrow(.SD)]>0){
+      a <- depend_col[domain=="core", paste0(domain_table, ".", column_name)]
+    }
+    if(depend_col[domain!="core", nrow(.SD)]>0){
+      # TODO: Mention somewhere that this does take into account external data
+      # dependencies
+      b <- depend_col[grepl("^AD", domain), paste0(domain, ".", column_name)]
+    }
+    c(a,b)
+  }) |> unlist()
+  outputs <- purrr::map2(x_no_rows$domain, x_no_rows$outputs, function(domain, output){
+    paste0(domain, ".", unlist(output))
+  }) |> unlist()
+
+  missing_parents <- setdiff(dependencies, outputs)
+  if(length(missing_parents)>0){
+    stop("\n\n The following columns are parents of other columns, but are not in the ADaM spec:\n", paste0(missing_parents, collapse = "\n"))
+  }
+
+}
