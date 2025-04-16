@@ -14,7 +14,7 @@ test_that("perfomance", {
   output_path <- withr::local_tempdir()
 
   # ACT
-
+  debugonce(generate_adam_code)
   actual <- generate_adam_code(ui_path,
                                std_lib_path,
                                path_trial_metadata,
@@ -24,7 +24,8 @@ test_that("perfomance", {
   write_adam_programs(dir = output_path, programs = actual$programs)
 
   x <- list.files(output_path, full.names = TRUE)
-
+  do.call(file.edit, as.list(x))
+browser()
   programs <- lapply(x, readLines)
   names(programs) <- basename(x)
   # Check ADSL (program 1)

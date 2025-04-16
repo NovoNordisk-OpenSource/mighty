@@ -6,9 +6,8 @@
 #' @return
 #'
 #' @examples
-add_nodes_to_load_external_data <- function(program_order, nodes) {
-
-  external_deps <- external_dependencies_per_program(program_order, nodes)
+add_nodes_to_load_external_data <- function(program_order, nodes, init_metadata) {
+  external_deps <- external_dependencies_per_program(program_order, nodes, init_metadata)
   x <- split(program_order, by = "program_id")
 
   new_nodes_list <- purrr::imap(x, function(i, nm) {
@@ -42,17 +41,64 @@ add_nodes_to_load_external_data <- function(program_order, nodes) {
 #'
 #' @param program_order
 #' @param nodes
+#' @param init_metadata
 #'
 #' @return
 #'
 #' @examples
-external_dependencies_per_program <- function(program_order, nodes) {
-  x <- program_order[nodes[, .(node_id, depend_cols_ext)], on = .(node_id)] |>
+external_dependencies_per_program <- function(program_order, nodes, init_metadata) {
+
+  x <- program_order[nodes[, .(node_id, domain, type, depend_cols)], on = .(node_id)] |>
     setorder(program_id, rank)
-  nodes_by_domain <- split(x[, .(node_id, depend_cols_ext, program_id)], by =
+  nodes_by_pgm <- split(x[, .(node_id,  domain, type, depend_cols, program_id)], by =
                              "program_id")
-  lapply(nodes_by_domain, function(i) {
-    i[, rbindlist(depend_cols_ext), by = node_id]
+  dep_src_cols_by_pgm <- lapply(nodes_by_pgm, function(i) {
+    i[, rbindlist(depend_cols), by = node_id] |>
+      dplyr::filter(domain !=  unique(i$domain))
   })
 
+  ext_cols_by_pgm <- lapply(seq_len(length(nodes_by_pgm)), function(i){
+
+    y <- nodes_by_pgm[[i]]
+
+    if(any(y$type == "domain_init")){
+      filter_depend_cols <- init_metadata[[unique(y$domain)]][["filter_depend_cols"]]
+      core_domains <- init_metadata[[unique(y$domain)]][["core_domains"]]
+
+      # Column dependencies coming from ADSL
+      filter_depend_cols_adsl <- gsub("^ADSL\\.", "", filter_depend_cols[grepl("^ADSL\\.", filter_depend_cols)])
+      dep_adsl <- data.table::data.table(domain = "ADSL",
+                                         domain_type = "adam",
+                                         column_name = filter_depend_cols_adsl)
+
+      # If ADSL is required in the core filter, then add key to filter dependency
+      if (nrow(dep_adsl) > 0) {
+        dep_key <- data.table::data.table(domain = c("ADSL", core_domains),
+                                          domain_type = c("adam", classify_external_data_domains(core_domains)),
+                                          column_name = "USUBJID")
+      }else{
+        dep_key <- data.table::data.table()
+      }
+
+      # Column dependencies coming from the "core" domain(s)
+      filter_depend_cols_core <- gsub("^core\\.", "", filter_depend_cols[grepl("^core\\.", filter_depend_cols)])
+      dep_core <- expand.grid(
+        "domain" = core_domains,
+        "column_name" = filter_depend_cols_core,
+        stringsAsFactors = FALSE
+      )
+      dep_core[["domain_type"]] <- classify_external_data_domains(dep_core[["domain"]])
+
+
+      # Combine the dependencies
+      rbind(dep_core, dep_adsl, dep_key, dep_src_cols_by_pgm[[i]][, c("domain", "column_name", "domain_type")]) |>
+        unique() |> setorder(domain_type, domain, column_name)
+    }else{
+      dep_src_cols_by_pgm[[i]][, c("domain", "column_name", "domain_type")] |>
+        unique() |>
+        setorder(domain_type, domain, column_name)
+    }
+  })
+  names(ext_cols_by_pgm) <- as.character(seq_len(length(ext_cols_by_pgm)))
+  return(ext_cols_by_pgm)
 }

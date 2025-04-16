@@ -25,7 +25,6 @@ generate_adam_code <- function(path_ui_data,
   ui_table <- convert_yml_to_data_table(ui_yml)
   trial_metadata <- yaml::read_yaml(path_trial_metadata)
 
-
   nodes_1 <- path_std_lib |>
     lapply(parse_node_metadata) |>
     unlist(recursive = FALSE) |>
@@ -39,34 +38,32 @@ generate_adam_code <- function(path_ui_data,
   # domain =="self" are also present as outputs
   # assert_all_dependencies_present(nodes_2)
 
-
   # Create an initialization action per domain that consumes predecessor actions
   nodes_3 <- create_domain_initialize_nodes(nodes_2, ui_init)
 
   # Add information about external dependencies to the initialization action
-  nodes_5 <- enrich_with_external_dependencies(nodes_3, ui_init)
+  nodes_4 <- enrich_with_external_dependencies(nodes_3, ui_init)
 
   # Identify edges in the topology graph
-  edges <- make_edges(nodes_5)
+  edges <- make_edges(nodes_3)
 
   # Identify topological order of actions
-  nodes_topo_order <- weighted_node_topo_sort(edges, nodes_5, primary_domain = "ADSL")
+  nodes_topo_order <- weighted_node_topo_sort(edges, nodes_3, primary_domain = "ADSL")
 
   # Group actions into programs that can be run as batches in a sequence
-  program_sequence_1 <- group_nodes_optimal(nodes_topo_order, nodes_5, edges)
+  program_sequence_1 <- group_nodes_optimal(nodes_topo_order, nodes_3, edges)
 
   # Add initialization actions to the program sequence
-  program_sequence_2 <- add_program_init_nodes(program_sequence_1, nodes_5)
+  program_sequence_2 <- add_program_init_nodes(program_sequence_1, nodes_3)
 
   # Add action to import external dependencies to the program sequence
-  program_sequence_3 <- add_nodes_to_load_external_data(program_sequence_2, nodes_5)
-
+  program_sequence_3 <- add_nodes_to_load_external_data(program_sequence_2, nodes_3, ui_init)
 
   # Create programs
   data_connection <- match.arg(data_connection)
   programs <- generate_program(
     program_sequence_3,
-    nodes_5,
+    nodes_4,
     yaml::read_yaml(path_domain_keys),
     path_std_lib,
     ui_yml,
