@@ -4,7 +4,13 @@
 \alias{pre_process_predecessor_left_join}
 \title{Pre-process variables for predecessor left joins}
 \usage{
-pre_process_predecessor_left_join(depend_cols, outputs, domain, domain_keys)
+pre_process_predecessor_left_join(
+  depend_columns,
+  depend_domains,
+  outputs,
+  domain,
+  domain_keys
+)
 }
 \value{
 a list of strings to be used in the predecessor_left_join function

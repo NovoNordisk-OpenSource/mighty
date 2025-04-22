@@ -7,7 +7,7 @@
 generate_initialize_domain(
   .self,
   core_domains,
-  filter_per_domain = NULL,
+  domain_filter = NULL,
   filter_global = NULL,
   keep_vars = NULL
 )

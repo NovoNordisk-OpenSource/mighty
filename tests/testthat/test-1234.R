@@ -21,10 +21,10 @@ test_that("perfomance", {
                                output_path,
                                data_connection = "pharmaverse")
   write_adam_programs(dir = output_path, programs = actual$programs)
+  browser()
 
   x <- list.files(output_path, full.names = TRUE)
-  do.call(file.edit, as.list(x))
-browser()
+
   programs <- lapply(x, readLines)
   names(programs) <- basename(x)
   # Check ADSL (program 1)

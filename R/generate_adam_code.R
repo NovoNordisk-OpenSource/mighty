@@ -41,9 +41,6 @@ generate_adam_code <- function(path_ui_data,
   # Create an initialization action per domain that consumes predecessor actions
   nodes_3 <- create_domain_initialize_nodes(nodes_2, ui_init)
 
-  # Add information about external dependencies to the initialization action
-  nodes_4 <- enrich_with_external_dependencies(nodes_3, ui_init)
-
   # Identify edges in the topology graph
   edges <- make_edges(nodes_3)
 
@@ -63,7 +60,7 @@ generate_adam_code <- function(path_ui_data,
   data_connection <- match.arg(data_connection)
   programs <- generate_program(
     program_sequence_3,
-    nodes_4,
+    nodes_3,
     yaml::read_yaml(path_domain_keys),
     path_std_lib,
     ui_yml,

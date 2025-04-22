@@ -2,7 +2,7 @@
 % Please edit documentation in R/update_ui_data.R
 \name{update_ui_data}
 \alias{update_ui_data}
-\title{Update UI data}
+\title{Title}
 \usage{
 update_ui_data(payload, ui_data)
 }
@@ -10,5 +10,5 @@ update_ui_data(payload, ui_data)
 \item{ui_data}{}
 }
 \description{
-Update UI data
+Title
 }

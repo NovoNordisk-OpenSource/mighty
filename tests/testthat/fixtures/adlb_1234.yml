@@ -63,9 +63,17 @@ column_metadata:
     depend_rows:
       - new_aval_01
 
-  - column: AVAL_GRP2
+  - column: AVAL_GRP1
+    label: some text
+    code_id: aval_grp_01
+    depend_rows:
+      - new_lbtest_01
+
+  - colum: AVAL_GRP2
     label: some text
     code_id: aval_grp_02
+    depend_rows:
+      - new_lbtest_01
 
 row_actions:
   - code_id: new_lbtest_01
@@ -104,14 +112,6 @@ row_actions:
   - code_id: new_visitnum_02
     depend_rows:
       - new_visitnum_01
-
-  - code_id: aval_grp_01
-    depend_rows:
-      - new_lbtest_01
-
-  - code_id: aval_grp_02
-    depend_rows:
-      - new_lbtest_01
 
 referenced_domains:
   - domain: LB
