@@ -44,3 +44,19 @@ read_adam_domain_yml <- function(yml) {
 
 
 }
+
+convert_to_NA_character <- function(x) {
+  # Check if x is a list
+  if (is.list(x)) {
+    # Apply recursively
+    return(lapply(x, convert_to_NA_character))
+  }
+
+
+  if (is.character(x) && any(x == "NA")) {
+    x[x == "NA"] <- NA_character_
+  }
+
+  # Return the possibly modified x
+  return(x)
+}
