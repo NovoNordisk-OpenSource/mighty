@@ -65,5 +65,3 @@ test_that("perfomance", {
   ADSL |> expect_snapshot_value(style = "json2")
 
 })
-
-
