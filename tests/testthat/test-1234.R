@@ -21,12 +21,12 @@ test_that("perfomance", {
                                output_path,
                                data_connection = "pharmaverse")
   write_adam_programs(dir = output_path, programs = actual$programs)
-  browser()
 
   x <- list.files(output_path, full.names = TRUE)
 
   programs <- lapply(x, readLines)
   names(programs) <- basename(x)
+
   # Check ADSL (program 1)
   expect_section_order("ADSL-PLANNED_ARM", "ADSL-ARM_GRP1-ARM_GROUP_01", programs[["1_ADSL.R"]])
   expect_section_order("ADSL-PLANNED_ARM", "ADSL-NEW_ARM-ARM_01", programs[["1_ADSL.R"]])
@@ -62,6 +62,9 @@ test_that("perfomance", {
   expect_section_order("ADSL-NEWFL02-NEWFL_02", "ADSL-NEWFL03-NEWREA03-NEWFL_03", programs[["3_ADSL.R"]])
   source(x[[3]])
   expect_snapshot_value(x = ADSL, style = "json2")
+
+  # Check edges
+  expect_snapshot_value(x = as.data.frame(actual$edges), style = "json2")
 
 })
 
