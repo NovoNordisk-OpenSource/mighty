@@ -14,6 +14,7 @@
 #' @examples
 generate_initialize_domain <-  function(.self,
                                         core_domains,
+                                        adsl_domain_keys,
                                         domain_filter = NULL,
                                         filter_global = NULL,
                                         keep_vars = NULL) {
@@ -56,7 +57,8 @@ generate_initialize_domain <-  function(.self,
   # are needed for global filtering.
   # TODO: This could be done smarter
   merge_expr <- if (.self != "ADSL") {
-    glue::glue("{.self} <- dplyr::left_join({.self}, ADSL, by = c('STUDYID', 'USUBJID'))")
+    keys <- paste0("\"", adsl_domain_keys, "\"", collapse = ",")
+    glue::glue("{.self} <- dplyr::left_join({.self}, ADSL, by = c({keys}))")
   } else {
     NULL
   }

@@ -18,7 +18,8 @@ generate_node_code <- function(nodes_program_i,
                                ui_data,
                                sdtm_dataset_list,
                                adam_dataset_list,
-                               data_connection) {
+                               data_connection,
+                               path_output) {
   program <- list()
 
   trial_metadata <- ui_data$trial_metadata
@@ -28,11 +29,14 @@ generate_node_code <- function(nodes_program_i,
 
     if (node_i$type == "external") {
       external_deps <- node_i$external_dependencies_by_program[[1]]
-      program[[i]] <- generate_external_data_code(external_deps,
-                                                  trial_metadata,
-                                                  sdtm_dataset_list,
-                                                  adam_dataset_list,
-                                                  data_connection) |> paste0(collapse = "\n\n")
+      program[[i]] <- generate_external_data_code(
+        external_deps,
+        trial_metadata,
+        sdtm_dataset_list,
+        adam_dataset_list,
+        data_connection,
+        path_output = path_output
+      ) |> paste0(collapse = "\n\n")
 
       next
     }
@@ -42,6 +46,7 @@ generate_node_code <- function(nodes_program_i,
       program[[i]] <- generate_initialize_domain(
         .self = node_i$domain,
         core_domains = domain_metadata$core_domains,
+        adsl_domain_keys = domain_keys$ADSL,
         domain_filter = domain_metadata$filter_domain,
         filter_global = domain_metadata$filter_global,
         keep_vars = node_i$outputs[[1]]
@@ -49,13 +54,17 @@ generate_node_code <- function(nodes_program_i,
       next
     }
     if (node_i$type == "program_init") {
-      program[[i]] <- generate_program_init(adam_domain = node_i$domain,
-                                            adam_dataset_list = adam_dataset_list,
-                                            data_connection = data_connection)
+
+      program[[i]] <- generate_program_init(
+        adam_domain = node_i$domain,
+        adam_dataset_list = adam_dataset_list,
+        data_connection = data_connection,
+        path_out = path_output
+
+      )
       next
     }
     if (node_i$type == "predecessor") {
-
       is_mutate <- node_i$depend_cols[[1]] |> nrow() == 1
       if (is_mutate) {
         depends <- node_i[["depend_cols"]][[1]][["column_name"]]
@@ -72,7 +81,11 @@ generate_node_code <- function(nodes_program_i,
       depend_columns <- node_i[["depend_cols"]][[1]][["column_name"]]
       depend_domains <- node_i[["depend_cols"]][[1]][["domain"]]
       outputs <- node_i[["outputs"]][[1]]
-      x <- pre_process_predecessor_left_join(depend_columns, depend_domains, outputs, node_i$domain, domain_keys)
+      x <- pre_process_predecessor_left_join(depend_columns,
+                                             depend_domains,
+                                             outputs,
+                                             node_i$domain,
+                                             domain_keys)
       program[[i]] <- predecessor_left_join(
         .self = node_i$domain,
         join_dataset = x$join_dataset,
@@ -90,6 +103,14 @@ generate_node_code <- function(nodes_program_i,
         node_id = node_i$node_id,
         domain_name = node_i$domain,
         env = std_code_env
+      )
+      next
+    }
+    if (node_i$type == "write_data") {
+      program[[i]] <- generate_write_data(
+        domain_name = node_i$domain,
+        data_connection = data_connection,
+        path_output = path_output
       )
       next
     }

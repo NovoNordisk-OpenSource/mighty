@@ -59,8 +59,8 @@ generate_adam_code <- function(path_ui_data,
   program_sequence_2 <- add_program_init_nodes(program_sequence_1, nodes_5)
 
   # Add action to import external dependencies to the program sequence
-  program_sequence_3 <- add_nodes_to_load_external_data(program_sequence_2, nodes_5)
-
+  program_sequence_3 <- add_nodes_to_load_external_data(program_sequence_2, nodes_5) |>
+    add_node_to_write_data()
 
   # Create programs
   data_connection <- match.arg(data_connection)
@@ -71,7 +71,8 @@ generate_adam_code <- function(path_ui_data,
     path_std_lib,
     trial_metadata,
     ui_yml,
-    data_connection
+    data_connection,
+    path_output = path_output
   )
 
   return(

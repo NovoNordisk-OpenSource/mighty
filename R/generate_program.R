@@ -1,10 +1,27 @@
+#' Generate program(s)
+#'
+#' @param program_order
+#' @param nodes
+#' @param domain_keys
+#' @param std_library_path
+#' @param trial_metadata
+#' @param ui_data
+#' @param path_output When data_connection is "pharmaverse" the generated
+#'   programs need to point to a location where the outputs are stored
+#' @param data_connection
+#'
+#' @returns
+#' @export
+#'
+#' @examples
 generate_program <- function(program_order,
                              nodes,
                              domain_keys,
                              std_library_path,
                              trial_metadata,
                              ui_data,
-                             data_connection) {
+                             data_connection,
+                             path_output = NULL) {
   # Merge the program_id and rank column from program_order onto nodes
   # data.table to get the program_id for each node. Then sort the nodes by
   # program_id and rank.
@@ -34,7 +51,8 @@ generate_program <- function(program_order,
     ui_data,
     sdtm_dataset_list,
     adam_dataset_list,
-    data_connection
+    data_connection,
+    path_output
   )
 
   programs <- rename_programs(programs, nodes_split)
