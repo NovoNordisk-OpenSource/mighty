@@ -148,18 +148,18 @@ new_lbtest_05 <- function(.self) {
 # type: row
 # depend_cols:
 #   - LBTEST
-#   - LBRESN
+#   - AVAL
 # outputs:
 #   - LBTEST
 #!-!
 new_lbtest_06 <- function(.self) {
 
   new_lbtest1 <- .self |>
-    dplyr::filter(LBTEST == "Microcytes (new)" & LBRESN>1) |>
+    dplyr::filter(LBTEST == "Microcytes (new)" & AVAL>1) |>
     dplyr::mutate(LBTEST = "Microcytes (new 3)")
 
   new_lbtest2 <- .self |>
-    dplyr::filter(LBTEST == "Microcytes (new 2)" & LBRESN>1) |>
+    dplyr::filter(LBTEST == "Microcytes (new 2)" & AVAL>1) |>
     dplyr::mutate(LBTEST = "Microcytes (new 4)")
 
 
