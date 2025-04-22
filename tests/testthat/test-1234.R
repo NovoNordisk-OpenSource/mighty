@@ -27,7 +27,7 @@ test_that("perfomance", {
   programs <- lapply(x, readLines)
   names(programs) <- basename(x)
 
-  # Check ADSL (program 1)
+  # Check ADSL program 1
   expect_section_order("ADSL-PLANNED_ARM", "ADSL-ARM_GRP1-ARM_GROUP_01", programs[["1_ADSL.R"]])
   expect_section_order("ADSL-PLANNED_ARM", "ADSL-NEW_ARM-ARM_01", programs[["1_ADSL.R"]])
   expect_section_order("ADSL-PLANNED_ARM", "ADSL-ARM_MATCH-ARM_MATCH_01", programs[["1_ADSL.R"]])
@@ -37,9 +37,12 @@ test_that("perfomance", {
   expect_section_order(c("ADSL-PLANNED_ARM", "ADSL-AGE_DIFF1-AGE_DIFF_01"), "ADSL-NEWFL01-NEWREA01-NEWFL_01", programs[["1_ADSL.R"]])
 
   source(x[[1]])
-  expect_snapshot_value(x = ADSL, style = "json2")
-  # Check ADLB (program 2)
 
+  # Check ADSL table after program 1
+  setcolorder(ADSL, sort(names(ADSL)))
+  expect_snapshot_value(x = ADSL, style = "json2")
+
+  # Check ADLB program
   expect_section_order(c("ADLB-AVAL", "ADLB-LBTEST-NEW_LBTEST_01"), "ADLB-AVAL_GRP-AVAL_GRP_01", programs[["2_ADLB.R"]])
   expect_section_order("ADLB-AVAL-NEW_AVAL_01", "ADLB-LBTEST-LBTEST_01", programs[["2_ADLB.R"]])
   expect_section_order(c("ADLB-LBTEST-NEW_LBTEST_01", "ADLB-AVAL_GRP-AVAL_GRP_01"), "ADLB-AVAL_GRP2-AVAL_GRP_02", programs[["2_ADLB.R"]])
@@ -54,13 +57,17 @@ test_that("perfomance", {
   expect_section_order(c("ADLB-AVAL", "ADLB-AVAL-NEW_AVAL_01"), "ADLB-AVAL-NEW_AVAL_02", programs[["2_ADLB.R"]])
   expect_section_order("ADLB-VISITNUM-NEW_VISITNUM_01", "ADLB-VISITNUM-NEW_VISITNUM_02", programs[["2_ADLB.R"]])
 
+  # Check ADLB table
   source(x[[2]])
+  setcolorder(ADLB, sort(names(ADLB)))
   expect_snapshot_value(x = ADLB, style = "json2")
 
-
-  # Check ADSL (program 3)
+  # Check ADSL program 2
   expect_section_order("ADSL-NEWFL02-NEWFL_02", "ADSL-NEWFL03-NEWREA03-NEWFL_03", programs[["3_ADSL.R"]])
+
+  # Check ADSL table after program 2
   source(x[[3]])
+  setcolorder(ADSL, sort(names(ADSL)))
   expect_snapshot_value(x = ADSL, style = "json2")
 
   # Check edges
