@@ -36,9 +36,8 @@ test_that("perfomance", {
   expect_section_order(c("ADSL-PLANNED_ARM", "ADSL-AGE_DIFF1-AGE_DIFF_01"), "ADSL-AGE_DIFF2-AGE_DIFF_02", programs[["1_ADSL.R"]])
   expect_section_order(c("ADSL-PLANNED_ARM", "ADSL-AGE_DIFF1-AGE_DIFF_01"), "ADSL-NEWFL01-NEWREA01-NEWFL_01", programs[["1_ADSL.R"]])
 
-  source(x[[1]])
-
   # Check ADSL table after program 1
+  source(x[[1]])
   setcolorder(ADSL, sort(names(ADSL)))
   expect_snapshot_value(x = ADSL, style = "json2")
 
