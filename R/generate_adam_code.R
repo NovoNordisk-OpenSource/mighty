@@ -29,7 +29,7 @@ generate_adam_code <- function(path_ui_data,
     lapply(parse_node_metadata) |>
     unlist(recursive = FALSE) |>
     update_ui_data(ui_table) |>
-    add_node_id()
+    add_node_id_fast()
 
   # Enrich predecessors in UI data with auto-generated metadata
   nodes_2 <- update_predecessors(nodes_1, path_domain_keys)
@@ -54,7 +54,14 @@ generate_adam_code <- function(path_ui_data,
   program_sequence_2 <- add_program_init_nodes(program_sequence_1, nodes_3)
 
   # Add action to import external dependencies to the program sequence
-  program_sequence_3 <- add_nodes_to_load_external_data(program_sequence_2, nodes_3, ui_init)
+# <<<<<<< HEAD
+#   program_sequence_3 <- add_nodes_to_load_external_data(program_sequence_2, nodes_3, ui_init)
+# =======
+#   program_sequence_3 <- add_nodes_to_load_external_data(program_sequence_2, nodes_5) |>
+#     add_node_to_write_data()
+# >>>>>>> feature/new_yml_model
+  program_sequence_3 <- add_nodes_to_load_external_data(program_sequence_2, nodes_3, ui_init) |>
+    add_node_to_write_data()
 
   # Create programs
   data_connection <- match.arg(data_connection)
@@ -63,8 +70,10 @@ generate_adam_code <- function(path_ui_data,
     nodes_3,
     yaml::read_yaml(path_domain_keys),
     path_std_lib,
+    trial_metadata,
     ui_yml,
-    data_connection
+    data_connection,
+    path_output = path_output
   )
 
   return(

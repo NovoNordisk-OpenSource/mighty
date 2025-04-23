@@ -63,13 +63,13 @@ column_metadata:
     depend_rows:
       - new_aval_01
 
-  - column: AVAL_GRP1
+  - column: AVAL_GRP
     label: some text
     code_id: aval_grp_01
     depend_rows:
       - new_lbtest_01
 
-  - colum: AVAL_GRP2
+  - column: AVAL_GRP2
     label: some text
     code_id: aval_grp_02
     depend_rows:

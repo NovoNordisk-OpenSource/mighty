@@ -11,31 +11,21 @@
 #' @examples
 #'
 extract_sdtm_core_variables <- function(nodes) {
-  nodes_by_domain <- split(nodes, by = "domain")
-  core_variables_by_domain <- lapply(nodes_by_domain, extract_sdtm_core_variables_i)
-  names(core_variables_by_domain) <- names(nodes_by_domain)
-  core_variables_by_domain
-}
 
-extract_sdtm_core_variables_i <- function(nodes_domain_i) {
-  # Core variables consit of the unique parent columns of all predecessor nodes
-  predecessor_depend_cols <- nodes_domain_i[type=="predecessor", depend_cols] |> rbindlist()
-  predecessor_depend_cols[domain == "core", column_name] |> unique()
+  # Pre-filter for predecessor nodes to avoid unnecessary processing
+  pred_nodes <- nodes[nodes$type == "predecessor", ]
 
-}
+  # Group by domain
+  result <- split(pred_nodes, by = "domain")
 
+  # Process each domain group
+  result <- lapply(result, function(domain_nodes) {
+    # Combine all depend_cols into one data.table
+    all_cols <- data.table::rbindlist(domain_nodes$depend_cols)
 
+    # Filter for core domain and get unique column names in one step
+    unique(all_cols[domain == "core", column_name])
+  })
 
-
-
-add_initial_predecessors_to_metadata <- function(metadata_init, init_predecessors) {
-  metadata_init <- purrr::map2(
-    metadata_init,
-    init_predecessors,
-    .f = function(yml, pred) {
-      yml[["initial_predecessors"]] <- pred
-      yml
-    }
-  )
-  metadata_init
+  return(result)
 }

@@ -7,6 +7,7 @@
 generate_initialize_domain(
   .self,
   core_domains,
+  adsl_domain_keys,
   domain_filter = NULL,
   filter_global = NULL,
   keep_vars = NULL

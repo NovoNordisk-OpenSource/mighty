@@ -11,7 +11,8 @@ generate_node_code(
   ui_data,
   sdtm_dataset_list,
   adam_dataset_list,
-  data_connection
+  data_connection,
+  path_output
 )
 }
 \arguments{

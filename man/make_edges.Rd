@@ -4,7 +4,7 @@
 \alias{make_edges}
 \title{Make edges}
 \usage{
-make_edges(nodes, primary_domain = "adsl")
+make_edges(nodes, primary_domain = "ADSL")
 }
 \arguments{
 \item{primary_domain}{}

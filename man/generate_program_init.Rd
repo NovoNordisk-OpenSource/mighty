@@ -8,6 +8,7 @@ generate_program_init(
   adam_domain,
   adam_dataset_list,
   data_connection,
+  path_out,
   file_extension = c("parquet", "sas7bdat")
 )
 }
