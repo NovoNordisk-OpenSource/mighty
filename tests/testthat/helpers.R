@@ -23,7 +23,7 @@ expect_section_order <- function(start_section, end_section, section_list) {
   # Check if the start_section is before the end_section
   start_idx <- c()
   for (i in start_section) {
-    start_idx <- c(start_idx, grep(paste0("^# ", i), section_list))
+    start_idx <- c(start_idx, grep(paste0("^# ", i, " -----"), section_list))
 
     testthat::expect_true(
       length(start_idx) > 0,
@@ -31,11 +31,11 @@ expect_section_order <- function(start_section, end_section, section_list) {
     )
   }
 
-  end_idx <-  grep(paste0("^# ", end_section), section_list)
+  end_idx <-  grep(paste0("^# ", end_section, " ---"), section_list)
 
   testthat::expect_true(
     length(end_idx) > 0,
-    info = paste0("The section ", i, " does not exist in the document")
+    info = paste0("The section ", end_section, " does not exist in the document")
   )
 
   testthat::expect_true(

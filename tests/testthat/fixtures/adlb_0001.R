@@ -1,29 +1,28 @@
 #!-!
-# type: column
-# origin: derivation
+# type: derivation
 # depend_cols:
-#   - self.USUBJID
-#   - self.LBSEQ
-#   - self.AVAL
-#   - lb.USUBJID
-#   - lb.LBSEQ
-#   - lb.LBTEST
-#   - adsl.USUBJID
-#   - adsl.PLANNED_ARM
+#   - USUBJID
+#   - LBSEQ
+#   - AVAL
+#   - LB.USUBJID
+#   - LB.LBSEQ
+#   - LB.LBTEST
+#   - ADSL.USUBJID
+#   - ADSL.PLANNED_ARM
 # outputs:
-#   - self.LBTEST
+#   - LBTEST
 #!-!
-lbtest_01 <- function(.self, lb, adsl) {
+lbtest_01 <- function(.self, LB, ADSL) {
 
   # join with adsl, only derive lbtest if adsl.planned_arm != "" and
   # if aval is na them lbtest = "Invalid"
   .self <- .self |>
     dplyr::left_join(
-      lb |> dplyr::select(USUBJID, LBSEQ, LBTEST),
+      LB |> dplyr::select(USUBJID, LBSEQ, LBTEST),
       by = c("USUBJID" = "USUBJID", "LBSEQ" = "LBSEQ")
     ) |>
     dplyr::left_join(
-      adsl |> dplyr::select(USUBJID, PLANNED_ARM),
+      ADSL |> dplyr::select(USUBJID, PLANNED_ARM),
       by = "USUBJID"
     ) |>
     dplyr::mutate(
@@ -41,11 +40,13 @@ lbtest_01 <- function(.self, lb, adsl) {
 
 #!-!
 # type: row
-# origin: NA
 # depend_cols:
-#   - self.LBTEST
+#   - LBTEST
+#   - SV.VISITNUM
+#   - SV.USUBJID
+#   - SV.VISITDY
 # outputs:
-#   - self.LBTEST
+#   - LBTEST
 #!-!
 new_lbtest_01 <- function(.self) {
 
@@ -53,19 +54,23 @@ new_lbtest_01 <- function(.self) {
     dplyr::filter(LBTEST == "Microcytes") |>
     dplyr::mutate(LBTEST = "Microcytes (new)")
 
+  new_lbtest <- new_lbtest |>
+    dplyr::left_join(SV, by = c("USUBJID", "VISITNUM")) |>
+    dplyr::filter(VISITDY > 20) |>
+    dplyr::select(-VISITDY)
+
   .self <- rbind(.self, new_lbtest)
   return(.self)
 }
 
 #!-!
 # type: row
-# origin: NA
 # depend_cols:
-#   - self.LBTEST
-#   - self.AVALC
+#   - LBTEST
+#   - AVALC
 # outputs:
-#   - self.LBTEST
-#   - self.AVALC
+#   - LBTEST
+#   - AVALC
 #!-!
 new_lbtest_02 <- function(.self) {
 
@@ -82,11 +87,10 @@ new_lbtest_02 <- function(.self) {
 
 #!-!
 # type: row
-# origin: NA
 # depend_cols:
-#   - self.LBTEST
+#   - LBTEST
 # outputs:
-#   - self.LBTEST
+#   - LBTEST
 #!-!
 new_lbtest_03 <- function(.self) {
 
@@ -104,11 +108,10 @@ new_lbtest_03 <- function(.self) {
 
 #!-!
 # type: row
-# origin: NA
 # depend_cols:
-#   - self.LBTEST
+#   - LBTEST
 # outputs:
-#   - self.LBTEST
+#   - LBTEST
 #!-!
 new_lbtest_04 <- function(.self) {
 
@@ -126,11 +129,10 @@ new_lbtest_04 <- function(.self) {
 
 #!-!
 # type: row
-# origin: NA
 # depend_cols:
-#   - self.LBTEST
+#   - LBTEST
 # outputs:
-#   - self.LBTEST
+#   - LBTEST
 #!-!
 new_lbtest_05 <- function(.self) {
 
@@ -152,21 +154,21 @@ new_lbtest_05 <- function(.self) {
 
 #!-!
 # type: row
-# origin: NA
 # depend_cols:
-#   - self.LBTEST
-#   - self.AVAL
+#   - LBTEST
+#   - AVAL
+#   - DOMAIN
 # outputs:
-#   - self.LBTEST
+#   - LBTEST
 #!-!
 new_lbtest_06 <- function(.self) {
 
   new_lbtest1 <- .self |>
-    dplyr::filter(LBTEST == "Microcytes (new)" & AVAL>1) |>
+    dplyr::filter(LBTEST == "Microcytes (new)" & AVAL>1 & !is.na(DOMAIN)) |>
     dplyr::mutate(LBTEST = "Microcytes (new 3)")
 
   new_lbtest2 <- .self |>
-    dplyr::filter(LBTEST == "Microcytes (new 2)" & AVAL>1) |>
+    dplyr::filter(LBTEST == "Microcytes (new 2)" & AVAL>1 & !is.na(DOMAIN)) |>
     dplyr::mutate(LBTEST = "Microcytes (new 4)")
 
 
@@ -180,11 +182,10 @@ new_lbtest_06 <- function(.self) {
 
 #!-!
 # type: row
-# origin: NA
 # depend_cols:
-#   - self.AVAL
+#   - AVAL
 # outputs:
-#   - self.AVAL
+#   - AVAL
 #!-!
 new_aval_01 <- function(.self) {
 
@@ -198,11 +199,10 @@ new_aval_01 <- function(.self) {
 
 #!-!
 # type: row
-# origin: NA
 # depend_cols:
-#   - self.AVAL
+#   - AVAL
 # outputs:
-#   - self.AVAL
+#   - AVAL
 #!-!
 new_aval_02 <- function(.self) {
 
@@ -220,12 +220,11 @@ new_aval_02 <- function(.self) {
 
 #!-!
 # type: row
-# origin: NA
 # depend_cols:
-#   - self.AVAL
-#   - self.DOMAIN
+#   - AVAL
+#   - DOMAIN
 # outputs:
-#   - self.AVAL
+#   - AVAL
 #!-!
 new_aval_03 <- function(.self) {
 
@@ -243,12 +242,11 @@ new_aval_03 <- function(.self) {
 
 #!-!
 # type: row
-# origin: NA
 # depend_cols:
-#   - self.AVAL
-#   - self.AVALC
+#   - AVAL
+#   - AVALC
 # outputs:
-#   - self.AVAL
+#   - AVAL
 #!-!
 new_aval_04 <- function(.self) {
 
@@ -266,11 +264,10 @@ new_aval_04 <- function(.self) {
 
 #!-!
 # type: row
-# origin: NA
 # depend_cols:
-#   - self.VISITNUM
+#   - VISITNUM
 # outputs:
-#   - self.VISITNUM
+#   - VISITNUM
 #!-!
 new_visitnum_01 <- function(.self) {
 
@@ -288,11 +285,10 @@ new_visitnum_01 <- function(.self) {
 
 #!-!
 # type: row
-# origin: NA
 # depend_cols:
-#   - self.VISITNUM
+#   - VISITNUM
 # outputs:
-#   - self.VISITNUM
+#   - VISITNUM
 #!-!
 new_visitnum_02 <- function(.self) {
 
@@ -309,12 +305,11 @@ new_visitnum_02 <- function(.self) {
 }
 
 #!-!
-# type: column
-# origin: derivation
+# type: derivation
 # depend_cols:
-#   - self.AVAL
+#   - AVAL
 # outputs:
-#   - self.AVAL_GRP
+#   - AVAL_GRP
 #!-!
 aval_grp_01 <- function(.self) {
   .self <- .self |>
@@ -326,12 +321,11 @@ aval_grp_01 <- function(.self) {
 }
 
 #!-!
-# type: column
-# origin: derivation
+# type: derivation
 # depend_cols:
-#   - self.AVAL_GRP
+#   - AVAL_GRP
 # outputs:
-#   - self.AVAL_GRP2
+#   - AVAL_GRP2
 #!-!
 aval_grp_02 <- function(.self) {
   .self <- .self |>
@@ -343,8 +337,7 @@ aval_grp_02 <- function(.self) {
 
 
 #!-!
-# type: column
-# origin: derivation
+# type: derivation
 # depend_cols:
 # outputs:
 #!-!

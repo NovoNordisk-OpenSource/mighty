@@ -4,7 +4,7 @@
 \alias{group_nodes_optimal}
 \title{Title}
 \usage{
-group_nodes_optimal(ordered_nodes, vertices, edges)
+group_nodes_optimal(ordered_nodes, nodes, edges)
 }
 \arguments{
 \item{edges}{}

@@ -21,9 +21,12 @@ Imports:
     labelled,
     combinat,
     checkmate,
+    styler
 Suggests: 
     knitr,
     rmarkdown,
+    admiral,
+    withr,
     testthat (>= 3.0.0),
     pharmaversesdtm
 Config/testthat/edition: 3

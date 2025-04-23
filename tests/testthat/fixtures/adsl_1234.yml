@@ -1,0 +1,271 @@
+table_metadata:
+  table: ADSL
+  label: Subject-Level Analysis Dataset
+  class: SUBJECT LEVEL ANALYSIS DATASET
+  structure: One record per subject
+  keys:
+    - USUBJID
+  comment: 'MODIFY, OPTIONAL to fill: To add a link to a reference, e.g. ADRG, SAP
+    or a program file update source_documents tab in adam_cst_metdata_xxxx.xls template.
+    Syntax is explained in column header notes of the template.'
+
+init:
+  core_domains:
+    - DM
+    - DM_VACCINE
+  filter_domain:
+    dm: '!is.na(AGEU)'
+    dm_vaccine: NA
+  filter_global:
+    - 'STUDYID == "CDISCPILOT01"'
+    - 'DOMAIN == "DM"'
+  filter_depend_cols:
+    - core.STUDYID
+    - core.DOMAIN
+    - core.AGEU
+
+column_metadata:
+  - column: USUBJID
+    source: core.USUBJID
+
+  - column: PLANNED_ARM
+    source: core.ARM
+
+  - column: SEX
+    source: core.SEX
+
+  - column: ARM_GRP1
+    label: "some text"
+    code_id: arm_group_01
+
+  - column: ARM_CAT1
+    label: "some text"
+    code_id: arm_category_01
+
+  - column: ARM_MATCH
+    label: "some text"
+    code_id: arm_match_01
+
+  - column: AGE2
+    code_id: age_crop_01
+
+  - column: AGE_DIFF1
+    code_id: age_diff_01
+
+  - column: AGE_DIFF2
+    code_id: age_diff_02
+
+  - column: RACE_COUNTRY
+    code_id: race_x_country_01
+
+  - column: NEW_ARM
+    code_id: arm_01
+
+  - column: MIN_AVAL
+    code_id: min_aval_01
+
+  - column: ARM
+    source: core.ARM
+
+  - column: DTHFL
+    source: core.DTHFL
+
+  - column: AGE
+    source: core.AGE
+
+  - column: NEWFL01
+    label: "some text"
+    code_id: newfl_01
+
+  - column: NEWREA01
+    label: "some text"
+    code_id: newfl_01
+
+  - column: NEWFL02
+    label: "some text"
+    code_id: newfl_02
+
+  - column: NEWFL03
+    label: "some text"
+    code_id: newfl_03
+
+  - column: NEWREA03
+    label: "some text"
+    code_id: newfl_03
+
+  - column: STUDYID
+    label: "some text"
+    source: core.STUDYID
+
+  - column: ACTARM
+    label: "some text"
+    source: core.ACTARM
+
+  - column: COUNTRY
+    label: "some text"
+    source: core.COUNTRY
+
+  - column: RACE
+    label: "some text"
+    source: core.RACE
+
+
+referenced_domains:
+  - domain: DM
+    variables:
+      - USUBJID
+      - STUDYID
+      - SUBJID
+      - ARM
+      - ARMCD
+      - ACTARM
+      - ACTARMCD
+      - ARMNRS
+      - SITEID
+      - ETHNIC
+      - RACE
+      - SEX
+      - AGEU
+      - DTHFL
+      - RFXSTDTC
+      - RFICDTC
+      - RFXENDTC
+      - RFPENDTC
+      - DTHDTC
+      - ISCFL
+      - PRWDFL
+      - REGION1
+      - REGION1N
+      - REGION2
+      - REGION2N
+      - TRT01P
+      - TRT01A
+      - RACEALL
+      - BRTHDT
+      - RFICDT
+      - RFPENDT
+      - TR01SDT
+      - DTHDT
+  - domain: ADSL
+    variables:
+      - COUNTRY
+      - AGE
+      - DXAPOPFL
+      - STSPOPFL
+      - FASFL
+      - PPROTREA
+      - RANDFL
+      - PRWDFL
+      - PTWDFL
+      - TRT01PN
+      - TRT01AN
+      - TRT01A
+      - SEX2
+      - AAGE
+      - EOTSTT
+      - RANDDT
+      - SCRNDT
+      - DCTDT
+      - EOTDT
+      - EOTSFDT
+      - EOTEFDT
+      - EOTVISFL
+      - LPTVISFL
+      - ONFD01RD
+      - ONFD02RD
+      - FTRDEFDD
+      - EGFRG1BL
+      - BMIG1BL
+      - BMIG2BL
+      - BMIG3BL
+      - BMIG4BL
+      - WGTG1BL
+      - FTD01RDT
+      - FTD02RDT
+  - domain: DS
+    variables:
+      - DTHCAUS
+      - RANERRFL
+      - ISCFL
+      - COMPLSFL
+      - COMPLTFL
+      - SAFFL
+      - PPROTFL
+      - DCSFL
+      - EOTSTT
+      - EOSSTT
+      - DCSREAS
+      - DCSREASP
+      - DCTFL
+      - DCTREAS
+      - DCTREASP
+      - DCTNAE
+      - SCFDT
+      - RANDDT
+      - TRTSDT
+      - DCSDT
+      - DCTDT
+      - TRTEDT
+      - EOSDT
+  - domain: ADQSPGI
+    variables: PGISTAFL
+  - domain: MK
+    variables: DXAPOPFL
+  - domain: FT
+    variables: STSPOPFL
+  - domain: IE
+    variables:
+      - PPROTREA
+      - RANDFL
+      - EXCFAIL
+      - INCFAIL
+  - domain: S
+    variables: TRT01P
+  - domain: SUPPDM
+    variables: RACEALL
+  - domain: SDTM
+    variables: SMOKSTAT
+  - domain: SUPPSU
+    variables: SMOKSTAT
+  - domain: SU
+    variables: SMOKSTAT
+  - domain: ADTRTEV
+    variables:
+      - FTRDEFDT
+      - ONTRDSFD
+      - ONTRDEFD
+      - FTRDEFDD
+  - domain: ADEC
+    variables:
+      - TRTEDT
+      - LDOSE
+  - domain: SV
+    variables:
+      - LSTSVDT
+      - EOTVISDT
+      - LPTVISDT
+  - domain: MDVISIT
+    variables:
+      - LSTSVDT
+      - EOTVISDT
+      - LPTVISDT
+      - RESP01
+  - domain: ADLB
+    variables:
+      - HB1CCBL
+      - FPGBL
+      - FPGCBL
+      - HBA1CBL
+      - GLYC01BL
+      - WSTCRBL
+      - EGFRBL
+  - domain: ADVS
+    variables:
+      - HGTBL
+      - WSTCRBL
+      - BMIBL
+      - WGTBL
+      - RESP01FL
+  - domain: ADGLYST
+    variables: GLYC02BL
+

@@ -14,13 +14,15 @@ generate_external_data_code <- function(payload,
                                         trial_metadata,
                                         sdtm_dataset_list,
                                         adam_dataset_list,
-                                        data_connection) {
+                                        data_connection,
+                                        path_output) {
   # for each element of payload, apply the following logic
-  by_domain <- split(payload, by = "domain")
+  by_domain <- split(payload, payload$domain)
   if (data_connection == "pharmaverse") {
+
     connector_setup <- NULL
     data_load_code <-
-      purrr::imap(by_domain, for_each_domain_pharmaverse)
+      purrr::imap(by_domain, for_each_domain_pharmaverse, path_output = path_output)
     data_load_code <- Filter(Negate(is.null), data_load_code)
   }
   if (data_connection == "connector") {
@@ -123,14 +125,16 @@ for_each_domain_connector <- function(i,
   )
 }
 
-for_each_domain_pharmaverse <- function(i, domain_name) {
+for_each_domain_pharmaverse <- function(i, domain_name, path_output) {
   keep_vars <- i[["column_name"]] |>
     toupper() |>
     unique() |>
     sort() |>
     paste0(collapse = ", ")
 
-  data_load_code <- switch(i$domain_type[[1]], sdtm = pharmaverse_sdtm(domain_name, keep_vars))
+  data_load_code <- switch(i$domain_type[[1]],
+                           sdtm = pharmaverse_sdtm(domain_name, keep_vars),
+                           adam = pharmaverse_adam(domain_name, keep_vars, path_output))
 }
 
 pharmaverse_sdtm <- function(sdtm_main, keep_vars) {
@@ -141,8 +145,8 @@ pharmaverse_sdtm <- function(sdtm_main, keep_vars) {
   if (supp_exists) {
     return(
       glue::glue(
-        "{sdtm_main}_supp <- pharmaversesdtm::{supp_dataset_name}
-  {sdtm_main} <- pharmaversesdtm::{sdtm_main} |>
+        "{sdtm_main}_supp <- pharmaversesdtm::{tolower(supp_dataset_name)}
+  {sdtm_main} <- pharmaversesdtm::{tolower(sdtm_main)} |>
     dplyr::select({keep_vars})
     rm({sdtm_main}_supp)"
       )
@@ -151,8 +155,18 @@ pharmaverse_sdtm <- function(sdtm_main, keep_vars) {
 
   return(
     glue::glue(
-      "{sdtm_main} <- pharmaversesdtm::{sdtm_main} |>
+      "{sdtm_main} <- pharmaversesdtm::{tolower(sdtm_main)} |>
     dplyr::select({keep_vars})"
     )
+  )
+}
+
+pharmaverse_adam <- function(adam_domain, keep_vars, path_output) {
+
+  path_domain <- file.path(path_output, paste0(adam_domain, ".R"))
+  glue::glue(
+    "{adam_domain} <- readRDS(\"{path_domain}\") |>
+    tibble::as_tibble() |>
+    dplyr::select({keep_vars})"
   )
 }

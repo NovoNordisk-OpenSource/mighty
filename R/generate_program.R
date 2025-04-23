@@ -1,14 +1,32 @@
+#' Generate program(s)
+#'
+#' @param program_order
+#' @param nodes
+#' @param domain_keys
+#' @param std_library_path
+#' @param trial_metadata
+#' @param ui_data
+#' @param path_output When data_connection is "pharmaverse" the generated
+#'   programs need to point to a location where the outputs are stored
+#' @param data_connection
+#'
+#' @returns
+#' @export
+#'
+#' @examples
 generate_program <- function(program_order,
                              nodes,
                              domain_keys,
                              std_library_path,
                              trial_metadata,
-                             data_connection) {
+                             ui_data,
+                             data_connection,
+                             path_output = NULL) {
   # Merge the program_id and rank column from program_order onto nodes
   # data.table to get the program_id for each node. Then sort the nodes by
   # program_id and rank.
   keep_only_from_program_order <- c("type", "domain")
-  nodes <- merge(program_order[, .(node_id,
+  nodes_and_programs <- merge(program_order[, .(node_id,
                                    domain,
                                    program_id,
                                    rank,
@@ -23,17 +41,18 @@ generate_program <- function(program_order,
   sdtm_dataset_list <- list_all_(type = "sdtm", trial_metadata)
   adam_dataset_list <- list_all_(type = "adam", trial_metadata)
 
-  nodes_split <- split(nodes, by = "program_id")
+  nodes_split <- split(nodes_and_programs, by = "program_id")
 
   programs <- lapply(
     nodes_split,
     generate_node_code,
     domain_keys,
     std_code_env,
-    trial_metadata,
+    ui_data,
     sdtm_dataset_list,
     adam_dataset_list,
-    data_connection
+    data_connection,
+    path_output
   )
 
   programs <- rename_programs(programs, nodes_split)
@@ -56,9 +75,10 @@ rename_programs <- function(programs, nodes_split) {
 list_all_sdtm_datasets <- function(trial_metadata) {
   # Generate list of all SDTM datasets in the current study so later we can
   # check if a specific supp dataset exists
+
   sdtm_path <-
-    sdtm_connector <- connector::connector_fs$new(path = sdtm_path)
-  sdtm_connector |> connector::cnt_list_content()
+    sdtm_connector <- connector::connector_fs()(path = sdtm_path)
+  sdtm_connector |> connector::list_content_cnt()
 
 }
 list_all_ <- function(type = c("sdtm", "adam"), trial_metadata) {
@@ -78,8 +98,9 @@ list_all_ <- function(type = c("sdtm", "adam"), trial_metadata) {
   # This is needed when testing and referencing trial data locations that don't
   # exist, or the testing environment doesn't have access to
   result <- tryCatch({
-    connector::connector_fs$new(path = path) |>
-      connector::cnt_list_content()
+
+    connector::connector_fs(path = path) |>
+      connector::list_content_cnt()
   }, error = function(e) {
     if (grepl("directory.*does not.*exist", e$message, ignore.case = TRUE)) {
       return(NULL)

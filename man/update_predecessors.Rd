@@ -10,5 +10,7 @@ update_predecessors(nodes, path_mappings)
 \item{path_mappings}{}
 }
 \description{
-Update predecessors
+Ensures that external domains
+
+Additional details...
 }

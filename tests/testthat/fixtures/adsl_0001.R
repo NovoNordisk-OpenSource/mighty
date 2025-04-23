@@ -1,10 +1,9 @@
 #!-!
-# type: column
-# origin: derivation
+# type: derivation
 # depend_cols:
-#   - self.PLANNED_ARM
+#   - PLANNED_ARM
 # outputs:
-#   - self.ARM_GRP1
+#   - ARM_GRP1
 #!-!
 arm_group_01 <- function(.self) {
   .self <- .self |>
@@ -17,12 +16,11 @@ arm_group_01 <- function(.self) {
 }
 
 #!-!
-# type: column
-# origin: derivation
+# type: derivation
 # depend_cols:
-#   - self.ARM_GRP1
+#   - ARM_GRP1
 # outputs:
-#   - self.ARM_CAT1
+#   - ARM_CAT1
 #!-!
 arm_category_01 <- function(.self) {
   .self <- .self |>
@@ -35,13 +33,12 @@ arm_category_01 <- function(.self) {
 }
 
 #!-!
-# type: column
-# origin: derivation
+# type: derivation
 # depend_cols:
-#   - self.PLANNED_ARM
-#   - self.ACTARM
+#   - PLANNED_ARM
+#   - ACTARM
 # outputs:
-#   - self.ARM_MATCH
+#   - ARM_MATCH
 #!-!
 arm_match_01 <- function(.self) {
   .self <- .self |>
@@ -52,12 +49,11 @@ arm_match_01 <- function(.self) {
 }
 
 #!-!
-# type: column
-# origin: derivation
+# type: derivation
 # depend_cols:
-#   - self.AGE
+#   - AGE
 # outputs:
-#   - self.AGE2
+#   - AGE2
 #!-!
 age_crop_01 <- function(.self) {
   .self <- .self |>
@@ -66,13 +62,12 @@ age_crop_01 <- function(.self) {
 }
 
 #!-!
-# type: column
-# origin: derivation
+# type: derivation
 # depend_cols:
-#   - self.AGE
-#   - self.AGE2
+#   - AGE
+#   - AGE2
 # outputs:
-#   - self.AGE_DIFF1
+#   - AGE_DIFF1
 #!-!
 age_diff_01 <- function(.self) {
   .self <- .self |>
@@ -81,13 +76,12 @@ age_diff_01 <- function(.self) {
 }
 
 #!-!
-# type: column
-# origin: derivation
+# type: derivation
 # depend_cols:
-#   - self.AGE_DIFF1
-#   - self.PLANNED_ARM
+#   - AGE_DIFF1
+#   - PLANNED_ARM
 # outputs:
-#   - self.AGE_DIFF2
+#   - AGE_DIFF2
 #!-!
 age_diff_02 <- function(.self) {
   .self <- .self |>
@@ -96,12 +90,11 @@ age_diff_02 <- function(.self) {
 }
 
 #!-!
-# type: column
-# origin: derivation
+# type: derivation
 # depend_cols:
-#   - self.AGE2
+#   - AGE2
 # outputs:
-#   - self.AGE_GRP1
+#   - AGE_GRP1
 #!-!
 age_group_01 <- function(.self, cut_points) {
   .self <- .self |>
@@ -116,28 +109,26 @@ age_group_01 <- function(.self, cut_points) {
 }
 
 #!-!
-# type: column
-# origin: derivation
+# type: derivation
 # depend_cols:
-#   - self.RACE
-#   - self.SITEID
+#   - RACE
+#   - COUNTRY
 # outputs:
-#   - self.RACE_SITEID
+#   - RACE_COUNTRY
 #!-!
-race_x_siteid_01 <- function(.self) {
+race_x_country_01 <- function(.self) {
   .self <- .self |>
-    dplyr::mutate(RACE_SITEID = paste0(RACE, "-", SITEID))
+    dplyr::mutate(RACE_COUNTRY = paste0(RACE, "-", COUNTRY))
   return(.self)
 }
 
 #!-!
-# type: column
-# origin: derivation
+# type: derivation
 # depend_cols:
-#   - self.PLANNED_ARM
-#   - self.USUBJID
+#   - PLANNED_ARM
+#   - USUBJID
 # outputs:
-#   - self.NEW_ARM
+#   - NEW_ARM
 #!-!
 arm_01 <- function(.self) {
   .self <- .self |>
@@ -148,20 +139,19 @@ arm_01 <- function(.self) {
 }
 
 #!-!
-# type: column
-# origin: derivation
+# type: derivation
 # depend_cols:
-#   - self.USUBJID
-#   - adlb.USUBJID
-#   - adlb.AVAL
+#   - USUBJID
+#   - ADLB.USUBJID
+#   - ADLB.AVAL
 # outputs:
-#   - self.MIN_AVAL
+#   - MIN_AVAL
 #!-!
-min_aval_01 <- function(.self, adlb) {
+min_aval_01 <- function(.self, ADLB) {
   # Extract the minimum AVAL value for each SUBJID
   .self <- .self |>
     dplyr::left_join(
-      adlb |> dplyr::select(USUBJID, AVAL) |>
+      ADLB |> dplyr::select(USUBJID, AVAL) |>
         dplyr::group_by(USUBJID) |>
         dplyr::summarise(MIN_AVAL = min(AVAL)) |>
         dplyr::ungroup()
@@ -172,15 +162,14 @@ min_aval_01 <- function(.self, adlb) {
 }
 
 #!-!
-# type: column
-# origin: derivation
+# type: derivation
 # depend_cols:
-#   - self.DTHFL
-#   - self.PLANNED_ARM
-#   - self.AGE_DIFF1
+#   - DTHFL
+#   - PLANNED_ARM
+#   - AGE_DIFF1
 # outputs:
-#   - self.NEWFL01
-#   - self.NEWREA01
+#   - NEWFL01
+#   - NEWREA01
 #!-!
 newfl_01 <- function(.self) {
   # Extract the minimum AVAL value for each SUBJID
@@ -194,19 +183,18 @@ newfl_01 <- function(.self) {
 }
 
 #!-!
-# type: column
-# origin: derivation
+# type: derivation
 # depend_cols:
-#   - self.USUBJID
-#   - self.COUNTRY
-#   - self.ARM_MATCH
-#   - adlb.USUBJID
-#   - adlb.LBTEST
+#   - USUBJID
+#   - COUNTRY
+#   - ARM_MATCH
+#   - ADLB.USUBJID
+#   - ADLB.LBTEST
 # outputs:
-#   - self.NEWFL02
+#   - NEWFL02
 #!-!
-newfl_02 <- function(.self, adlb) {
-  subids <- lb |>
+newfl_02 <- function(.self, ADLB) {
+  subids <- ADLB |>
     dplyr::filter(LBTEST == "Polychromasia") |>
     dplyr::pull(USUBJID) |>
     unique()
@@ -218,14 +206,13 @@ newfl_02 <- function(.self, adlb) {
 }
 
 #!-!
-# type: column
-# origin: derivation
+# type: derivation
 # depend_cols:
-#   - self.NEWFL01
-#   - self.NEWFL02
+#   - NEWFL01
+#   - NEWFL02
 # outputs:
-#   - self.NEWFL03
-#   - self.NEWREA03
+#   - NEWFL03
+#   - NEWREA03
 #!-!
 newfl_03 <- function(.self) {
   .self <- .self |>

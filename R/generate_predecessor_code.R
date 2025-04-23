@@ -1,4 +1,7 @@
-predecessor_mutate <-  function(.self, rename_var, source_var, action_name) {
+predecessor_mutate <-  function(.self, rename_var, source_var, node_id) {
+
+  action_name <- sub(".*\\.", "", node_id)
+
   glue::glue('
  # {toupper(action_name)} -----------------------------------------------------
 
@@ -15,34 +18,38 @@ predecessor_mutate <-  function(.self, rename_var, source_var, action_name) {
 #' @export
 #'
 
-pre_process_predecessor_left_join <- function(depend_cols, outputs, domain_keys) {
-  # Extract the domain (everything before the first ".")
-  domains <- sub("\\..*", "", depend_cols) |> unique()
-  join_dataset <- domains[!grepl("self", domains)]
+pre_process_predecessor_left_join <- function(depend_columns, depend_domains, outputs, domain, domain_keys) {
 
+  # Extract the domain (everything before the first ".")
+  depend_domains <- depend_domains |> unique()
+  join_dataset <- depend_domains[!grepl(domain, depend_domains)]
+  checkmate::assertTRUE(length(join_dataset)==1)
   by_vars <- domain_keys[[join_dataset]]
   if(is.null(by_vars)){
     stop("The domain keys for ", join_dataset, " are not defined")
   }
   # Remove the join variables from the depend_cols
   regexp <- paste0(by_vars, collapse = "|")
-  var_to_add <- depend_cols[!grepl(regexp, depend_cols)]
+  var_to_add <- depend_columns[!grepl(regexp, depend_columns)]
+
   # Remove all the domain prefixes
   var_to_add <- sub(".*\\.", "", var_to_add)
   return(list(
     join_dataset = join_dataset,
     var_to_add = var_to_add,
     by_vars = by_vars,
-    output_var = toupper(sub(".*\\.", "", outputs))
+    output_var = sub(".*\\.", "", outputs)
   ))
 }
 
-predecessor_left_join <- function(.self, join_dataset, var_to_add, by_vars, action_name, output_var) {
-  by_vars_str <- paste(sprintf('"%s"', by_vars), collapse = ", ")
+predecessor_left_join <- function(.self, join_dataset, var_to_add, by_vars, node_id, output_var) {
 
+  by_vars_str <- paste(sprintf('"%s"', by_vars), collapse = ", ")
   select_expr <- c(by_vars, var_to_add) |>
     unique() |>
     paste0(collapse = ", ")
+
+  action_name <- node_id
 
   left_join_code <- glue::glue(
     "

@@ -1,14 +1,18 @@
 #' Title
 #'
 #' @param ordered_nodes
-#' @param vertices
+#' @param nodes
 #' @param edges
 #'
 #' @return
 #' @export
 #'
 #' @examples
-group_nodes_optimal <- function(ordered_nodes, vertices, edges){
+group_nodes_optimal <- function(ordered_nodes, nodes, edges){
+  # When edges has additional columns, things go wrong
+  edges <- edges[,.(parent_node, node_id)]
+
+  vertices <- nodes[, .(node_id, domain, type)]
 
   # Permute domain init nodes
   ordered_nodes_perm <- permute_topo_order(ordered_nodes, vertices)

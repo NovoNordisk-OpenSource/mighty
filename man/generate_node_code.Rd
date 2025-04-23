@@ -8,10 +8,11 @@ generate_node_code(
   nodes_program_i,
   domain_keys,
   std_code_env,
-  trial_metadata,
+  ui_data,
   sdtm_dataset_list,
   adam_dataset_list,
-  data_connection
+  data_connection,
+  path_output
 )
 }
 \arguments{

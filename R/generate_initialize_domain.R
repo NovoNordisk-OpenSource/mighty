@@ -14,7 +14,8 @@
 #' @examples
 generate_initialize_domain <-  function(.self,
                                         core_domains,
-                                        filter_per_domain = NULL,
+                                        adsl_domain_keys,
+                                        domain_filter = NULL,
                                         filter_global = NULL,
                                         keep_vars = NULL) {
 
@@ -36,8 +37,6 @@ generate_initialize_domain <-  function(.self,
     glue::glue("{domain_var}_tmp <- {domain_var} |> dplyr::filter({domain_filter_collapsed})")
   }
 
-  domain_filter <- filter_per_domain[[1]]
-
   stopifnot("Domain filters must be set to NA if not used" =
               length(domain_filter) == length(core_domains))
 
@@ -46,7 +45,7 @@ generate_initialize_domain <-  function(.self,
   # Generate row_bind expression if there are multiple core domains
   if (length(core_domains) > 1) {
     bind_expr <-  glue::glue(
-      "{.self} <- dplyr::bind_rows({paste(paste0(core_domains, '_tmp'), collapse = ', ')}) |> dplyr::as_tibble()
+      "{.self} <- rbind({paste(paste0(core_domains, '_tmp'), collapse = ', ')}) |> dplyr::as_tibble()
       rm({paste(paste0(core_domains, '_tmp'), collapse=', ')})"
     )
   } else {
@@ -57,8 +56,9 @@ generate_initialize_domain <-  function(.self,
   # When the domain is NOT ADSL, we automatically merge it one in case ADSL vars
   # are needed for global filtering.
   # TODO: This could be done smarter
-  merge_expr <- if (.self != "adsl") {
-    glue::glue("{.self} <- dplyr::left_join({.self}, adsl, by = c('STUDYID', 'USUBJID'))")
+  merge_expr <- if (.self != "ADSL") {
+    keys <- paste0("\"", adsl_domain_keys, "\"", collapse = ",")
+    glue::glue("{.self} <- dplyr::left_join({.self}, ADSL, by = c({keys}))")
   } else {
     NULL
   }

@@ -4,10 +4,10 @@
 \alias{weighted_node_topo_sort}
 \title{Topological sort of a weighted directed graph}
 \usage{
-weighted_node_topo_sort(g, primary_domain = "adsl", nodes)
+weighted_node_topo_sort(edges, nodes, primary_domain = "ADSL")
 }
 \arguments{
-\item{nodes}{}
+\item{primary_domain}{}
 }
 \description{
 Topological sort of a weighted directed graph

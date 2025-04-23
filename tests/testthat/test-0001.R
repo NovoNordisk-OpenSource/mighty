@@ -23,14 +23,13 @@ test_that("Complex test", {
                               output_path,
                               data_connection = "pharmaverse")
 
-
   x <- list.files(output_path, full.names = TRUE)
   programs <- lapply(x, readLines)
   names(programs) <- basename(x)
 
   # EXPECT data values ---------------------------------------------------------
 
-  # Execute code and run expectations on the final outputed ADaM tables
+  # Execute code and run expectations on the final outputted ADaM tables
   lapply(x, source)
   expect_snapshot_value(adsl, style = "json2")
   expect_snapshot_value(adlb, style = "json2")
@@ -81,5 +80,7 @@ test_that("Complex test", {
 
   # Storing the data.table in the snapshot causes warnings, maybe due to
   # internal attributes use by data.table. So we convert to data.frame
-  expect_snapshot_value(as.data.frame(actual$program_order[, .(domain, node_id, program_id, rank)]), style = "json2")
+  expect_snapshot_value(
+    as.data.frame(actual$program_sequence[, .(domain, node_id, program_id, rank)]),
+    style = "json2")
 })

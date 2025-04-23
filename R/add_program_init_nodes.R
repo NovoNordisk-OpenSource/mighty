@@ -34,7 +34,7 @@ f<- function(domain, x){
 
     program_init_node <- data.table(
       domain = domain,
-      node_id = paste0("program_init_", domain, "_", program_id_i),
+      node_id = paste0(domain, "-", program_id_i, "-program_init"),
       node_group = NA,
       program_id = program_id_i,
       rank = min_rank - 0.1,

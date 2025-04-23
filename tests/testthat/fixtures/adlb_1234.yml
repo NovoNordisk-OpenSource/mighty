@@ -1,0 +1,178 @@
+table_metadata:
+  table: ADLB
+  label: Lab Analysis
+  class: BASIC DATA STRUCTURE
+  structure: One record per subject per parameter per analysis visit
+  keys:
+    - USUBJID PARAMN AVISITN ADT ATM SRCSEQ
+  comment: 'MODIFY, OPTIONAL to fill: To add a link to a reference, e.g. ADRG, SAP
+    or a program file update source_documents tab in adam_cst_metdata_xxxx.xls template.
+    Syntax is explained in column header notes of the template.'
+
+init:
+  core_domains:
+    - LB
+  filter_domain:
+    LB: NA
+  filter_global:
+    - '!is.na(SEX)'
+  filter_depend_cols:
+    - ADSL.SEX
+
+column_metadata:
+  - column: USUBJID
+    source: core.USUBJID
+
+  - column: VISITNUM
+    source: core.VISITNUM
+
+  - column: ARM
+    source: ADSL.PLANNED_ARM
+
+  - column: RACE_COUNTRY
+    source: ADSL.RACE_COUNTRY
+
+  - column: AVAL
+    source: core.LBSTRESN
+
+  - column: AVALC
+    source: core.LBSTRESC
+
+  - column: STUDYID
+    label: "some text"
+    source: core.STUDYID
+
+  - column: LBSEQ
+    source: core.LBSEQ
+
+  - column: LBSTRESN
+    source: core.LBSTRESN
+
+
+  - column: LBSTRESC
+    source: core.LBSTRESC
+
+  - column: DOMAIN
+    source: core.DOMAIN
+
+  - column: LBTEST
+    label: some text
+    code_id: lbtest_01
+    method: |-
+      Some text
+    depend_rows:
+      - new_aval_01
+
+  - column: AVAL_GRP
+    label: some text
+    code_id: aval_grp_01
+    depend_rows:
+      - new_lbtest_01
+
+  - column: AVAL_GRP2
+    label: some text
+    code_id: aval_grp_02
+    depend_rows:
+      - new_lbtest_01
+
+row_actions:
+  - code_id: new_lbtest_01
+
+  - code_id: new_lbtest_02
+
+  - code_id: new_lbtest_03
+    depend_rows:
+        - new_lbtest_01
+
+  - code_id: new_lbtest_04
+    depend_rows:
+      - new_lbtest_02
+
+  - code_id: new_lbtest_05
+    depend_rows:
+      - new_lbtest_01
+      - new_lbtest_02
+
+  - code_id: new_lbtest_06
+    depend_rows:
+      - new_lbtest_03
+
+  - code_id: new_aval_01
+
+  - code_id: new_aval_02
+    depend_rows:
+      - new_aval_01
+
+  - code_id: new_aval_03
+
+  - code_id: new_aval_04
+
+  - code_id: new_visitnum_01
+
+  - code_id: new_visitnum_02
+    depend_rows:
+      - new_visitnum_01
+
+referenced_domains:
+  - domain: LB
+    variables:
+      - USUBJID
+      - LBORRES
+      - LBORRESU
+      - LBFAST
+      - LBDTC
+      - VISITNUM
+      - ANRLO
+      - ANRHI
+      - SRCSEQ
+      - AVALC
+      - AVAL
+      - ADT
+      - ATM
+      - ADTM
+  - domain: ADSL
+    variables:
+      - TRTP
+      - TRTPN
+      - TRTA
+      - TRTAN
+      - STUDYID
+      - SUBJID
+      - FASFL
+      - SAFFL
+      - RANDFL
+      - DXAPOPFL
+      - REGION1
+      - REGION1N
+      - COUNTRY
+      - SITEID
+      - SEX
+      - ETHNIC
+      - RACE
+      - RACEALL
+      - AGE
+      - AGEU
+      - AGEGR1
+      - AGEGR1N
+      - TRTSDT
+      - TRTEDT
+      - BMIBL
+      - BMIG1BL
+      - BMIG1BLN
+      - WGTBL
+      - HGTBL
+      - HBA1CBL
+      - FPGBL
+      - WSTCRBL
+      - ADY
+  - domain: MDPARAM
+    variables:
+      - PARAMCD
+      - AVALU
+      - PARAM
+      - PARAMN
+  - domain: ADLB
+    variables: BASECAT1
+  - domain: MDVISIT
+    variables: AVISIT
+
