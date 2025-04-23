@@ -42,6 +42,9 @@ lbtest_01 <- function(.self, LB, ADSL) {
 # type: row
 # depend_cols:
 #   - LBTEST
+#   - SV.VISITNUM
+#   - SV.USUBJID
+#   - SV.VISITDY
 # outputs:
 #   - LBTEST
 #!-!
@@ -50,6 +53,11 @@ new_lbtest_01 <- function(.self) {
   new_lbtest <- .self |>
     dplyr::filter(LBTEST == "Microcytes") |>
     dplyr::mutate(LBTEST = "Microcytes (new)")
+
+  new_lbtest <- new_lbtest |>
+    dplyr::left_join(SV, by = c("USUBJID", "VISITNUM")) |>
+    dplyr::filter(VISITDY > 20) |>
+    dplyr::select(-VISITDY)
 
   .self <- rbind(.self, new_lbtest)
   return(.self)
