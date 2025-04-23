@@ -54,12 +54,6 @@ generate_adam_code <- function(path_ui_data,
   program_sequence_2 <- add_program_init_nodes(program_sequence_1, nodes_3)
 
   # Add action to import external dependencies to the program sequence
-# <<<<<<< HEAD
-#   program_sequence_3 <- add_nodes_to_load_external_data(program_sequence_2, nodes_3, ui_init)
-# =======
-#   program_sequence_3 <- add_nodes_to_load_external_data(program_sequence_2, nodes_5) |>
-#     add_node_to_write_data()
-# >>>>>>> feature/new_yml_model
   program_sequence_3 <- add_nodes_to_load_external_data(program_sequence_2, nodes_3, ui_init) |>
     add_node_to_write_data()
 
