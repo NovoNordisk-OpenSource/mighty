@@ -1,6 +1,5 @@
 #' fn_AB
 #'
-
 #' @section metadata:
 #' ```yaml
 #' depend_cols:
@@ -10,7 +9,7 @@
 #'   - B
 #' type: derivation
 #' ```
-
+#' @export
 fn_AB <- function(.self,
                   params = list(
                     param_1 = 50,
@@ -19,6 +18,7 @@ fn_AB <- function(.self,
                     param_4 = NULL,
                     param_5 = min(6,7)
                   )) {
+  # Some comment
   sum(params$param_5)
   .self <- params
   return(.self)
@@ -27,7 +27,6 @@ fn_AB <- function(.self,
 
 
 #' fn_no_params
-
 #' @section metadata:
 #' ```yaml
 #' depend_cols:
@@ -36,7 +35,7 @@ fn_AB <- function(.self,
 #'    - C
 #' type: derivation
 #' ```
-#'
+#' @export
 
 fn_no_params <- function(.self, b) {
   .self <- c(.self)
@@ -54,7 +53,7 @@ fn_no_params <- function(.self, b) {
 #'    - D
 #' type: derivation
 #' ```
-#'
+#' @export
 fn_mixed_defaults_and_user_params <- function(.self,
                                               params = list(param_defualt = 5, param_user = "This should be overwritten")
 ){

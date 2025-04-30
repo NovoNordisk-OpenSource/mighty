@@ -29,12 +29,11 @@ parse_code_components_metadata <- function(pkgs = NULL,
     source_file_out <- lapply(source_files, parse_code_components_metadata_from_file) |>
       unlist(FALSE)
   }
-
+return(c(pkg_out, source_file_out))
 }
 
 parse_code_components_metadata_from_package_rd <- function(pkg, function_names) {
   rd_db <- tools::Rd_db(pkg)
-  browser()
   out <- lapply(function_names,
                 parse_code_component_i,
                 rd_db = rd_db,

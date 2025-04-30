@@ -23,15 +23,28 @@ parse_into_chunks <- function(code_id,
   # Check that the function follows the required standards
   validate_std_action_return(f_def = f_def, fn_name = code_id)
 
-  # Convert function to code chunk. We have to do it this way, and not use
-  # `f_src_ref` in order to preserve any comments. This makes it harded to
-  # un-ambiguously find the header and final return statement for functions that
-  # have embedded functions
-  code_chunk <- attr(f_def, "srcref") |> paste(collapse = "\n") |>
-    remove_function_header() |>
-    remove_function_return()
-  out <- gsub(".self", domain_name, code_chunk)
+  # If it's possible, we want to preserve the comments
+  f_srcref <- attr(f_def, "srcref")
+  if(!is.null(f_srcref)){
+    # Convert function to code chunk. We have to do it this way, and not use
+    # `f_src_ref` in order to preserve any comments. This makes it harded to
+    # un-ambiguously find the header and final return statement for functions that
+    # have embedded functions
 
+    code_chunk <- f_srcref |>
+      paste(collapse = "\n") |>
+      remove_function_header() |>
+      remove_function_return()
+
+  } else{
+
+    body_expr <- body(f_def)[-1]
+    n_expr <- length(body_expr)
+    code_chunk <- body_expr[-n_expr] |>
+      paste0(collapse = "\n")
+  }
+
+  out <- gsub(".self", domain_name, code_chunk)
   # Temporary objects to remove
   interim_objects_to_rm <- get_scope_objects(f_def)
 
@@ -107,10 +120,10 @@ validate_std_action_return <- function(f_def, fn_name) {
          "`")
   }
   # Ends with "return(.self)"
-  f_src_ref <- attr(body(f_def), "srcref")
-  src_length <- length(f_src_ref)
-  actual <- f_src_ref[[src_length]] |> as.character()
-  expected <- "return(.self)"
+  f_body <- body(f_def)
+  body_length <- length(f_body)
+  actual <- f_body[[body_length]] |> as.character()
+  expected <- c("return", ".self")
   result <- identical(actual, expected)
   if (!result) {
     stop("Source function required to end with `",

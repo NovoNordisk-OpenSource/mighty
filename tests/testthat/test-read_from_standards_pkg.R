@@ -38,7 +38,8 @@ test_that("Can read code components from another package", {
     withr::with_dir(pkg_name, {
       roxygen2::roxygenize(".")
     })
-browser()
+
+    # Run code to test with tempory library
     withr::with_libpaths(
       new = lib_dir,
       code = {
@@ -61,12 +62,25 @@ browser()
           data_connection = "pharmaverse"
         )
 
-        # Test that we can access the documentation
-        expect_true(length(rd_db) > 0)
-        expect_true("add_numbers.Rd" %in% names(rd_db))
+        eval(parse(text = paste0(actual$programs$`1_ADSL`, collapse = "\n")))
+        expect_equal(
+          unname(ADSL),
+          list(
+            100,
+            "This is a regular string",
+            1,
+            NULL,
+            6,
+            5,
+            "User-supplied string"
+          )
+        )
+
+        # Ensure that default arguments are passed as un-evaluated R strings to the program
+        prog <- actual$programs$`1_ADSL` |> unlist()
+        expect_equal(1, grepl("param_5 = min\\(6, 7\\)", prog) |> sum())
+
       }
     )
-
-    # No need for explicit cleanup - withr::with_tempdir handles it
   })
 })
