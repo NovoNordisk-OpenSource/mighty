@@ -1,0 +1,48 @@
+table_metadata:
+  table: ADLB
+  label: Lab Analysis
+  class: BASIC DATA STRUCTURE
+  structure: One
+  keys:
+    - USUBJID PARAMN AVISITN ADT ATM SRCSEQ
+
+init:
+  core_domains:
+    - LB
+  filter_domain:
+    LB: NA
+  filter_global:
+    - '!is.na(SEX)'
+  filter_depend_cols:
+    - ADSL.SEX
+
+column_metadata:
+  - column: USUBJID
+    source: core.USUBJID
+
+  - column: A
+    code_id: fn_AB
+    parameters:
+      - param_1: "1"
+      - param_2: "2"
+
+  - column: B
+    code_id: fn_AB
+    parameters:
+      - param_1: "x"
+      - param_2: "y"
+
+  - column: C
+    code_id: fn_C
+    parameters:
+      - param_1: "hello"
+
+
+row_actions:
+  - code_id: f_D
+    parameters:
+      - param_1: "hello"
+
+  - code_id: f_E
+    parameters:
+    - param_1: "hello_2"

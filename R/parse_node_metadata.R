@@ -1,10 +1,20 @@
+#' Get metadata from code components
+#' @description Fetches code dependencies and outputs, as well as function
+#' parameters (aside from the self and other data parameters)
+#'
+#' @param file_path
+#'
+#' @returns
+#' @export
+#'
+#' @examples
 parse_node_metadata <- function(file_path) {
-
   lines <- readLines(file_path, warn = FALSE) |> trimws()
   out <- list()
   current_function <- NULL
   current_metadata <- NULL
   in_metadata <- FALSE
+
   functions <- get_top_level_functions(file_path)
   metadata_lines <- metadata_block_lines(lines)
   for (i in seq_along(lines)) {
@@ -16,7 +26,7 @@ parse_node_metadata <- function(file_path) {
     }
 
     if (in_function_line) {
-      # This always comes after thes metadata chunk
+      # This always comes after the metadata chunk
       current_function <- functions[i == line, closure_name]
       out[[current_function]] <- yaml::yaml.load(current_metadata)
       current_metadata <- NULL
@@ -26,12 +36,6 @@ parse_node_metadata <- function(file_path) {
 
     current_metadata <- paste0(current_metadata, "\n", stringr::str_remove(line, "^# "))
   }
-
-  # # Handle case where the file ends while still in metadata block
-  # if (!is.null(current_function) && !is.null(current_metadata)) {
-  #   current_function$metadata <- yaml::yaml.load(current_metadata)
-  #   out[[current_function$name]] <- current_function
-  # }
 
   return(out)
 }
@@ -93,7 +97,6 @@ combine_metadata_config <- function(functions, config, file_path) {
   combined <- list()
 
   for (func_name in names(functions)) {
-
     func <- functions[[func_name]]
     func_config <- config[[func_name]]
 

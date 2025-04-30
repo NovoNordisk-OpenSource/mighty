@@ -7,15 +7,15 @@
 #' @export
 #'
 #' @examples
-update_ui_data <- function(payload, ui_data) {
-  metadata_from_active_code_ids <- payload[ui_data[!is.na(code_id), code_id]]
-
+update_ui_data <- function(code_component_metadata, ui_data) {
+  metadata_from_active_code_ids <- code_component_metadata[unique(ui_data[!is.na(code_id), code_id])]
   metadata_from_active_code_ids_transposed <- purrr::list_transpose(metadata_from_active_code_ids)
   code_id_data <- data.table::data.table(
     code_id = names(metadata_from_active_code_ids),
     type = metadata_from_active_code_ids_transposed$type,
     depend_cols = metadata_from_active_code_ids_transposed$depend_cols,
-    outputs = metadata_from_active_code_ids_transposed$outputs
+    outputs = metadata_from_active_code_ids_transposed$outputs,
+    parameters_defaults = metadata_from_active_code_ids_transposed$parameters_defaults
   )
 
   x <- merge(
@@ -25,6 +25,7 @@ update_ui_data <- function(payload, ui_data) {
     suffixes = c("", "_from_code"),
     all.x = TRUE
   )
+
   assert_outputs_identical(x)
 
   # Consolidate columns for data that is redundant

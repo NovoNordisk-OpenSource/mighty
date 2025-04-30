@@ -1,9 +1,10 @@
 predecessor_mutate <-  function(.self, rename_var, source_var, node_id) {
 
-  action_name <- sub(".*\\.", "", node_id)
+  #header <- sub(".*-", "", node_id)
+  header <- node_id
 
   glue::glue('
- # {toupper(action_name)} -----------------------------------------------------
+ # {toupper(header)} -----------------------------------------------------
 
   {.self} <- {.self} |> dplyr::mutate({toupper(rename_var)} = {toupper(source_var)})
 
@@ -49,11 +50,11 @@ predecessor_left_join <- function(.self, join_dataset, var_to_add, by_vars, node
     unique() |>
     paste0(collapse = ", ")
 
-  action_name <- node_id
+  header <- node_id
 
   left_join_code <- glue::glue(
     "
-    # {toupper(action_name)} -----------------------------------------------------
+    # {header} -----------------------------------------------------
 
     {.self} <- {.self} |>
         dplyr::left_join({join_dataset} |> dplyr::select({select_expr}),

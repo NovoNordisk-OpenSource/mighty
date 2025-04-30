@@ -17,7 +17,7 @@
 generate_program <- function(program_order,
                              nodes,
                              domain_keys,
-                             std_library_path,
+                             code_component_env,
                              trial_metadata,
                              ui_data,
                              data_connection,
@@ -34,9 +34,6 @@ generate_program <- function(program_order,
                                    external_dependencies_by_program)], nodes[, !..keep_only_from_program_order], by = "node_id", all.x = TRUE) |>
     setorder(program_id, rank)
   # Create clean, empty environment to store standard components
-  std_code_env <- new.env()
-  std_library_path |>
-    lapply(source, local = std_code_env)
 
   sdtm_dataset_list <- list_all_(type = "sdtm", trial_metadata)
   adam_dataset_list <- list_all_(type = "adam", trial_metadata)
@@ -47,7 +44,7 @@ generate_program <- function(program_order,
     nodes_split,
     generate_node_code,
     domain_keys,
-    std_code_env,
+    code_component_env,
     ui_data,
     sdtm_dataset_list,
     adam_dataset_list,

@@ -21,7 +21,8 @@ Imports:
     labelled,
     combinat,
     checkmate,
-    styler
+    styler,
+    roxygen2
 Suggests: 
     knitr,
     rmarkdown,

@@ -1,5 +1,4 @@
 #' Generates the complete set of ADaM programs
-#'
 #' @param path_ui_data
 #' @param path_std_lib
 #' @param path_domain_keys
@@ -12,22 +11,27 @@
 #' @examples
 #' @import data.table
 generate_adam_code <- function(path_ui_data,
-                               path_std_lib,
+                               code_component_source_pkgs = NULL,
+                               code_component_source_files = NULL,
                                path_trial_metadata,
                                path_domain_keys,
                                path_output,
-                               data_connection = c("connector", "pharmaverse"),
-                               trial_metadata_path) {
+                               data_connection = c("connector", "pharmaverse")) {
   # Data from UI containing explicit user input
 
   ui_yml <- read_adam_specs(path_ui_data)
   ui_init <- purrr::list_transpose(ui_yml)[["init"]]
-  ui_table <- convert_yml_to_data_table(ui_yml)
   trial_metadata <- yaml::read_yaml(path_trial_metadata)
-
-  nodes_1 <- path_std_lib |>
-    lapply(parse_node_metadata) |>
-    unlist(recursive = FALSE) |>
+  ui_table <- convert_yml_to_data_table(ui_yml)
+  unique_code_ids <- ui_table[!is.na(code_id) & !duplicated(code_id), code_id]
+  code_component_env <- create_consolidated_env(
+    packages = code_component_source_pkgs,
+    source_files = code_component_source_files,
+    code_ids = unique_code_ids
+  )
+  nodes_1 <- parse_code_components_metadata(pkgs = code_component_source_pkgs,
+                                            source_files = code_component_source_files,
+                                            function_names = unique_code_ids) |>
     update_ui_data(ui_table) |>
     add_node_id_fast()
 
@@ -63,7 +67,7 @@ generate_adam_code <- function(path_ui_data,
     program_sequence_3,
     nodes_3,
     yaml::read_yaml(path_domain_keys),
-    path_std_lib,
+    code_component_env,
     trial_metadata,
     ui_yml,
     data_connection,

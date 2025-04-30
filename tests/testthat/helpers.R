@@ -31,7 +31,12 @@ expect_section_order <- function(start_section, end_section, section_list) {
     )
   }
 
-  end_idx <-  grep(paste0("^# ", end_section, " ---"), section_list)
+  # Escape paraentheses in end_section
+  end_section2 <- end_section |>
+    gsub("\\(", "\\\\(", x=_) |>
+    gsub("\\)", "\\\\)", x=_)
+
+  end_idx <-  grep(paste0("^# ", end_section2, " ---"), section_list)
 
   testthat::expect_true(
     length(end_idx) > 0,
