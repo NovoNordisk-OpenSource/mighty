@@ -4,7 +4,7 @@
 \alias{update_ui_data}
 \title{Title}
 \usage{
-update_ui_data(payload, ui_data)
+update_ui_data(code_component_metadata, ui_data)
 }
 \arguments{
 \item{ui_data}{}

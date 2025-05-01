@@ -4,7 +4,14 @@
 \alias{parse_into_chunks}
 \title{Parse into chunks}
 \usage{
-parse_into_chunks(code_id, node_id, domain_name, env)
+parse_into_chunks(
+  code_id,
+  user_supplied_parameters,
+  node_id,
+  domain_name,
+  outputs,
+  env
+)
 }
 \arguments{
 \item{env}{}

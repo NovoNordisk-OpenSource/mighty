@@ -6,12 +6,12 @@
 \usage{
 generate_adam_code(
   path_ui_data,
-  path_std_lib,
+  code_component_source_pkgs = NULL,
+  code_component_source_files = NULL,
   path_trial_metadata,
   path_domain_keys,
   path_output,
-  data_connection = c("connector", "pharmaverse"),
-  trial_metadata_path
+  data_connection = c("connector", "pharmaverse")
 )
 }
 \arguments{

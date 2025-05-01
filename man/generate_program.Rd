@@ -8,7 +8,7 @@ generate_program(
   program_order,
   nodes,
   domain_keys,
-  std_library_path,
+  code_component_env,
   trial_metadata,
   ui_data,
   data_connection,
