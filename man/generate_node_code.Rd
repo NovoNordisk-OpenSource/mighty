@@ -9,6 +9,7 @@ generate_node_code(
   domain_keys,
   std_code_env,
   ui_data,
+  trial_metadata,
   sdtm_dataset_list,
   adam_dataset_list,
   data_connection,
@@ -16,7 +17,7 @@ generate_node_code(
 )
 }
 \arguments{
-\item{data_connection}{}
+\item{path_output}{}
 }
 \description{
 Generate Node Code

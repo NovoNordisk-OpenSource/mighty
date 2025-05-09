@@ -28,9 +28,9 @@ generate_external_data_code <- function(payload,
   if (data_connection == "connector") {
     # Connector setup
     connector_setup <- glue::glue(
-      "adam_connector <- connector::connector_fs$new(path='~/projstat/{trial_metadata$project_id}/{trial_metadata$complete_id}/current/stats/data/adam')
-  sdtm_connector <- connector::connector_fs$new(path='~/projstat/{trial_metadata$project_id}/{trial_metadata$complete_id}/current/dm/data/sdtm')
-  md_connector <- connector::connector_fs$new(path='~/projstat/{trial_metadata$project_id}/{trial_metadata$complete_id}/current/stats/data/metadata')
+      "adam_connector <- connector::connector_fs(path='~/projstat/{trial_metadata$project_id}/{trial_metadata$complete_id}/current/stats/data/adam')
+  sdtm_connector <- connector::connector_fs(path='~/projstat/{trial_metadata$project_id}/{trial_metadata$complete_id}/current/dm/data/sdtm')
+  md_connector <- connector::connector_fs(path='~/projstat/{trial_metadata$project_id}/{trial_metadata$complete_id}/current/stats/data/metadata')
   "
     )
     data_load_code <-
@@ -66,10 +66,10 @@ external_data_stdm <- function(sdtm_main,
   if (supp_exists) {
     return(
       glue::glue(
-        "{sdtm_main}_supp <- sdtm_connector |> connector::cnt_read('{supp_dataset_name}')
+        "{sdtm_main}_supp <- sdtm_connector |> connector::read_cnt('{supp_dataset_name}')
   {sdtm_main} <- sdtm_connector |>
-    connector::cnt_read('{sdtm_main_ext}') |>
-    sdtm_add_supp({sdtm_main}_supp) |>
+    connector::read_cnt('{sdtm_main_ext}') |>
+    mighty::sdtm_add_supp({sdtm_main}_supp) |>
     dplyr::select({keep_vars})
     rm({sdtm_main}_supp)"
       )
@@ -79,7 +79,7 @@ external_data_stdm <- function(sdtm_main,
   return(
     glue::glue(
       "{sdtm_main} <- sdtm_connector |>
-    connector::cnt_read('{sdtm_main_ext}') |>
+    connector::read_cnt('{sdtm_main_ext}') |>
     dplyr::select({keep_vars})"
     )
   )
@@ -92,7 +92,7 @@ external_data_adam <- function(adam_domain,
   adam_domain_ext <- make_adam_domain_ext(adam_domain, file_extension, adam_dataset_list)
   glue::glue(
     "{adam_domain} <- adam_connector |>
-    connector::cnt_read('{adam_domain_ext}') |>
+    connector::read_cnt('{adam_domain_ext}') |>
     dplyr::select({keep_vars})"
   )
 }
@@ -101,7 +101,7 @@ external_data_md <- function(md_domain, keep_vars, file_extension = "sas7bdat") 
   md_domain_ext <- paste(md_domain, file_extension, sep = ".")
   glue::glue(
     "{md_domain} <- md_connector |>
-    connector::cnt_read('{md_domain_ext}') |>
+    connector::read_cnt('{md_domain_ext}') |>
     dplyr::select({keep_vars})"
   )
 }

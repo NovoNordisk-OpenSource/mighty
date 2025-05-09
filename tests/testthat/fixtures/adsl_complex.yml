@@ -14,8 +14,8 @@ init:
     - DM
     - DM_VACCINE
   filter_domain:
-    dm: '!is.na(AGEU)'
-    dm_vaccine: NA
+    - DM: '!is.na(AGEU)'
+    - DM_VACCINE: NA
   filter_global:
     - 'STUDYID == "CDISCPILOT01"'
     - 'DOMAIN == "DM"'

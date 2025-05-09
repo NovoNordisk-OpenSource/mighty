@@ -18,6 +18,8 @@ test_that("parameters accept R code", {
     data_connection = "pharmaverse"
   )
 
+  # EXPECT
+
   eval(parse(text = paste0(actual$programs$`1_ADSL`, collapse = "\n")))
   expect_equal(
     unname(ADSL),

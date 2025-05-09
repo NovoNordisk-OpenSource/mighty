@@ -48,7 +48,6 @@ column_metadata:
   - column: LBSTRESN
     source: core.LBSTRESN
 
-
   - column: LBSTRESC
     source: core.LBSTRESC
 

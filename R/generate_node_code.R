@@ -3,10 +3,12 @@
 #' @param nodes_program_i
 #' @param domain_keys
 #' @param std_code_env
+#' @param ui_data
 #' @param trial_metadata
 #' @param sdtm_dataset_list
 #' @param adam_dataset_list
 #' @param data_connection
+#' @param path_output
 #'
 #' @return
 #' @export
@@ -16,13 +18,12 @@ generate_node_code <- function(nodes_program_i,
                                domain_keys,
                                std_code_env,
                                ui_data,
+                               trial_metadata,
                                sdtm_dataset_list,
                                adam_dataset_list,
                                data_connection,
                                path_output) {
   program <- list()
-
-  trial_metadata <- ui_data$trial_metadata
 
   for (i in seq_len(nrow(nodes_program_i))) {
     node_i <- nodes_program_i[i]
@@ -98,22 +99,48 @@ generate_node_code <- function(nodes_program_i,
 
     }
     if (node_i$type == "derivation" || node_i$type == "row") {
-      program[[i]] <- parse_into_chunks(
-        code_id = node_i$code_id,
-        user_supplied_parameters = node_i$parameters |> unlist(FALSE),
-        node_id = node_i$node_id,
-        domain_name = node_i$domain,
-        outputs = node_i$outputs,
-        env = std_code_env
+
+      # If no code_id is provided, the derivation depends on another derivation
+      # and only a mutation step is required. Otherwise the derivation is sourced
+      # from a code component and the code_id is used to parse the code.
+      is_mutate <- is.na(node_i$code_id)
+      if(!is_mutate){
+        program[[i]] <- parse_into_chunks(
+          code_id = node_i$code_id,
+          user_supplied_parameters = node_i$parameters |> unlist(FALSE),
+          node_id = node_i$node_id,
+          domain_name = node_i$domain,
+          outputs = node_i$outputs,
+          env = std_code_env
+        )
+        next
+      }
+      depends <- node_i[["depend_cols"]][[1]][["column_name"]]
+      outputs <- node_i[["outputs"]][[1]]
+      program[[i]] <- predecessor_mutate(
+        .self = node_i$domain,
+        rename_var = outputs,
+        source_var = depends,
+        node_id = node_i$node_id
       )
       next
     }
     if (node_i$type == "write_data") {
+
+      # Collect input table names
+      if(any(nodes_program_i$type == "external")){
+        input_tables <- nodes_program_i[nodes_program_i$type == "external",]$external_dependencies_by_program[[1]][["domain"]] |>
+          unique()
+      } else {
+        input_tables <- c()
+      }
+
       program[[i]] <- generate_write_data(
         domain_name = node_i$domain,
         data_connection = data_connection,
-        path_output = path_output
-      )
+        path_output = path_output,
+        input_tables
+      ) |> paste0(collapse = "\n\n")
       next
     }
     stop("Unknown node type")

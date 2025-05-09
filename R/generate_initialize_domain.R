@@ -56,7 +56,7 @@ generate_initialize_domain <-  function(.self,
   # When the domain is NOT ADSL, we automatically merge it one in case ADSL vars
   # are needed for global filtering.
   # TODO: This could be done smarter
-  merge_expr <- if (.self != "ADSL") {
+  merge_expr <- if (self != "ADSL") {
     keys <- paste0("\"", adsl_domain_keys, "\"", collapse = ",")
     glue::glue("{.self} <- dplyr::left_join({.self}, ADSL, by = c({keys}))")
   } else {

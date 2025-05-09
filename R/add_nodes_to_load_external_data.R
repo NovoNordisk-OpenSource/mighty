@@ -51,7 +51,7 @@ external_dependencies_per_program <- function(program_order, nodes, init_metadat
   x <- program_order[nodes[, .(node_id, domain, type, depend_cols)], on = .(node_id)] |>
     setorder(program_id, rank)
   nodes_by_pgm <- split(x[, .(node_id,  domain, type, depend_cols, program_id)], by =
-                             "program_id")
+                          "program_id")
   dep_src_cols_by_pgm <- lapply(nodes_by_pgm, function(i) {
     i[, rbindlist(depend_cols), by = node_id] |>
       dplyr::filter(domain !=  unique(i$domain))
@@ -65,11 +65,22 @@ external_dependencies_per_program <- function(program_order, nodes, init_metadat
       filter_depend_cols <- init_metadata[[unique(y$domain)]][["filter_depend_cols"]]
       core_domains <- init_metadata[[unique(y$domain)]][["core_domains"]]
 
+      # Create template for empty dependencies
+      dep_empty <- data.table::data.table(
+        domain = character(),
+        domain_type = character(),
+        column_name = character()
+      )
+
       # Column dependencies coming from ADSL
       filter_depend_cols_adsl <- gsub("^ADSL\\.", "", filter_depend_cols[grepl("^ADSL\\.", filter_depend_cols)])
-      dep_adsl <- data.table::data.table(domain = "ADSL",
-                                         domain_type = "adam",
-                                         column_name = filter_depend_cols_adsl)
+      if (length(filter_depend_cols_adsl) > 0) {
+        dep_adsl <- data.table::data.table(domain = "ADSL",
+                                           domain_type = "adam",
+                                           column_name = filter_depend_cols_adsl)
+      } else {
+        dep_adsl <- dep_empty
+      }
 
       # If ADSL is required in the core filter, then add key to filter dependency
       if (nrow(dep_adsl) > 0) {
@@ -77,7 +88,7 @@ external_dependencies_per_program <- function(program_order, nodes, init_metadat
                                           domain_type = c("adam", classify_external_data_domains(core_domains)),
                                           column_name = "USUBJID")
       }else{
-        dep_key <- data.table::data.table()
+        dep_key <- dep_empty
       }
 
       # Column dependencies coming from the "core" domain(s)
@@ -91,10 +102,11 @@ external_dependencies_per_program <- function(program_order, nodes, init_metadat
 
 
       # Combine the dependencies
-      rbind(dep_core, dep_adsl, dep_key, dep_src_cols_by_pgm[[i]][, c("domain", "column_name", "domain_type")]) |>
+      rbind(dep_core, dep_adsl, dep_key, dep_src_cols_by_pgm[[i]][, c("domain", "domain_type", "column_name")]) |>
         unique() |> setorder(domain_type, domain, column_name)
-    }else{
-      dep_src_cols_by_pgm[[i]][, c("domain", "column_name", "domain_type")] |>
+
+    } else {
+      dep_src_cols_by_pgm[[i]][, c("domain", "domain_type",  "column_name")] |>
         unique() |>
         setorder(domain_type, domain, column_name)
     }
