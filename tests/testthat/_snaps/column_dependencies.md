@@ -793,6 +793,131 @@
       ]
     }
 
+# Global filter and domain filter incl. adsl dependencies (lower case)
+
+    {
+      "type": "list",
+      "attributes": {
+        "names": {
+          "type": "character",
+          "attributes": {},
+          "value": ["column_name", "domain", "domain_type"]
+        },
+        "row.names": {
+          "type": "integer",
+          "attributes": {},
+          "value": [1, 2]
+        },
+        "class": {
+          "type": "character",
+          "attributes": {},
+          "value": ["data.frame"]
+        }
+      },
+      "value": [
+        {
+          "type": "character",
+          "attributes": {},
+          "value": ["USUBJID", "VISITNUM"]
+        },
+        {
+          "type": "character",
+          "attributes": {},
+          "value": ["lb", "lb"]
+        },
+        {
+          "type": "character",
+          "attributes": {},
+          "value": ["sdtm", "sdtm"]
+        }
+      ]
+    }
+
+---
+
+    {
+      "type": "list",
+      "attributes": {
+        "names": {
+          "type": "character",
+          "attributes": {},
+          "value": ["domain", "domain_type", "column_name"]
+        },
+        "out.attrs": {
+          "type": "list",
+          "attributes": {
+            "names": {
+              "type": "character",
+              "attributes": {},
+              "value": ["dim", "dimnames"]
+            }
+          },
+          "value": [
+            {
+              "type": "integer",
+              "attributes": {
+                "names": {
+                  "type": "character",
+                  "attributes": {},
+                  "value": ["domain", "column_name"]
+                }
+              },
+              "value": [1, 1]
+            },
+            {
+              "type": "list",
+              "attributes": {
+                "names": {
+                  "type": "character",
+                  "attributes": {},
+                  "value": ["domain", "column_name"]
+                }
+              },
+              "value": [
+                {
+                  "type": "character",
+                  "attributes": {},
+                  "value": ["domain=lb"]
+                },
+                {
+                  "type": "character",
+                  "attributes": {},
+                  "value": ["column_name=LBSTRESN"]
+                }
+              ]
+            }
+          ]
+        },
+        "row.names": {
+          "type": "character",
+          "attributes": {},
+          "value": ["2", "5", "3", "1", "6", "4", "8"]
+        },
+        "class": {
+          "type": "character",
+          "attributes": {},
+          "value": ["data.frame"]
+        }
+      },
+      "value": [
+        {
+          "type": "character",
+          "attributes": {},
+          "value": ["adsl", "adsl", "adsl", "lb", "lb", "lb", "lb"]
+        },
+        {
+          "type": "character",
+          "attributes": {},
+          "value": ["adam", "adam", "adam", "sdtm", "sdtm", "sdtm", "sdtm"]
+        },
+        {
+          "type": "character",
+          "attributes": {},
+          "value": ["SEX", "STUDYID", "USUBJID", "LBSTRESN", "STUDYID", "USUBJID", "VISITNUM"]
+        }
+      ]
+    }
+
 # Check external predecessor
 
     {

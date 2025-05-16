@@ -232,6 +232,13 @@ test_that("Global filter and domain filter incl. ADSL dependencies", {
   actual$data_model$depend_cols[[1]] |>
     as.data.frame() |> expect_snapshot_value(style = "json2")
 
+  # Check casing
+  programs <- x |> lapply(readLines)
+  names(programs) <- basename(x)
+  expect_true(any(grepl("ADSL <- readRDS\\(", programs[["1_ADLB.R"]])))
+  expect_true(any(grepl("ADLB <- dplyr::left_join\\(ADLB, ADSL, by",
+                        programs[["1_ADLB.R"]])))
+
   # Check external dependencies
   actual$program_sequence$external_dependencies_by_program[[1]] |>
     dplyr::arrange(domain, domain_type, column_name) |>
@@ -268,6 +275,13 @@ test_that("Global filter and domain filter incl. adsl dependencies (lower case)"
   expect_equal(actual$data_model$type, "domain_init")
   actual$data_model$depend_cols[[1]] |>
     as.data.frame() |> expect_snapshot_value(style = "json2")
+
+  # Check casing
+  programs <- x |> lapply(readLines)
+  names(programs) <- basename(x)
+  expect_true(any(grepl("adsl <- readRDS\\(", programs[["1_adlb.R"]])))
+  expect_true(any(grepl("adlb <- dplyr::left_join\\(adlb, adsl, by",
+                        programs[["1_adlb.R"]])))
 
   # Check external dependencies
   actual$program_sequence$external_dependencies_by_program[[1]] |>
@@ -310,40 +324,3 @@ test_that("Check external predecessor", {
     as.data.frame() |> expect_snapshot_value(style = "json2")
 
 })
-
-
-test_that("Parallel domain progrmamming: Check ADSL import for ADLB filter with no ADSL domain specified", {
-
-  # SETUP
-  ui_path <- test_path("fixtures", "adlb_filter_on_adsl.yml")
-  path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
-  std_lib_path <- testthat::test_path("fixtures", "adsl_0001.R")
-  domain_keys_path <- system.file("standards", "domain_keys.yml", package = "mighty")
-  output_path <- withr::local_tempdir()
-
-  # ACT
-  actual <- generate_adam_code(
-    path_ui_data = ui_path,
-    code_component_source_files =  std_lib_path,
-    path_trial_metadata = path_trial_metadata,
-    path_domain_keys = domain_keys_path,
-    path_output = output_path,
-    data_connection = "pharmaverse"
-  )
-
-  # EXPECT
-
-  # Check data model
-  actual$data_model$depend_cols[[1]] |>
-    as.data.frame() |> expect_snapshot_value(style = "json2")
-
-  # Check external dependencies
-  actual$program_sequence$external_dependencies_by_program[[1]] |>
-    dplyr::arrange(domain, domain_type, column_name) |>
-    dplyr::relocate(domain, domain_type, column_name) |>
-    as.data.frame() |> expect_snapshot_value(style = "json2")
-
-})
-
-
-
