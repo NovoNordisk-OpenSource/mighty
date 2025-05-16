@@ -2,8 +2,8 @@
 #'
 #' @param .self Character of length 1. Name of domain
 #' @param core_domains list of core SDTM domains used to make "base" table
-#' @param filter_expr list of stings with lenght equal to number of core_domains
-#'   filters to apply to each core SDTM table before combining
+#' @param adsl_domain_keys
+#' @param filter_domain
 #' @param filter_global String. Global filter to be applied after merging
 #' @param keep_vars Vector of strings naming variables from SDTM core domains
 #'   kept
@@ -15,7 +15,8 @@
 generate_initialize_domain <-  function(.self,
                                         core_domains,
                                         adsl_domain_keys,
-                                        domain_filter = NULL,
+                                        adsl_name,
+                                        filter_domain = NULL,
                                         filter_global = NULL,
                                         keep_vars = NULL) {
 
@@ -26,21 +27,21 @@ generate_initialize_domain <-  function(.self,
   )
 
   # Read in the core domains
-  filter_prepart <- function(domain, domain_filter = NULL) {
+  filter_prepart <- function(domain, filter_domain = NULL) {
 
     domain_var <- domain
 
-    if (is.null(domain_filter) || any(is.na(domain_filter))) {
+    if (is.null(filter_domain) || any(is.na(filter_domain))) {
       return(glue::glue("{domain_var}_tmp <- {domain_var}"))
     }
-    domain_filter_collapsed <- paste(domain_filter, collapse = " &&\n")
-    glue::glue("{domain_var}_tmp <- {domain_var} |> dplyr::filter({domain_filter_collapsed})")
+    filter_domain_collapsed <- paste(filter_domain, collapse = " &&\n")
+    glue::glue("{domain_var}_tmp <- {domain_var} |> dplyr::filter({filter_domain_collapsed})")
   }
 
   stopifnot("Domain filters must be set to NA if not used" =
-              length(domain_filter) == length(core_domains))
+              length(filter_domain) == length(core_domains))
 
-  prepart_exprs <- unlist(purrr::map2(core_domains, domain_filter, filter_prepart))
+  prepart_exprs <- unlist(purrr::map2(core_domains, filter_domain, filter_prepart))
 
   # Generate row_bind expression if there are multiple core domains
   if (length(core_domains) > 1) {
@@ -58,7 +59,7 @@ generate_initialize_domain <-  function(.self,
   # TODO: This could be done smarter
   merge_expr <- if (self != "ADSL") {
     keys <- paste0("\"", adsl_domain_keys, "\"", collapse = ",")
-    glue::glue("{.self} <- dplyr::left_join({.self}, ADSL, by = c({keys}))")
+    glue::glue("{.self} <- dplyr::left_join({.self}, {adsl_name}, by = c({keys}))")
   } else {
     NULL
   }

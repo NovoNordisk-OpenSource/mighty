@@ -240,6 +240,44 @@ test_that("Global filter and domain filter incl. ADSL dependencies", {
 
 })
 
+test_that("Global filter and domain filter incl. adsl dependencies (lower case)", {
+
+  # SETUP
+  ui_path <- testthat::test_path("fixtures", "adlb_global_and_domain_filter2.yml")
+  path_trial_metadata <- testthat::test_path("fixtures", "trial_metadata_0001.yml")
+  std_lib_path <- testthat::test_path("fixtures", "adlb_0001.R")
+
+  domain_keys_path <- system.file("standards", "domain_keys.yml", package = "mighty")
+  output_path <- withr::local_tempdir()
+
+  # ACT
+  actual <- generate_adam_code(
+    path_ui_data = ui_path,
+    code_component_source_files =  std_lib_path,
+    path_trial_metadata = path_trial_metadata,
+    path_domain_keys = domain_keys_path,
+    path_output = output_path,
+    data_connection = "pharmaverse"
+  )
+  write_adam_programs(dir = output_path, programs = actual$programs)
+  x <- list.files(output_path, full.names = TRUE)
+
+  # EXPECT
+
+  # Check data model
+  expect_equal(actual$data_model$type, "domain_init")
+  actual$data_model$depend_cols[[1]] |>
+    as.data.frame() |> expect_snapshot_value(style = "json2")
+
+  # Check external dependencies
+  actual$program_sequence$external_dependencies_by_program[[1]] |>
+    dplyr::arrange(domain, domain_type, column_name) |>
+    dplyr::relocate(domain, domain_type, column_name) |>
+    as.data.frame() |> expect_snapshot_value(style = "json2")
+
+})
+
+
 test_that("Check external predecessor", {
 
   # SETUP
@@ -272,4 +310,40 @@ test_that("Check external predecessor", {
     as.data.frame() |> expect_snapshot_value(style = "json2")
 
 })
+
+
+test_that("Parallel domain progrmamming: Check ADSL import for ADLB filter with no ADSL domain specified", {
+
+  # SETUP
+  ui_path <- test_path("fixtures", "adlb_filter_on_adsl.yml")
+  path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
+  std_lib_path <- testthat::test_path("fixtures", "adsl_0001.R")
+  domain_keys_path <- system.file("standards", "domain_keys.yml", package = "mighty")
+  output_path <- withr::local_tempdir()
+
+  # ACT
+  actual <- generate_adam_code(
+    path_ui_data = ui_path,
+    code_component_source_files =  std_lib_path,
+    path_trial_metadata = path_trial_metadata,
+    path_domain_keys = domain_keys_path,
+    path_output = output_path,
+    data_connection = "pharmaverse"
+  )
+
+  # EXPECT
+
+  # Check data model
+  actual$data_model$depend_cols[[1]] |>
+    as.data.frame() |> expect_snapshot_value(style = "json2")
+
+  # Check external dependencies
+  actual$program_sequence$external_dependencies_by_program[[1]] |>
+    dplyr::arrange(domain, domain_type, column_name) |>
+    dplyr::relocate(domain, domain_type, column_name) |>
+    as.data.frame() |> expect_snapshot_value(style = "json2")
+
+})
+
+
 
