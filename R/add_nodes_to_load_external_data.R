@@ -2,12 +2,14 @@
 #'
 #' @param program_order
 #' @param nodes
+#' @param init_metadata
+#' @param domain_keys
 #'
 #' @return
 #'
 #' @examples
-add_nodes_to_load_external_data <- function(program_order, nodes, init_metadata) {
-  external_deps <- external_dependencies_per_program(program_order, nodes, init_metadata)
+add_nodes_to_load_external_data <- function(program_order, nodes, init_metadata, domain_keys) {
+  external_deps <- external_dependencies_per_program(program_order, nodes, init_metadata, domain_keys)
   x <- split(program_order, by = "program_id")
 
   new_nodes_list <- purrr::imap(x, function(i, nm) {
@@ -46,9 +48,9 @@ add_nodes_to_load_external_data <- function(program_order, nodes, init_metadata)
 #' @return
 #'
 #' @examples
-external_dependencies_per_program <- function(program_order, nodes, init_metadata) {
+external_dependencies_per_program <- function(program_order, nodes, init_metadata, domain_keys) {
 
-  x <- program_order[nodes[, .(node_id, domain, type, depend_cols)], on = .(node_id)] |>
+  x <- program_order[nodes[, .(node_id, depend_cols)], on = .(node_id)] |>
     setorder(program_id, rank)
   nodes_by_pgm <- split(x[, .(node_id,  domain, type, depend_cols, program_id)], by =
                           "program_id")
@@ -82,12 +84,15 @@ external_dependencies_per_program <- function(program_order, nodes, init_metadat
         dep_adsl <- dep_empty
       }
 
-      # If ADSL is required in the core filter, then add key to filter dependency
+      # If ADSL is required in the core filter, then add foreign key to filter dependency
       if (nrow(dep_adsl) > 0) {
-        dep_key <- data.table::data.table(domain = c("ADSL", core_domains),
-                                          domain_type = c("adam", classify_external_data_domains(core_domains)),
-                                          column_name = "USUBJID")
-      }else{
+        dep_key <- expand.grid(
+          "domain" = c("ADSL", core_domains),
+          "column_name" = domain_keys[["ADSL"]],
+          stringsAsFactors = FALSE
+        )
+        dep_key[["domain_type"]] <- classify_external_data_domains(dep_key[["domain"]])
+      } else {
         dep_key <- dep_empty
       }
 

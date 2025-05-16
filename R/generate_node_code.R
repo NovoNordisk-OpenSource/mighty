@@ -78,7 +78,6 @@ generate_node_code <- function(nodes_program_i,
         )
         next
       }
-
       depend_columns <- node_i[["depend_cols"]][[1]][["column_name"]]
       depend_domains <- node_i[["depend_cols"]][[1]][["domain"]]
       outputs <- node_i[["outputs"]][[1]]

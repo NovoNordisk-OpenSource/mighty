@@ -34,6 +34,8 @@ test_that("No filters", {
 
   # Check external dependencies
   actual$program_sequence$external_dependencies_by_program[[1]] |>
+    dplyr::arrange(domain, domain_type, column_name) |>
+    dplyr::relocate(domain, domain_type, column_name) |>
     as.data.frame() |> expect_snapshot_value(style = "json2")
 
 })
@@ -74,6 +76,8 @@ test_that("No domain filters", {
 
   # Check external dependencies
   actual$program_sequence$external_dependencies_by_program[[1]] |>
+    dplyr::arrange(domain, domain_type, column_name) |>
+    dplyr::relocate(domain, domain_type, column_name) |>
     as.data.frame() |> expect_snapshot_value(style = "json2")
 
 })
@@ -114,6 +118,8 @@ test_that("No global filters", {
 
   # Check external dependencies
   actual$program_sequence$external_dependencies_by_program[[1]] |>
+    dplyr::arrange(domain, domain_type, column_name) |>
+    dplyr::relocate(domain, domain_type, column_name) |>
     as.data.frame() |> expect_snapshot_value(style = "json2")
 
 })
@@ -149,6 +155,8 @@ test_that("No filters and no derivations", {
 
   # Check external dependencies
   actual$program_sequence$external_dependencies_by_program[[1]] |>
+    dplyr::arrange(domain, domain_type, column_name) |>
+    dplyr::relocate(domain, domain_type, column_name) |>
     as.data.frame() |> expect_snapshot_value(style = "json2")
 
 })
@@ -189,6 +197,8 @@ test_that("Global filter and domain filter", {
 
   # Check external dependencies
   actual$program_sequence$external_dependencies_by_program[[1]] |>
+    dplyr::arrange(domain, domain_type, column_name) |>
+    dplyr::relocate(domain, domain_type, column_name) |>
     as.data.frame() |> expect_snapshot_value(style = "json2")
 
 })
@@ -224,6 +234,42 @@ test_that("Global filter and domain filter incl. ADSL dependencies", {
 
   # Check external dependencies
   actual$program_sequence$external_dependencies_by_program[[1]] |>
+    dplyr::arrange(domain, domain_type, column_name) |>
+    dplyr::relocate(domain, domain_type, column_name) |>
     as.data.frame() |> expect_snapshot_value(style = "json2")
 
 })
+
+test_that("Check external predecessor", {
+
+  # SETUP
+  ui_path <- test_path("fixtures", "adsl_external_data.yml")
+  path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
+  std_lib_path <- testthat::test_path("fixtures", "adsl_0001.R")
+  domain_keys_path <- system.file("standards", "domain_keys.yml", package = "mighty")
+  output_path <- withr::local_tempdir()
+
+  # ACT
+  actual <- generate_adam_code(
+    path_ui_data = ui_path,
+    code_component_source_files =  std_lib_path,
+    path_trial_metadata = path_trial_metadata,
+    path_domain_keys = domain_keys_path,
+    path_output = output_path,
+    data_connection = "pharmaverse"
+  )
+
+  # EXPECT
+
+  # Check data model
+  actual$data_model$depend_cols[[1]] |>
+    as.data.frame() |> expect_snapshot_value(style = "json2")
+
+  # Check external dependencies
+  actual$program_sequence$external_dependencies_by_program[[1]] |>
+    dplyr::arrange(domain, domain_type, column_name) |>
+    dplyr::relocate(domain, domain_type, column_name) |>
+    as.data.frame() |> expect_snapshot_value(style = "json2")
+
+})
+

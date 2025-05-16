@@ -23,8 +23,8 @@ test_that("Complex test with multiple domains and column/row operations", {
     data_connection = "pharmaverse"
   )
   write_adam_programs(dir = output_path, programs = actual$programs)
-
   x <- list.files(output_path, full.names = TRUE)
+
   programs <- x |> lapply(readLines)
   names(programs) <- basename(x)
 

@@ -43,8 +43,6 @@ update_ui_data <- function(code_component_metadata, ui_data) {
 
   x[, depend_cols := purrr::map2(depend_cols, domain, depend_cols_nested_data_table)]
 
-  assert_all_parents_present(x)
-
   return(x)
 }
 

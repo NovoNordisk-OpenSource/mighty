@@ -1,0 +1,40 @@
+table_metadata:
+  table: ADSL
+  label: Subject-Level Analysis Dataset
+  class: SUBJECT LEVEL ANALYSIS DATASET
+  structure: One record per subject
+  keys:
+    - USUBJID
+  comment: 'MODIFY, OPTIONAL to fill: To add a link to a reference, e.g. ADRG, SAP
+    or a program file update source_documents tab in adam_cst_metdata_xxxx.xls template.
+    Syntax is explained in column header notes of the template.'
+
+init:
+  core_domains:
+    - DM
+  filter_domain: NA
+  filter_global: NA
+  filter_depend_cols: NA
+
+column_metadata:
+  - column: USUBJID
+    source: core.USUBJID
+
+  - column: PLANNED_ARM
+    source: core.ARM
+
+  - column: ARM_GRP1
+    code_id: arm_group_01
+
+  - column: ARM_GRP2
+    source: ARM_GRP1
+
+  - column: ARM_MATCH
+    code_id: arm_match_01
+
+  - column: ACTARM
+    source: core.ACTARM
+
+  - column: PLANNED_ARM2
+    source: PLANNED_ARM
+

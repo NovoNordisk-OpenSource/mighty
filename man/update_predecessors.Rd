@@ -4,10 +4,10 @@
 \alias{update_predecessors}
 \title{Update predecessors}
 \usage{
-update_predecessors(nodes, path_mappings)
+update_predecessors(nodes, pk, ui_init)
 }
 \arguments{
-\item{path_mappings}{}
+\item{ui_init}{}
 }
 \description{
 Ensures that external domains

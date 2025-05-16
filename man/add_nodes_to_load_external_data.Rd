@@ -4,10 +4,15 @@
 \alias{add_nodes_to_load_external_data}
 \title{Update program order with nodes to load external data}
 \usage{
-add_nodes_to_load_external_data(program_order, nodes, init_metadata)
+add_nodes_to_load_external_data(
+  program_order,
+  nodes,
+  init_metadata,
+  domain_keys
+)
 }
 \arguments{
-\item{nodes}{}
+\item{domain_keys}{}
 }
 \description{
 Update program order with nodes to load external data

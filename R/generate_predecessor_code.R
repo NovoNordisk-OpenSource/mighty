@@ -25,7 +25,7 @@ pre_process_predecessor_left_join <- function(depend_columns, depend_domains, ou
   depend_domains <- depend_domains |> unique()
   join_dataset <- depend_domains[!grepl(domain, depend_domains)]
   checkmate::assertTRUE(length(join_dataset)==1)
-  by_vars <- domain_keys[[join_dataset]]
+  by_vars <- domain_keys[[toupper(join_dataset)]]
   if(is.null(by_vars)){
     stop("The domain keys for ", join_dataset, " are not defined")
   }

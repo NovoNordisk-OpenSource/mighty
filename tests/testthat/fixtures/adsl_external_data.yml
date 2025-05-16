@@ -1,5 +1,5 @@
 table_metadata:
-  table: ADSL
+  table: adsl
   label: Subject-Level Analysis Dataset
   class: SUBJECT LEVEL ANALYSIS DATASET
   structure: One record per subject
@@ -12,9 +12,17 @@ table_metadata:
 init:
   core_domains:
     - DM
-  filter_domain: NA
-  filter_global: NA
-  filter_depend_cols: NA
+    - DM_VACCINE
+  filter_domain:
+    - DM: '!is.na(AGEU)'
+    - DM_VACCINE: NA
+  filter_global:
+    - 'STUDYID == "CDISCPILOT01"'
+    - 'DOMAIN == "DM"'
+  filter_depend_cols:
+    - core.STUDYID
+    - core.DOMAIN
+    - core.AGEU
 
 column_metadata:
   - column: USUBJID
@@ -23,15 +31,11 @@ column_metadata:
   - column: PLANNED_ARM
     source: core.ARM
 
-  - column: ARM_GRP1
-    code_id: arm_group_01
+  - column: PLANNED_ARM2
+    source: PLANNED_ARM
 
-  - column: ARM_GRP2
-    source: ARM_GRP1
+  - column: VAR1
+    source: EX.VAR1
 
-  - column: ARM_MATCH
-    code_id: arm_match_01
 
-  - column: ACTARM
-    source: core.ACTARM
 

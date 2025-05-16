@@ -11,11 +11,12 @@ generate_adam_code(
   path_trial_metadata,
   path_domain_keys,
   path_output,
-  data_connection = c("connector", "pharmaverse")
+  data_connection = c("connector", "pharmaverse"),
+  check_external_adam = TRUE
 )
 }
 \arguments{
-\item{data_connection}{}
+\item{check_external_adam}{}
 }
 \description{
 Generates the complete set of ADaM programs

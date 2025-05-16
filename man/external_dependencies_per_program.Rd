@@ -4,7 +4,12 @@
 \alias{external_dependencies_per_program}
 \title{Get external dependencies per program}
 \usage{
-external_dependencies_per_program(program_order, nodes, init_metadata)
+external_dependencies_per_program(
+  program_order,
+  nodes,
+  init_metadata,
+  domain_keys
+)
 }
 \arguments{
 \item{init_metadata}{}

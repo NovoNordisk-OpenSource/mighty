@@ -74,7 +74,7 @@
         "row.names": {
           "type": "integer",
           "attributes": {},
-          "value": [1, 2, 3, 4, 5]
+          "value": [1, 2, 3, 4]
         },
         "names": {
           "type": "character",
@@ -91,17 +91,17 @@
         {
           "type": "character",
           "attributes": {},
-          "value": ["core", "DM", "DM", "DM_VACCINE", "DM_VACCINE"]
+          "value": ["DM", "DM", "DM_VACCINE", "DM_VACCINE"]
         },
         {
           "type": "character",
           "attributes": {},
-          "value": ["core", "sdtm", "sdtm", "sdtm", "sdtm"]
+          "value": ["sdtm", "sdtm", "sdtm", "sdtm"]
         },
         {
           "type": "character",
           "attributes": {},
-          "value": ["ARM", "ARM", "USUBJID", "ARM", "USUBJID"]
+          "value": ["ARM", "USUBJID", "ARM", "USUBJID"]
         }
       ]
     }
@@ -182,7 +182,7 @@
         "names": {
           "type": "character",
           "attributes": {},
-          "value": ["domain", "column_name", "domain_type"]
+          "value": ["domain", "domain_type", "column_name"]
         },
         "out.attrs": {
           "type": "list",
@@ -232,7 +232,7 @@
         "row.names": {
           "type": "character",
           "attributes": {},
-          "value": ["9", "6", "3", "1", "5", "8", "4", "2", "7"]
+          "value": ["7", "3", "1", "5", "8", "4", "2", "6"]
         },
         "class": {
           "type": "character",
@@ -244,17 +244,17 @@
         {
           "type": "character",
           "attributes": {},
-          "value": ["core", "DM", "DM", "DM", "DM", "DM_VACCINE", "DM_VACCINE", "DM_VACCINE", "DM_VACCINE"]
+          "value": ["DM", "DM", "DM", "DM", "DM_VACCINE", "DM_VACCINE", "DM_VACCINE", "DM_VACCINE"]
         },
         {
           "type": "character",
           "attributes": {},
-          "value": ["ARM", "ARM", "DOMAIN", "STUDYID", "USUBJID", "ARM", "DOMAIN", "STUDYID", "USUBJID"]
+          "value": ["sdtm", "sdtm", "sdtm", "sdtm", "sdtm", "sdtm", "sdtm", "sdtm"]
         },
         {
           "type": "character",
           "attributes": {},
-          "value": ["core", "sdtm", "sdtm", "sdtm", "sdtm", "sdtm", "sdtm", "sdtm", "sdtm"]
+          "value": ["ARM", "DOMAIN", "STUDYID", "USUBJID", "ARM", "DOMAIN", "STUDYID", "USUBJID"]
         }
       ]
     }
@@ -335,7 +335,7 @@
         "names": {
           "type": "character",
           "attributes": {},
-          "value": ["domain", "column_name", "domain_type"]
+          "value": ["domain", "domain_type", "column_name"]
         },
         "out.attrs": {
           "type": "list",
@@ -385,7 +385,7 @@
         "row.names": {
           "type": "character",
           "attributes": {},
-          "value": ["7", "1", "4", "3", "2", "6", "5"]
+          "value": ["1", "5", "3", "2", "6", "4"]
         },
         "class": {
           "type": "character",
@@ -397,17 +397,17 @@
         {
           "type": "character",
           "attributes": {},
-          "value": ["core", "DM", "DM", "DM", "DM_VACCINE", "DM_VACCINE", "DM_VACCINE"]
+          "value": ["DM", "DM", "DM", "DM_VACCINE", "DM_VACCINE", "DM_VACCINE"]
         },
         {
           "type": "character",
           "attributes": {},
-          "value": ["ARM", "AGEU", "ARM", "USUBJID", "AGEU", "ARM", "USUBJID"]
+          "value": ["sdtm", "sdtm", "sdtm", "sdtm", "sdtm", "sdtm"]
         },
         {
           "type": "character",
           "attributes": {},
-          "value": ["core", "sdtm", "sdtm", "sdtm", "sdtm", "sdtm", "sdtm"]
+          "value": ["AGEU", "ARM", "USUBJID", "AGEU", "ARM", "USUBJID"]
         }
       ]
     }
@@ -483,7 +483,7 @@
         "row.names": {
           "type": "integer",
           "attributes": {},
-          "value": [1, 2, 3, 4, 5]
+          "value": [1, 2, 3, 4]
         },
         "names": {
           "type": "character",
@@ -500,17 +500,17 @@
         {
           "type": "character",
           "attributes": {},
-          "value": ["core", "DM", "DM", "DM_VACCINE", "DM_VACCINE"]
+          "value": ["DM", "DM", "DM_VACCINE", "DM_VACCINE"]
         },
         {
           "type": "character",
           "attributes": {},
-          "value": ["core", "sdtm", "sdtm", "sdtm", "sdtm"]
+          "value": ["sdtm", "sdtm", "sdtm", "sdtm"]
         },
         {
           "type": "character",
           "attributes": {},
-          "value": ["ARM", "ARM", "USUBJID", "ARM", "USUBJID"]
+          "value": ["ARM", "USUBJID", "ARM", "USUBJID"]
         }
       ]
     }
@@ -591,7 +591,7 @@
         "names": {
           "type": "character",
           "attributes": {},
-          "value": ["domain", "column_name", "domain_type"]
+          "value": ["domain", "domain_type", "column_name"]
         },
         "out.attrs": {
           "type": "list",
@@ -641,7 +641,7 @@
         "row.names": {
           "type": "character",
           "attributes": {},
-          "value": ["11", "1", "8", "5", "3", "7", "2", "10", "6", "4", "9"]
+          "value": ["1", "9", "5", "3", "7", "2", "10", "6", "4", "8"]
         },
         "class": {
           "type": "character",
@@ -653,17 +653,17 @@
         {
           "type": "character",
           "attributes": {},
-          "value": ["core", "DM", "DM", "DM", "DM", "DM", "DM_VACCINE", "DM_VACCINE", "DM_VACCINE", "DM_VACCINE", "DM_VACCINE"]
+          "value": ["DM", "DM", "DM", "DM", "DM", "DM_VACCINE", "DM_VACCINE", "DM_VACCINE", "DM_VACCINE", "DM_VACCINE"]
         },
         {
           "type": "character",
           "attributes": {},
-          "value": ["ARM", "AGEU", "ARM", "DOMAIN", "STUDYID", "USUBJID", "AGEU", "ARM", "DOMAIN", "STUDYID", "USUBJID"]
+          "value": ["sdtm", "sdtm", "sdtm", "sdtm", "sdtm", "sdtm", "sdtm", "sdtm", "sdtm", "sdtm"]
         },
         {
           "type": "character",
           "attributes": {},
-          "value": ["core", "sdtm", "sdtm", "sdtm", "sdtm", "sdtm", "sdtm", "sdtm", "sdtm", "sdtm", "sdtm"]
+          "value": ["AGEU", "ARM", "DOMAIN", "STUDYID", "USUBJID", "AGEU", "ARM", "DOMAIN", "STUDYID", "USUBJID"]
         }
       ]
     }
@@ -716,7 +716,7 @@
         "names": {
           "type": "character",
           "attributes": {},
-          "value": ["domain", "column_name", "domain_type"]
+          "value": ["domain", "domain_type", "column_name"]
         },
         "out.attrs": {
           "type": "list",
@@ -766,7 +766,7 @@
         "row.names": {
           "type": "character",
           "attributes": {},
-          "value": ["2", "3", "1", "4", "6"]
+          "value": ["2", "5", "3", "1", "6", "4", "8"]
         },
         "class": {
           "type": "character",
@@ -778,17 +778,142 @@
         {
           "type": "character",
           "attributes": {},
-          "value": ["ADSL", "ADSL", "LB", "LB", "LB"]
+          "value": ["ADSL", "ADSL", "ADSL", "LB", "LB", "LB", "LB"]
         },
         {
           "type": "character",
           "attributes": {},
-          "value": ["SEX", "USUBJID", "LBSTRESN", "USUBJID", "VISITNUM"]
+          "value": ["adam", "adam", "adam", "sdtm", "sdtm", "sdtm", "sdtm"]
         },
         {
           "type": "character",
           "attributes": {},
-          "value": ["adam", "adam", "sdtm", "sdtm", "sdtm"]
+          "value": ["SEX", "STUDYID", "USUBJID", "LBSTRESN", "STUDYID", "USUBJID", "VISITNUM"]
+        }
+      ]
+    }
+
+# Check external predecessor
+
+    {
+      "type": "list",
+      "attributes": {
+        "row.names": {
+          "type": "integer",
+          "attributes": {},
+          "value": [1]
+        },
+        "class": {
+          "type": "character",
+          "attributes": {},
+          "value": ["data.frame"]
+        },
+        "names": {
+          "type": "character",
+          "attributes": {},
+          "value": ["column_name", "domain", "domain_type"]
+        }
+      },
+      "value": [
+        {
+          "type": "character",
+          "attributes": {},
+          "value": ["ARM"]
+        },
+        {
+          "type": "character",
+          "attributes": {},
+          "value": ["adsl"]
+        },
+        {
+          "type": "character",
+          "attributes": {},
+          "value": ["adam"]
+        }
+      ]
+    }
+
+---
+
+    {
+      "type": "list",
+      "attributes": {
+        "names": {
+          "type": "character",
+          "attributes": {},
+          "value": ["domain", "domain_type", "column_name"]
+        },
+        "out.attrs": {
+          "type": "list",
+          "attributes": {
+            "names": {
+              "type": "character",
+              "attributes": {},
+              "value": ["dim", "dimnames"]
+            }
+          },
+          "value": [
+            {
+              "type": "integer",
+              "attributes": {
+                "names": {
+                  "type": "character",
+                  "attributes": {},
+                  "value": ["domain", "column_name"]
+                }
+              },
+              "value": [2, 3]
+            },
+            {
+              "type": "list",
+              "attributes": {
+                "names": {
+                  "type": "character",
+                  "attributes": {},
+                  "value": ["domain", "column_name"]
+                }
+              },
+              "value": [
+                {
+                  "type": "character",
+                  "attributes": {},
+                  "value": ["domain=DM", "domain=DM_VACCINE"]
+                },
+                {
+                  "type": "character",
+                  "attributes": {},
+                  "value": ["column_name=STUDYID", "column_name=DOMAIN", "column_name=AGEU"]
+                }
+              ]
+            }
+          ]
+        },
+        "row.names": {
+          "type": "character",
+          "attributes": {},
+          "value": ["5", "9", "3", "1", "7", "6", "10", "4", "2", "8", "12", "11"]
+        },
+        "class": {
+          "type": "character",
+          "attributes": {},
+          "value": ["data.frame"]
+        }
+      },
+      "value": [
+        {
+          "type": "character",
+          "attributes": {},
+          "value": ["DM", "DM", "DM", "DM", "DM", "DM_VACCINE", "DM_VACCINE", "DM_VACCINE", "DM_VACCINE", "DM_VACCINE", "EX", "EX"]
+        },
+        {
+          "type": "character",
+          "attributes": {},
+          "value": ["sdtm", "sdtm", "sdtm", "sdtm", "sdtm", "sdtm", "sdtm", "sdtm", "sdtm", "sdtm", "sdtm", "sdtm"]
+        },
+        {
+          "type": "character",
+          "attributes": {},
+          "value": ["AGEU", "ARM", "DOMAIN", "STUDYID", "USUBJID", "AGEU", "ARM", "DOMAIN", "STUDYID", "USUBJID", "USUBJID", "VAR1"]
         }
       ]
     }

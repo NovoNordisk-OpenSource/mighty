@@ -1,7 +1,7 @@
-test_that("Check that predecessors are identified correctly and can be renamed while extracting from core", {
+test_that("Check that predecessors and derivations are identified correctly and that predecessors can be renamed while extracting from core", {
 
   # SETUP
-  ui_path <- testthat::test_path("fixtures", "adsl_categorisation_of_predecessors.yml")
+  ui_path <- testthat::test_path("fixtures", "adsl_categorisation_of_action_type.yml")
   path_trial_metadata <- testthat::test_path("fixtures", "trial_metadata_0001.yml")
   std_lib_path <- testthat::test_path("fixtures", "adsl_0001.R")
 
@@ -22,9 +22,9 @@ test_that("Check that predecessors are identified correctly and can be renamed w
 
   # EXPECT
   expect_equal(actual$data_model$type,
-               c("predecessor", rep("derivation", 3), "domain_init"))
+               c("predecessor", rep("derivation", 4), "domain_init"))
   expect_equal(actual$data_model$code_id,
-               c(NA, NA, "arm_group_01", "arm_match_01", NA))
+               c(NA, NA, NA, "arm_group_01", "arm_match_01", NA))
 
   x[[1]] |> source()
   ADSL |> expect_snapshot_value(style = "json2")
