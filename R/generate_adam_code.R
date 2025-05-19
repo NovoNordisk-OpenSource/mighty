@@ -53,7 +53,7 @@ generate_adam_code <- function(path_ui_data,
   nodes_2[is.na(code_id) & is.na(type), type := "derivation"]
 
   # Check dependencies
-  assert_all_parents_present(nodes_2, check_external_adam)
+  assert_all_parents_present(nodes_2, check_external_adam, ui_init, domain_keys)
 
   # Create an initialize action per domain that:
   #   - absorb core predecessor actions that have no renaming

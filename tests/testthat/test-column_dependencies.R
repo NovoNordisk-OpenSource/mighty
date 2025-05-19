@@ -1,7 +1,7 @@
 test_that("No filters", {
 
   # SETUP
-  ui_path <- testthat::test_path("fixtures", "adsl_no_filter.yml")
+  ui_path <- testthat::test_path("fixtures", "column_dependencies_adsl_01.yml")
   path_trial_metadata <- testthat::test_path("fixtures", "trial_metadata_0001.yml")
   std_lib_path <- testthat::test_path("fixtures", "adsl_0001.R")
 
@@ -43,7 +43,7 @@ test_that("No filters", {
 test_that("No domain filters", {
 
   # SETUP
-  ui_path <- testthat::test_path("fixtures", "adsl_no_domain_filter.yml")
+  ui_path <- testthat::test_path("fixtures", "column_dependencies_adsl_02.yml")
   path_trial_metadata <- testthat::test_path("fixtures", "trial_metadata_0001.yml")
   std_lib_path <- testthat::test_path("fixtures", "adsl_0001.R")
 
@@ -85,7 +85,7 @@ test_that("No domain filters", {
 test_that("No global filters", {
 
   # SETUP
-  ui_path <- testthat::test_path("fixtures", "adsl_no_global_filter.yml")
+  ui_path <- testthat::test_path("fixtures", "column_dependencies_adsl_03.yml")
   path_trial_metadata <- testthat::test_path("fixtures", "trial_metadata_0001.yml")
   std_lib_path <- testthat::test_path("fixtures", "adsl_0001.R")
 
@@ -127,7 +127,7 @@ test_that("No global filters", {
 test_that("No filters and no derivations", {
 
   # SETUP
-  ui_path <- testthat::test_path("fixtures", "adsl_no_filter_no_derivation.yml")
+  ui_path <- testthat::test_path("fixtures", "column_dependencies_adsl_04.yml")
   path_trial_metadata <- testthat::test_path("fixtures", "trial_metadata_0001.yml")
   std_lib_path <- testthat::test_path("fixtures", "adsl_0001.R")
 
@@ -164,7 +164,7 @@ test_that("No filters and no derivations", {
 test_that("Global filter and domain filter", {
 
   # SETUP
-  ui_path <- testthat::test_path("fixtures", "adsl_global_and_domain_filter.yml")
+  ui_path <- testthat::test_path("fixtures", "column_dependencies_adsl_05.yml")
   path_trial_metadata <- testthat::test_path("fixtures", "trial_metadata_0001.yml")
   std_lib_path <- testthat::test_path("fixtures", "adsl_0001.R")
 
@@ -206,7 +206,7 @@ test_that("Global filter and domain filter", {
 test_that("Global filter and domain filter incl. ADSL dependencies", {
 
   # SETUP
-  ui_path <- testthat::test_path("fixtures", "adlb_global_and_domain_filter_01.yml")
+  ui_path <- testthat::test_path("fixtures", "column_dependencies_adlb_01.yml")
   path_trial_metadata <- testthat::test_path("fixtures", "trial_metadata_0001.yml")
   std_lib_path <- testthat::test_path("fixtures", "adlb_0001.R")
 
@@ -220,7 +220,8 @@ test_that("Global filter and domain filter incl. ADSL dependencies", {
     path_trial_metadata = path_trial_metadata,
     path_domain_keys = domain_keys_path,
     path_output = output_path,
-    data_connection = "pharmaverse"
+    data_connection = "pharmaverse",
+    check_external_adam = FALSE
   )
   write_adam_programs(dir = output_path, programs = actual$programs)
   x <- list.files(output_path, full.names = TRUE)
@@ -250,7 +251,7 @@ test_that("Global filter and domain filter incl. ADSL dependencies", {
 test_that("Global filter and domain filter incl. adsl dependencies (lower case)", {
 
   # SETUP
-  ui_path <- testthat::test_path("fixtures", "adlb_global_and_domain_filter_02.yml")
+  ui_path <- testthat::test_path("fixtures", "column_dependencies_adlb_02.yml")
   path_trial_metadata <- testthat::test_path("fixtures", "trial_metadata_0001.yml")
   std_lib_path <- testthat::test_path("fixtures", "adlb_0001.R")
 
@@ -264,7 +265,8 @@ test_that("Global filter and domain filter incl. adsl dependencies (lower case)"
     path_trial_metadata = path_trial_metadata,
     path_domain_keys = domain_keys_path,
     path_output = output_path,
-    data_connection = "pharmaverse"
+    data_connection = "pharmaverse",
+    check_external_adam = FALSE
   )
   write_adam_programs(dir = output_path, programs = actual$programs)
   x <- list.files(output_path, full.names = TRUE)
@@ -295,7 +297,7 @@ test_that("Global filter and domain filter incl. adsl dependencies (lower case)"
 test_that("Check external predecessor", {
 
   # SETUP
-  ui_path <- test_path("fixtures", "adsl_external_data.yml")
+  ui_path <- test_path("fixtures", "column_dependencies_adsl_06.yml")
   path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
   std_lib_path <- testthat::test_path("fixtures", "adsl_0001.R")
   domain_keys_path <- system.file("standards", "domain_keys.yml", package = "mighty")
