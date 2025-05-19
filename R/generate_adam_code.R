@@ -49,16 +49,12 @@ generate_adam_code <- function(path_ui_data,
   #   - 'core' is replaced with actual core domain(s) in depend_cols
   nodes_2 <- update_predecessors(nodes_1, domain_keys, ui_init)
 
-  # Assign type "derivation" to actions that are sourced from other derivations
-  nodes_2[is.na(code_id) & is.na(type), type := "derivation"]
-
   # Check dependencies
   assert_all_parents_present(nodes_2, check_external_adam)
 
   # Create an initialize action per domain that:
-  #   - absorb core predecessor actions that have no renaming
-  #   - redirect remaining core predecessors (with renaming) dependencies to the
-  #     initialize actions
+  #   - absorb core copy nodes
+  #   - redirect "rename" dependencies to the initialize actions
   nodes_3 <- create_domain_initialize_nodes(nodes_2, ui_init)
 
   # Identify edges in the topology graph

@@ -55,7 +55,6 @@ generate_node_code <- function(nodes_program_i,
       next
     }
     if (node_i$type == "program_init") {
-
       program[[i]] <- generate_program_init(
         adam_domain = node_i$domain,
         adam_dataset_list = adam_dataset_list,
@@ -65,12 +64,13 @@ generate_node_code <- function(nodes_program_i,
       )
       next
     }
-    if (node_i$type == "predecessor") {
+
+    if (grepl("rename|echo", node_i$type)) {
       is_mutate <- node_i$depend_cols[[1]] |> nrow() == 1
       if (is_mutate) {
         depends <- node_i[["depend_cols"]][[1]][["column_name"]]
         outputs <- node_i[["outputs"]][[1]]
-        program[[i]] <- predecessor_mutate(
+        program[[i]] <- generate_rename_code(
           .self = node_i$domain,
           rename_var = outputs,
           source_var = depends,
@@ -78,15 +78,16 @@ generate_node_code <- function(nodes_program_i,
         )
         next
       }
+
       depend_columns <- node_i[["depend_cols"]][[1]][["column_name"]]
       depend_domains <- node_i[["depend_cols"]][[1]][["domain"]]
       outputs <- node_i[["outputs"]][[1]]
-      x <- pre_process_predecessor_left_join(depend_columns,
-                                             depend_domains,
-                                             outputs,
-                                             node_i$domain,
-                                             domain_keys)
-      program[[i]] <- predecessor_left_join(
+      x <- pre_process_generate_rename_left_join_code(depend_columns,
+                                                      depend_domains,
+                                                      outputs,
+                                                      node_i$domain,
+                                                      domain_keys)
+      program[[i]] <- generate_rename_left_join_code(
         .self = node_i$domain,
         join_dataset = x$join_dataset,
         var_to_add = x$var_to_add,
@@ -98,37 +99,20 @@ generate_node_code <- function(nodes_program_i,
 
     }
     if (node_i$type == "derivation" || node_i$type == "row") {
-
-      # If no code_id is provided, the derivation depends on another derivation
-      # and only a mutation step is required. Otherwise the derivation is sourced
-      # from a code component and the code_id is used to parse the code.
-      is_mutate <- is.na(node_i$code_id)
-      if(!is_mutate){
-        program[[i]] <- parse_into_chunks(
-          code_id = node_i$code_id,
-          user_supplied_parameters = node_i$parameters |> unlist(FALSE),
-          node_id = node_i$node_id,
-          domain_name = node_i$domain,
-          outputs = node_i$outputs,
-          env = std_code_env
-        )
-        next
-      }
-      depends <- node_i[["depend_cols"]][[1]][["column_name"]]
-      outputs <- node_i[["outputs"]][[1]]
-      program[[i]] <- predecessor_mutate(
-        .self = node_i$domain,
-        rename_var = outputs,
-        source_var = depends,
-        node_id = node_i$node_id
+      program[[i]] <- parse_into_chunks(
+        code_id = node_i$code_id,
+        user_supplied_parameters = node_i$parameters |> unlist(FALSE),
+        node_id = node_i$node_id,
+        domain_name = node_i$domain,
+        outputs = node_i$outputs,
+        env = std_code_env
       )
       next
     }
     if (node_i$type == "write_data") {
-
       # Collect input table names
-      if(any(nodes_program_i$type == "external")){
-        input_tables <- nodes_program_i[nodes_program_i$type == "external",]$external_dependencies_by_program[[1]][["domain"]] |>
+      if (any(nodes_program_i$type == "external")) {
+        input_tables <- nodes_program_i[nodes_program_i$type == "external", ]$external_dependencies_by_program[[1]][["domain"]] |>
           unique()
       } else {
         input_tables <- c()

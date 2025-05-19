@@ -1,4 +1,4 @@
-predecessor_mutate <-  function(.self, rename_var, source_var, node_id) {
+generate_rename_code <-  function(.self, rename_var, source_var, node_id) {
 
   #header <- sub(".*-", "", node_id)
   header <- node_id
@@ -6,7 +6,7 @@ predecessor_mutate <-  function(.self, rename_var, source_var, node_id) {
   glue::glue('
  # {toupper(header)} -----------------------------------------------------
 
-  {.self} <- {.self} |> dplyr::mutate({toupper(rename_var)} = {toupper(source_var)})
+  {.self} <- {.self} |> dplyr::rename({toupper(rename_var)} = {toupper(source_var)})
 
 ')
 }
@@ -19,7 +19,7 @@ predecessor_mutate <-  function(.self, rename_var, source_var, node_id) {
 #' @export
 #'
 
-pre_process_predecessor_left_join <- function(depend_columns, depend_domains, outputs, domain, domain_keys) {
+pre_process_generate_rename_left_join_code <- function(depend_columns, depend_domains, outputs, domain, domain_keys) {
 
   # Extract the domain (everything before the first ".")
   depend_domains <- depend_domains |> unique()
@@ -43,7 +43,7 @@ pre_process_predecessor_left_join <- function(depend_columns, depend_domains, ou
   ))
 }
 
-predecessor_left_join <- function(.self, join_dataset, var_to_add, by_vars, node_id, output_var) {
+generate_rename_left_join_code <- function(.self, join_dataset, var_to_add, by_vars, node_id, output_var) {
 
   by_vars_str <- paste(sprintf('"%s"', by_vars), collapse = ", ")
   select_expr <- c(by_vars, var_to_add) |>
