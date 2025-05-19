@@ -66,16 +66,16 @@ generate_node_code <- function(nodes_program_i,
     }
 
     if (grepl("rename|echo", node_i$type)) {
-      is_join <- node_i$depend_cols[[1]] |> nrow() != 1
-      if (!is_join) {
+      is_mutate <- node_i$depend_cols[[1]] |> nrow() == 1
+      if (is_mutate) {
         depends <- node_i[["depend_cols"]][[1]][["column_name"]]
         outputs <- node_i[["outputs"]][[1]]
         program[[i]] <- generate_rename_code(
           .self = node_i$domain,
           rename_var = outputs,
           source_var = depends,
-          node_id = node_i$node_id,
-          type = node_i$type
+          node_id = node_i$node_id
+
         )
         next
       }
