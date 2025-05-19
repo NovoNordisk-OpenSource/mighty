@@ -206,7 +206,7 @@ test_that("Global filter and domain filter", {
 test_that("Global filter and domain filter incl. ADSL dependencies", {
 
   # SETUP
-  ui_path <- testthat::test_path("fixtures", "adlb_global_and_domain_filter.yml")
+  ui_path <- testthat::test_path("fixtures", "adlb_global_and_domain_filter_01.yml")
   path_trial_metadata <- testthat::test_path("fixtures", "trial_metadata_0001.yml")
   std_lib_path <- testthat::test_path("fixtures", "adlb_0001.R")
 
@@ -250,7 +250,7 @@ test_that("Global filter and domain filter incl. ADSL dependencies", {
 test_that("Global filter and domain filter incl. adsl dependencies (lower case)", {
 
   # SETUP
-  ui_path <- testthat::test_path("fixtures", "adlb_global_and_domain_filter2.yml")
+  ui_path <- testthat::test_path("fixtures", "adlb_global_and_domain_filter_02.yml")
   path_trial_metadata <- testthat::test_path("fixtures", "trial_metadata_0001.yml")
   std_lib_path <- testthat::test_path("fixtures", "adlb_0001.R")
 
