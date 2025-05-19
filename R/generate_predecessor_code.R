@@ -1,4 +1,4 @@
-generate_rename_code <-  function(.self, rename_var, source_var, node_id) {
+generate_mutate_code <-  function(.self, rename_var, source_var, node_id) {
   #header <- sub(".*-", "", node_id)
   header <- node_id
 

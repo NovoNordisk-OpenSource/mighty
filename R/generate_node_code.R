@@ -65,12 +65,12 @@ generate_node_code <- function(nodes_program_i,
       next
     }
 
-    if (grepl("rename|echo", node_i$type)) {
+    if (grepl("mutate|echo", node_i$type)) {
       is_mutate <- node_i$depend_cols[[1]] |> nrow() == 1
       if (is_mutate) {
         depends <- node_i[["depend_cols"]][[1]][["column_name"]]
         outputs <- node_i[["outputs"]][[1]]
-        program[[i]] <- generate_rename_code(
+        program[[i]] <- generate_mutate_code(
           .self = node_i$domain,
           rename_var = outputs,
           source_var = depends,

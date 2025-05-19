@@ -19,47 +19,47 @@ update_predecessors <-  function(nodes, pk, ui_init) {
   dep_domain <- extract_domain_of_dependency_columns(x)
 
   # Identify indices of of copy nodes and rename nodes
-  index_copy_rename <- which(is.na(x[["code_id"]]) &
+  index_copy_mutate <- which(is.na(x[["code_id"]]) &
                                (dep_domain == "core" |
                                   dep_domain != x[["domain"]]))
 
   index_echos <- x[,code_id] |>
     is.na() |>
     which() |>
-    setdiff(index_copy_rename)
+    setdiff(index_copy_mutate)
 x[index_echos, type:= "echo"]
   # If return early when empty
-  if (length(index_copy_rename) == 0) {
+  if (length(index_copy_mutate) == 0) {
     return(x)
   }
-x[index_copy_rename, type:="copy_rename"]
+x[index_copy_mutate, type:="copy_mutate"]
 
   # Identify copy/rename nodes that are
   #   1. external (from different domains than core) and
   #   2. core
-  dep_domains <- vapply(x[["depend_cols"]][index_copy_rename], function(dc)
+  dep_domains <- vapply(x[["depend_cols"]][index_copy_mutate], function(dc)
     dc[["domain"]], character(1))
-  node_copy_rename_external <- x[["domain"]][index_copy_rename] != dep_domains &
+  node_copy_mutate_external <- x[["domain"]][index_copy_mutate] != dep_domains &
     dep_domains != "core"
-  node_copy_rename_core <- dep_domains == "core"
+  node_copy_mutate_core <- dep_domains == "core"
 
   # 1. Update copy/rename nodes having an external dependency with foreign key
-  if (any(node_copy_rename_external)) {
+  if (any(node_copy_mutate_external)) {
     x <- add_foreign_key_as_depends_col(
       x = x,
-      index_copy_rename = index_copy_rename,
-      node_copy_rename_external = node_copy_rename_external,
+      index_copy_mutate = index_copy_mutate,
+      node_copy_mutate_external = node_copy_mutate_external,
       pk = pk
     )
   }
 
   # 2. For copy/rename nodes with a core domain, we need to replace the "core"
   # with the actual name of the domain. This makes downstream processing easier
-  if (any(node_copy_rename_core)) {
+  if (any(node_copy_mutate_core)) {
     x <- replace_core_with_named_domain(
       x = x,
-      index_copy_rename = index_copy_rename,
-      node_copy_rename_core = node_copy_rename_core,
+      index_copy_mutate = index_copy_mutate,
+      node_copy_mutate_core = node_copy_mutate_core,
       ui_init = ui_init
     )
   }
@@ -82,8 +82,8 @@ extract_domain_of_dependency_columns <- function(x){
     unlist()
 }
 
-add_foreign_key_as_depends_col <- function(x, index_copy_rename, node_copy_rename_external, pk) {
-  for (i in index_copy_rename[node_copy_rename_external]) {
+add_foreign_key_as_depends_col <- function(x, index_copy_mutate, node_copy_mutate_external, pk) {
+  for (i in index_copy_mutate[node_copy_mutate_external]) {
     domain_i <- x[["domain"]][[i]]
     dep_domain <- x[["depend_cols"]][[i]][["domain"]]
 
@@ -109,10 +109,10 @@ add_foreign_key_as_depends_col <- function(x, index_copy_rename, node_copy_renam
 }
 
 replace_core_with_named_domain <- function(x,
-                                          index_copy_rename,
-                                          node_copy_rename_core,
+                                          index_copy_mutate,
+                                          node_copy_mutate_core,
                                           ui_init) {
-  for (i in index_copy_rename[node_copy_rename_core]) {
+  for (i in index_copy_mutate[node_copy_mutate_core]) {
     dep_cols_i <- x[["depend_cols"]][[i]]
     domain_i <- x[["domain"]][[i]]
     core_domains <- ui_init[[domain_i]][["core_domains"]]

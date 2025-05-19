@@ -12,7 +12,7 @@
 create_domain_initialize_nodes <- function(nodes, domain_init_data) {
   nodes_split <- split(nodes, by = "domain")
 
-  # For each domain: Identify the core variables for copy/rename nodes
+  # For each domain: Identify the core variables for copy/mutate nodes
   core_vars <- nodes_split |>
     lapply(extract_core_dependency_columns, domain_init_data = domain_init_data)
 
@@ -32,17 +32,17 @@ create_domain_initialize_nodes <- function(nodes, domain_init_data) {
   }) |> unlist()
   nodes_subset <- nodes[!nodes$node_id %in% nodes_to_remove, ]
 
-  # Since "copy" nodes are absorbed, only "rename" nodes left
-  nodes_subset[type == "copy_rename", type := "rename"]
+  # Since "copy" nodes are absorbed, only "mutate" nodes left
+  nodes_subset[type == "copy_mutate", type := "mutate"]
 
-  # Rename nodes are not absorbed by the domain_init nodes. However, the
-  # dependencies specified in the rename nodes should now point to the variables
+  # mutate nodes are not absorbed by the domain_init nodes. However, the
+  # dependencies specified in the mutate nodes should now point to the variables
   # outputted by the domain init node, not the original "core" domain(s).
 
   # The update is done by replacing the domain
   # name in the depend_cols with the ADaM domain name.
 
-  nodes_subset <- replace_core_domain_with_adam_for_rename_nodes(nodes_subset = nodes_subset, domain_init_data = domain_init_data)
+  nodes_subset <- replace_core_domain_with_adam_for_mutate_nodes(nodes_subset = nodes_subset, domain_init_data = domain_init_data)
 
   # Return the updated nodes with domain_init nodes
   return(rbind(nodes_subset, domain_init_nodes))
@@ -56,7 +56,7 @@ create_domain_initialize_nodes <- function(nodes, domain_init_data) {
 #' and returns only the dependencies that are from core domains.
 #'
 #' The function first identifies core domains for the domain in scope, then filters to
-#' copy_rename type nodes to extract their dependencies. It checks that dependencies
+#' copy_mutate type nodes to extract their dependencies. It checks that dependencies
 #' are either all from core domains or all from non-core domains, and returns only
 #' the dependencies from core domains.
 #'
@@ -67,13 +67,13 @@ create_domain_initialize_nodes <- function(nodes, domain_init_data) {
 #'
 #' @return A named list of data frames, where each element contains dependency column
 #'   information from core domains. Names of the list correspond to the output names
-#'   from copy_rename operations. NULL dependencies (from non-core domains) are removed.
+#'   from copy_mutate operations. NULL dependencies (from non-core domains) are removed.
 #'
 extract_core_dependency_columns <- function(x, domain_init_data) {
   # Identify column dependencies for all predecessors
   core_domains <- id_core_domains_for_domain_in_scope(x, domain_init_data)
 
-  x_sub <- x[x$type == "copy_rename", ]
+  x_sub <- x[x$type == "copy_mutate", ]
   dep_cols <- x_sub$depend_cols
   names(dep_cols) <- unlist(x_sub$outputs)
 
@@ -134,10 +134,10 @@ create_domain_init_node_i <- function(core_vars_domain_i,
   )][, node_id := paste0(domain, "-", "domain_init")]
 }
 
-#' Replace "core" domains with ADaM "self" domain for rename nodes
+#' Replace "core" domains with ADaM "self" domain for mutate nodes
 #' @details
-#' Rename nodes are not absorbed by the domain_init nodes. However, the
-#' dependencies specified in the rename nodes should now point to the variables
+#' mutate nodes are not absorbed by the domain_init nodes. However, the
+#' dependencies specified in the mutate nodes should now point to the variables
 #' outputted by the domain init node, not the original "core" domain(s). The
 #' update is done by replacing the domain name in the depend_cols with the ADaM
 #' domain name.
@@ -147,9 +147,9 @@ create_domain_init_node_i <- function(core_vars_domain_i,
 #' @param domain_init_data
 #'
 #' @returns
-replace_core_domain_with_adam_for_rename_nodes <- function(nodes_subset, domain_init_data) {
+replace_core_domain_with_adam_for_mutate_nodes <- function(nodes_subset, domain_init_data) {
   for (i in seq_len(nrow(nodes_subset))) {
-    if (nodes_subset[i, type == "rename"]) {
+    if (nodes_subset[i, type == "mutate"]) {
       dep_cols <- nodes_subset[["depend_cols"]][[i]]
       domain_i <- nodes_subset[["domain"]][[i]]
       indx_core_vars <- dep_cols$domain %in% domain_init_data[[domain_i]][["core_domains"]]
