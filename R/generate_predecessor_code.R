@@ -1,12 +1,15 @@
-generate_rename_code <-  function(.self, rename_var, source_var, node_id) {
-
+generate_rename_code <-  function(.self, rename_var, source_var, node_id, type) {
+verb <- "rename"
+if(type=="echo"){
+  verb <- "mutate"
+}
   #header <- sub(".*-", "", node_id)
   header <- node_id
 
   glue::glue('
  # {toupper(header)} -----------------------------------------------------
 
-  {.self} <- {.self} |> dplyr::rename({toupper(rename_var)} = {toupper(source_var)})
+  {.self} <- {.self} |> dplyr::{verb}({toupper(rename_var)} = {toupper(source_var)})
 
 ')
 }
