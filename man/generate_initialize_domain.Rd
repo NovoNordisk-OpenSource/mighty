@@ -8,7 +8,8 @@ generate_initialize_domain(
   .self,
   core_domains,
   adsl_domain_keys,
-  domain_filter = NULL,
+  adsl_name,
+  filter_domain = NULL,
   filter_global = NULL,
   keep_vars = NULL
 )
@@ -22,9 +23,6 @@ generate_initialize_domain(
 
 \item{keep_vars}{Vector of strings naming variables from SDTM core domains
 kept}
-
-\item{filter_expr}{list of stings with lenght equal to number of core_domains
-filters to apply to each core SDTM table before combining}
 }
 \description{
 Write the R code to initialize a domain
