@@ -3,8 +3,9 @@ Title: What the Package Does (One Line, Title Case)
 Version: 0.0.0.9000
 Authors@R: c(
     person("Matthew", "Phelps", email = "mewp@novonordisk.com", role = c("aut", "cre")),
-    person("Nicolai", "Skov Johnsen", role = "ctb"),
-    person("Aksel", "Thomsen", role = "ctb")
+    person("Nicolai", "Skov Johnsen", email = "nosj@novonordisk.com", role = "ctb"),
+    person("Aksel", "Thomsen", email = "oath@novonordisk.com", role = "ctb"),
+    person("Michael Hedegaard", "Thomsen", email = "mhzt@novonordisk.com", role = "ctb")
   )
 Description: What the package does (one paragraph).
 License: Apache License (>= 2)
@@ -30,5 +31,6 @@ Suggests:
     admiral,
     withr,
     testthat (>= 3.0.0),
-    pharmaversesdtm
+    pharmaversesdtm,
+    arrow
 Config/testthat/edition: 3
