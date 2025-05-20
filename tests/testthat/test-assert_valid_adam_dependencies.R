@@ -4,7 +4,7 @@ test_that(
     # SETUP
     ui_path <- c(test_path("fixtures", "assert_valid_adam_dependencies_adlb_01.yml"))
     path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
-    std_lib_path <- testthat::test_path("fixtures", "adlb_0001.R")
+    std_lib_path <- testthat::test_path("fixtures", "assert_valid_adam_dependencies_adlb.R")
 
     domain_keys_path <- system.file("standards", "domain_keys.yml", package = "mighty")
     output_path <- withr::local_tempdir()
@@ -29,7 +29,7 @@ test_that(
     # SETUP
     ui_path <- c(test_path("fixtures", "assert_valid_adam_dependencies_adlb_01.yml"))
     path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
-    std_lib_path <- testthat::test_path("fixtures", "adlb_0001.R")
+    std_lib_path <- testthat::test_path("fixtures", "assert_valid_adam_dependencies_adlb.R")
 
     domain_keys_path <- system.file("standards", "domain_keys.yml", package = "mighty")
     output_path <- withr::local_tempdir()
@@ -54,7 +54,7 @@ test_that(
     # SETUP
     ui_path <- c(test_path("fixtures", "assert_valid_adam_dependencies_adlb_02.yml"))
     path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
-    std_lib_path <- testthat::test_path("fixtures", "adlb_0001.R")
+    std_lib_path <- testthat::test_path("fixtures", "assert_valid_adam_dependencies_adlb.R")
 
     domain_keys_path <- system.file("standards", "domain_keys.yml", package = "mighty")
     output_path <- withr::local_tempdir()
@@ -79,7 +79,7 @@ test_that(
     # SETUP
     ui_path <- c(test_path("fixtures", "assert_valid_adam_dependencies_adlb_02.yml"))
     path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
-    std_lib_path <- testthat::test_path("fixtures", "adlb_0001.R")
+    std_lib_path <- testthat::test_path("fixtures", "assert_valid_adam_dependencies_adlb.R")
 
     domain_keys_path <- system.file("standards", "domain_keys.yml", package = "mighty")
     output_path <- withr::local_tempdir()
@@ -104,7 +104,7 @@ test_that(
     # SETUP
     ui_path <- c(test_path("fixtures", "assert_valid_adam_dependencies_adlb_03.yml"))
     path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
-    std_lib_path <- testthat::test_path("fixtures", "adlb_0001.R")
+    std_lib_path <- testthat::test_path("fixtures", "assert_valid_adam_dependencies_adlb.R")
 
     domain_keys_path <- system.file("standards", "domain_keys.yml", package = "mighty")
     output_path <- withr::local_tempdir()
@@ -129,7 +129,7 @@ test_that(
     # SETUP
     ui_path <- c(test_path("fixtures", "assert_valid_adam_dependencies_adlb_03.yml"))
     path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
-    std_lib_path <- testthat::test_path("fixtures", "adlb_0001.R")
+    std_lib_path <- testthat::test_path("fixtures", "assert_valid_adam_dependencies_adlb.R")
 
     domain_keys_path <- system.file("standards", "domain_keys.yml", package = "mighty")
     output_path <- withr::local_tempdir()
@@ -155,7 +155,7 @@ test_that(
     # SETUP
     ui_path <- c(test_path("fixtures", "assert_valid_adam_dependencies_adlb_04.yml"))
     path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
-    std_lib_path <- testthat::test_path("fixtures", "adlb_0001.R")
+    std_lib_path <- testthat::test_path("fixtures", "assert_valid_adam_dependencies_adlb.R")
 
     domain_keys_path <- system.file("standards", "domain_keys.yml", package = "mighty")
     output_path <- withr::local_tempdir()
@@ -179,7 +179,7 @@ test_that(
     # SETUP
     ui_path <- c(test_path("fixtures", "assert_valid_adam_dependencies_adlb_04.yml"))
     path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
-    std_lib_path <- testthat::test_path("fixtures", "adlb_0001.R")
+    std_lib_path <- testthat::test_path("fixtures", "assert_valid_adam_dependencies_adlb.R")
 
     domain_keys_path <- system.file("standards", "domain_keys.yml", package = "mighty")
     output_path <- withr::local_tempdir()
@@ -206,7 +206,7 @@ test_that(
     # SETUP
     ui_path <- c(test_path("fixtures", "assert_valid_adam_dependencies_adlb_05.yml"))
     path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
-    std_lib_path <- testthat::test_path("fixtures", "adlb_0001.R")
+    std_lib_path <- testthat::test_path("fixtures", "assert_valid_adam_dependencies_adlb.R")
 
     domain_keys_path <- system.file("standards", "domain_keys.yml", package = "mighty")
     output_path <- withr::local_tempdir()
@@ -233,7 +233,7 @@ test_that(
     # SETUP
     ui_path <- c(test_path("fixtures", "assert_valid_adam_dependencies_adlb_05.yml"))
     path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
-    std_lib_path <- testthat::test_path("fixtures", "adlb_0001.R")
+    std_lib_path <- testthat::test_path("fixtures", "assert_valid_adam_dependencies_adlb.R")
 
     domain_keys_path <- system.file("standards", "domain_keys.yml", package = "mighty")
     output_path <- withr::local_tempdir()
@@ -258,7 +258,7 @@ test_that(
     # SETUP
     ui_path <- test_path("fixtures", "assert_valid_adam_dependencies_adlb_06.yml")
     path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
-    std_lib_path <- testthat::test_path("fixtures", "adlb_0001.R")
+    std_lib_path <- testthat::test_path("fixtures", "assert_valid_adam_dependencies_adlb.R")
 
     domain_keys_path <- system.file("standards", "domain_keys.yml", package = "mighty")
     output_path <- withr::local_tempdir()
@@ -285,7 +285,7 @@ test_that(
     # SETUP
     ui_path <- test_path("fixtures", "assert_valid_adam_dependencies_adlb_06.yml")
     path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
-    std_lib_path <- testthat::test_path("fixtures", "adlb_0001.R")
+    std_lib_path <- testthat::test_path("fixtures", "assert_valid_adam_dependencies_adlb.R")
 
     domain_keys_path <- system.file("standards", "domain_keys.yml", package = "mighty")
     output_path <- withr::local_tempdir()
@@ -305,7 +305,7 @@ test_that(
 
 
 test_that(
-  "An error is triggered when ADSL specification for filtering in two domains is incomplete and when check_cross_domain_adam_dependencies is enabled",
+  "An error is triggered when ADSL specifications for filtering in two domains are incomplete and when check_cross_domain_adam_dependencies is enabled",
   {
     # SETUP
     ui_path <- c(
@@ -313,7 +313,7 @@ test_that(
       test_path("fixtures", "assert_valid_adam_dependencies_advs_01.yml")
     )
     path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
-    std_lib_path <- testthat::test_path("fixtures", "adlb_0001.R")
+    std_lib_path <- testthat::test_path("fixtures", "assert_valid_adam_dependencies_adlb.R")
 
     domain_keys_path <- system.file("standards", "domain_keys.yml", package = "mighty")
     output_path <- withr::local_tempdir()
@@ -333,7 +333,7 @@ test_that(
 )
 
 test_that(
-  "No error is triggered when ADSL specification for filtering in two domains is incomplete and when check_cross_domain_adam_dependencies is disabled",
+  "No error is triggered when ADSL specifications for filtering in two domains are incomplete and when check_cross_domain_adam_dependencies is disabled",
   {
     # SETUP
     ui_path <- c(
@@ -341,7 +341,7 @@ test_that(
       test_path("fixtures", "assert_valid_adam_dependencies_advs_01.yml")
     )
     path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
-    std_lib_path <- testthat::test_path("fixtures", "adlb_0001.R")
+    std_lib_path <- testthat::test_path("fixtures", "assert_valid_adam_dependencies_adlb.R")
 
     domain_keys_path <- system.file("standards", "domain_keys.yml", package = "mighty")
     output_path <- withr::local_tempdir()
@@ -368,7 +368,7 @@ test_that(
       test_path("fixtures", "assert_valid_adam_dependencies_advs_02.yml")
     )
     path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
-    std_lib_path <- testthat::test_path("fixtures", "adlb_0001.R")
+    std_lib_path <- testthat::test_path("fixtures", "assert_valid_adam_dependencies_adlb.R")
 
     domain_keys_path <- system.file("standards", "domain_keys.yml", package = "mighty")
     output_path <- withr::local_tempdir()
@@ -386,6 +386,56 @@ test_that(
                                       "\n\tadlb\\.VISITNUM2\n\n.*ADVS spec:",
                                       "\n\tADVS\\.VISITNUM\nto execute:\n\tADVS\\.VISITNUM2"))
 
+  }
+)
+
+test_that(
+  "An error is triggered when the within-domain ADaM specification that includes a standard component is incomplete and check_cross_domain_adam_dependencies is disabled",
+  {
+    # SETUP
+    ui_path <- test_path("fixtures", "assert_valid_adam_dependencies_adlb_07.yml")
+    path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
+    std_lib_path <- testthat::test_path("fixtures", "assert_valid_adam_dependencies_adlb.R")
+
+    domain_keys_path <- system.file("standards", "domain_keys.yml", package = "mighty")
+    output_path <- withr::local_tempdir()
+
+    # EXPECT
+    actual <- generate_adam_code(
+      path_ui_data = ui_path,
+      code_component_source_files =  std_lib_path,
+      path_trial_metadata = path_trial_metadata,
+      path_domain_keys = domain_keys_path,
+      path_output = output_path,
+      data_connection = "pharmaverse",
+      check_cross_domain_adam_dependencies = FALSE
+    ) |> expect_error(regexp = paste0(".*ADLB spec:\n\tadlb\\.LBTEST\nto execute:",
+                                      "\n\tadlb\\.LBTEST2\n\tadlb\\.LBTEST3\n\tadlb\\.LBTEST3_FLG"))
+  }
+)
+
+test_that(
+  "An error is triggered when the within-domain ADaM specification that includes a standard component is incomplete and check_cross_domain_adam_dependencies is enabled",
+  {
+    # SETUP
+    ui_path <- test_path("fixtures", "assert_valid_adam_dependencies_adlb_07.yml")
+    path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
+    std_lib_path <- testthat::test_path("fixtures", "assert_valid_adam_dependencies_adlb.R")
+
+    domain_keys_path <- system.file("standards", "domain_keys.yml", package = "mighty")
+    output_path <- withr::local_tempdir()
+
+    # EXPECT
+    actual <- generate_adam_code(
+      path_ui_data = ui_path,
+      code_component_source_files =  std_lib_path,
+      path_trial_metadata = path_trial_metadata,
+      path_domain_keys = domain_keys_path,
+      path_output = output_path,
+      data_connection = "pharmaverse",
+      check_cross_domain_adam_dependencies = TRUE
+    ) |> expect_error(regexp = paste0(".*ADaM spec:\n\tadlb\\.LBTEST\nto execute:",
+                                      "\n\tadlb\\.LBTEST2\n\tadlb\\.LBTEST3\n\tadlb\\.LBTEST3_FLG"))
   }
 )
 

@@ -52,10 +52,10 @@ assert_valid_adam_dependencies <- function(x, ui_init, domain_keys, check_cross_
 
   if (check_cross_domain_adam_dependencies) {
     check_adam_dependencies_cross_domain(x,
-                                     adam_dep_by_domain,
-                                     outputs,
-                                     domains,
-                                     adsl_filter_dep_by_domain)
+                                         adam_dep_by_domain,
+                                         outputs,
+                                         domains,
+                                         adsl_filter_dep_by_domain)
   } else {
     # Only check that the are no missing internal parents per ADaM domain
 
@@ -260,10 +260,10 @@ find_missing_filter_dependencies <- function(nm, adsl_filter_dep_by_domain, miss
 #' @returns Nothing if all dependencies are present; stops with an error message
 #'   if dependencies are missing
 check_adam_dependencies_cross_domain <- function(x,
-                                                     adam_dep_by_domain,
-                                                     outputs,
-                                                     domains,
-                                                     adsl_filter_dep_by_domain) {
+                                                 adam_dep_by_domain,
+                                                 outputs,
+                                                 domains,
+                                                 adsl_filter_dep_by_domain) {
   # If check_external_adam = TRUE then check that there are no missing ADaM
   # column dependencies across domains
   all_adam_dep <- adam_dep_by_domain |> unlist() |> as.character()
@@ -279,14 +279,13 @@ check_adam_dependencies_cross_domain <- function(x,
   }) |> unlist()
 
   # Initialize actions_missing_deps
-  actions_missing_deps <-  NULL
+  col_missing_deps <-  NULL
 
   # Get affected actions if any exist
   if (any(idx)) {
-    actions_missing_deps_dt <- x[idx, c("domain", "column")]
-    actions_missing_deps <- paste0(actions_missing_deps_dt$domain,
-                                   ".",
-                                   actions_missing_deps_dt$column)
+    col_missing_deps <- lapply(which(idx), function(i) {
+      paste0(x$domain[[i]], ".", unlist(x$output[[i]]))
+    }) |> unlist() |> unique()
   }
 
   # Find missing filter dependencies
@@ -295,7 +294,7 @@ check_adam_dependencies_cross_domain <- function(x,
   }) |> unlist()
 
   # Combine all affected outputs
-  outputs_missing_deps <- c(actions_missing_deps, filter_missing_deps)
+  outputs_missing_deps <- c(col_missing_deps, filter_missing_deps)
 
   # Print error message
   stop(
@@ -354,13 +353,15 @@ check_adam_dependencies_within_domain <- function(nm,
   }, logical(1))
 
   # Get the names of the affected actions
-  actions_missing_deps <-  x_by_domain[[nm]]$column[idx] |> unlist()
+  col_missing_deps <-  x_by_domain[[nm]]$outputs[idx] |>
+    unlist() |>
+    unique()
 
   # Create error message
   paste0(
     "\n\nThe following columns are missing in the ", toupper(nm), " spec:\n\t",
     paste0(nm, ".", sort(missing_internal_parent_cols), collapse = "\n\t"),
     "\nto execute:\n\t",
-    paste0(nm, ".", sort(actions_missing_deps), collapse = "\n\t")
+    paste0(nm, ".", sort(col_missing_deps), collapse = "\n\t")
   )
 }
