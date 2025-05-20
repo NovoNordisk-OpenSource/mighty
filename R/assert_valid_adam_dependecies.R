@@ -1,4 +1,4 @@
-#' Assert All Parent Columns Are Present
+#' Assert ADaM depdendencies are valid
 #' @description Validates that all required parent columns are available for each ADaM domain.
 #'
 #' @details This function performs comprehensive dependency checking across ADaM domains
@@ -29,7 +29,7 @@
 #' @returns Nothing if all dependencies are satisfied; stops with an error message
 #'   if dependencies are missing
 #'
-assert_all_parents_present <- function(x, check_external_adam, ui_init, domain_keys){
+assert_valid_adam_dependecies <- function(x, check_external_adam, ui_init, domain_keys){
 
   # Split by ADaM domain
   x_by_domain <- split(x, by = "domain")
@@ -51,7 +51,7 @@ assert_all_parents_present <- function(x, check_external_adam, ui_init, domain_k
 
 
   if (check_external_adam) {
-    check_missing_external_adam_dependencies(x,
+    check_adam_dependencies_cross_domain(x,
                                      adam_dep_by_domain,
                                      outputs,
                                      domains,
@@ -59,7 +59,7 @@ assert_all_parents_present <- function(x, check_external_adam, ui_init, domain_k
   } else {
     # Only check that the are no missing internal parents per ADaM domain
     for(nm in domains) {
-      check_missing_internal_parent_columns(nm, adam_dep_by_domain, outputs, x_by_domain)
+      check_adam_dependencies_within_domain(nm, adam_dep_by_domain, outputs, x_by_domain)
     }
   }
 }
@@ -93,7 +93,7 @@ get_adsl_filter_dependencies <- function(nm, ui_init, domain_keys) {
   }
 
   # Extract only ADSL dependencies (columns starting with "AD")
-  filter_depend_cols_adsl <- filter_depend_cols[grepl("^AD", filter_depend_cols, ignore.case = TRUE)]
+  filter_depend_cols_adsl <- filter_depend_cols[grepl("^ADSL", filter_depend_cols, ignore.case = TRUE)]
 
   # Early return if no ADSL dependencies exist
   if (length(filter_depend_cols_adsl) == 0) {
@@ -249,7 +249,7 @@ find_missing_filter_dependencies <- function(nm, adsl_filter_dep_by_domain, miss
 #'
 #' @returns Nothing if all dependencies are present; stops with an error message
 #'   if dependencies are missing
-check_missing_external_adam_dependencies <- function(x,
+check_adam_dependencies_cross_domain <- function(x,
                                                      adam_dep_by_domain,
                                                      outputs,
                                                      domains,
@@ -315,7 +315,7 @@ check_missing_external_adam_dependencies <- function(x,
 #'
 #' @returns Nothing if all internal parent columns are present; stops with an
 #'   error message if columns are missing
-check_missing_internal_parent_columns <- function(nm,
+check_adam_dependencies_within_domain <- function(nm,
                                                   adam_dep_by_domain,
                                                   outputs,
                                                   x_by_domain) {
