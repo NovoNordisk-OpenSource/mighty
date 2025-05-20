@@ -28,6 +28,10 @@ update_ui_data <- function(code_component_metadata, ui_data) {
       suffixes = c("", "_from_code"),
       all.x = TRUE
     )
+    # Temporarily convert all "derivation" components into "compute" to match
+    # our internal terminology
+    x[type_from_code=="derivation", type_from_code:= "compute"]
+
 
     assert_outputs_identical(x)
 

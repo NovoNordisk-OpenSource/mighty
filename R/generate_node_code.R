@@ -99,7 +99,7 @@ generate_node_code <- function(nodes_program_i,
       next
 
     }
-    if (node_i$type == "derivation" || node_i$type == "row") {
+    if (node_i$type == "compute" || node_i$type == "row") {
       program[[i]] <- parse_into_chunks(
         code_id = node_i$code_id,
         user_supplied_parameters = node_i$parameters |> unlist(FALSE),

@@ -8,7 +8,7 @@
 assert_outputs_identical <- function(x) {
   # Only derivations can have discrepancies as they have "column" defined both
   # in yml and in code components
-  x_sub <- x[type_from_code == "derivation", .(code_id, outputs, outputs_from_code)]
+  x_sub <- x[type_from_code != "row", .(code_id, outputs, outputs_from_code)]
   inx <- purrr::map2(x_sub$outputs, x_sub$outputs_from_code, function(yml, code) {
     setdiff(yml,code) |> length()==0
   }) |> unlist()
