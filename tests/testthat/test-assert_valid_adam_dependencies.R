@@ -119,7 +119,7 @@ test_that(
       data_connection = "pharmaverse",
       check_cross_domain_adam_dependencies = FALSE
     ) |> expect_error(
-      regexp =  ".*ADaM spec for adlb:\n\tadlb.VISITNUM\nto execute:\n\tadlb\\.VISITNUM2")
+      regexp =  ".*ADLB spec:\n\tadlb.VISITNUM\nto execute:\n\tadlb\\.VISITNUM2")
   }
 )
 
@@ -169,7 +169,7 @@ test_that(
       path_output = output_path,
       data_connection = "pharmaverse",
       check_cross_domain_adam_dependencies = FALSE
-    ) |> expect_error(regexp = ".*ADaM spec for adlb:\n\tadlb\\.STUDYID\n\tadlb\\.VISITNUM\nto execute:\n\tadlb\\.AGE\n\tadlb\\.VISITNUM2")
+    ) |> expect_error(regexp = ".*ADLB spec:\n\tadlb\\.STUDYID\n\tadlb\\.VISITNUM\nto execute:\n\tadlb\\.AGE\n\tadlb\\.VISITNUM2")
   }
 )
 
@@ -358,3 +358,34 @@ test_that(
     ) |> expect_no_error()
   }
 )
+
+test_that(
+  "An error is triggered when within-domain ADaM specifications for two domains are incomplete and when check_cross_domain_adam_dependencies is disabled",
+  {
+    # SETUP
+    ui_path <- c(
+      test_path("fixtures", "assert_valid_adam_dependencies_adlb_03.yml"),
+      test_path("fixtures", "assert_valid_adam_dependencies_advs_02.yml")
+    )
+    path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
+    std_lib_path <- testthat::test_path("fixtures", "adlb_0001.R")
+
+    domain_keys_path <- system.file("standards", "domain_keys.yml", package = "mighty")
+    output_path <- withr::local_tempdir()
+
+    # EXPECT
+    actual <- generate_adam_code(
+      path_ui_data = ui_path,
+      code_component_source_files =  std_lib_path,
+      path_trial_metadata = path_trial_metadata,
+      path_domain_keys = domain_keys_path,
+      path_output = output_path,
+      data_connection = "pharmaverse",
+      check_cross_domain_adam_dependencies = FALSE
+    ) |> expect_error(regexp = paste0(".*ADLB spec:\n\tadlb\\.VISITNUM\nto execute:",
+                                      "\n\tadlb\\.VISITNUM2\n\n.*ADVS spec:",
+                                      "\n\tADVS\\.VISITNUM\nto execute:\n\tADVS\\.VISITNUM2"))
+
+  }
+)
+

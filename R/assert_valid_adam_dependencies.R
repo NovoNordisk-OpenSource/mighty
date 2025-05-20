@@ -58,8 +58,18 @@ assert_valid_adam_dependencies <- function(x, ui_init, domain_keys, check_cross_
                                      adsl_filter_dep_by_domain)
   } else {
     # Only check that the are no missing internal parents per ADaM domain
-    for(nm in domains) {
-      check_adam_dependencies_within_domain(nm, adam_dep_by_domain, outputs, x_by_domain)
+
+    error_msg <- c()
+    for (nm in domains) {
+      error_msg <- c(
+        error_msg,
+        check_adam_dependencies_within_domain(nm, adam_dep_by_domain, outputs, x_by_domain)
+      )
+    }
+
+    # If there are any missing dependencies, stop execution
+    if (length(error_msg) > 0) {
+      stop(error_msg)
     }
   }
 }
@@ -313,8 +323,7 @@ check_adam_dependencies_cross_domain <- function(x,
 #' @param x_by_domain List of data frames split by domain containing dependency
 #'   information
 #'
-#' @returns Nothing if all internal parent columns are present; stops with an
-#'   error message if columns are missing
+#' @returns Error message as a string if any dependencies are missing
 check_adam_dependencies_within_domain <- function(nm,
                                                   adam_dep_by_domain,
                                                   outputs,
@@ -324,6 +333,7 @@ check_adam_dependencies_within_domain <- function(nm,
   if (length(missing_deps) == 0) {
     return(invisible(NULL))
   }
+
   # Extract only the column names from missing dependencies that belong to this domain
   missing_internal_parent_cols <- lapply(missing_deps, function(mp) {
     str_split <- strsplit(mp, "\\.")[[1]]
@@ -338,9 +348,7 @@ check_adam_dependencies_within_domain <- function(nm,
     return(invisible(NULL))
   }
 
-
   # Find which actions are affected by the missing columns
-
   idx <- vapply(x_by_domain[[nm]]$depend_cols, function(y) {
     any(y$column_name %in% missing_internal_parent_cols & y$domain == nm)
   }, logical(1))
@@ -348,11 +356,9 @@ check_adam_dependencies_within_domain <- function(nm,
   # Get the names of the affected actions
   actions_missing_deps <-  x_by_domain[[nm]]$column[idx] |> unlist()
 
-  # Print error message
-  stop(
-    "\n\nThe following columns are missing in the ADaM spec for ",
-    nm,
-    ":\n\t",
+  # Create error message
+  paste0(
+    "\n\nThe following columns are missing in the ", toupper(nm), " spec:\n\t",
     paste0(nm, ".", sort(missing_internal_parent_cols), collapse = "\n\t"),
     "\nto execute:\n\t",
     paste0(nm, ".", sort(actions_missing_deps), collapse = "\n\t")
