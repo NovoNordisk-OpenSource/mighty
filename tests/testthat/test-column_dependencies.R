@@ -221,7 +221,7 @@ test_that("Global filter and domain filter incl. ADSL dependencies", {
     path_domain_keys = domain_keys_path,
     path_output = output_path,
     data_connection = "pharmaverse",
-    check_external_adam = FALSE
+    check_cross_domain_adam_dependencies = FALSE
   )
   write_adam_programs(dir = output_path, programs = actual$programs)
   x <- list.files(output_path, full.names = TRUE)
@@ -266,7 +266,7 @@ test_that("Global filter and domain filter incl. adsl dependencies (lower case)"
     path_domain_keys = domain_keys_path,
     path_output = output_path,
     data_connection = "pharmaverse",
-    check_external_adam = FALSE
+    check_cross_domain_adam_dependencies = FALSE
   )
   write_adam_programs(dir = output_path, programs = actual$programs)
   x <- list.files(output_path, full.names = TRUE)

@@ -20,16 +20,16 @@
 #'
 #' @param x Data frame containing dependency information with columns for 'domain',
 #'   'depend_cols', 'outputs', and optionally 'type'
-#' @param check_external_adam Logical indicating whether to check for dependencies
-#'   across different ADaM domains (TRUE) or only within each domain (FALSE)
 #' @param ui_init List containing UI initialization data with filter dependencies
 #'   per domain
 #' @param domain_keys Named list mapping domain names to their respective key columns
+#' @param check_cross_domain_adam_dependencies Logical indicating whether to check for dependencies
+#'   across different ADaM domains (TRUE) or only within each domain (FALSE)
 #'
 #' @returns Nothing if all dependencies are satisfied; stops with an error message
 #'   if dependencies are missing
 #'
-assert_valid_adam_dependecies <- function(x, check_external_adam, ui_init, domain_keys){
+assert_valid_adam_dependencies <- function(x, ui_init, domain_keys, check_cross_domain_adam_dependencies){
 
   # Split by ADaM domain
   x_by_domain <- split(x, by = "domain")
@@ -50,7 +50,7 @@ assert_valid_adam_dependecies <- function(x, check_external_adam, ui_init, domai
   outputs <- prefix_outputs_with_domain_for_non_row_nodes(x)
 
 
-  if (check_external_adam) {
+  if (check_cross_domain_adam_dependencies) {
     check_adam_dependencies_cross_domain(x,
                                      adam_dep_by_domain,
                                      outputs,

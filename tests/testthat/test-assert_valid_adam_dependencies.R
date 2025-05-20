@@ -1,8 +1,8 @@
 test_that(
-  "No errors occur for a complete specification when check_external_adam is disabled",
+  "No errors occur for a complete specification when check_cross_domain_adam_dependencies is disabled",
   {
     # SETUP
-    ui_path <- c(test_path("fixtures", "check_external_adam_adlb_01.yml"))
+    ui_path <- c(test_path("fixtures", "assert_valid_adam_dependencies_adlb_01.yml"))
     path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
     std_lib_path <- testthat::test_path("fixtures", "adlb_0001.R")
 
@@ -17,17 +17,17 @@ test_that(
       path_domain_keys = domain_keys_path,
       path_output = output_path,
       data_connection = "pharmaverse",
-      check_external_adam = FALSE
+      check_cross_domain_adam_dependencies = FALSE
     ) |> expect_no_error()
 
   }
 )
 
 test_that(
-  "No errors occur for a complete specification when check_external_adam is enabled",
+  "No errors occur for a complete specification when check_cross_domain_adam_dependencies is enabled",
   {
     # SETUP
-    ui_path <- c(test_path("fixtures", "check_external_adam_adlb_01.yml"))
+    ui_path <- c(test_path("fixtures", "assert_valid_adam_dependencies_adlb_01.yml"))
     path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
     std_lib_path <- testthat::test_path("fixtures", "adlb_0001.R")
 
@@ -42,17 +42,17 @@ test_that(
       path_domain_keys = domain_keys_path,
       path_output = output_path,
       data_connection = "pharmaverse",
-      check_external_adam = TRUE
+      check_cross_domain_adam_dependencies = TRUE
     ) |> expect_no_error()
 
   }
 )
 
 test_that(
-  "An error occurs for an incomplete specification of external adam columns when check_external_adam is enabled",
+  "An error occurs for an incomplete specification of external adam columns when check_cross_domain_adam_dependencies is enabled",
   {
     # SETUP
-    ui_path <- c(test_path("fixtures", "check_external_adam_adlb_02.yml"))
+    ui_path <- c(test_path("fixtures", "assert_valid_adam_dependencies_adlb_02.yml"))
     path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
     std_lib_path <- testthat::test_path("fixtures", "adlb_0001.R")
 
@@ -67,17 +67,17 @@ test_that(
       path_domain_keys = domain_keys_path,
       path_output = output_path,
       data_connection = "pharmaverse",
-      check_external_adam = TRUE
+      check_cross_domain_adam_dependencies = TRUE
     ) |> expect_error(
       regexp = ".*ADaM spec:\n\tadsl\\.AGE\n\tadsl\\.STUDYID\n\tadsl\\.USUBJID\nto execute:\n\tadlb\\.AGE")
   }
 )
 
 test_that(
-  "No errors occur for an incomplete specification of external adam columns when check_external_adam is disabled",
+  "No errors occur for an incomplete specification of external adam columns when check_cross_domain_adam_dependencies is disabled",
   {
     # SETUP
-    ui_path <- c(test_path("fixtures", "check_external_adam_adlb_02.yml"))
+    ui_path <- c(test_path("fixtures", "assert_valid_adam_dependencies_adlb_02.yml"))
     path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
     std_lib_path <- testthat::test_path("fixtures", "adlb_0001.R")
 
@@ -92,17 +92,17 @@ test_that(
       path_domain_keys = domain_keys_path,
       path_output = output_path,
       data_connection = "pharmaverse",
-      check_external_adam = FALSE
+      check_cross_domain_adam_dependencies = FALSE
     ) |> expect_no_error()
 
   }
 )
 
 test_that(
-  "An error occurs for an incomplete specification of internal adam columns when check_external_adam is disabled",
+  "An error occurs for an incomplete specification of internal adam columns when check_cross_domain_adam_dependencies is disabled",
   {
     # SETUP
-    ui_path <- c(test_path("fixtures", "check_external_adam_adlb_03.yml"))
+    ui_path <- c(test_path("fixtures", "assert_valid_adam_dependencies_adlb_03.yml"))
     path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
     std_lib_path <- testthat::test_path("fixtures", "adlb_0001.R")
 
@@ -117,17 +117,17 @@ test_that(
       path_domain_keys = domain_keys_path,
       path_output = output_path,
       data_connection = "pharmaverse",
-      check_external_adam = FALSE
+      check_cross_domain_adam_dependencies = FALSE
     ) |> expect_error(
       regexp =  ".*ADaM spec for adlb:\n\tadlb.VISITNUM\nto execute:\n\tadlb\\.VISITNUM2")
   }
 )
 
 test_that(
-  "An error occurs for an incomplete specification of internal adam columns when check_external_adam is enabled",
+  "An error occurs for an incomplete specification of internal adam columns when check_cross_domain_adam_dependencies is enabled",
   {
     # SETUP
-    ui_path <- c(test_path("fixtures", "check_external_adam_adlb_03.yml"))
+    ui_path <- c(test_path("fixtures", "assert_valid_adam_dependencies_adlb_03.yml"))
     path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
     std_lib_path <- testthat::test_path("fixtures", "adlb_0001.R")
 
@@ -142,7 +142,7 @@ test_that(
       path_domain_keys = domain_keys_path,
       path_output = output_path,
       data_connection = "pharmaverse",
-      check_external_adam = TRUE
+      check_cross_domain_adam_dependencies = TRUE
     ) |> expect_error(
       regexp = ".*ADaM spec:\n\tadlb.VISITNUM\nto execute:\n\tadlb\\.VISITNUM2")
 
@@ -150,10 +150,10 @@ test_that(
 )
 
 test_that(
-  "An error occurs for an incomplete specification of both internal and external adam columns when check_external_adam is disabled",
+  "An error occurs for an incomplete specification of both internal and external adam columns when check_cross_domain_adam_dependencies is disabled",
   {
     # SETUP
-    ui_path <- c(test_path("fixtures", "check_external_adam_adlb_04.yml"))
+    ui_path <- c(test_path("fixtures", "assert_valid_adam_dependencies_adlb_04.yml"))
     path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
     std_lib_path <- testthat::test_path("fixtures", "adlb_0001.R")
 
@@ -168,16 +168,16 @@ test_that(
       path_domain_keys = domain_keys_path,
       path_output = output_path,
       data_connection = "pharmaverse",
-      check_external_adam = FALSE
+      check_cross_domain_adam_dependencies = FALSE
     ) |> expect_error(regexp = ".*ADaM spec for adlb:\n\tadlb\\.STUDYID\n\tadlb\\.VISITNUM\nto execute:\n\tadlb\\.AGE\n\tadlb\\.VISITNUM2")
   }
 )
 
 test_that(
-  "An error occurs for an incomplete specification of both internal and external adam columns when check_external_adam is enabled",
+  "An error occurs for an incomplete specification of both internal and external adam columns when check_cross_domain_adam_dependencies is enabled",
   {
     # SETUP
-    ui_path <- c(test_path("fixtures", "check_external_adam_adlb_04.yml"))
+    ui_path <- c(test_path("fixtures", "assert_valid_adam_dependencies_adlb_04.yml"))
     path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
     std_lib_path <- testthat::test_path("fixtures", "adlb_0001.R")
 
@@ -192,7 +192,7 @@ test_that(
       path_domain_keys = domain_keys_path,
       path_output = output_path,
       data_connection = "pharmaverse",
-      check_external_adam = TRUE
+      check_cross_domain_adam_dependencies = TRUE
     ) |> expect_error(regexp = paste0("The following columns are missing in the ADaM spec:",
                                       "\n\tadlb\\.STUDYID\n\tadlb\\.VISITNUM\n\tadsl\\.AGE",
                                       "\n\tadsl\\.STUDYID\n\tadsl\\.USUBJID",
@@ -201,10 +201,10 @@ test_that(
 )
 
 test_that(
-  "An error occurs for ADSL dependency on filter when ADSL columns are not specified and check_external_adam is enabled",
+  "An error occurs for ADSL dependency on filter when ADSL columns are not specified and check_cross_domain_adam_dependencies is enabled",
   {
     # SETUP
-    ui_path <- c(test_path("fixtures", "check_external_adam_adlb_05.yml"))
+    ui_path <- c(test_path("fixtures", "assert_valid_adam_dependencies_adlb_05.yml"))
     path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
     std_lib_path <- testthat::test_path("fixtures", "adlb_0001.R")
 
@@ -219,7 +219,7 @@ test_that(
       path_domain_keys = domain_keys_path,
       path_output = output_path,
       data_connection = "pharmaverse",
-      check_external_adam = TRUE
+      check_cross_domain_adam_dependencies = TRUE
     ) |> expect_error(regexp = paste0(".*ADaM spec:",
                                       "\n\tADSL\\.SEX\n\tADSL\\.STUDYID\n\tADSL\\.USUBJID",
                                       "\nto execute:\n\tADLB filter"))
@@ -228,10 +228,10 @@ test_that(
 )
 
 test_that(
-  "No errors occur for ADSL dependency on filter when ADSL columns are not specified and check_external_adam is disabled",
+  "No errors occur for ADSL dependency on filter when ADSL columns are not specified and check_cross_domain_adam_dependencies is disabled",
   {
     # SETUP
-    ui_path <- c(test_path("fixtures", "check_external_adam_adlb_05.yml"))
+    ui_path <- c(test_path("fixtures", "assert_valid_adam_dependencies_adlb_05.yml"))
     path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
     std_lib_path <- testthat::test_path("fixtures", "adlb_0001.R")
 
@@ -246,17 +246,17 @@ test_that(
       path_domain_keys = domain_keys_path,
       path_output = output_path,
       data_connection = "pharmaverse",
-      check_external_adam = FALSE
+      check_cross_domain_adam_dependencies = FALSE
     ) |> expect_no_error()
 
   }
 )
 
 test_that(
-  "An error occurs for ADSL dependency on filter and action when ADSL columns are not specified and check_external_adam is enabled",
+  "An error occurs for ADSL dependency on filter and action when ADSL columns are not specified and check_cross_domain_adam_dependencies is enabled",
   {
     # SETUP
-    ui_path <- test_path("fixtures", "check_external_adam_adlb_06.yml")
+    ui_path <- test_path("fixtures", "assert_valid_adam_dependencies_adlb_06.yml")
     path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
     std_lib_path <- testthat::test_path("fixtures", "adlb_0001.R")
 
@@ -271,7 +271,7 @@ test_that(
       path_domain_keys = domain_keys_path,
       path_output = output_path,
       data_connection = "pharmaverse",
-      check_external_adam = TRUE
+      check_cross_domain_adam_dependencies = TRUE
     ) |> expect_error(regexp =
                         paste0(".*ADaM spec:",
                                "\n\tADSL\\.AGE\n\tADSL\\.SEX\n\tADSL.\\STUDYID\n\tADSL\\.USUBJID",
@@ -280,10 +280,10 @@ test_that(
 )
 
 test_that(
-  "No errors occur for ADSL dependency on filter and action when ADSL columns are not specified and check_external_adam is disabled",
+  "No errors occur for ADSL dependency on filter and action when ADSL columns are not specified and check_cross_domain_adam_dependencies is disabled",
   {
     # SETUP
-    ui_path <- test_path("fixtures", "check_external_adam_adlb_06.yml")
+    ui_path <- test_path("fixtures", "assert_valid_adam_dependencies_adlb_06.yml")
     path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
     std_lib_path <- testthat::test_path("fixtures", "adlb_0001.R")
 
@@ -298,18 +298,18 @@ test_that(
       path_domain_keys = domain_keys_path,
       path_output = output_path,
       data_connection = "pharmaverse",
-      check_external_adam = FALSE
+      check_cross_domain_adam_dependencies = FALSE
     ) |> expect_no_error()
   }
 )
 
 test_that(
-  "An error occurs for ADSL dependency on filter for two domains when ADSL columns are not specified and check_external_adam is enabled",
+  "An error occurs for ADSL dependency on filter for two domains when ADSL columns are not specified and check_cross_domain_adam_dependencies is enabled",
   {
     # SETUP
     ui_path <- c(
-      test_path("fixtures", "check_external_adam_adlb_06.yml"),
-      test_path("fixtures", "check_external_adam_advs_01.yml")
+      test_path("fixtures", "assert_valid_adam_dependencies_adlb_06.yml"),
+      test_path("fixtures", "assert_valid_adam_dependencies_advs_01.yml")
     )
     path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
     std_lib_path <- testthat::test_path("fixtures", "adlb_0001.R")
@@ -325,19 +325,19 @@ test_that(
       path_domain_keys = domain_keys_path,
       path_output = output_path,
       data_connection = "pharmaverse",
-      check_external_adam = TRUE
+      check_cross_domain_adam_dependencies = TRUE
     ) |> expect_error(regexp =
                       ".*ADaM spec:\n\tADSL\\.AGE\n\tADSL\\.SEX\n\tADSL\\.STUDYID\n\tADSL\\.USUBJID\nto execute:\n\tADLB filter\n\tADLB\\.AGE\n\tADVS filter")
   }
 )
 
 test_that(
-  "No error occur for ADSL dependency on filter for two domains when ADSL columns are not specified and check_external_adam is disabled",
+  "No error occur for ADSL dependency on filter for two domains when ADSL columns are not specified and check_cross_domain_adam_dependencies is disabled",
   {
     # SETUP
     ui_path <- c(
-      test_path("fixtures", "check_external_adam_adlb_06.yml"),
-      test_path("fixtures", "check_external_adam_advs_01.yml")
+      test_path("fixtures", "assert_valid_adam_dependencies_adlb_06.yml"),
+      test_path("fixtures", "assert_valid_adam_dependencies_advs_01.yml")
     )
     path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
     std_lib_path <- testthat::test_path("fixtures", "adlb_0001.R")
@@ -353,7 +353,7 @@ test_that(
       path_domain_keys = domain_keys_path,
       path_output = output_path,
       data_connection = "pharmaverse",
-      check_external_adam = FALSE
+      check_cross_domain_adam_dependencies = FALSE
     ) |> expect_no_error()
   }
 )
