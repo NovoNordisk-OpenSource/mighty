@@ -1,5 +1,5 @@
 test_that(
-  "No errors occur for a complete specification when check_cross_domain_adam_dependencies is disabled",
+  "No error is triggered for a complete specification when check_cross_domain_adam_dependencies is disabled",
   {
     # SETUP
     ui_path <- c(test_path("fixtures", "assert_valid_adam_dependencies_adlb_01.yml"))
@@ -24,7 +24,7 @@ test_that(
 )
 
 test_that(
-  "No errors occur for a complete specification when check_cross_domain_adam_dependencies is enabled",
+  "No error is triggered for a complete specification when check_cross_domain_adam_dependencies is enabled",
   {
     # SETUP
     ui_path <- c(test_path("fixtures", "assert_valid_adam_dependencies_adlb_01.yml"))
@@ -49,7 +49,7 @@ test_that(
 )
 
 test_that(
-  "An error occurs for an incomplete specification of external adam columns when check_cross_domain_adam_dependencies is enabled",
+  "An error is triggered when cross-domain ADaM specification is incomplete and when check_cross_domain_adam_dependencies is enabled",
   {
     # SETUP
     ui_path <- c(test_path("fixtures", "assert_valid_adam_dependencies_adlb_02.yml"))
@@ -74,7 +74,7 @@ test_that(
 )
 
 test_that(
-  "No errors occur for an incomplete specification of external adam columns when check_cross_domain_adam_dependencies is disabled",
+  "No error is triggered when cross-domain ADaM specification is incomplete and when check_cross_domain_adam_dependencies is enabled",
   {
     # SETUP
     ui_path <- c(test_path("fixtures", "assert_valid_adam_dependencies_adlb_02.yml"))
@@ -99,7 +99,7 @@ test_that(
 )
 
 test_that(
-  "An error occurs for an incomplete specification of internal adam columns when check_cross_domain_adam_dependencies is disabled",
+  "An error is triggered when within-domain ADaM specification is incomplete and when check_cross_domain_adam_dependencies is disabled",
   {
     # SETUP
     ui_path <- c(test_path("fixtures", "assert_valid_adam_dependencies_adlb_03.yml"))
@@ -124,7 +124,7 @@ test_that(
 )
 
 test_that(
-  "An error occurs for an incomplete specification of internal adam columns when check_cross_domain_adam_dependencies is enabled",
+  "An error is triggered when within-domain ADaM specification is incomplete and when check_cross_domain_adam_dependencies is enabled",
   {
     # SETUP
     ui_path <- c(test_path("fixtures", "assert_valid_adam_dependencies_adlb_03.yml"))
@@ -150,7 +150,7 @@ test_that(
 )
 
 test_that(
-  "An error occurs for an incomplete specification of both internal and external adam columns when check_cross_domain_adam_dependencies is disabled",
+  "An error is triggered when within-domain and cross-domain ADaM specifications are incomplete and when check_cross_domain_adam_dependencies is disabled",
   {
     # SETUP
     ui_path <- c(test_path("fixtures", "assert_valid_adam_dependencies_adlb_04.yml"))
@@ -174,7 +174,7 @@ test_that(
 )
 
 test_that(
-  "An error occurs for an incomplete specification of both internal and external adam columns when check_cross_domain_adam_dependencies is enabled",
+  "An error is triggered when within-domain and cross-domain ADaM specifications are incomplete and when check_cross_domain_adam_dependencies is enabled",
   {
     # SETUP
     ui_path <- c(test_path("fixtures", "assert_valid_adam_dependencies_adlb_04.yml"))
@@ -201,7 +201,7 @@ test_that(
 )
 
 test_that(
-  "An error occurs for ADSL dependency on filter when ADSL columns are not specified and check_cross_domain_adam_dependencies is enabled",
+  "An error is triggered when ADSL specification for filtering is incomplete and when check_cross_domain_adam_dependencies is enabled",
   {
     # SETUP
     ui_path <- c(test_path("fixtures", "assert_valid_adam_dependencies_adlb_05.yml"))
@@ -228,7 +228,7 @@ test_that(
 )
 
 test_that(
-  "No errors occur for ADSL dependency on filter when ADSL columns are not specified and check_cross_domain_adam_dependencies is disabled",
+  "No error is triggered when ADSL specification for filtering is incomplete and when check_cross_domain_adam_dependencies is disabled",
   {
     # SETUP
     ui_path <- c(test_path("fixtures", "assert_valid_adam_dependencies_adlb_05.yml"))
@@ -253,7 +253,7 @@ test_that(
 )
 
 test_that(
-  "An error occurs for ADSL dependency on filter and action when ADSL columns are not specified and check_cross_domain_adam_dependencies is enabled",
+  "An error is triggered when ADSL specification for filtering and actions is incomplete and when check_cross_domain_adam_dependencies is enabled",
   {
     # SETUP
     ui_path <- test_path("fixtures", "assert_valid_adam_dependencies_adlb_06.yml")
@@ -280,7 +280,7 @@ test_that(
 )
 
 test_that(
-  "No errors occur for ADSL dependency on filter and action when ADSL columns are not specified and check_cross_domain_adam_dependencies is disabled",
+  "No error is triggered when ADSL specification for filtering and actions is incomplete and when check_cross_domain_adam_dependencies is disabled",
   {
     # SETUP
     ui_path <- test_path("fixtures", "assert_valid_adam_dependencies_adlb_06.yml")
@@ -303,8 +303,9 @@ test_that(
   }
 )
 
+
 test_that(
-  "An error occurs for ADSL dependency on filter for two domains when ADSL columns are not specified and check_cross_domain_adam_dependencies is enabled",
+  "An error is triggered when ADSL specification for filtering in two domains is incomplete and when check_cross_domain_adam_dependencies is enabled",
   {
     # SETUP
     ui_path <- c(
@@ -332,7 +333,7 @@ test_that(
 )
 
 test_that(
-  "No error occur for ADSL dependency on filter for two domains when ADSL columns are not specified and check_cross_domain_adam_dependencies is disabled",
+  "No error is triggered when ADSL specification for filtering in two domains is incomplete and when check_cross_domain_adam_dependencies is disabled",
   {
     # SETUP
     ui_path <- c(
@@ -357,9 +358,3 @@ test_that(
     ) |> expect_no_error()
   }
 )
-
-
-
-
-
-
