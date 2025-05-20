@@ -1,3 +1,34 @@
+#' Assert All Parent Columns Are Present
+#' @description Validates that all required parent columns are available for each ADaM domain.
+#'
+#' @details This function performs comprehensive dependency checking across ADaM domains
+#' to ensure data integrity. It operates in two modes:
+#'
+#' 1. When `check_external_adam = TRUE`: Checks that all dependencies across domains are
+#'    satisfied, including external dependencies between different ADaM domains.
+#'
+#' 2. When `check_external_adam = FALSE`: Only checks that internal dependencies within
+#'    each ADaM domain are satisfied.
+#'
+#' The function identifies dependencies from two sources:
+#' - ADSL columns used in domain filters
+#' - Column dependencies from actions within each domain
+#'
+#' If any required parent columns are missing, the function will stop execution with
+#' a detailed error message indicating which columns are missing and which actions
+#' or filters require those columns.
+#'
+#' @param x Data frame containing dependency information with columns for 'domain',
+#'   'depend_cols', 'outputs', and optionally 'type'
+#' @param check_external_adam Logical indicating whether to check for dependencies
+#'   across different ADaM domains (TRUE) or only within each domain (FALSE)
+#' @param ui_init List containing UI initialization data with filter dependencies
+#'   per domain
+#' @param domain_keys Named list mapping domain names to their respective key columns
+#'
+#' @returns Nothing if all dependencies are satisfied; stops with an error message
+#'   if dependencies are missing
+#'
 assert_all_parents_present <- function(x, check_external_adam, ui_init, domain_keys){
 
   # Split by ADaM domain
@@ -218,7 +249,11 @@ find_missing_filter_dependencies <- function(nm, adsl_filter_dep_by_domain, miss
 #'
 #' @returns Nothing if all dependencies are present; stops with an error message
 #'   if dependencies are missing
-check_missing_external_adam_dependencies <- function(x, adam_dep_by_domain, outputs, domains, adsl_filter_dep_by_domain) {
+check_missing_external_adam_dependencies <- function(x,
+                                                     adam_dep_by_domain,
+                                                     outputs,
+                                                     domains,
+                                                     adsl_filter_dep_by_domain) {
   # If check_external_adam = TRUE then check that there are no missing ADaM
   # column dependencies across domains
   all_adam_dep <- adam_dep_by_domain |> unlist() |> as.character()
@@ -228,37 +263,37 @@ check_missing_external_adam_dependencies <- function(x, adam_dep_by_domain, outp
     return(invisible(NULL))
   }
 
-    # Prepare error message
-    idx <-  lapply(x$depend_cols, function(y) {
-      check_missing_dependency(y, missing_deps)
-    }) |> unlist()
+  # Prepare error message
+  idx <-  lapply(x$depend_cols, function(y) {
+    check_missing_dependency(y, missing_deps)
+  }) |> unlist()
 
-    # Initialize actions_missing_deps
-    actions_missing_deps <-  NULL
+  # Initialize actions_missing_deps
+  actions_missing_deps <-  NULL
 
-    # Get affected actions if any exist
-    if (any(idx)) {
-      actions_missing_deps_dt <- x[idx, c("domain", "column")]
-      actions_missing_deps <- paste0(actions_missing_deps_dt$domain,
-                                     ".",
-                                     actions_missing_deps_dt$column)
-    }
+  # Get affected actions if any exist
+  if (any(idx)) {
+    actions_missing_deps_dt <- x[idx, c("domain", "column")]
+    actions_missing_deps <- paste0(actions_missing_deps_dt$domain,
+                                   ".",
+                                   actions_missing_deps_dt$column)
+  }
 
-    # Find missing filter dependencies
-    filter_missing_deps <- lapply(domains, function(nm) {
-      find_missing_filter_dependencies(nm, adsl_filter_dep_by_domain, missing_deps)
-    }) |> unlist()
+  # Find missing filter dependencies
+  filter_missing_deps <- lapply(domains, function(nm) {
+    find_missing_filter_dependencies(nm, adsl_filter_dep_by_domain, missing_deps)
+  }) |> unlist()
 
-    # Combine all affected outputs
-    outputs_missing_deps <- c(actions_missing_deps, filter_missing_deps)
+  # Combine all affected outputs
+  outputs_missing_deps <- c(actions_missing_deps, filter_missing_deps)
 
-    # Print error message
-    stop(
-      "\n\nThe following columns are missing in the ADaM spec:\n\t",
-      paste0(sort(missing_deps), collapse = "\n\t"),
-      "\nto execute:\n\t",
-      paste0(sort(outputs_missing_deps), collapse = "\n\t")
-    )
+  # Print error message
+  stop(
+    "\n\nThe following columns are missing in the ADaM spec:\n\t",
+    paste0(sort(missing_deps), collapse = "\n\t"),
+    "\nto execute:\n\t",
+    paste0(sort(outputs_missing_deps), collapse = "\n\t")
+  )
 }
 
 
