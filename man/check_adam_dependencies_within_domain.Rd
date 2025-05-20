@@ -23,8 +23,7 @@ dependencies}
 information}
 }
 \value{
-Nothing if all internal parent columns are present; stops with an
-error message if columns are missing
+Error message as a string if any dependencies are missing
 }
 \description{
 Checks if all required internal parent columns within a specific
