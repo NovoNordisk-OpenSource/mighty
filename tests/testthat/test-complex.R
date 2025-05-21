@@ -27,7 +27,7 @@ test_that("Complex test with multiple domains and column/row operations", {
 
   programs <- x |> lapply(readLines)
   names(programs) <- basename(x)
-browser()
+
   # Check program 1: ADSL part 1
   expect_section_order("ADSL-PLANNED_ARM", "ADSL-ARM_GRP1-arm_group_01", programs[["1_ADSL.R"]])
   expect_section_order("ADSL-PLANNED_ARM", "ADSL-NEW_ARM-arm_01", programs[["1_ADSL.R"]])
