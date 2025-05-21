@@ -23,17 +23,8 @@ create_domain_initialize_nodes <- function(nodes, domain_init_data) {
                                    domain_init_data) |>
     rbindlist()
 
-
   # Remove copy nodes because these are  absorbed  by domain_init nodes
-  nodes_to_remove <- lapply(names(core_vars), function(nm) {
-    ls1 <- lapply(core_vars[[nm]], function(y)
-      unique(y$column_name))
-    paste0(nm, "-", names(ls1)[names(ls1) == ls1])
-  }) |> unlist()
-  nodes_subset <- nodes[!nodes$node_id %in% nodes_to_remove, ]
-
-  # Since "copy" nodes are absorbed, only "mutate" nodes left
-  nodes_subset[type == "copy_mutate", type := "mutate"]
+  nodes_subset <- nodes[type!="copy", ]
 
   # mutate nodes are not absorbed by the domain_init nodes. However, the
   # dependencies specified in the mutate nodes should now point to the variables
@@ -73,7 +64,7 @@ extract_core_dependency_columns <- function(x, domain_init_data) {
   # Identify column dependencies for all predecessors
   core_domains <- id_core_domains_for_domain_in_scope(x, domain_init_data)
 
-  x_sub <- x[x$type == "copy_mutate", ]
+  x_sub <- x[x$type == "copy"|x$type == "mutate", ]
   dep_cols <- x_sub$depend_cols
   names(dep_cols) <- unlist(x_sub$outputs)
 
