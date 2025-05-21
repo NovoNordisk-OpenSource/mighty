@@ -4,7 +4,7 @@
 #' @param path_domain_keys
 #' @param path_output
 #' @param data_connection
-#' @param check_external_adam
+#' @param check_cross_domain_adam_dependencies
 #'
 #' @return
 #' @export
@@ -18,7 +18,7 @@ generate_adam_code <- function(path_ui_data,
                                path_domain_keys,
                                path_output,
                                data_connection = c("connector", "pharmaverse", "custom_data"),
-                               check_external_adam = TRUE) {
+                               check_cross_domain_adam_dependencies = TRUE) {
 
   # Read data from UI containing explicit user input
   ui_yml <- read_adam_specs(path_ui_data)
@@ -53,7 +53,7 @@ generate_adam_code <- function(path_ui_data,
   nodes_2[is.na(code_id) & is.na(type), type := "derivation"]
 
   # Check dependencies
-  assert_all_parents_present(nodes_2, check_external_adam)
+  assert_valid_adam_dependencies(nodes_2, ui_init, domain_keys, check_cross_domain_adam_dependencies)
 
   # Create an initialize action per domain that:
   #   - absorb core predecessor actions that have no renaming

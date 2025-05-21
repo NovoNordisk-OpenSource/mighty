@@ -16,7 +16,7 @@ weighted_node_topo_sort <- function(edges, nodes, primary_domain = "ADSL") {
                                      vertices = nodes[, .(node_id, domain)])
 
   # Weight the primary domain
-  starting_domain <- which(igraph::V(g)$domain == primary_domain)
+  starting_domain <- which(toupper(igraph::V(g)$domain) == toupper(primary_domain))
   igraph::V(g)$weight <- 0
   igraph::V(g)[starting_domain]$weight <- 1
 
