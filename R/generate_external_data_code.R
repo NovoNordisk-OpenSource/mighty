@@ -5,6 +5,7 @@
 #' @param sdtm_dataset_list
 #' @param adam_dataset_list
 #' @param data_connection
+#' @param custom_data_path
 #'
 #' @return
 #' @export
@@ -25,14 +26,11 @@ generate_external_data_code <- function(payload,
       purrr::imap(by_domain, for_each_domain_pharmaverse, path_output = path_output)
     data_load_code <- Filter(Negate(is.null), data_load_code)
   }
-  if (data_connection == "connector") {
-    # Connector setup
+  if (data_connection == "connector" | data_connection == "custom_data") {
     connector_setup <- glue::glue(
-      "adam_connector <- connector::connector_fs(path='~/projstat/{trial_metadata$project_id}/{trial_metadata$complete_id}/current/stats/data/adam')
-  sdtm_connector <- connector::connector_fs(path='~/projstat/{trial_metadata$project_id}/{trial_metadata$complete_id}/current/dm/data/sdtm')
-  md_connector <- connector::connector_fs(path='~/projstat/{trial_metadata$project_id}/{trial_metadata$complete_id}/current/stats/data/metadata')
-  "
-    )
+      "adam_connector <- connector::connector_fs(path='", get_data_connector_path("adam", trial_metadata, data_connection, path_output), "')\n",
+      "sdtm_connector <- connector::connector_fs(path='", get_data_connector_path("sdtm", trial_metadata, data_connection, path_output), "')\n",
+      "md_connector <- connector::connector_fs(path='", get_data_connector_path("metadata", trial_metadata, data_connection, path_output), "')\n")
     data_load_code <-
       purrr::imap(by_domain,
                   for_each_domain_connector,
@@ -55,7 +53,8 @@ external_data_stdm <- function(sdtm_main,
                                sdtm_dataset_list,
                                file_extension = c("parquet", "sas7bdat")) {
   sdtm_main_ext <- paste(sdtm_main, file_extension[1], sep = ".")
-  parquet_exists <- sdtm_main_ext %in% sdtm_dataset_list
+  parquet_exists <- tolower(sdtm_main_ext) %in% tolower(sdtm_dataset_list)
+
   if (!parquet_exists) {
     sdtm_main_ext <- paste(sdtm_main, file_extension[2], sep = ".")
   }
