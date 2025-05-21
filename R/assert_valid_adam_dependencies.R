@@ -274,9 +274,9 @@ check_adam_dependencies_cross_domain <- function(x,
   }
 
   # Prepare error message
-  idx <-  lapply(x$depend_cols, function(y) {
+  idx <-  vapply(x$depend_cols, function(y) {
     check_missing_dependency(y, missing_deps)
-  }) |> unlist()
+  }, logical(1))
 
   # Initialize actions_missing_deps
   col_missing_deps <-  NULL
@@ -322,7 +322,8 @@ check_adam_dependencies_cross_domain <- function(x,
 #' @param x_by_domain List of data frames split by domain containing dependency
 #'   information
 #'
-#' @returns Error message as a string if any dependencies are missing
+#' @returns Error message as a string if any dependencies are missing, otherwise
+#'   NULL
 check_adam_dependencies_within_domain <- function(nm,
                                                   adam_dep_by_domain,
                                                   outputs,
