@@ -37,8 +37,9 @@ update_ui_data <- function(code_component_metadata, ui_data) {
                              outputs = outputs_from_code), ]
     x$outputs_from_code <- x$type_from_code <- x$depend_cols_from_code <- x$column <- NULL
 
-  } else { # if there are no code_id references in the ui data then just use the ui data
+  } else { # if there are no code_id references in the ui data then just use the ui data excl. column
     x <- ui_data
+    x$column <- NULL
   }
 
   x[, depend_cols := purrr::map2(depend_cols, domain, depend_cols_nested_data_table)]
