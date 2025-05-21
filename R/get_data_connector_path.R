@@ -2,6 +2,7 @@ get_data_connector_path <- function(type = c("sdtm", "adam", "metadata"),
                                     trial_metadata,
                                     data_connection = c("connector", "custom_data"),
                                     custom_data_path = NULL) {
+  assert_valid_trial_config(trial_metadata)
   data_path <- NULL
   if (data_connection == "connector") {
     connector_path <- "~/projstat/{trial_metadata$project_id}/{trial_metadata$complete_id}/{trial_metadata$instance}"
