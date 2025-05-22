@@ -26,6 +26,9 @@ column_metadata:
   - column: PLANNED_ARM
     source: core.ARM
 
+  - column: RACE
+    source: core.RACE
+
   - column: AGE
     code_id: age_redefined_01
 

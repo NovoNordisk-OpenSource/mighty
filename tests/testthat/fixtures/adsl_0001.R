@@ -274,21 +274,22 @@ newfl_03 <-  function(.self) {
   return(.self)
 }
 
-
 #' age_redefined_01
 #'
 #' @section metadata:
 #' ```yaml
 #' depend_cols:
 #'   - core.AGE
+#'   - core.SEX
+#'   - RACE
 #' outputs:
 #'   - AGE
-#' type: derivation
+#' type: col_compute
 #' ```
 #'
 age_redefined_01 <- function(.self) {
   .self <- .self |>
-    dplyr::mutate(AGE = AGE + 1)
+    dplyr::mutate(AGE = ifelse(!is.na(SEX) & !is.na(RACE), AGE, 0))
   return(.self)
 }
 
@@ -298,15 +299,14 @@ age_redefined_01 <- function(.self) {
 #' ```yaml
 #' depend_cols:
 #'   - core.AGE
-#'   - AGE2
 #' outputs:
 #'   - AGE
-#' type: derivation
+#' type: col_compute
 #' ```
 #'
 age_redefined_02 <- function(.self) {
   .self <- .self |>
-    dplyr::mutate(AGE = AGE + AGE2)
+    dplyr::mutate(AGE = AGE + 1)
   return(.self)
 }
 
@@ -318,7 +318,7 @@ age_redefined_02 <- function(.self) {
 #'   - core.AGE
 #' outputs:
 #'   - AGE2
-#' type: derivation
+#' type: col_compute
 #' ```
 #'
 age2_01 <- function(.self) {
@@ -335,7 +335,7 @@ age2_01 <- function(.self) {
 #'   - AGE
 #' outputs:
 #'   - AGE3
-#' type: derivation
+#' type: col_compute
 #' ```
 #'
 age3_01 <- function(.self) {

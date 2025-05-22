@@ -60,17 +60,18 @@ update_predecessors <-  function(nodes, pk, ui_init) {
 
   # For col_copy/col_mutate nodes with a core domain, we need to replace the "core"
   # with the actual name of the domain. This makes downstream processing easier
-  dep_domains <- vapply(x[["depend_cols"]][index_copy_mutate], function(dc)
-    dc[["domain"]], character(1))
-  node_copy_mutate_core <- dep_domains == "core"
-  if (any(node_copy_mutate_core)) {
-    x <- replace_core_with_named_domain(
-      x = x,
-      index_copy_mutate = index_copy_mutate,
-      node_copy_mutate_core = node_copy_mutate_core,
-      ui_init = ui_init
-    )
-  }
+  # dep_domains <- vapply(x[["depend_cols"]][index_copy_mutate], function(dc)
+  #   dc[["domain"]], character(1))
+  # node_copy_mutate_core <- dep_domains == "core"
+  # if (any(node_copy_mutate_core)) {
+    # x <- replace_core_with_named_domain(
+    #   x = x,
+    #   index_copy_mutate = index_copy_mutate,
+    #   node_copy_mutate_core = node_copy_mutate_core,
+    #   ui_init = ui_init
+    # )
+  # }
+  x <- replace_core_with_named_domain(x, ui_init)
 
   return(x)
 }
@@ -130,23 +131,58 @@ add_foreign_key_as_depends_col <- function(x,
   return(x)
 }
 
-replace_core_with_named_domain <- function(x,
-                                           index_copy_mutate,
-                                           node_copy_mutate_core,
-                                           ui_init) {
-  for (i in index_copy_mutate[node_copy_mutate_core]) {
+# replace_core_with_named_domain <- function(x,
+#                                            index_copy_mutate,
+#                                            node_copy_mutate_core,
+#                                            ui_init) {
+#   for (i in index_copy_mutate[node_copy_mutate_core]) {
+#     dep_cols_i <- x[["depend_cols"]][[i]]
+#     domain_i <- x[["domain"]][[i]]
+#     core_domains <- ui_init[[domain_i]][["core_domains"]]
+#
+#     # Replace core domain with actual domain(s)s
+#     new_dep_cols <- data.table(
+#       column_name = dep_cols_i[["column_name"]],
+#       domain = core_domains,
+#       domain_type = classify_external_data_domains(core_domains)
+#     )
+#     x[["depend_cols"]][[i]] <- new_dep_cols
+#   }
+#   return(x)
+#
+# }
+
+replace_core_with_named_domain <- function(x, ui_init) {
+
+  for (i in seq_len(nrow(x))) {
+
+    # Extract the dependency columns and domain for the current node
     dep_cols_i <- x[["depend_cols"]][[i]]
     domain_i <- x[["domain"]][[i]]
     core_domains <- ui_init[[domain_i]][["core_domains"]]
 
-    # Replace core domain with actual domain(s)s
-    new_dep_cols <- data.table(
-      column_name = dep_cols_i[["column_name"]],
-      domain = core_domains,
-      domain_type = classify_external_data_domains(core_domains)
-    )
-    x[["depend_cols"]][[i]] <- new_dep_cols
+    # Check if any dependencies are core
+    is_core_dep <-  tolower(dep_cols_i$domain) == "core"
+
+    # Keep non-core dependencies unchanged
+    retained_dep_cols <- dep_cols_i[!is_core_dep,]
+
+    # Replace core domain with actual domain(s)
+    if(any(is_core_dep)) {
+      replaced_dep_cols <- expand.grid(
+        "domain" = core_domains,
+        "column_name" = dep_cols_i$column_name[is_core_dep],
+        stringsAsFactors = FALSE
+      )
+      replaced_dep_cols[["domain_type"]] = classify_external_data_domains(replaced_dep_cols[["domain"]])
+    } else {
+      replaced_dep_cols <- NULL
+    }
+
+    # Combine retained and replaced dependency columns
+    x[["depend_cols"]][[i]] <- rbind(retained_dep_cols, replaced_dep_cols)
   }
+
   return(x)
 
 }
