@@ -6,7 +6,7 @@
 #'   - LBTEST
 #' outputs:
 #'   - LBTEST2
-#' type: derivation
+#' type: col_compute
 #' ```
 #'
 lbtest2 <- function(.self) {
@@ -28,7 +28,7 @@ lbtest2 <- function(.self) {
 #' outputs:
 #'   - LBTEST3
 #'   - LBTEST3_FLG
-#' type: derivation
+#' type: col_compute
 #' ```
 #'
 lbtest3 <- function(.self) {

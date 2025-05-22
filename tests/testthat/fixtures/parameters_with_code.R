@@ -7,7 +7,7 @@
 #' outputs:
 #'   - A
 #'   - B
-#' type: derivation
+#' type: col_compute
 #' ```
 #' @export
 fn_AB <- function(.self,
@@ -33,7 +33,7 @@ fn_AB <- function(.self,
 #'    - USUBJID
 #' outputs:
 #'    - C
-#' type: derivation
+#' type: col_compute
 #' ```
 #' @export
 
@@ -51,7 +51,7 @@ fn_no_params <- function(.self, b) {
 #'    - USUBJID
 #' outputs:
 #'    - D
-#' type: derivation
+#' type: col_compute
 #' ```
 #' @export
 fn_mixed_defaults_and_user_params <- function(.self,

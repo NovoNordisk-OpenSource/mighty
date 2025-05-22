@@ -1,6 +1,6 @@
 Package: mighty
 Title: What the Package Does (One Line, Title Case)
-Version: 0.0.0.9000
+Version: 0.0.0.9001
 Authors@R: c(
     person("Matthew", "Phelps", email = "mewp@novonordisk.com", role = c("aut", "cre")),
     person("Nicolai", "Skov Johnsen", role = "ctb"),
