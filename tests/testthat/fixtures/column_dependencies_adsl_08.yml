@@ -1,0 +1,36 @@
+table_metadata:
+  table: ADSL
+  label: Subject-Level Analysis Dataset
+  class: SUBJECT LEVEL ANALYSIS DATASET
+  structure: One record per subject
+  keys:
+    - USUBJID
+  comment: 'MODIFY, OPTIONAL to fill: To add a link to a reference, e.g. ADRG, SAP
+    or a program file update source_documents tab in adam_cst_metdata_xxxx.xls template.
+    Syntax is explained in column header notes of the template.'
+
+init:
+  core_domains:
+    - DM
+    - DM_VACCINE
+  filter_domain:
+    - DM: '!is.na(AGEU)'
+    - DM_VACCINE: NA
+  filter_global: NA
+  filter_depend_cols: NA
+
+column_metadata:
+  - column: USUBJID
+    source: core.USUBJID
+
+  - column: AGE
+    source: core.AGE
+
+  - column: AGE
+    code_id: age_redefined_01
+
+  - column: AGE2
+    code_id: age2_01
+
+  - column: AGE3
+    code_id: age3_01

@@ -273,3 +273,73 @@ newfl_03 <-  function(.self) {
 
   return(.self)
 }
+
+
+#' age_redefined_01
+#'
+#' @section metadata:
+#' ```yaml
+#' depend_cols:
+#'   - core.AGE
+#' outputs:
+#'   - AGE
+#' type: derivation
+#' ```
+#'
+age_redefined_01 <- function(.self) {
+  .self <- .self |>
+    dplyr::mutate(AGE = AGE + 1)
+  return(.self)
+}
+
+#' age_redefined_02
+#'
+#' @section metadata:
+#' ```yaml
+#' depend_cols:
+#'   - core.AGE
+#'   - AGE2
+#' outputs:
+#'   - AGE
+#' type: derivation
+#' ```
+#'
+age_redefined_02 <- function(.self) {
+  .self <- .self |>
+    dplyr::mutate(AGE = AGE + AGE2)
+  return(.self)
+}
+
+#' age2_01
+#'
+#' @section metadata:
+#' ```yaml
+#' depend_cols:
+#'   - core.AGE
+#' outputs:
+#'   - AGE2
+#' type: derivation
+#' ```
+#'
+age2_01 <- function(.self) {
+  .self <- .self |>
+    dplyr::mutate(AGE2 = 10*AGE)
+  return(.self)
+}
+
+#' age3_01
+#'
+#' @section metadata:
+#' ```yaml
+#' depend_cols:
+#'   - AGE
+#' outputs:
+#'   - AGE3
+#' type: derivation
+#' ```
+#'
+age3_01 <- function(.self) {
+  .self <- .self |>
+    dplyr::mutate(AGE3 = AGE - 1)
+  return(.self)
+}
