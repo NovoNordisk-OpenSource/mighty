@@ -17,6 +17,9 @@
 update_ui_data <-  function(code_component_metadata, ui_data) {
   # If there are no code_id references, return the original data
   if (!has_code_id_references(ui_data)) {
+    # Remove "column" field because this is removed in the processing step when
+    # there are code_id references
+    ui_data$column <- NULL
     return(process_depend_cols(ui_data))
   }
 
