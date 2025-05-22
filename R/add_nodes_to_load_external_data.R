@@ -75,11 +75,16 @@ external_dependencies_per_program <- function(program_order, nodes, init_metadat
       )
 
       # Column dependencies coming from ADSL
-      filter_depend_cols_adsl <- gsub("^ADSL\\.", "", filter_depend_cols[grepl("^ADSL\\.", filter_depend_cols)])
+      filter_depend_cols_adsl <- filter_depend_cols[grepl("^ADSL\\.", filter_depend_cols, ignore.case = TRUE)]
+      adsl_name <- lapply(filter_depend_cols_adsl, function(x) strsplit(x, "\\.")[[1]][[1]]) |> unlist() |> unique()
+      if(length(adsl_name) > 1){
+        stop(paste("Inconsistent casing of ADSL in domain filter for", toupper(y$domain), "."))
+      }
+
       if (length(filter_depend_cols_adsl) > 0) {
-        dep_adsl <- data.table::data.table(domain = "ADSL",
+        dep_adsl <- data.table::data.table(domain = adsl_name,
                                            domain_type = "adam",
-                                           column_name = filter_depend_cols_adsl)
+                                           column_name = gsub("^ADSL\\.", "", filter_depend_cols_adsl, ignore.case = TRUE))
       } else {
         dep_adsl <- dep_empty
       }
@@ -87,7 +92,7 @@ external_dependencies_per_program <- function(program_order, nodes, init_metadat
       # If ADSL is required in the core filter, then add foreign key to filter dependency
       if (nrow(dep_adsl) > 0) {
         dep_key <- expand.grid(
-          "domain" = c("ADSL", core_domains),
+          "domain" = c(adsl_name, core_domains),
           "column_name" = domain_keys[["ADSL"]],
           stringsAsFactors = FALSE
         )
@@ -97,7 +102,7 @@ external_dependencies_per_program <- function(program_order, nodes, init_metadat
       }
 
       # Column dependencies coming from the "core" domain(s)
-      filter_depend_cols_core <- gsub("^core\\.", "", filter_depend_cols[grepl("^core\\.", filter_depend_cols)])
+      filter_depend_cols_core <- gsub("^core\\.", "", filter_depend_cols[grepl("^core\\.", filter_depend_cols, ignore.case = TRUE)])
       dep_core <- expand.grid(
         "domain" = core_domains,
         "column_name" = filter_depend_cols_core,

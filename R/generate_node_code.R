@@ -43,12 +43,20 @@ generate_node_code <- function(nodes_program_i,
     }
     if (node_i$type == "domain_init") {
       domain_metadata <- ui_data[[node_i$domain]]$init
+      filter_depend_cols <- domain_metadata$filter_depend_cols
+      adsl_name <- regmatches(filter_depend_cols,
+                              regexpr("ADSL|adsl", filter_depend_cols)) |>
+        unique()
+
+
+
 
       program[[i]] <- generate_initialize_domain(
         .self = node_i$domain,
         core_domains = domain_metadata$core_domains,
         adsl_domain_keys = domain_keys$ADSL,
-        domain_filter = domain_metadata$filter_domain,
+        adsl_name = adsl_name,
+        filter_domain = domain_metadata$filter_domain,
         filter_global = domain_metadata$filter_global,
         keep_vars = node_i$outputs[[1]]
       )
