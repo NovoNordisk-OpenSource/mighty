@@ -41,7 +41,8 @@ update_predecessors <-  function(nodes, pk, ui_init) {
   x[node_id %in% mutate_node_ids, type := "col_mutate"]
 
 
-  # Enrich col_echo nodes having an external dependency with foreign key
+  # Enrich depend_cols for col_echo actions having an external dependency with
+  # foreign key
   if (length(index_echos) > 0) {
     dep_domains <- vapply(x[["depend_cols"]][index_echos], function(dc)
       dc[["domain"]], character(1))
@@ -57,6 +58,26 @@ update_predecessors <-  function(nodes, pk, ui_init) {
     }
   }
 
+  # browser()
+  # Enrich depend_cols for col_compute actions that inputs a core column and
+  # return the same column in the ADaM domain. The enrichment consists of adding
+  # the the output columns from all other actions (if any) that have the same
+  # core column as input. This will ensure that the latter actions will be
+  # executed before the first mentioned col_compute actions.
+  # node_id_compute_nodes_core <- apply(x, 1, function(row) {
+  #   if(row$type == "col_compute" &&
+  #      all(row$output == row$depend_cols$column_name)) {
+  #       row$node_id
+  #   }
+  # })
+  # if(!is.null(node_id_compute_nodes_core)){
+  #
+  #   }
+  # }
+
+
+
+
 
   # For col_copy/col_mutate nodes with a core domain, we need to replace the "core"
   # with the actual name of the domain. This makes downstream processing easier
@@ -71,11 +92,13 @@ update_predecessors <-  function(nodes, pk, ui_init) {
     #   ui_init = ui_init
     # )
   # }
+
+  # Replace "core" domain with the actual name of the core domain(s).
+  # This makes downstream processing easier
   x <- replace_core_with_named_domain(x, ui_init)
 
   return(x)
 }
-
 
 
 extract_domain_of_dependency_columns <- function(x) {
