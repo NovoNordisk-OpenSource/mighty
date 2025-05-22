@@ -1,14 +1,27 @@
 #' Assert outputs defined in code components match those defined in yml specs
+#' @description Validates that the outputs defined in code components match
+#' exactly with those defined in the YAML specifications.
 #'
-#' @param x
+#' @details This function checks for consistency between the outputs declared in
+#' YAML specifications and those actually produced by the code components. It
+#' focuses specifically on 'col_compute' type components since these have
+#' outputs defined in both places. The function compares the two sets of outputs
+#' and raises a detailed error if any discrepancies are found, showing exactly
+#' which outputs differ for each code component.
 #'
-#' @returns TRUE if passes, error if it does not
-#' @export
+#' @param x A data.table containing code components with columns:
+#'   - type_from_code: The type of the component
+#'   - code_id: Unique identifier for the code component
+#'   - outputs: List column containing outputs defined in YAML specs
+#'   - outputs_from_code: List column containing outputs detected from code
 #'
+#' @return TRUE if all outputs match, or throws an error with detailed
+#'   information about mismatches
 assert_outputs_identical <- function(x) {
-  # Only derivations can have discrepancies as they have "column" defined both
+  # Only col_compute can have discrepancies as they have "column" defined both
   # in yml and in code components
-  x_sub <- x[type_from_code != "row", .(code_id, outputs, outputs_from_code)]
+
+  x_sub <- x[type_from_code == "col_compute", .(code_id, outputs, outputs_from_code)]
   inx <- purrr::map2(x_sub$outputs, x_sub$outputs_from_code, function(yml, code) {
     setdiff(yml,code) |> length()==0
   }) |> unlist()

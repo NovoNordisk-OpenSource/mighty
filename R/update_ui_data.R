@@ -80,10 +80,6 @@ extract_code_component_metadata <-  function(code_component_metadata, ui_data) {
     outputs = metadata_transposed$outputs,
     parameters_defaults = metadata_transposed$parameters_defaults
   )
-
-  # Standardize terminology
-  code_id_data[type == "derivation", type := "compute"]
-
   return(code_id_data)
 }
 

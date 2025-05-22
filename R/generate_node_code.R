@@ -73,7 +73,7 @@ generate_node_code <- function(nodes_program_i,
       next
     }
 
-    if (grepl("mutate|echo", node_i$type)) {
+    if (grepl("col_mutate|col_echo", node_i$type)) {
       is_mutate <- node_i$depend_cols[[1]] |> nrow() == 1
       if (is_mutate) {
         depends <- node_i[["depend_cols"]][[1]][["column_name"]]
@@ -107,7 +107,7 @@ generate_node_code <- function(nodes_program_i,
       next
 
     }
-    if (node_i$type == "compute" || node_i$type == "row") {
+    if (node_i$type == "col_compute" || node_i$type == "row_compute") {
       program[[i]] <- parse_into_chunks(
         code_id = node_i$code_id,
         user_supplied_parameters = node_i$parameters |> unlist(FALSE),
@@ -135,6 +135,7 @@ generate_node_code <- function(nodes_program_i,
       ) |> paste0(collapse = "\n\n")
       next
     }
+
     stop("Unknown node type")
 
   }

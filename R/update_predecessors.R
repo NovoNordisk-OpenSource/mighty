@@ -18,7 +18,7 @@ update_predecessors <-  function(nodes, pk, ui_init) {
   # Extract domain of dependency columns
   dep_domain <- extract_domain_of_dependency_columns(x)
 
-  # Identify indices of of copy nodes and rename nodes
+  # Identify indices of of col_copy nodes and col_mutate nodes
   index_copy_mutate <- which(is.na(x[["code_id"]]) &
                                dep_domain == "core")
 
@@ -26,21 +26,22 @@ update_predecessors <-  function(nodes, pk, ui_init) {
     is.na() |>
     which() |>
     setdiff(index_copy_mutate)
-  x[index_echos, type := "echo"]
+  x[index_echos, type := "col_echo"]
 
   # Return early when empty
   if (length(index_copy_mutate) == 0) {
     return(x)
   }
 
-  # We need to distinguish between copy and mutate nodes, because downstream
-  # copy nodes will be absorbed my the domain_init nodes, but mutates nodes will
+  # We need to distinguish between col_copy and col_mutate nodes, because downstream
+  # col_copy nodes will be absorbed my the domain_init nodes, but mutates nodes will
   # not
   mutate_node_ids <- extract_mutate_node_ids(x, index_copy_mutate)
-  x[index_copy_mutate, type := "copy"]
-  x[node_id %in% mutate_node_ids, type := "mutate"]
+  x[index_copy_mutate, type := "col_copy"]
+  x[node_id %in% mutate_node_ids, type := "col_mutate"]
 
-  # Enrich echo nodes having an external dependency with foreign key
+
+  # Enrich col_echo nodes having an external dependency with foreign key
   if (length(index_echos) > 0) {
     dep_domains <- vapply(x[["depend_cols"]][index_echos], function(dc)
       dc[["domain"]], character(1))
@@ -56,7 +57,8 @@ update_predecessors <-  function(nodes, pk, ui_init) {
     }
   }
 
-  # For copy/rename nodes with a core domain, we need to replace the "core"
+
+  # For col_copy/col_mutate nodes with a core domain, we need to replace the "core"
   # with the actual name of the domain. This makes downstream processing easier
   dep_domains <- vapply(x[["depend_cols"]][index_copy_mutate], function(dc)
     dc[["domain"]], character(1))
@@ -73,12 +75,14 @@ update_predecessors <-  function(nodes, pk, ui_init) {
   return(x)
 }
 
+
+
 extract_domain_of_dependency_columns <- function(x) {
   x$depend_cols |>
     lapply(function(i) {
       if (nrow(i) > 1) {
         # Ignore if multiple dependencies are present in which case the action is
-        # not a copy, rename, or echo, and needs no update
+        # not a col_copy, col_mutate, or col_echo, and needs no update
         return("")
       }
       i$domain

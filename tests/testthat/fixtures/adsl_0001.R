@@ -6,7 +6,7 @@
 #'   - PLANNED_ARM
 #' outputs:
 #'   - ARM_GRP1
-#' type: derivation
+#' type: col_compute
 #' ```
 #'
 arm_group_01 <-  function(.self) {
@@ -27,7 +27,7 @@ arm_group_01 <-  function(.self) {
 #'   - ARM_GRP1
 #' outputs:
 #'   - ARM_CAT1
-#' type: derivation
+#' type: col_compute
 #' ```
 #'
 arm_category_01 <-  function(.self) {
@@ -49,7 +49,7 @@ arm_category_01 <-  function(.self) {
 #'   - ACTARM
 #' outputs:
 #'   - ARM_MATCH
-#' type: derivation
+#' type: col_compute
 #' ```
 #'
 arm_match_01 <-  function(.self) {
@@ -68,7 +68,7 @@ arm_match_01 <-  function(.self) {
 #'   - AGE
 #' outputs:
 #'   - AGE2
-#' type: derivation
+#' type: col_compute
 #' ```
 #'
 age_crop_01 <-  function(.self) {
@@ -86,7 +86,7 @@ age_crop_01 <-  function(.self) {
 #'   - AGE2
 #' outputs:
 #'   - AGE_DIFF1
-#' type: derivation
+#' type: col_compute
 #' ```
 #'
 age_diff_01 <-  function(.self) {
@@ -104,7 +104,7 @@ age_diff_01 <-  function(.self) {
 #'   - PLANNED_ARM
 #' outputs:
 #'   - AGE_DIFF2
-#' type: derivation
+#' type: col_compute
 #' ```
 #'
 age_diff_02 <-  function(.self) {
@@ -121,7 +121,7 @@ age_diff_02 <-  function(.self) {
 #'   - AGE2
 #' outputs:
 #'   - AGE_GRP1
-#' type: derivation
+#' type: col_compute
 #' ```
 #'
 age_group_01 <-  function(.self, params = list(cut_points = c(25, 50))) {
@@ -145,7 +145,7 @@ age_group_01 <-  function(.self, params = list(cut_points = c(25, 50))) {
 #'   - COUNTRY
 #' outputs:
 #'   - RACE_COUNTRY
-#' type: derivation
+#' type: col_compute
 #' ```
 #'
 race_x_country_01 <-  function(.self) {
@@ -163,7 +163,7 @@ race_x_country_01 <-  function(.self) {
 #'   - USUBJID
 #' outputs:
 #'   - NEW_ARM
-#' type: derivation
+#' type: col_compute
 #' ```
 #'
 arm_01 <-  function(.self) {
@@ -184,7 +184,7 @@ arm_01 <-  function(.self) {
 #'   - ADLB.AVAL
 #' outputs:
 #'   - MIN_AVAL
-#' type: derivation
+#' type: col_compute
 #' ```
 #'
 min_aval_01 <-  function(.self, ADLB) {
@@ -212,7 +212,7 @@ min_aval_01 <-  function(.self, ADLB) {
 #' outputs:
 #'   - NEWFL01
 #'   - NEWREA01
-#' type: derivation
+#' type: col_compute
 #' ```
 #'
 newfl_01 <-  function(.self) {
@@ -238,7 +238,7 @@ newfl_01 <-  function(.self) {
 #'   - ADLB.LBTEST
 #' outputs:
 #'   - NEWFL02
-#' type: derivation
+#' type: col_compute
 #' ```
 #'
 newfl_02 <-  function(.self, ADLB) {
@@ -263,7 +263,7 @@ newfl_02 <-  function(.self, ADLB) {
 #' outputs:
 #'   - NEWFL03
 #'   - NEWREA03
-#' type: derivation
+#' type: col_compute
 #' ```
 #'
 newfl_03 <-  function(.self) {

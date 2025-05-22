@@ -23,7 +23,7 @@ test_that("Check that predecessors and derivations are identified correctly and 
 
   # EXPECT
   expect_equal(actual$data_model$type,
-               c("mutate", rep("echo", 4),rep("compute", 2), "domain_init"))
+               c("col_mutate", rep("col_echo", 4),rep("col_compute", 2), "domain_init"))
   expect_equal(actual$data_model$code_id,
                c(rep(NA, 5), "arm_group_01", "arm_match_01", NA))
 

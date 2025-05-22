@@ -12,7 +12,7 @@
 create_domain_initialize_nodes <- function(nodes, domain_init_data) {
   nodes_split <- split(nodes, by = "domain")
 
-  # For each domain: Identify the core variables for copy/mutate nodes
+  # For each domain: Identify the core variables for col_copy/col_mutate nodes
   core_vars <- nodes_split |>
     lapply(extract_core_dependency_columns, domain_init_data = domain_init_data)
 
@@ -23,11 +23,11 @@ create_domain_initialize_nodes <- function(nodes, domain_init_data) {
                                    domain_init_data) |>
     rbindlist()
 
-  # Remove copy nodes because these are  absorbed  by domain_init nodes
-  nodes_subset <- nodes[type!="copy", ]
+  # Remove col_copy nodes because these are  absorbed  by domain_init nodes
+  nodes_subset <- nodes[type!="col_copy", ]
 
-  # mutate nodes are not absorbed by the domain_init nodes. However, the
-  # dependencies specified in the mutate nodes should now point to the variables
+  # col_mutate nodes are not absorbed by the domain_init nodes. However, the
+  # dependencies specified in the col_mutate nodes should now point to the variables
   # outputted by the domain init node, not the original "core" domain(s).
 
   # The update is done by replacing the domain
@@ -64,7 +64,7 @@ extract_core_dependency_columns <- function(x, domain_init_data) {
   # Identify column dependencies for all predecessors
   core_domains <- id_core_domains_for_domain_in_scope(x, domain_init_data)
 
-  x_sub <- x[x$type == "copy"|x$type == "mutate", ]
+  x_sub <- x[x$type == "col_copy"|x$type == "col_mutate", ]
   dep_cols <- x_sub$depend_cols
   names(dep_cols) <- unlist(x_sub$outputs)
 
@@ -125,10 +125,10 @@ create_domain_init_node_i <- function(core_vars_domain_i,
   )][, node_id := paste0(domain, "-", "domain_init")]
 }
 
-#' Replace "core" domains with ADaM "self" domain for mutate nodes
+#' Replace "core" domains with ADaM "self" domain for col_mutate nodes
 #' @details
-#' mutate nodes are not absorbed by the domain_init nodes. However, the
-#' dependencies specified in the mutate nodes should now point to the variables
+#' col_mutate nodes are not absorbed by the domain_init nodes. However, the
+#' dependencies specified in the col_mutate nodes should now point to the variables
 #' outputted by the domain init node, not the original "core" domain(s). The
 #' update is done by replacing the domain name in the depend_cols with the ADaM
 #' domain name.
@@ -140,7 +140,7 @@ create_domain_init_node_i <- function(core_vars_domain_i,
 #' @returns
 replace_core_domain_with_adam_for_mutate_nodes <- function(nodes_subset, domain_init_data) {
   for (i in seq_len(nrow(nodes_subset))) {
-    if (nodes_subset[i, type == "mutate"]) {
+    if (nodes_subset[i, type == "col_mutate"]) {
       dep_cols <- nodes_subset[["depend_cols"]][[i]]
       domain_i <- nodes_subset[["domain"]][[i]]
       indx_core_vars <- dep_cols$domain %in% domain_init_data[[domain_i]][["core_domains"]]
