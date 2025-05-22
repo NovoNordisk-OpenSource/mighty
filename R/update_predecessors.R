@@ -40,7 +40,6 @@ update_predecessors <-  function(nodes, pk, ui_init) {
   x[index_copy_mutate, type := "copy"]
   x[node_id %in% mutate_node_ids, type := "mutate"]
 
-
   # Enrich echo nodes having an external dependency with foreign key
   if (length(index_echos) > 0) {
     dep_domains <- vapply(x[["depend_cols"]][index_echos], function(dc)
@@ -56,7 +55,6 @@ update_predecessors <-  function(nodes, pk, ui_init) {
       )
     }
   }
-
 
   # For copy/rename nodes with a core domain, we need to replace the "core"
   # with the actual name of the domain. This makes downstream processing easier
@@ -74,8 +72,6 @@ update_predecessors <-  function(nodes, pk, ui_init) {
 
   return(x)
 }
-
-
 
 extract_domain_of_dependency_columns <- function(x) {
   x$depend_cols |>

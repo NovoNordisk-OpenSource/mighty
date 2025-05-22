@@ -23,6 +23,9 @@ column_metadata:
   - column: USUBJID
     source: core.USUBJID
 
+  - column: PLANNED_ARM
+    source: core.ARM
+
   - column: AGE
     source: core.AGE
 

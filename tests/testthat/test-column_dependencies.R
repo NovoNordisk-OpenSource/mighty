@@ -335,7 +335,7 @@ test_that("Dependencies between actions with core dependencies", {
 
   domain_keys_path <- system.file("standards", "domain_keys.yml", package = "mighty")
   output_path <- withr::local_tempdir()
-  browser()
+  debugonce(generate_adam_code)
   # ACT
   actual <- generate_adam_code(
     path_ui_data = ui_path,
