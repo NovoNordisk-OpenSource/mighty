@@ -2,8 +2,8 @@ test_that("Complex test with multiple domains and column/row operations", {
 
 # SETUP -------------------------------------------------------------------
   ui_path <- c(
-    test_path("fixtures", "adsl_complex.yml"),
-    test_path("fixtures", "adlb_complex.yml")
+    test_path("fixtures", "complex_adsl.yml"),
+    test_path("fixtures", "complex_adlb.yml")
   )
   path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
   std_lib_path <- c(
