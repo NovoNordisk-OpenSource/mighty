@@ -38,3 +38,8 @@ column_metadata:
   - column: PLANNED_ARM2
     source: PLANNED_ARM
 
+  - column: VAR2
+    source: DS.DSSEQ
+
+  - column: VISITDY
+    source: DS.DSCAT
