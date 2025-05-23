@@ -17,7 +17,7 @@ generate_adam_code <- function(path_ui_data,
                                path_trial_metadata,
                                path_domain_keys,
                                path_output,
-                               data_connection = c("connector", "pharmaverse"),
+                               data_connection = c("connector", "pharmaverse", "custom_data"),
                                check_cross_domain_adam_dependencies = TRUE) {
 
   # Read data from UI containing explicit user input

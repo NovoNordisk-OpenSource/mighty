@@ -18,6 +18,6 @@ generate_program_init <- function(adam_domain, adam_dataset_list, data_connectio
   adam_domain_ext <- make_adam_domain_ext(adam_domain, file_extension, adam_dataset_list)
   glue::glue(
     "{adam_domain} <- adam_connector |>
-    connector::cnt_read('{adam_domain_ext}')"
+    connector::read_cnt('{adam_domain_ext}')"
   )
 }
