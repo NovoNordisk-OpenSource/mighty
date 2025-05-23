@@ -10,7 +10,7 @@ test_that(
     output_path <- withr::local_tempdir()
 
     # EXPECT
-    generate_adam_code(
+    actual <- generate_adam_code(
       path_ui_data = ui_path,
       code_component_source_files =  std_lib_path,
       path_trial_metadata = path_trial_metadata,
@@ -20,6 +20,7 @@ test_that(
       check_cross_domain_adam_dependencies = FALSE
     ) |> expect_no_error()
 
+    actual$data_model |> names() |> sort() |> expect_equal(c("code_id", "depend_cols", "depend_rows", "domain", "node_id", "outputs", "parameters", "type"))
   }
 )
 
@@ -35,7 +36,7 @@ test_that(
     output_path <- withr::local_tempdir()
 
     # EXPECT
-    generate_adam_code(
+    actual <- generate_adam_code(
       path_ui_data = ui_path,
       code_component_source_files =  std_lib_path,
       path_trial_metadata = path_trial_metadata,
@@ -44,7 +45,7 @@ test_that(
       data_connection = "pharmaverse",
       check_cross_domain_adam_dependencies = TRUE
     ) |> expect_no_error()
-
+    actual$data_model |> names() |> sort() |> expect_equal(c("code_id", "depend_cols", "depend_rows", "domain", "node_id", "outputs", "parameters", "type"))
   }
 )
 
@@ -85,7 +86,7 @@ test_that(
     output_path <- withr::local_tempdir()
 
     # EXPECT
-    generate_adam_code(
+    actual <- generate_adam_code(
       path_ui_data = ui_path,
       code_component_source_files =  std_lib_path,
       path_trial_metadata = path_trial_metadata,
@@ -94,7 +95,7 @@ test_that(
       data_connection = "pharmaverse",
       check_cross_domain_adam_dependencies = FALSE
     ) |> expect_no_error()
-
+    actual$data_model |> names() |> sort() |> expect_equal(c("code_id", "depend_cols", "depend_rows", "domain", "node_id", "outputs", "parameters", "type"))
   }
 )
 
@@ -248,7 +249,7 @@ test_that(
       data_connection = "pharmaverse",
       check_cross_domain_adam_dependencies = FALSE
     ) |> expect_no_error()
-
+    actual$data_model |> names() |> sort() |> expect_equal(c("code_id", "depend_cols", "depend_rows", "domain", "node_id", "outputs", "parameters", "type"))
   }
 )
 
@@ -300,6 +301,7 @@ test_that(
       data_connection = "pharmaverse",
       check_cross_domain_adam_dependencies = FALSE
     ) |> expect_no_error()
+    actual$data_model |> names() |> sort() |> expect_equal(c("code_id", "depend_cols", "depend_rows", "domain", "node_id", "outputs", "parameters", "type"))
   }
 )
 
@@ -356,6 +358,7 @@ test_that(
       data_connection = "pharmaverse",
       check_cross_domain_adam_dependencies = FALSE
     ) |> expect_no_error()
+    actual$data_model |> names() |> sort() |> expect_equal(c("code_id", "depend_cols", "depend_rows", "domain", "node_id", "outputs", "parameters", "type"))
   }
 )
 

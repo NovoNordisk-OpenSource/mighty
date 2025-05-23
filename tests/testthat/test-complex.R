@@ -1,5 +1,6 @@
 test_that("Complex test with multiple domains and column/row operations", {
-  # SETUP
+
+# SETUP -------------------------------------------------------------------
   ui_path <- c(
     test_path("fixtures", "adsl_complex.yml"),
     test_path("fixtures", "adlb_complex.yml")
@@ -13,7 +14,7 @@ test_that("Complex test with multiple domains and column/row operations", {
   domain_keys_path <- system.file("standards", "domain_keys.yml", package = "mighty")
   output_path <- withr::local_tempdir()
 
-  # ACT
+  # ACT ---------------------------------------------------------------------
   actual <- generate_adam_code(
     path_ui_data = ui_path,
     code_component_source_files =  std_lib_path,
@@ -22,6 +23,9 @@ test_that("Complex test with multiple domains and column/row operations", {
     path_output = output_path,
     data_connection = "pharmaverse"
   )
+
+  # EXPECT ------------------------------------------------------------------
+  actual$data_model |> names() |> sort() |> expect_equal(c("code_id", "depend_cols", "depend_rows", "domain", "node_id", "outputs", "parameters", "type"))
   write_adam_programs(dir = output_path, programs = actual$programs)
   x <- list.files(output_path, full.names = TRUE)
 
@@ -75,6 +79,6 @@ test_that("Complex test with multiple domains and column/row operations", {
   ADSL |> expect_snapshot_value(style = "json2")
 
   # Check edges
-  actual$edges |> as.data.frame() |> expect_snapshot_value(style = "json2")
+  actual$edges |> data.table::setorder(node_id, parent_node) |>  as.data.frame() |> expect_snapshot_value(style = "json2")
 })
 

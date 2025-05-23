@@ -193,7 +193,7 @@ get_all_adam_dependencies <- function(x, adsl_filter_dep_by_domain) {
 #' @returns Character vector of domain-prefixed column names in the format "domain.column_name"
 prefix_outputs_with_domain_for_non_row_nodes <- function(x) {
   # Filter out rows where type is "row" using data.table syntax
-  x_no_rows <- x[is.na(type) | type != "row"]
+  x_no_rows <- x[is.na(type) | type != "row_compute"]
 
   # Create fully qualified output names by prefixing with domain
   outputs <- purrr::map2(x_no_rows$domain, x_no_rows$outputs, function(domain, output) {

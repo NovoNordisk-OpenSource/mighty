@@ -70,11 +70,11 @@ merge_rows_with_same_code_id <- function(x) {
   # program. In contrast, multiple row nodes can have the same code_id with
   # DIFFERENT parameters.
 
-  non_predecessor_nodes <- x[!is.na(code_id)]
-  non_predecessor_nodes[column == "", tmp_id := paste0(code_id, parameters)]
-  non_predecessor_nodes[column != "", tmp_id := code_id]
+  nodes_referencing_code <- x[!is.na(code_id)]
+  nodes_referencing_code[column == "", tmp_id := paste0(code_id, parameters)]
+  nodes_referencing_code[column != "", tmp_id := code_id]
 
-  result <- non_predecessor_nodes[, .(
+  result <- nodes_referencing_code[, .(
     column = column |> unlist() |> unique() |> list(),
     type = unique(type),
     domain = unique(domain),

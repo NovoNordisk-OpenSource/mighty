@@ -38,7 +38,7 @@ test_that("Complex test with multiple domains and column/row operations and miss
   file.create(paste0(adam_testdata_path, "/ADSL.parquet"))
   file.create(paste0(adam_testdata_path, "/ADLB.parquet"))
 
-  # ACT
+  # ACT ---------------------------------------------------------------------
   actual <- generate_adam_code(
     path_ui_data = ui_path,
     code_component_source_files =  std_lib_path,
@@ -48,10 +48,8 @@ test_that("Complex test with multiple domains and column/row operations and miss
     data_connection = "custom_data"
   )
 
-  # remove dummy ADaM parquet files
-#  file.remove(paste0(adam_testdata_path, "/ADSL.parquet"))
-#  file.remove(paste0(adam_testdata_path, "/ADLB.parquet"))
-
+  # EXPECT ------------------------------------------------------------------
+  actual$data_model |> names() |> sort() |> expect_equal(c("code_id", "depend_cols", "depend_rows", "domain", "node_id", "outputs", "parameters", "type"))
   write_adam_programs(dir = output_path, programs = actual$programs)
   x <- list.files(output_path, pattern = "*.R", full.names = TRUE)
   programs <- x |> lapply(readLines)
@@ -103,6 +101,6 @@ test_that("Complex test with multiple domains and column/row operations and miss
   ADSL |> expect_snapshot_value(style = "json2")
 
   # Check edges
-  actual$edges |> as.data.frame() |> expect_snapshot_value(style = "json2")
+  actual$edges |> data.table::setorder(node_id, parent_node) |>  as.data.frame() |> expect_snapshot_value(style = "json2")
 })
 

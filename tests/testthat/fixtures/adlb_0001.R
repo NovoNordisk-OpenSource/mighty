@@ -13,7 +13,7 @@
 #'   - ADSL.PLANNED_ARM
 #' outputs:
 #'   - LBTEST
-#' type: derivation
+#' type: col_compute
 #' ```
 #'
 lbtest_01 <-  function(.self, LB, ADSL) {
@@ -53,7 +53,7 @@ lbtest_01 <-  function(.self, LB, ADSL) {
 #'   - SV.VISITDY
 #' outputs:
 #'   - LBTEST
-#' type: row
+#' type: row_compute
 #' ```
 #'
 new_lbtest_01 <-  function(.self) {
@@ -81,7 +81,7 @@ new_lbtest_01 <-  function(.self) {
 #' outputs:
 #'   - LBTEST
 #'   - AVALC
-#' type: row
+#' type: row_compute
 #' ```
 #'
 new_lbtest_02 <- function(.self) {
@@ -105,7 +105,7 @@ new_lbtest_02 <- function(.self) {
 #'   - LBTEST
 #' outputs:
 #'   - LBTEST
-#' type: row
+#' type: row_compute
 #' ```
 #'
 new_lbtest_03 <- function(.self) {
@@ -130,7 +130,7 @@ new_lbtest_03 <- function(.self) {
 #'   - LBTEST
 #' outputs:
 #'   - LBTEST
-#' type: row
+#' type: row_compute
 #' ```
 #'
 new_lbtest_04 <- function(.self) {
@@ -155,7 +155,7 @@ new_lbtest_04 <- function(.self) {
 #'   - LBTEST
 #' outputs:
 #'   - LBTEST
-#' type: row
+#' type: row_compute
 #' ```
 #'
 new_lbtest_05 <- function(.self) {
@@ -186,7 +186,7 @@ new_lbtest_05 <- function(.self) {
 #'   - DOMAIN
 #' outputs:
 #'   - LBTEST
-#' type: row
+#' type: row_compute
 #' ```
 #'
 new_lbtest_06 <- function(.self) {
@@ -216,7 +216,7 @@ new_lbtest_06 <- function(.self) {
 #'   - AVAL
 #' outputs:
 #'   - AVAL
-#' type: row
+#' type: row_compute
 #' ```
 #'
 new_aval_01 <- function(.self) {
@@ -237,7 +237,7 @@ new_aval_01 <- function(.self) {
 #'   - AVAL
 #' outputs:
 #'   - AVAL
-#' type: row
+#' type: row_compute
 #' ```
 #'
 new_aval_02 <- function(.self) {
@@ -263,7 +263,7 @@ new_aval_02 <- function(.self) {
 #'   - DOMAIN
 #' outputs:
 #'   - AVAL
-#' type: row
+#' type: row_compute
 #' ```
 #'
 new_aval_03 <- function(.self) {
@@ -289,7 +289,7 @@ new_aval_03 <- function(.self) {
 #'   - AVALC
 #' outputs:
 #'   - AVAL
-#' type: row
+#' type: row_compute
 #' ```
 #'
 new_aval_04 <- function(.self) {
@@ -314,7 +314,7 @@ new_aval_04 <- function(.self) {
 #'   - VISITNUM
 #' outputs:
 #'   - VISITNUM
-#' type: row
+#' type: row_compute
 #' ```
 #'
 new_visitnum_01 <- function(.self) {
@@ -339,7 +339,7 @@ new_visitnum_01 <- function(.self) {
 #'   - VISITNUM
 #' outputs:
 #'   - VISITNUM
-#' type: row
+#' type: row_compute
 #' ```
 #'
 new_visitnum_02 <- function(.self) {
@@ -364,7 +364,7 @@ new_visitnum_02 <- function(.self) {
 #'   - AVAL
 #' outputs:
 #'   - AVAL_GRP
-#' type: derivation
+#' type: col_compute
 #' ```
 #'
 aval_grp_01 <- function(.self) {
@@ -384,7 +384,7 @@ aval_grp_01 <- function(.self) {
 #'   - AVAL_GRP
 #' outputs:
 #'   - AVAL_GRP2
-#' type: derivation
+#' type: col_compute
 #' ```
 #'
 aval_grp_02 <-  function(.self) {
@@ -402,7 +402,7 @@ aval_grp_02 <-  function(.self) {
 #' ```yaml
 #' depend_cols:
 #' outputs:
-#' type: derivation
+#' type: col_compute
 #' ```
 #'
 copy_rows_01 <-  function(.self) {
@@ -418,7 +418,7 @@ copy_rows_01 <-  function(.self) {
 #'   - LBTEST
 #' outputs:
 #'   - LBTEST
-#' type: row
+#' type: row_compute
 #' ```
 #'
 new_lbtest_07 <- function(.self, params = list(test_val = "Phosphate")) {

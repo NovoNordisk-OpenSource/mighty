@@ -7,7 +7,7 @@
 #' outputs:
 #'   - A
 #'   - B
-#' type: derivation
+#' type: col_compute
 #' ```
 #'
 fn_AB <- function(.self, params = list(param_1=NULL, param_2 = NULL)){
@@ -23,7 +23,7 @@ fn_AB <- function(.self, params = list(param_1=NULL, param_2 = NULL)){
 #'   - USUBJID
 #' outputs:
 #'   - C
-#' type: derivation
+#' type: col_compute
 #' ```
 #'
 fn_C <- function(.self, params = list(param_1=NULL)){
@@ -39,7 +39,7 @@ fn_C <- function(.self, params = list(param_1=NULL)){
 #'   - USUBJID
 #' outputs:
 #'   - C
-#' type: derivation
+#' type: col_compute
 #' ```
 #'
 fn_D <- function(.self, params = list(param_1=NULL)){
@@ -54,7 +54,7 @@ fn_D <- function(.self, params = list(param_1=NULL)){
 #'   - USUBJID
 #' outputs:
 #'   - C
-#' type: derivation
+#' type: col_compute
 #' ```
 #'
 fn_E <- function(.self, params = list(param_1=NULL)){

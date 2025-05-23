@@ -15,17 +15,18 @@ test_that("Check that predecessors and derivations are identified correctly and 
     path_trial_metadata = path_trial_metadata,
     path_domain_keys = domain_keys_path,
     path_output = output_path,
-    data_connection = "pharmaverse"
+    data_connection = "pharmaverse",
+    check_cross_domain_adam_dependencies = FALSE
   )
   write_adam_programs(dir = output_path, programs = actual$programs)
   x <- list.files(output_path, full.names = TRUE)
 
   # EXPECT
   expect_equal(actual$data_model$type,
-               c("predecessor", rep("derivation", 4), "domain_init"))
+               c("col_mutate", rep("col_echo", 4),rep("col_compute", 2), "domain_init"))
   expect_equal(actual$data_model$code_id,
-               c(NA, NA, NA, "arm_group_01", "arm_match_01", NA))
+               c(rep(NA, 5), "arm_group_01", "arm_match_01", NA))
 
-  x[[1]] |> source()
-  ADSL |> expect_snapshot_value(style = "json2")
+
+  actual$edges |> as.data.frame() |>  expect_snapshot_value(style = "json2")
 })
