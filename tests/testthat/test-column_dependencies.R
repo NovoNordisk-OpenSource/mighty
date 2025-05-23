@@ -350,54 +350,48 @@ test_that("Dependencies between actions with core dependencies", {
   x <- list.files(output_path, full.names = TRUE)
   do.call(file.edit, as.list(x))
 })
-#
-# test_that("Error is triggered when both a col_mutate and a col_copy action exist that inputs a core variable and return the ADaM variable of same name", {
-#   # SETUP
-#   ui_path <- test_path("fixtures", "column_dependencies_adsl_08.yml")
-#   path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
-#   std_lib_path <- testthat::test_path("fixtures", "adsl_0001.R")
-#
-#   domain_keys_path <- system.file("standards", "domain_keys.yml", package = "mighty")
-#   output_path <- withr::local_tempdir()
-#   browser()
-#   # ACT
-#   actual <- generate_adam_code(
-#     path_ui_data = ui_path,
-#     code_component_source_files =  std_lib_path,
-#     path_trial_metadata = path_trial_metadata,
-#     path_domain_keys = domain_keys_path,
-#     path_output = output_path,
-#     data_connection = "pharmaverse"
-#   )
-#
-#   write_adam_programs(dir = output_path, programs = actual$programs)
-#   x <- list.files(output_path, full.names = TRUE)
-#   do.call(file.edit, as.list(x))
-# })
-#
-# test_that("Error is triggered when multiple col_compute actions exist that inputs a core variable and return the ADaM variable of same name", {
-#   # SETUP
-#   ui_path <- test_path("fixtures", "column_dependencies_adsl_09.yml")
-#   path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
-#   std_lib_path <- testthat::test_path("fixtures", "adsl_0001.R")
-#
-#   domain_keys_path <- system.file("standards", "domain_keys.yml", package = "mighty")
-#   output_path <- withr::local_tempdir()
-#   browser()
-#   # ACT
-#   actual <- generate_adam_code(
-#     path_ui_data = ui_path,
-#     code_component_source_files =  std_lib_path,
-#     path_trial_metadata = path_trial_metadata,
-#     path_domain_keys = domain_keys_path,
-#     path_output = output_path,
-#     data_connection = "pharmaverse"
-#   )
-#
-#   write_adam_programs(dir = output_path, programs = actual$programs)
-#   x <- list.files(output_path, full.names = TRUE)
-#   do.call(file.edit, as.list(x))
-# })
 
 
-# thest that: "Error is triggered when two column actions return the same output"
+test_that("Error is triggered when both a col_mutate and a col_copy action exist that inputs a core variable and return the ADaM variable of same name", {
+  # SETUP
+  ui_path <- test_path("fixtures", "column_dependencies_adsl_08.yml")
+  path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
+  std_lib_path <- testthat::test_path("fixtures", "adsl_0001.R")
+
+  domain_keys_path <- system.file("standards", "domain_keys.yml", package = "mighty")
+  output_path <- withr::local_tempdir()
+
+  # ACT
+  actual <- generate_adam_code(
+    path_ui_data = ui_path,
+    code_component_source_files =  std_lib_path,
+    path_trial_metadata = path_trial_metadata,
+    path_domain_keys = domain_keys_path,
+    path_output = output_path,
+    data_connection = "pharmaverse"
+  ) |> expect_error(regexp = "Column\\(s\\) AGE are outputted in multiple actions in domain ADSL.")
+
+})
+
+
+test_that("Error is triggered when multiple col_compute actions exist that inputs a core variable and return the ADaM variable of same name", {
+
+  # SETUP
+  ui_path <- test_path("fixtures", "column_dependencies_adsl_09.yml")
+  path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
+  std_lib_path <- testthat::test_path("fixtures", "adsl_0001.R")
+
+  domain_keys_path <- system.file("standards", "domain_keys.yml", package = "mighty")
+  output_path <- withr::local_tempdir()
+
+  # ACT
+  actual <- generate_adam_code(
+    path_ui_data = ui_path,
+    code_component_source_files =  std_lib_path,
+    path_trial_metadata = path_trial_metadata,
+    path_domain_keys = domain_keys_path,
+    path_output = output_path,
+    data_connection = "pharmaverse"
+  ) |> expect_error(regexp = "Column\\(s\\) AGE are outputted in multiple actions in domain ADSL.")
+
+})
