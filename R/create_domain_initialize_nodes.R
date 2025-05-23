@@ -13,17 +13,27 @@ create_domain_initialize_nodes <- function(nodes, domain_init_data) {
   nodes_split <- split(nodes, by = "domain")
 
   # For each domain: Identify the core variables for col_copy/col_mutate nodes
-  core_vars <- nodes_split |>
-    lapply(extract_core_dependency_columns, domain_init_data = domain_init_data)
+  # core_vars <- nodes_split |>
+  #   lapply(extract_core_dependency_columns, domain_init_data = domain_init_data)
+
+  core_vars <- lapply(nodes_split, function(x) {
+    domain_i <- x$domain[[1]]
+    core_domains <- domain_init_data[[domain_i]]$core_domains
+    lapply(x$depend_cols, function(y) {
+      out <- y[domain %in% core_domains & domain_type == "temp"]
+      out$domain_type <- classify_external_data_domains(out$domain)
+      out
+    }) |> rbindlist() |> unique()
+  })
 
   # Create a domain_init action for each domain
-  domain_init_nodes <- purrr::imap(lapply(core_vars, rbindlist),
+  domain_init_nodes <- purrr::imap(core_vars, #lapply(core_vars, rbindlist),
                                    create_domain_init_node_i,
                                    nodes,
                                    domain_init_data) |>
     rbindlist()
 
-  # Remove col_copy nodes because these are  absorbed  by domain_init nodes
+  # Remove col_copy nodes because these are absorbed by domain_init nodes
   nodes_subset <- nodes[type!="col_copy", ]
 
   # col_mutate nodes are not absorbed by the domain_init nodes. However, the
@@ -33,10 +43,13 @@ create_domain_initialize_nodes <- function(nodes, domain_init_data) {
   # The update is done by replacing the domain
   # name in the depend_cols with the ADaM domain name.
 
-  nodes_subset <- replace_core_domain_with_adam_for_mutate_nodes(nodes_subset = nodes_subset, domain_init_data = domain_init_data)
+  #nodes_subset_new <- replace_core_domain_with_adam_for_mutate_nodes(nodes_subset = nodes_subset, domain_init_data = domain_init_data)
+
+  nodes_subset_updated <- replace_core_tmp_domain_with_adam(nodes_subset = nodes_subset, domain_init_data = domain_init_data)
 
   # Return the updated nodes with domain_init nodes
-  return(rbind(nodes_subset, domain_init_nodes))
+  # return(rbind(nodes_subset, domain_init_nodes))
+  return(rbind(nodes_subset_updated, domain_init_nodes))
 }
 
 
@@ -151,6 +164,22 @@ replace_core_domain_with_adam_for_mutate_nodes <- function(nodes_subset, domain_
         dep_cols[["domain_type"]][indx_core_vars] <- "adam"
         nodes_subset[["depend_cols"]][[i]] <- unique(dep_cols)
       }
+    }
+  }
+  return(nodes_subset)
+}
+
+replace_core_tmp_domain_with_adam <- function(nodes_subset, domain_init_data) {
+  for (i in seq_len(nrow(nodes_subset))) {
+    dep_cols <- nodes_subset[["depend_cols"]][[i]]
+    domain_i <- nodes_subset[["domain"]][[i]]
+    indx_core_vars <- dep_cols$domain %in% domain_init_data[[domain_i]][["core_domains"]] & dep_cols$domain_type == "temp"
+
+    # Only core predecessors are modified
+    if (any(indx_core_vars)) {
+      dep_cols[["domain"]][indx_core_vars] <- domain_i
+      dep_cols[["domain_type"]][indx_core_vars] <- "adam"
+      nodes_subset[["depend_cols"]][[i]] <- unique(dep_cols)
     }
   }
   return(nodes_subset)

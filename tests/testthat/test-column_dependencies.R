@@ -348,7 +348,6 @@ test_that("Check external predecessor", {
 #   )
 #
 #   # EXPECT
-#
 #   write_adam_programs(dir = output_path, programs = actual$programs)
 #   x <- list.files(output_path, full.names = TRUE)
 #   do.call(file.edit, as.list(x))

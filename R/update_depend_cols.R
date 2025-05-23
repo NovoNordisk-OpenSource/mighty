@@ -41,7 +41,7 @@ update_depend_cols <- function(nodes, pk, ui_init) {
   # action.
   x <- enrich_core_compute_actions(x)
 
-  # Replace "core" domain with the actual name of the core domain(s).
+  # Replace "core" domain with the actual name of the core domain(s) "-tmp"
   # This makes downstream processing easier
   x <- replace_core_with_named_domain(x, ui_init)
 
@@ -114,7 +114,7 @@ replace_core_with_named_domain <- function(x, ui_init) {
         "column_name" = dep_cols_i$column_name[is_core_dep],
         stringsAsFactors = FALSE
       )
-      replaced_dep_cols[["domain_type"]] = classify_external_data_domains(replaced_dep_cols[["domain"]])
+      replaced_dep_cols[["domain_type"]] = "temp"
     } else {
       replaced_dep_cols <- NULL
     }

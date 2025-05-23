@@ -46,11 +46,6 @@ generate_adam_code <- function(path_ui_data,
   # Check that outputs are valid
   assert_valid_outputs(nodes_1)
 
-  # Update predecessors:
-  #   - assign type "predecessor"
-  #   - external predecessors requiring a join are enriched with foreign keys
-  #   - 'core' is replaced with actual core domain(s) in depend_cols
-
   # Assign action types col_copy, col_echo and col_mutate
   nodes_2 <- assign_predecessor_action_types(nodes_1)
 
@@ -59,6 +54,7 @@ generate_adam_code <- function(path_ui_data,
   # - For col_compute actions that inputs a core column and return the same
   #   column in the ADaM domain: Add output columns from all other actions that
   #   have the same core column as input
+  # - replace "core" with actual domains
   nodes_3 <- update_depend_cols(nodes_2, domain_keys, ui_init)
 
   # Check ADaM column dependencies
