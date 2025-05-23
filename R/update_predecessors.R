@@ -58,12 +58,14 @@ update_predecessors <-  function(nodes, pk, ui_init) {
     }
   }
 
+  # Check that no col actions returns the same columns
+
   # browser()
   # Enrich depend_cols for col_compute actions that inputs a core column and
   # return the same column in the ADaM domain. The enrichment consists of adding
   # the the output columns from all other actions (if any) that have the same
   # core column as input. This will ensure that the latter actions will be
-  # executed before the first mentioned col_compute actions.
+  # executed before the first mentioned col_compute action.
   # node_id_compute_nodes_core <- apply(x, 1, function(row) {
   #   if(row$type == "col_compute" &&
   #      all(row$output == row$depend_cols$column_name)) {

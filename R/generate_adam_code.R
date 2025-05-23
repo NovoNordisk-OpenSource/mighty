@@ -43,6 +43,9 @@ generate_adam_code <- function(path_ui_data,
     update_ui_data(ui_table) |>
     add_node_id_fast()
 
+  # Check that outputs are valid
+  assert_valid_outputs(nodes_1)
+
   # Update predecessors:
   #   - assign type "predecessor"
   #   - external predecessors requiring a join are enriched with foreign keys
