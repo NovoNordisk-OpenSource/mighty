@@ -2,13 +2,26 @@
 % Please edit documentation in R/update_ui_data.R
 \name{update_ui_data}
 \alias{update_ui_data}
-\title{Title}
+\title{Update UI data with code component metadata}
 \usage{
 update_ui_data(code_component_metadata, ui_data)
 }
 \arguments{
-\item{ui_data}{}
+\item{code_component_metadata}{List of metadata for code components, indexed by code_id}
+
+\item{ui_data}{Data table containing UI data with optional code_id references}
+}
+\value{
+A data table with UI data enriched with code component metadata and processed dependent columns
 }
 \description{
-Title
+Merges UI data with code component metadata based on code_id references and processes dependent columns.
+}
+\details{
+Takes UI data that may contain code_id references and enriches it with metadata
+from the code component metadata. Handles the merging of metadata, standardization of terminology,
+and processing of dependent columns.
+}
+\examples{
+# Example usage would go here
 }

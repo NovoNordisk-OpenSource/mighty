@@ -14,7 +14,7 @@ generate_external_data_code(
 )
 }
 \arguments{
-\item{data_connection}{}
+\item{custom_data_path}{}
 }
 \description{
 Generate external data code

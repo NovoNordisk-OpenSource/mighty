@@ -7,11 +7,27 @@
 assert_outputs_identical(x)
 }
 \arguments{
-\item{x}{}
+\item{x}{A data.table containing code components with columns:
+\itemize{
+\item type_from_code: The type of the component
+\item code_id: Unique identifier for the code component
+\item outputs: List column containing outputs defined in YAML specs
+\item outputs_from_code: List column containing outputs detected from code
+}}
 }
 \value{
-TRUE if passes, error if it does not
+TRUE if all outputs match, or throws an error with detailed
+information about mismatches
 }
 \description{
-Assert outputs defined in code components match those defined in yml specs
+Validates that the outputs defined in code components match
+exactly with those defined in the YAML specifications.
+}
+\details{
+This function checks for consistency between the outputs declared in
+YAML specifications and those actually produced by the code components. It
+focuses specifically on 'col_compute' type components since these have
+outputs defined in both places. The function compares the two sets of outputs
+and raises a detailed error if any discrepancies are found, showing exactly
+which outputs differ for each code component.
 }

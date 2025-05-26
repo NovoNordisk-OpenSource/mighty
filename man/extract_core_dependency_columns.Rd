@@ -16,7 +16,7 @@ which domains are considered "core" for each domain.}
 \value{
 A named list of data frames, where each element contains dependency column
 information from core domains. Names of the list correspond to the output names
-from copy_rename operations. NULL dependencies (from non-core domains) are removed.
+from copy_mutate operations. NULL dependencies (from non-core domains) are removed.
 }
 \description{
 Extract dependency columns from "core" datasets
@@ -27,7 +27,7 @@ for a given domain in scope. It filters out dependencies from non-core (external
 and returns only the dependencies that are from core domains.
 
 The function first identifies core domains for the domain in scope, then filters to
-copy_rename type nodes to extract their dependencies. It checks that dependencies
+copy_mutate type nodes to extract their dependencies. It checks that dependencies
 are either all from core domains or all from non-core domains, and returns only
 the dependencies from core domains.
 }
