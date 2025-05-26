@@ -2,16 +2,28 @@
 % Please edit documentation in R/create_consolidated_env.R
 \name{create_consolidated_env}
 \alias{create_consolidated_env}
-\title{Create consolidate environment for all code components}
+\title{Create a Consolidated Environment}
 \usage{
 create_consolidated_env(packages = NULL, source_files = NULL, code_ids)
 }
 \arguments{
-\item{source_files}{}
+\item{packages}{Optional character vector specifying package names to load.}
+
+\item{source_files}{Optional character vector specifying file paths to load R
+scripts from.}
+
+\item{code_ids}{Mandatory character vector containing function names to be
+consolidated.}
 }
 \value{
-Returns an environment
+A new environment containing the loaded functions.
 }
 \description{
-Create consolidate environment for all code components
+Combines functions from specified packages and source files into
+a new environment, checking for duplicates.
+}
+\details{
+This function loads packages and source files, extracting functions
+defined in those sources matching specified \code{code_ids}. It verifies the
+uniqueness of function names across different sources.
 }

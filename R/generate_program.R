@@ -35,8 +35,8 @@ generate_program <- function(program_order,
     setorder(program_id, rank)
   # Create clean, empty environment to store standard components
 
-  sdtm_dataset_list <- list_all_(type = "sdtm", trial_metadata)
-  adam_dataset_list <- list_all_(type = "adam", trial_metadata)
+  sdtm_dataset_list <- list_all_(type = "sdtm", trial_metadata, data_connection, path_output)
+  adam_dataset_list <- list_all_(type = "adam", trial_metadata, data_connection, path_output)
 
   nodes_split <- split(nodes_and_programs, by = "program_id")
 
@@ -79,33 +79,36 @@ list_all_sdtm_datasets <- function(trial_metadata) {
   sdtm_connector |> connector::list_content_cnt()
 
 }
-list_all_ <- function(type = c("sdtm", "adam"), trial_metadata) {
+list_all_ <- function(type = c("sdtm", "adam"), trial_metadata, data_connection, custom_data_path = NULL) {
   # Generate list of all SDTM datasets in the current study so later we can
   # check if a specific supp dataset exists
-  if (type == "adam") {
-    path <- glue::glue(
-      "~/projstat/{trial_metadata$project_id}/{trial_metadata$complete_id}/current/stats/data/adam"
-    )
-  }
-  if (type == "sdtm") {
-    path <- glue::glue(
-      "~/projstat/{trial_metadata$project_id}/{trial_metadata$complete_id}/current/dm/data/sdtm"
-    )
-  }
+  path <- get_data_connector_path(
+    type = type,
+    trial_metadata = trial_metadata,
+    data_connection = data_connection,
+    custom_data_path = custom_data_path
+  )
 
-  # This is needed when testing and referencing trial data locations that don't
-  # exist, or the testing environment doesn't have access to
-  result <- tryCatch({
+  # If data_connector is pharmaverse, path is set to null. Otherwise a path
+  # must be set in the get_data_connector_path function
+  if (is.null(path)) {
+    result <- character()
+  }
+  else {
+    # This is needed when testing and referencing trial data locations that don't
+    # exist, or the testing environment doesn't have access to
+    result <- tryCatch({
 
-    connector::connector_fs(path = path) |>
-      connector::list_content_cnt()
-  }, error = function(e) {
-    if (grepl("directory.*does not.*exist", e$message, ignore.case = TRUE)) {
-      return(NULL)
-    } else {
-      stop(e)  # re-throws the original error for all other cases
-    }
-  })
+      connector::connector_fs(path = path) |>
+        connector::list_content_cnt()
+    }, error = function(e) {
+      if (grepl("directory.*does not.*exist", e$message, ignore.case = TRUE)) {
+        return(NULL)
+      } else {
+        stop(e)  # re-throws the original error for all other cases
+      }
+    })
+  }
   return(result)
 }
 

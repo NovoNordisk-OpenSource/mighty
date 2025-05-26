@@ -13,16 +13,14 @@ generate_write_data <- function(domain_name,
     file_path <- file.path(path_output, paste0(domain_name, ".R"))
     save_table_code <- glue::glue("saveRDS(object = {domain_name}, file = \"{file_path}\")")
   }
-
-  if (data_connection == "connector") {
+  # Assumption: adamconnector setup earlier i.e. in generate_external_data_code
+  if (data_connection == "connector" | data_connection == "custom_data") {
     save_table_code <- glue::glue(
       '
-      connector::connector_fs(path = "{path_output}") |>
-        connector::write_cnt({domain_name}, "{domain_name}.parquet")
+      adam_connector |> connector::write_cnt({domain_name}, "{domain_name}.parquet", overwrite = TRUE)
       '
     )
   }
-
   cleanup_code <- ""
   if(length(input_tables) > 0){
     input_tables <- setdiff(input_tables, "core") # Temporary solution. Core should not be visible

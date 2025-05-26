@@ -43,7 +43,8 @@ weighted_node_topo_sort <- function(edges, nodes, primary_domain = "ADSL") {
     }
 
     # Sort available nodes by weight (descending order)
-    sorted_level <- names(node_weights)[available_nodes][order(node_weights[available_nodes], decreasing = TRUE)]
+    available_names <- names(node_weights)[available_nodes]
+    sorted_level <- available_names[order(node_weights[available_nodes], decreasing = TRUE)]
 
     # Add sorted nodes to the result
     sorted_order <- c(sorted_order, sorted_level)

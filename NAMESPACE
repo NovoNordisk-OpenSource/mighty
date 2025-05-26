@@ -2,7 +2,6 @@
 
 export(add_program_init_nodes)
 export(classify_external_data_domains_2)
-export(create_consolidated_env)
 export(create_domain_initialize_nodes)
 export(enrich_with_external_dependencies)
 export(extract_sdtm_core_variables)
