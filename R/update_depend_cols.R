@@ -107,7 +107,18 @@ replace_core_with_named_domain <- function(x, ui_init) {
     # Keep non-core dependencies unchanged
     retained_dep_cols <- dep_cols_i[!is_core_dep,]
 
-    # Replace core domain with actual domain(s)
+    # Replacement of "core" references in depend_cols:
+    #   - Replace "core" domain with actual domain(s)
+    #   - Replace "core" domain_type with "temp" to indicate that the domain is
+    #     not a final ADaM domain but a temporary domain that will be replaced
+    #     with the final domain. At this point this is important to separate
+    #     external core dependencies from the internal core dependencies before
+    #     consolidating the domain initialize nodes after which point the
+    #     temporary domain types will be replaced with the actual domain type.
+    #     Example: In the ADaM spec of ADLB, if core.X and LB.X are dependencies
+    #     to a col_compute action, the replacement of "core" with the actual
+    #     core domain "LB" will mix the two dependency sources had it not been
+    #     for the temporary domain type "temp" for the internal dependency.
     if(any(is_core_dep)) {
       replaced_dep_cols <- expand.grid(
         "domain" = core_domains,

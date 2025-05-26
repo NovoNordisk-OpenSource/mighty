@@ -51,10 +51,10 @@ generate_adam_code <- function(path_ui_data,
 
   # Enrich depend_cols.
   # - For external col_echo actions: include foreign keys
-  # - For col_compute actions that inputs a core column and return the same
+  # - For col_compute actions that input a core column and return the same
   #   column in the ADaM domain: Add output columns from all other actions that
   #   have the same core column as input
-  # - replace "core" with actual domains
+  # - replace "core" with actual domains of domain type "temp"
   nodes_3 <- update_depend_cols(nodes_2, domain_keys, ui_init)
 
   # Check ADaM column dependencies
@@ -63,6 +63,8 @@ generate_adam_code <- function(path_ui_data,
   # Create an initialize action per domain that:
   #   - absorb col_copy actions
   #   - change domains of depend cols from core domain(s) to ADaM domain
+  # In addition replace "temp" domain_type with actual domain type after
+  # consolidating domain initialize nodes
   nodes_4 <- create_domain_initialize_nodes(nodes_3, ui_init)
 
   # Identify edges in the topology graph
