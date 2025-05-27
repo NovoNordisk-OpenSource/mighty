@@ -17,7 +17,8 @@ init:
     - DM: '!is.na(AGEU)'
     - DM_VACCINE: NA
   filter_global: NA
-  filter_depend_cols: NA
+  filter_depend_cols:
+    - core.AGEU
 
 column_metadata:
   - column: USUBJID

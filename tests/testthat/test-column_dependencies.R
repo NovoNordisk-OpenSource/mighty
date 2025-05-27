@@ -293,7 +293,6 @@ test_that("Global filter and domain filter incl. adsl dependencies (lower case)"
 
 })
 
-
 test_that("Check external predecessor", {
 
   # SETUP
@@ -328,7 +327,9 @@ test_that("Check external predecessor", {
 })
 
 test_that("Dependencies between actions with core dependencies", {
-browser()
+
+  skip(message = "Skip for now. Need expectations")
+
   # SETUP
   ui_path <- test_path("fixtures", "column_dependencies_adsl_07.yml")
   path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
@@ -338,6 +339,7 @@ browser()
   output_path <- withr::local_tempdir()
 
   # ACT
+
   actual <- generate_adam_code(
     path_ui_data = ui_path,
     code_component_source_files =  std_lib_path,
@@ -351,6 +353,9 @@ browser()
   write_adam_programs(dir = output_path, programs = actual$programs)
   x <- list.files(output_path, full.names = TRUE)
   do.call(file.edit, as.list(x))
+
+
+
 })
 
 
@@ -398,3 +403,4 @@ test_that("Error is triggered when multiple col_compute actions exist that input
   ) |> expect_error(regexp = "Column\\(s\\) AGE are outputted in multiple actions in domain ADSL.")
 
 })
+

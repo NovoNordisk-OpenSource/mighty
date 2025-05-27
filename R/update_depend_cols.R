@@ -43,7 +43,7 @@ update_depend_cols <- function(nodes, pk, ui_init) {
 
   # Replace "core" domain with the actual name of the core domain(s) "-tmp"
   # This makes downstream processing easier
-  x <- replace_core_with_named_domain(x, ui_init)
+  # x <- replace_core_with_named_domain(x, ui_init)
 
   return(x)
 }
@@ -83,7 +83,7 @@ add_foreign_key_as_depends_col <- function(x,
       data.table(
         column_name = c(col, col),
         domain = c(domain_i, dep_domain),
-        domain_type = c("adam", classify_external_data_domains(dep_domain))
+        domain_type = c("init", classify_external_data_domains(dep_domain))
       )
     }) |> rbindlist()
 
@@ -97,45 +97,40 @@ replace_core_with_named_domain <- function(x, ui_init) {
   for (i in seq_len(nrow(x))) {
 
     # Extract the dependency columns and domain for the current node
-    dep_cols_i <- x[["depend_cols"]][[i]]
-    domain_i <- x[["domain"]][[i]]
-    core_domains <- ui_init[[domain_i]][["core_domains"]]
 
-    # Check if any dependencies are core
-    is_core_dep <-  tolower(dep_cols_i$domain) == "core"
 
-    # Keep non-core dependencies unchanged
-    retained_dep_cols <- dep_cols_i[!is_core_dep,]
+    if (x[["type"]][[i]] == "domain_init"){
 
-    # Replacement of "core" references in depend_cols:
-    #   - Replace "core" domain with actual domain(s)
-    #   - Replace "core" domain_type with "temp" to indicate that the domain is
-    #     not a final ADaM domain but a temporary domain that will be replaced
-    #     with the final domain. At this point this is important to separate
-    #     external core dependencies from the internal core dependencies before
-    #     consolidating the domain initialize nodes after which point the
-    #     temporary domain types will be replaced with the actual domain type.
-    #     Example: In the ADaM spec of ADLB, if core.X and LB.X are dependencies
-    #     to a col_compute action, the replacement of "core" with the actual
-    #     core domain "LB" will mix the two dependency sources had it not been
-    #     for the temporary domain type "temp" for the internal dependency.
-    if(any(is_core_dep)) {
-      replaced_dep_cols <- expand.grid(
+      domain_i <- gsub("_init$", "", x[["domain"]][[i]])
+      core_domains <- ui_init[[domain_i]][["core_domains"]]
+      dep_cols_i <- x[["depend_cols"]][[i]]
+
+      updated_dep_cols <- expand.grid(
+        "column_name" = dep_cols_i$column_name,
         "domain" = core_domains,
-        "column_name" = dep_cols_i$column_name[is_core_dep],
         stringsAsFactors = FALSE
       )
-      replaced_dep_cols[["domain_type"]] = "temp"
+      updated_dep_cols[["domain_type"]] <-
+        classify_external_data_domains(updated_dep_cols[["domain"]])
+
+      x$depend_cols[[i]] <- updated_dep_cols |> data.table::as.data.table()
+
     } else {
-      replaced_dep_cols <- NULL
+
+      domain_i <- x[["domain"]][[i]]
+      domain_type_i <- classify_external_data_domains(domain_i)
+      dep_cols_i <- x$depend_cols[[i]]
+      is_core_dep <-  tolower(dep_cols_i$domain) == "core"
+
+      dep_cols_i[is_core_dep,
+                 `:=`(domain = domain_i,
+                      domain_type = "init")]
+
+      x$depend_cols[[i]] <- dep_cols_i
+
     }
-
-    # Combine retained and replaced dependency columns
-    x[["depend_cols"]][[i]] <- rbind(retained_dep_cols, replaced_dep_cols)
   }
-
   return(x)
-
 }
 
 enrich_core_compute_actions <- function(x) {

@@ -47,11 +47,11 @@ create_column_dependency_edges <- function(nodes) {
   edges <- data.table::merge.data.table(
     parents_expanded,
     children_expanded,
-    by.x = c("parent_column", "parent_column_domain"),
-    by.y = c("child_column", "child_column_domain"),
+    by.x = c("parent_column", "parent_column_domain", "parent_column_domain_type"),
+    by.y = c("child_column", "child_column_domain", "child_column_domain_type"),
     suffixes = c("", "_parent")
   ) |>
-    setnames(c("consumes_variable", "consumes_variable_domain", "node_id", "parent_node")) |>
+    setnames(c("consumes_variable", "consumes_variable_domain", "consumes_variable_domain_type","node_id", "parent_node")) |>
     data.table::setcolorder(c("parent_node", "node_id", "consumes_variable")) |>
     data.table::setkey(node_id)
 
@@ -64,14 +64,10 @@ create_column_dependency_edges <- function(nodes) {
 #' @return A data.table with expanded parent column information
 expand_parent_columns <-  function(nodes) {
   # This gives a data.table showing which columns each node depends on
-  parents_expanded <- nodes[, rbindlist(depend_cols), by = .(node_id, domain)][,-"domain_type"] |>
-    setnames(c("node_id", "domain", "parent_column", "parent_column_domain"))
+  parents_expanded <- nodes[, rbindlist(depend_cols), by = .(node_id, domain)] |>
+    setnames(c("node_id", "domain", "parent_column", "parent_column_domain", "parent_column_domain_type"))
 
-  # Need to replace "core" with domain of node
-  parents_expanded[parent_column_domain=="core", parent_column_domain:= domain]
-  parents_expanded <-  parents_expanded[,.(node_id, parent_column, parent_column_domain)]
-
-  return(parents_expanded)
+  return(parents_expanded[,.(node_id, parent_column, parent_column_domain, parent_column_domain_type)])
 }
 
 #' @title Expand child columns for each node
@@ -84,7 +80,9 @@ expand_child_columns <- function(nodes) {
   extract_child_columns <- function(x) {
     data.table::data.table(
       child_column = x$outputs[[1]],
-      child_column_domain = x$domain
+      child_column_domain = x$domain,
+      child_column_domain_type =
+        ifelse(x$type == "domain_init", "init", "adam")
     )
   }
 

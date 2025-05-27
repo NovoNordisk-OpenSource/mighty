@@ -232,7 +232,7 @@
         "row.names": {
           "type": "character",
           "attributes": {},
-          "value": ["7", "3", "1", "5", "8", "4", "2", "6"]
+          "value": ["1", "2", "3", "4", "5", "6", "7", "8"]
         },
         "class": {
           "type": "character",
@@ -385,7 +385,7 @@
         "row.names": {
           "type": "character",
           "attributes": {},
-          "value": ["1", "5", "3", "2", "6", "4"]
+          "value": ["1", "2", "3", "4", "5", "6"]
         },
         "class": {
           "type": "character",
@@ -641,7 +641,7 @@
         "row.names": {
           "type": "character",
           "attributes": {},
-          "value": ["1", "9", "5", "3", "7", "2", "10", "6", "4", "8"]
+          "value": ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]
         },
         "class": {
           "type": "character",
@@ -677,6 +677,51 @@
           "type": "character",
           "attributes": {},
           "value": ["column_name", "domain", "domain_type"]
+        },
+        "out.attrs": {
+          "type": "list",
+          "attributes": {
+            "names": {
+              "type": "character",
+              "attributes": {},
+              "value": ["dim", "dimnames"]
+            }
+          },
+          "value": [
+            {
+              "type": "integer",
+              "attributes": {
+                "names": {
+                  "type": "character",
+                  "attributes": {},
+                  "value": ["column_name", "domain"]
+                }
+              },
+              "value": [2, 1]
+            },
+            {
+              "type": "list",
+              "attributes": {
+                "names": {
+                  "type": "character",
+                  "attributes": {},
+                  "value": ["column_name", "domain"]
+                }
+              },
+              "value": [
+                {
+                  "type": "character",
+                  "attributes": {},
+                  "value": ["column_name=USUBJID", "column_name=VISITNUM"]
+                },
+                {
+                  "type": "character",
+                  "attributes": {},
+                  "value": ["domain=LB"]
+                }
+              ]
+            }
+          ]
         },
         "row.names": {
           "type": "integer",
@@ -766,7 +811,7 @@
         "row.names": {
           "type": "character",
           "attributes": {},
-          "value": ["2", "5", "3", "1", "6", "4", "8"]
+          "value": ["1", "2", "3", "4", "5", "6", "7"]
         },
         "class": {
           "type": "character",
@@ -802,6 +847,51 @@
           "type": "character",
           "attributes": {},
           "value": ["column_name", "domain", "domain_type"]
+        },
+        "out.attrs": {
+          "type": "list",
+          "attributes": {
+            "names": {
+              "type": "character",
+              "attributes": {},
+              "value": ["dim", "dimnames"]
+            }
+          },
+          "value": [
+            {
+              "type": "integer",
+              "attributes": {
+                "names": {
+                  "type": "character",
+                  "attributes": {},
+                  "value": ["column_name", "domain"]
+                }
+              },
+              "value": [2, 1]
+            },
+            {
+              "type": "list",
+              "attributes": {
+                "names": {
+                  "type": "character",
+                  "attributes": {},
+                  "value": ["column_name", "domain"]
+                }
+              },
+              "value": [
+                {
+                  "type": "character",
+                  "attributes": {},
+                  "value": ["column_name=USUBJID", "column_name=VISITNUM"]
+                },
+                {
+                  "type": "character",
+                  "attributes": {},
+                  "value": ["domain=lb"]
+                }
+              ]
+            }
+          ]
         },
         "row.names": {
           "type": "integer",
@@ -891,7 +981,7 @@
         "row.names": {
           "type": "character",
           "attributes": {},
-          "value": ["2", "5", "3", "1", "6", "4", "8"]
+          "value": ["1", "2", "3", "4", "5", "6", "7"]
         },
         "class": {
           "type": "character",
@@ -923,6 +1013,11 @@
     {
       "type": "list",
       "attributes": {
+        "names": {
+          "type": "character",
+          "attributes": {},
+          "value": ["column_name", "domain", "domain_type"]
+        },
         "row.names": {
           "type": "integer",
           "attributes": {},
@@ -932,11 +1027,6 @@
           "type": "character",
           "attributes": {},
           "value": ["data.frame"]
-        },
-        "names": {
-          "type": "character",
-          "attributes": {},
-          "value": ["column_name", "domain", "domain_type"]
         }
       },
       "value": [
@@ -953,7 +1043,7 @@
         {
           "type": "character",
           "attributes": {},
-          "value": ["adam"]
+          "value": ["init"]
         }
       ]
     }
@@ -1016,7 +1106,7 @@
         "row.names": {
           "type": "character",
           "attributes": {},
-          "value": ["5", "9", "3", "1", "7", "6", "10", "4", "2", "8", "12", "11"]
+          "value": ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"]
         },
         "class": {
           "type": "character",

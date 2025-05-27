@@ -24,6 +24,8 @@ test_that("Complex test with multiple domains and column/row operations", {
     data_connection = "pharmaverse"
   )
 
+  browser()
+
   # EXPECT ------------------------------------------------------------------
   actual$data_model |> names() |> sort() |> expect_equal(c("code_id", "depend_cols", "depend_rows", "domain", "node_id", "outputs", "parameters", "type"))
   write_adam_programs(dir = output_path, programs = actual$programs)

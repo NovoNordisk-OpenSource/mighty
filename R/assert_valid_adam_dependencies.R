@@ -44,7 +44,7 @@ assert_valid_adam_dependencies <- function(x, ui_init, domain_keys, check_cross_
   #   - ADSL in domain filter
   #   - actions within the domain
   adam_dep_by_domain <- lapply(x_by_domain, get_all_adam_dependencies,
-                               adsl_filter_dep_by_domain = adsl_filter_dep_by_domain)
+                               adsl_filter_dep_by_domain)
 
   # Identify outputs
   outputs <- prefix_outputs_with_domain_for_non_row_nodes(x)
@@ -140,11 +140,11 @@ get_adsl_filter_dependencies <- function(nm, ui_init, domain_keys) {
 #'   (domain.column_name) that represent dependencies from ADaM domains
 get_adam_dependencies_from_actions <- function(domain_table, depend_col) {
   # Filter for dependencies from ADaM domains
-  adam_deps <- depend_col[grepl("^AD", domain, ignore.case = TRUE)]
+  adam_deps <- depend_col[domain == domain_table,]
   if (nrow(adam_deps) == 0) {
     return(character(0))
   }
-  from_adam_domains <- adam_deps[, paste0(domain, ".", column_name)]
+  adam_deps[, paste0(domain, ".", column_name)]
 }
 
 #' Get All ADaM Dependencies for a Domain

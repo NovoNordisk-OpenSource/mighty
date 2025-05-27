@@ -2,35 +2,28 @@
 #' @description Adds new nodes representing the domain initialization steps, and
 #' removes the corresponding nodes that represent the SDTM core variables
 #' @param nodes
-#' @param domain_init_data
 #'
 #' @return
 #' @export
 #'
 #' @examples
 
-create_domain_initialize_nodes <- function(nodes, domain_init_data) {
+create_domain_initialize_nodes <- function(nodes) {
   nodes_split <- split(nodes, by = "domain")
 
   # For each domain: Identify the core variables for col_copy/col_mutate nodes
   # core_vars <- nodes_split |>
   #   lapply(extract_core_dependency_columns, domain_init_data = domain_init_data)
-
   core_vars <- lapply(nodes_split, function(x) {
-    domain_i <- x$domain[[1]]
-    core_domains <- domain_init_data[[domain_i]]$core_domains
     lapply(x$depend_cols, function(y) {
-      out <- y[domain %in% core_domains & domain_type == "temp"]
-      out$domain_type <- classify_external_data_domains(out$domain)
-      out
+      y[domain == "core",]
     }) |> rbindlist() |> unique()
   })
 
   # Create a domain_init action for each domain
   domain_init_nodes <- purrr::imap(core_vars, #lapply(core_vars, rbindlist),
                                    create_domain_init_node_i,
-                                   nodes,
-                                   domain_init_data) |>
+                                   nodes) |>
     rbindlist()
 
   # Remove col_copy nodes because these are absorbed by domain_init nodes
@@ -45,11 +38,12 @@ create_domain_initialize_nodes <- function(nodes, domain_init_data) {
 
   #nodes_subset_new <- replace_core_domain_with_adam_for_mutate_nodes(nodes_subset = nodes_subset, domain_init_data = domain_init_data)
 
-  nodes_subset_updated <- replace_core_tmp_domain_with_adam(nodes_subset = nodes_subset, domain_init_data = domain_init_data)
+  # nodes_subset_updated <- replace_core_tmp_domain_with_adam(nodes_subset = nodes_subset, domain_init_data = domain_init_data)
 
   # Return the updated nodes with domain_init nodes
   # return(rbind(nodes_subset, domain_init_nodes))
-  return(rbind(nodes_subset_updated, domain_init_nodes))
+  # return(rbind(nodes_subset_updated, domain_init_nodes))
+  return(rbind(nodes_subset, domain_init_nodes))
 }
 
 
@@ -122,8 +116,7 @@ filter_core_domain_dependencies <- function(y, core_domains) {
 
 create_domain_init_node_i <- function(core_vars_domain_i,
                                       nm,
-                                      nodes,
-                                      domain_init_data) {
+                                      nodes) {
   new_node_i <- data.table::data.table(matrix(ncol = ncol(nodes), nrow = 1)) |>
     data.table::setnames(names(nodes))
 
@@ -134,8 +127,8 @@ create_domain_init_node_i <- function(core_vars_domain_i,
     parameters = NA_character_,
     type = "domain_init",
     depend_cols = list(core_vars_domain_i),
-    outputs = list(unique(core_vars_domain_i$column_name))
-  )][, node_id := paste0(domain, "-", "domain_init")]
+    outputs = list(core_vars_domain_i$column_name)
+  )][, node_id := paste0(nm, "-", "domain_init")]
 }
 
 #' Replace "core" domains with ADaM "self" domain for col_mutate nodes
