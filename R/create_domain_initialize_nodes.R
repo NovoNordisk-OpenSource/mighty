@@ -13,7 +13,6 @@ create_domain_initialize_nodes <- function(nodes) {
 
   # For each domain: Identify the core variables for col_copy/col_mutate nodes
   # core_vars <- nodes_split |>
-  #   lapply(extract_core_dependency_columns, domain_init_data = domain_init_data)
   core_vars <- lapply(nodes_split, function(x) {
     lapply(x$depend_cols, function(y) {
       y[domain == "core",]
@@ -21,29 +20,33 @@ create_domain_initialize_nodes <- function(nodes) {
   })
 
   # Create a domain_init action for each domain
-  domain_init_nodes <- purrr::imap(core_vars, #lapply(core_vars, rbindlist),
+  domain_init_nodes <- purrr::imap(core_vars,
                                    create_domain_init_node_i,
                                    nodes) |>
     rbindlist()
 
-  # Remove col_copy nodes because these are absorbed by domain_init nodes
-  nodes_subset <- nodes[type!="col_copy", ]
+  # Remove col_copy actions because these are absorbed by domain_init nodes
+  is_absorbed_by_init <- nodes$type == "col_copy"
+  nodes_retained <- nodes[!is_absorbed_by_init, ]
 
-  # col_mutate nodes are not absorbed by the domain_init nodes. However, the
-  # dependencies specified in the col_mutate nodes should now point to the variables
-  # outputted by the domain init node, not the original "core" domain(s).
+  # Identify what columns are absorbed bu the domain_init actions
+  nodes_absorbed <- nodes[is_absorbed_by_init, c("domain", "outputs")]
+  nodes_absorbed_list <- paste0(nodes_absorbed$domain, ".", nodes_absorbed$outputs)
 
-  # The update is done by replacing the domain
-  # name in the depend_cols with the ADaM domain name.
+  # For the retained actions, redirect any depend_cols that are absorbed by the
+  # domain_init actions to the domain_init action
+  nodes_retained$depend_cols <- lapply(nodes_retained$depend_cols, function(x) {
+    redirect_to_init <- paste0(x$domain, ".", x$column_name) %in% nodes_absorbed_list
 
-  #nodes_subset_new <- replace_core_domain_with_adam_for_mutate_nodes(nodes_subset = nodes_subset, domain_init_data = domain_init_data)
+    if (any(redirect_to_init)) {
+      # If the node is absorbed by a domain_init node, redirect the dependencies
+      x$domain_type[redirect_to_init] <- "init"
+    }
+    x
+  })
 
-  # nodes_subset_updated <- replace_core_tmp_domain_with_adam(nodes_subset = nodes_subset, domain_init_data = domain_init_data)
-
-  # Return the updated nodes with domain_init nodes
-  # return(rbind(nodes_subset, domain_init_nodes))
-  # return(rbind(nodes_subset_updated, domain_init_nodes))
-  return(rbind(nodes_subset, domain_init_nodes))
+  # Return the collection of retained actions and domain_init actions
+  return(rbind(nodes_retained, domain_init_nodes))
 }
 
 
