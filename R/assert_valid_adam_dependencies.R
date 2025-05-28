@@ -140,7 +140,7 @@ get_adsl_filter_dependencies <- function(nm, ui_init, domain_keys) {
 #'   (domain.column_name) that represent dependencies from ADaM domains
 get_adam_dependencies_from_actions <- function(domain_table, depend_col) {
   # Filter for dependencies from ADaM domains
-  adam_deps <- depend_col[domain == domain_table,]
+  adam_deps <- depend_col[domain_type %in% c("adam", "init"),]
   if (nrow(adam_deps) == 0) {
     return(character(0))
   }
