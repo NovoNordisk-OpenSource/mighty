@@ -1,0 +1,42 @@
+metadata:
+#  testthat_fixtures_root: !!expr file.path(system("git rev-parse --show-toplevel", intern = TRUE), testthat::test_path(), "fixtures")
+  testthat_fixtures_root: !!expr file.path(getwd(), testthat::test_path(), "fixtures")
+#  testthat_fixtures_root: !!expr paste0(testthat::test_path(), "/fixtures")
+#  testthat_fixtures_root: !!expr paste0(getwd(), "/tests/testthat/fixtures")
+  testdata: "data"
+  trial: "toolpool"
+  project: "general"
+  instance: "bos/tfl_programming"
+  root_path: "~/projstat"
+datasources:
+  - name: "adam"
+    backend:
+        type: "connector::connector_fs"
+        path: "{metadata.testthat_fixtures_root}/{metadata.testdata}/adam"
+  - name: "sdtm"
+    backend:
+        type: "connector::connector_fs"
+        path: "{metadata.testthat_fixtures_root}/{metadata.testdata}/sdtm"
+  - name: "metadata"
+    backend:
+        type: "connector::connector_fs"
+        path: "{metadata.testthat_fixtures_root}/{metadata.testdata}/metadata"
+  - name: "tfl_adam"
+    backend:
+        type: "connector::connector_fs"
+        path: "{metadata.root_path}/{metadata.project}/{metadata.trial}/{metadata.instance}/data/adam"
+  - name: "tfl_sdtm"
+    backend:
+        type: "connector::connector_fs"
+        path: "{metadata.root_path}/{metadata.project}/{metadata.trial}/{metadata.instance}/data/sdtm"
+  - name: "tfl_metadata"
+    backend:
+        type: "connector::connector_fs"
+        path: "{metadata.root_path}/{metadata.project}/{metadata.trial}/{metadata.instance}/data/metadata"
+
+# db_tfl <- connector::connect(config = test_path("fixtures", "connector_config.yml"))$tfl_sdtm
+# db_tfl$read_cnt("dm")
+
+#adam_connector <- connector::connect(config = "~/Repos/BOS/mighty/tests/testthat/fixtures/connector_config.yml")
+# db_test_sdtm <- connector::connect(config = test_path("fixtures", "connector_config.yml"))$sdtm
+# db_test_sdtm$read_cnt("dm")
