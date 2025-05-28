@@ -3,7 +3,7 @@ test_that("Can read code components from another package", {
   ui_path <- c(test_path("fixtures", "parameters_with_code.yml"))
   path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
   domain_keys_path <- system.file("standards", "domain_keys.yml", package = "mighty")
-  std_lib_path <- c(testthat::test_path("fixtures", "parameters_with_code.R"))
+  std_lib_path <- c(testthat::test_path("fixtures", "parse_from_pkg.R"))
   output_path <- withr::local_tempdir()
 
   # Load from fixture to eventually write into tmp pkg or tmp dir

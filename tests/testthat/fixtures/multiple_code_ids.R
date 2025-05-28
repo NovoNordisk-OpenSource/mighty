@@ -1,62 +1,42 @@
-#' fn_AB
-#'
-#' @section metadata:
-#' ```yaml
-#' depend_cols:
-#'   - USUBJID
-#' outputs:
-#'   - A
-#'   - B
-#' type: col_compute
-#' ```
-#'
+#' Fn AB
+#' @param .self `data.frame` Input data set
+#' @type col_compute
+#' @depends .self USUBJID
+#' @outputs A
+#' @outputs B
+#' @returns `.self`
 fn_AB <- function(.self, params = list(param_1=NULL, param_2 = NULL)){
   print("hello world")
 }
 
 
-#' fn_C
-#'
-#' @section metadata:
-#' ```yaml
-#' depend_cols:
-#'   - USUBJID
-#' outputs:
-#'   - C
-#' type: col_compute
-#' ```
-#'
+#' Fn C
+#' @param .self `data.frame` Input data set
+#' @type col_compute
+#' @depends .self USUBJID
+#' @outputs C
+#' @returns `.self`
 fn_C <- function(.self, params = list(param_1=NULL)){
   print("hello world")
 }
 
 
-#' fn_D
-#'
-#' @section metadata:
-#' ```yaml
-#' depend_cols:
-#'   - USUBJID
-#' outputs:
-#'   - C
-#' type: col_compute
-#' ```
-#'
+#' Fn D
+#' @param .self `data.frame` Input data set
+#' @type col_compute
+#' @depends .self USUBJID
+#' @outputs C
+#' @returns `.self`
 fn_D <- function(.self, params = list(param_1=NULL)){
   print("hello world")
 }
 
-#' fn_E
-#'
-#' @section metadata:
-#' ```yaml
-#' depend_cols:
-#'   - USUBJID
-#' outputs:
-#'   - C
-#' type: col_compute
-#' ```
-#'
+#' Fn E
+#' @param .self `data.frame` Input data set
+#' @type col_compute
+#' @depends .self USUBJID
+#' @outputs C
+#' @returns `.self`
 fn_E <- function(.self, params = list(param_1=NULL)){
   print("hello world")
 }

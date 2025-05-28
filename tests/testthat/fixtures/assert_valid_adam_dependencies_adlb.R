@@ -1,15 +1,10 @@
-#' lbtest2
-#'
-#' @section metadata:
-#' ```yaml
-#' depend_cols:
-#'   - LBTEST
-#' outputs:
-#'   - LBTEST2
-#' type: col_compute
-#' ```
-#'
-lbtest2 <- function(.self) {
+#' Lbtest2
+#' @param .self `data.frame` Input data set
+#' @type col_compute
+#' @depends .self LBTEST
+#' @outputs LBTEST2
+#' @returns `.self`
+lbtest2 <-  function(.self) {
   .self <- .self |>
     dplyr::mutate(
       LBTEST2 = dplyr::case_when(
@@ -19,19 +14,14 @@ lbtest2 <- function(.self) {
   return(.self)
 }
 
-#' lbtest3
-#'
-#' @section metadata:
-#' ```yaml
-#' depend_cols:
-#'   - LBTEST
-#' outputs:
-#'   - LBTEST3
-#'   - LBTEST3_FLG
-#' type: col_compute
-#' ```
-#'
-lbtest3 <- function(.self) {
+#' Lbtest3
+#' @param .self `data.frame` Input data set
+#' @type col_compute
+#' @depends .self LBTEST
+#' @outputs LBTEST3
+#' @outputs LBTEST3_FLG
+#' @returns `.self`
+lbtest3 <-  function(.self) {
   .self <- .self |>
     dplyr::mutate(
       LBTEST3 = dplyr::case_when(
@@ -45,4 +35,3 @@ lbtest3 <- function(.self) {
       ))
   return(.self)
 }
-

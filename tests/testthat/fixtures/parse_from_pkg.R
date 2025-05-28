@@ -2,6 +2,7 @@
 #' @param .self `data.frame` Input data set
 #' @type derivation
 #' @depends .self USUBJID
+#' @depends LB USUBJID
 #' @outputs A
 #' @outputs B
 #' @returns `.self`
