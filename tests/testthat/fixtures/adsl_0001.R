@@ -209,36 +209,26 @@ newfl_03 <-   function(.self) {
   return(.self)
 }
 
-#' age_redefined_01
-#'
-#' @section metadata:
-#' ```yaml
-#' depend_cols:
-#'   - core.AGE
-#'   - core.SEX
-#'   - RACE
-#' outputs:
-#'   - AGE
-#' type: col_compute
-#' ```
-#'
+#'#' age_redefined_01
+#' @param .self `data.frame` Input data set
+#' @type col_compute
+#' @depends core AGE
+#' @depends core SEX
+#' @depends .self RACE
+#' @outputs AGE
+#' @returns `.self`
 age_redefined_01 <- function(.self) {
   .self <- .self |>
     dplyr::mutate(AGE = ifelse(!is.na(SEX) & !is.na(RACE), AGE, 0))
   return(.self)
 }
 
-#' age_redefined_02
-#'
-#' @section metadata:
-#' ```yaml
-#' depend_cols:
-#'   - core.AGE
-#' outputs:
-#'   - AGE
-#' type: col_compute
-#' ```
-#'
+#'#' age_redefined_02
+#' @param .self `data.frame` Input data set
+#' @type col_compute
+#' @depends core AGE
+#' @outputs AGE
+#' @returns `.self`
 age_redefined_02 <- function(.self) {
   .self <- .self |>
     dplyr::mutate(AGE = AGE + 1)
@@ -246,16 +236,11 @@ age_redefined_02 <- function(.self) {
 }
 
 #' age2_01
-#'
-#' @section metadata:
-#' ```yaml
-#' depend_cols:
-#'   - core.AGE
-#' outputs:
-#'   - AGE2
-#' type: col_compute
-#' ```
-#'
+#' @param .self `data.frame` Input data set
+#' @type col_compute
+#' @depends core AGE
+#' @outputs AGE2
+#' @returns `.self`
 age2_01 <- function(.self) {
   .self <- .self |>
     dplyr::mutate(AGE2 = 10*AGE)
@@ -263,16 +248,11 @@ age2_01 <- function(.self) {
 }
 
 #' age3_01
-#'
-#' @section metadata:
-#' ```yaml
-#' depend_cols:
-#'   - AGE
-#' outputs:
-#'   - AGE3
-#' type: col_compute
-#' ```
-#'
+#' @param .self `data.frame` Input data set
+#' @type col_compute
+#' @depends .self AGE
+#' @outputs AGE3
+#' @returns `.self`
 age3_01 <- function(.self) {
   .self <- .self |>
     dplyr::mutate(AGE3 = AGE - 1)
