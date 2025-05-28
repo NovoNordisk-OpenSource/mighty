@@ -13,11 +13,14 @@ generate_write_data <- function(domain_name,
     file_path <- file.path(path_output, paste0(domain_name, ".R"))
     save_table_code <- glue::glue("saveRDS(object = {domain_name}, file = \"{file_path}\")")
   }
-  # Assumption: adamconnector setup earlier i.e. in generate_external_data_code
-  if (data_connection == "connector" | data_connection == "custom_data") {
+  # Assumption: cnt (Connector) object setup earlier i.e. in
+  # generate_external_data_code
+  # TODO: the parquet file format is chosen by default. Should there be a
+  # setting e.g. in the trial_metadata config file to choose file format?
+  else {
     save_table_code <- glue::glue(
       '
-      adam_connector |> connector::write_cnt({domain_name}, "{domain_name}.parquet", overwrite = TRUE)
+      cnt$adam$write_cnt({domain_name}, "{domain_name}.parquet", overwrite = TRUE)
       '
     )
   }

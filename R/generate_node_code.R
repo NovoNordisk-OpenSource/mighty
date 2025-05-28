@@ -6,8 +6,8 @@
 #' @param ui_data
 #' @param trial_metadata
 #' @param sdtm_dataset_list
-#' @param adam_dataset_list
 #' @param data_connection
+#' @param connector_config_path
 #' @param path_output
 #'
 #' @return
@@ -20,8 +20,8 @@ generate_node_code <- function(nodes_program_i,
                                ui_data,
                                trial_metadata,
                                sdtm_dataset_list,
-                               adam_dataset_list,
                                data_connection,
+                               connector_config_path,
                                path_output) {
   program <- list()
 
@@ -34,8 +34,8 @@ generate_node_code <- function(nodes_program_i,
         external_deps,
         trial_metadata,
         sdtm_dataset_list,
-        adam_dataset_list,
         data_connection,
+        connector_config_path,
         path_output = path_output
       ) |> paste0(collapse = "\n\n")
 

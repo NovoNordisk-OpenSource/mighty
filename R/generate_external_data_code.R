@@ -3,9 +3,9 @@
 #' @param payload
 #' @param trial_metadata
 #' @param sdtm_dataset_list
-#' @param adam_dataset_list
 #' @param data_connection
 #' @param custom_data_path
+#' @param connector_config_path
 #'
 #' @return
 #' @export
@@ -14,8 +14,8 @@
 generate_external_data_code <- function(payload,
                                         trial_metadata,
                                         sdtm_dataset_list,
-                                        adam_dataset_list,
                                         data_connection,
+                                        connector_config_path,
                                         path_output) {
   # for each element of payload, apply the following logic
   by_domain <- split(payload, payload$domain)
@@ -26,16 +26,13 @@ generate_external_data_code <- function(payload,
       purrr::imap(by_domain, for_each_domain_pharmaverse, path_output = path_output)
     data_load_code <- Filter(Negate(is.null), data_load_code)
   }
-  if (data_connection == "connector" | data_connection == "custom_data") {
+  else {
     connector_setup <- glue::glue(
-      "adam_connector <- connector::connector_fs(path='", get_data_connector_path("adam", trial_metadata, data_connection, path_output), "')\n",
-      "sdtm_connector <- connector::connector_fs(path='", get_data_connector_path("sdtm", trial_metadata, data_connection, path_output), "')\n",
-      "md_connector <- connector::connector_fs(path='", get_data_connector_path("metadata", trial_metadata, data_connection, path_output), "')\n")
+      "cnt <- connector::connect(config = '", path_output, "/_connector.yml') \n")
     data_load_code <-
       purrr::imap(by_domain,
                   for_each_domain_connector,
-                  sdtm_dataset_list,
-                  adam_dataset_list)
+                  sdtm_dataset_list)
 
   }
 
@@ -48,79 +45,39 @@ generate_external_data_code <- function(payload,
   c(block_header, connector_setup, data_load_code)
 }
 
-external_data_stdm <- function(sdtm_main,
-                               keep_vars,
-                               sdtm_dataset_list,
-                               file_extension = c("parquet", "sas7bdat")) {
-  sdtm_main_ext <- paste(sdtm_main, file_extension[1], sep = ".")
-  parquet_exists <- tolower(sdtm_main_ext) %in% tolower(sdtm_dataset_list)
-
-  if (!parquet_exists) {
-    sdtm_main_ext <- paste(sdtm_main, file_extension[2], sep = ".")
+external_data <- function(data_type = c("sdtm", "adam", "metadata"),
+                          domain,
+                          keep_vars,
+                          dataset_list = NULL) {
+  supp_exists <- FALSE
+  if (data_type == "sdtm" && !is.null(dataset_list)) {
+    supp_dataset_name <- paste0('supp', domain)
+    supp_exists <- supp_dataset_name %in% dataset_list
   }
 
-  supp_dataset_name <- paste0('supp', sdtm_main_ext)
-  supp_exists <- supp_dataset_name %in% sdtm_dataset_list
-
-  if (supp_exists) {
-    return(
-      glue::glue(
-        "{sdtm_main}_supp <- sdtm_connector |> connector::read_cnt('{supp_dataset_name}')
-  {sdtm_main} <- sdtm_connector |>
-    connector::read_cnt('{sdtm_main_ext}') |>
-    mighty::sdtm_add_supp({sdtm_main}_supp) |>
-    dplyr::select({keep_vars})
-    rm({sdtm_main}_supp)"
-      )
-    )
-  }
-
-  return(
-    glue::glue(
-      "{sdtm_main} <- sdtm_connector |>
-    connector::read_cnt('{sdtm_main_ext}') |>
-    dplyr::select({keep_vars})"
-    )
-  )
-}
-
-external_data_adam <- function(adam_domain,
-                               keep_vars,
-                               adam_dataset_list,
-                               file_extension = c("parquet", "sas7bdat")) {
-  adam_domain_ext <- make_adam_domain_ext(adam_domain, file_extension, adam_dataset_list)
   glue::glue(
-    "{adam_domain} <- adam_connector |>
-    connector::read_cnt('{adam_domain_ext}') |>
-    dplyr::select({keep_vars})"
-  )
-}
-
-external_data_md <- function(md_domain, keep_vars, file_extension = "sas7bdat") {
-  md_domain_ext <- paste(md_domain, file_extension, sep = ".")
-  glue::glue(
-    "{md_domain} <- md_connector |>
-    connector::read_cnt('{md_domain_ext}') |>
-    dplyr::select({keep_vars})"
+    ifelse(supp_exists, "{domain}_supp <- cnt${data_type}$read_cnt('{supp_dataset_name}')", ""),
+    "{domain} <- cnt${data_type}$read_cnt('{domain}') |> ",
+    ifelse(supp_exists, "mighty::sdtm_add_supp({sdtm_main}_supp) |>", ""),
+    "dplyr::select({keep_vars})",
+    ifelse(supp_exists, "rm({domain}_supp)", "")
   )
 }
 
 for_each_domain_connector <- function(i,
                                       domain_name,
-                                      sdtm_dataset_list,
-                                      adam_dataset_list) {
+                                      sdtm_dataset_list) {
   keep_vars <- i[["column_name"]] |>
     toupper() |>
     unique() |>
     sort() |>
     paste0(collapse = ", ")
 
-
   data_load_code <- switch(
     i$domain_type[[1]],
-    sdtm = external_data_stdm(domain_name, keep_vars, sdtm_dataset_list),
-    adam = external_data_adam(domain_name, keep_vars, adam_dataset_list),
-    md = external_data_md(domain_name, keep_vars)
+    sdtm = external_data("sdtm", domain_name, keep_vars, sdtm_dataset_list),
+    adam = external_data("adam", domain_name, keep_vars),
+    md = external_data("metadata", domain_name, keep_vars)
   )
 }
 

@@ -6,6 +6,8 @@
 #' @param std_library_path
 #' @param trial_metadata
 #' @param ui_data
+#' @param data_connection
+#' @param connector_config_path
 #' @param path_output When data_connection is "pharmaverse" the generated
 #'   programs need to point to a location where the outputs are stored
 #' @param data_connection
@@ -21,6 +23,7 @@ generate_program <- function(program_order,
                              trial_metadata,
                              ui_data,
                              data_connection,
+                             connector_config_path = NULL,
                              path_output = NULL) {
   # Merge the program_id and rank column from program_order onto nodes
   # data.table to get the program_id for each node. Then sort the nodes by
@@ -34,10 +37,7 @@ generate_program <- function(program_order,
                                    external_dependencies_by_program)], nodes[, !..keep_only_from_program_order], by = "node_id", all.x = TRUE) |>
     setorder(program_id, rank)
   # Create clean, empty environment to store standard components
-
   sdtm_dataset_list <- list_all_(type = "sdtm", trial_metadata, data_connection, path_output)
-  adam_dataset_list <- list_all_(type = "adam", trial_metadata, data_connection, path_output)
-
   nodes_split <- split(nodes_and_programs, by = "program_id")
 
   programs <- lapply(
@@ -48,8 +48,8 @@ generate_program <- function(program_order,
     ui_data,
     trial_metadata,
     sdtm_dataset_list,
-    adam_dataset_list,
     data_connection,
+    connector_config_path,
     path_output
   )
 
