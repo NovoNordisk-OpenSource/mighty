@@ -2,7 +2,8 @@
 % Please edit documentation in R/parse_code_components_metadata.R
 \name{parse_code_components_metadata}
 \alias{parse_code_components_metadata}
-\title{Parses parent and children ADaM columns from functions' Roxygen header}
+\title{Extract column metadata from {mighty} code components across packages and
+source files}
 \usage{
 parse_code_components_metadata(
   pkgs = NULL,
@@ -11,10 +12,33 @@ parse_code_components_metadata(
 )
 }
 \arguments{
-\item{function_names}{}
+\item{pkgs}{Character vector of package names to extract metadata from}
+
+\item{source_files}{Character vector of file paths to R source files}
+
+\item{function_names}{Character vector of function names to extract metadata
+for}
+}
+\value{
+A list where each element is named after a function and contains:
+\item{depend_cols}{Character vector of columns the function depends on}
+\item{outputs}{Character vector of columns the function creates or modifies}
+\item{type}{The function type (e.g., "col_compute" or "row_compute")}
 }
 \description{
-The metadata regarding the ADaM columns each function requires to be
-available to it are stored in the functions roxygen header, along with the
-specification of which ADaM column(s) the function modifies/creates.
+Retrieves metadata about ADaM columns that functions depend on
+and produce by parsing Roxygen documentation from either installed packages
+or R source files.
+}
+\details{
+Serves as the main entry point for extracting column dependency
+and output information from R functions. It can extract this metadata from
+two sources:
+\enumerate{
+\item Installed R packages (using their compiled documentation)
+\item R source files (parsing the Roxygen comments directly)
+}
+
+The function is needed to transform the information required for constructing
+the topology into a format that mighty can ingest
 }

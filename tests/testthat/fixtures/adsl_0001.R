@@ -1,15 +1,10 @@
-#' arm_group_01
-#'
-#' @section metadata:
-#' ```yaml
-#' depend_cols:
-#'   - PLANNED_ARM
-#' outputs:
-#'   - ARM_GRP1
-#' type: col_compute
-#' ```
-#'
-arm_group_01 <-  function(.self) {
+#' Arm group 01
+#' @param .self `data.frame` Input data set
+#' @type col_compute
+#' @depends .self PLANNED_ARM
+#' @outputs ARM_GRP1
+#' @returns `.self`
+arm_group_01 <-   function(.self) {
   .self <- .self |>
     dplyr::mutate(ARM_GRP1 = ifelse(
       PLANNED_ARM %in% c("Placebo", "Screen Failure"),
@@ -19,18 +14,13 @@ arm_group_01 <-  function(.self) {
   return(.self)
 }
 
-#' arm_category_01
-#'
-#' @section metadata:
-#' ```yaml
-#' depend_cols:
-#'   - ARM_GRP1
-#' outputs:
-#'   - ARM_CAT1
-#' type: col_compute
-#' ```
-#'
-arm_category_01 <-  function(.self) {
+#' Arm category 01
+#' @param .self `data.frame` Input data set
+#' @type col_compute
+#' @depends .self ARM_GRP1
+#' @outputs ARM_CAT1
+#' @returns `.self`
+arm_category_01 <-   function(.self) {
   .self <- .self |>
     dplyr::mutate(ARM_CAT1 = ifelse(
       ARM_GRP1 ==  "Placebo or Screen Failure",
@@ -40,19 +30,14 @@ arm_category_01 <-  function(.self) {
   return(.self)
 }
 
-#' arm_match_01
-#'
-#' @section metadata:
-#' ```yaml
-#' depend_cols:
-#'   - PLANNED_ARM
-#'   - ACTARM
-#' outputs:
-#'   - ARM_MATCH
-#' type: col_compute
-#' ```
-#'
-arm_match_01 <-  function(.self) {
+#' Arm match 01
+#' @param .self `data.frame` Input data set
+#' @type col_compute
+#' @depends .self PLANNED_ARM
+#' @depends .self ACTARM
+#' @outputs ARM_MATCH
+#' @returns `.self`
+arm_match_01 <-   function(.self) {
   .self <- .self |>
     dplyr::mutate(ARM_MATCH = ifelse(
       PLANNED_ARM ==  ACTARM, "Match", "Mismatch"
@@ -60,71 +45,51 @@ arm_match_01 <-  function(.self) {
   return(.self)
 }
 
-#' age_crop_01
-#'
-#' @section metadata:
-#' ```yaml
-#' depend_cols:
-#'   - AGE
-#' outputs:
-#'   - AGE2
-#' type: col_compute
-#' ```
-#'
-age_crop_01 <-  function(.self) {
+#' Age crop 01
+#' @param .self `data.frame` Input data set
+#' @type col_compute
+#' @depends .self AGE
+#' @outputs AGE2
+#' @returns `.self`
+age_crop_01 <-   function(.self) {
   .self <- .self |>
     dplyr::mutate(AGE2 = ifelse(AGE>80, 80, AGE))
   return(.self)
 }
 
-#' age_diff_01
-#'
-#' @section metadata:
-#' ```yaml
-#' depend_cols:
-#'   - AGE
-#'   - AGE2
-#' outputs:
-#'   - AGE_DIFF1
-#' type: col_compute
-#' ```
-#'
-age_diff_01 <-  function(.self) {
+#' Age diff 01
+#' @param .self `data.frame` Input data set
+#' @type col_compute
+#' @depends .self AGE
+#' @depends .self AGE2
+#' @outputs AGE_DIFF1
+#' @returns `.self`
+age_diff_01 <-   function(.self) {
   .self <- .self |>
     dplyr::mutate(AGE_DIFF1 = AGE-AGE2)
   return(.self)
 }
 
-#' age_diff_02
-#'
-#' @section metadata:
-#' ```yaml
-#' depend_cols:
-#'   - AGE_DIFF1
-#'   - PLANNED_ARM
-#' outputs:
-#'   - AGE_DIFF2
-#' type: col_compute
-#' ```
-#'
-age_diff_02 <-  function(.self) {
+#' Age diff 02
+#' @param .self `data.frame` Input data set
+#' @type col_compute
+#' @depends .self AGE_DIFF1
+#' @depends .self PLANNED_ARM
+#' @outputs AGE_DIFF2
+#' @returns `.self`
+age_diff_02 <-   function(.self) {
   .self <- .self |>
     dplyr::mutate(AGE_DIFF2 = ifelse(PLANNED_ARM != "Placebo", AGE_DIFF1, NA))
   return(.self)
 }
 
-#' age_group_01
-#'
-#' @section metadata:
-#' ```yaml
-#' depend_cols:
-#'   - AGE2
-#' outputs:
-#'   - AGE_GRP1
-#' type: col_compute
-#' ```
-#'
-age_group_01 <-  function(.self, params = list(cut_points = c(25, 50))) {
+#' Age group 01
+#' @param .self `data.frame` Input data set
+#' @type col_compute
+#' @depends .self AGE2
+#' @outputs AGE_GRP1
+#' @returns `.self`
+age_group_01 <-   function(.self, params = list(cut_points = c(25, 50))) {
   .self <- .self |>
     dplyr::mutate(AGE_GRP1 = cut(
       AGE2,
@@ -136,37 +101,27 @@ age_group_01 <-  function(.self, params = list(cut_points = c(25, 50))) {
   return(.self)
 }
 
-#' race_x_country_01
-#'
-#' @section metadata:
-#' ```yaml
-#' depend_cols:
-#'   - RACE
-#'   - COUNTRY
-#' outputs:
-#'   - RACE_COUNTRY
-#' type: col_compute
-#' ```
-#'
-race_x_country_01 <-  function(.self) {
+#' Race x country 01
+#' @param .self `data.frame` Input data set
+#' @type col_compute
+#' @depends .self RACE
+#' @depends .self COUNTRY
+#' @outputs RACE_COUNTRY
+#' @returns `.self`
+race_x_country_01 <-   function(.self) {
   .self <- .self |>
     dplyr::mutate(RACE_COUNTRY = paste0(RACE, "-", COUNTRY))
   return(.self)
 }
 
-#' arm_01
-#'
-#' @section metadata:
-#' ```yaml
-#' depend_cols:
-#'   - PLANNED_ARM
-#'   - USUBJID
-#' outputs:
-#'   - NEW_ARM
-#' type: col_compute
-#' ```
-#'
-arm_01 <-  function(.self) {
+#' Arm 01
+#' @param .self `data.frame` Input data set
+#' @type col_compute
+#' @depends .self PLANNED_ARM
+#' @depends .self USUBJID
+#' @outputs NEW_ARM
+#' @returns `.self`
+arm_01 <-   function(.self) {
   .self <- .self |>
     dplyr::mutate(NEW_ARM = ifelse(
       USUBJID == "01-701-1015", NA, PLANNED_ARM)
@@ -174,20 +129,15 @@ arm_01 <-  function(.self) {
   return(.self)
 }
 
-#' min_aval_01
-#'
-#' @section metadata:
-#' ```yaml
-#' depend_cols:
-#'   - USUBJID
-#'   - ADLB.USUBJID
-#'   - ADLB.AVAL
-#' outputs:
-#'   - MIN_AVAL
-#' type: col_compute
-#' ```
-#'
-min_aval_01 <-  function(.self, ADLB) {
+#' Min aval 01
+#' @param .self `data.frame` Input data set
+#' @type col_compute
+#' @depends .self USUBJID
+#' @depends ADLB USUBJID
+#' @depends ADLB AVAL
+#' @outputs MIN_AVAL
+#' @returns `.self`
+min_aval_01 <-   function(.self, ADLB) {
   # Extract the minimum AVAL value for each SUBJID
   .self <- .self |>
     dplyr::left_join(
@@ -201,21 +151,16 @@ min_aval_01 <-  function(.self, ADLB) {
   return(.self)
 }
 
-#' newfl_01
-#'
-#' @section metadata:
-#' ```yaml
-#' depend_cols:
-#'   - DTHFL
-#'   - PLANNED_ARM
-#'   - AGE_DIFF1
-#' outputs:
-#'   - NEWFL01
-#'   - NEWREA01
-#' type: col_compute
-#' ```
-#'
-newfl_01 <-  function(.self) {
+#' Newfl 01
+#' @param .self `data.frame` Input data set
+#' @type col_compute
+#' @depends .self DTHFL
+#' @depends .self PLANNED_ARM
+#' @depends .self AGE_DIFF1
+#' @outputs NEWFL01
+#' @outputs NEWREA01
+#' @returns `.self`
+newfl_01 <-   function(.self) {
   # Extract the minimum AVAL value for each SUBJID
   .self <- .self |> dplyr::mutate(
     NEWFL01 = ifelse(
@@ -226,47 +171,37 @@ newfl_01 <-  function(.self) {
   return(.self)
 }
 
-#' newfl_02
-#'
-#' @section metadata:
-#' ```yaml
-#' depend_cols:
-#'   - USUBJID
-#'   - COUNTRY
-#'   - ARM_MATCH
-#'   - ADLB.USUBJID
-#'   - ADLB.LBTEST
-#' outputs:
-#'   - NEWFL02
-#' type: col_compute
-#' ```
-#'
-newfl_02 <-  function(.self, ADLB) {
+#' Newfl 02
+#' @param .self `data.frame` Input data set
+#' @type col_compute
+#' @depends .self USUBJID
+#' @depends .self COUNTRY
+#' @depends .self ARM_MATCH
+#' @depends ADLB USUBJID
+#' @depends ADLB LBTEST
+#' @outputs NEWFL02
+#' @returns `.self`
+newfl_02 <-   function(.self, ADLB) {
   subids <- ADLB |>
     dplyr::filter(LBTEST == "Polychromasia") |>
     dplyr::pull(USUBJID) |>
     unique()
-  .self <-  .self |>
+  .self <-   .self |>
     dplyr::mutate(NEWFL02 = ifelse(!is.na(COUNTRY) &
                                      ARM_MATCH == "MATCH" &
                                      USUBJID %in% subids, 1, 0))
   return(.self)
 }
 
-#' newfl_03
-#'
-#' @section metadata:
-#' ```yaml
-#' depend_cols:
-#'   - NEWFL01
-#'   - NEWFL02
-#' outputs:
-#'   - NEWFL03
-#'   - NEWREA03
-#' type: col_compute
-#' ```
-#'
-newfl_03 <-  function(.self) {
+#' Newfl 03
+#' @param .self `data.frame` Input data set
+#' @type col_compute
+#' @depends .self NEWFL01
+#' @depends .self NEWFL02
+#' @outputs NEWFL03
+#' @outputs NEWREA03
+#' @returns `.self`
+newfl_03 <-   function(.self) {
   .self <- .self |>
     dplyr::mutate(NEWFL03 = ifelse(NEWFL01 == 1 & NEWFL02 == 1 , 1, 0),
                   NEWREA03 = ifelse(NEWFL01 == 1 & NEWFL02 == 1 , "Yes", "No"))

@@ -24,7 +24,8 @@ Imports:
     combinat,
     checkmate,
     styler,
-    roxygen2
+    roxygen2,
+    mighty.standards
 Suggests: 
     knitr,
     rmarkdown,

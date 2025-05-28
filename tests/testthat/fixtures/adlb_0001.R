@@ -1,22 +1,17 @@
-#' lbtest_01
-#'
-#' @section metadata:
-#' ```yaml
-#' depend_cols:
-#'   - USUBJID
-#'   - LBSEQ
-#'   - AVAL
-#'   - LB.USUBJID
-#'   - LB.LBSEQ
-#'   - LB.LBTEST
-#'   - ADSL.USUBJID
-#'   - ADSL.PLANNED_ARM
-#' outputs:
-#'   - LBTEST
-#' type: col_compute
-#' ```
-#'
-lbtest_01 <-  function(.self, LB, ADSL) {
+#' Lbtest 01
+#' @param .self `data.frame` Input data set
+#' @type col_compute
+#' @depends .self USUBJID
+#' @depends .self LBSEQ
+#' @depends .self AVAL
+#' @depends LB USUBJID
+#' @depends LB LBSEQ
+#' @depends LB LBTEST
+#' @depends ADSL USUBJID
+#' @depends ADSL PLANNED_ARM
+#' @outputs LBTEST
+#' @returns `.self`
+lbtest_01 <-   function(.self, LB, ADSL) {
 
   # join with adsl, only derive lbtest if adsl.planned_arm != "" and
   # if aval is na them lbtest = "Invalid"
@@ -42,72 +37,57 @@ lbtest_01 <-  function(.self, LB, ADSL) {
 }
 
 
-#' new_lbtest_01
-#'
-#' @section metadata:
-#' ```yaml
-#' depend_cols:
-#'   - LBTEST
-#'   - SV.VISITNUM
-#'   - SV.USUBJID
-#'   - SV.VISITDY
-#' outputs:
-#'   - LBTEST
-#' type: row_compute
-#' ```
-#'
-new_lbtest_01 <-  function(.self) {
+#' New lbtest 01
+#' @param .self `data.frame` Input data set
+#' @type row_compute
+#' @depends .self LBTEST
+#' @depends SV VISITNUM
+#' @depends SV USUBJID
+#' @depends SV VISITDY
+#' @outputs LBTEST
+#' @returns `.self`
+new_lbtest_01 <-   function(.self) {
 
   new_lbtest <- .self |>
     dplyr::filter(LBTEST == "Microcytes") |>
     dplyr::mutate(LBTEST = "Microcytes (new)")
 
-  new_lbtest <-  new_lbtest |>
+  new_lbtest <-   new_lbtest |>
     dplyr::left_join(SV, by = c("USUBJID", "VISITNUM")) |>
     dplyr::filter(VISITDY > 20) |>
     dplyr::select(-VISITDY)
 
-  .self <-  rbind(.self, new_lbtest)
+  .self <-   rbind(.self, new_lbtest)
   return(.self)
 }
 
-#' new_lbtest_02
-#'
-#' @section metadata:
-#' ```yaml
-#' depend_cols:
-#'   - LBTEST
-#'   - AVALC
-#' outputs:
-#'   - LBTEST
-#'   - AVALC
-#' type: row_compute
-#' ```
-#'
+#' New lbtest 02
+#' @param .self `data.frame` Input data set
+#' @type row_compute
+#' @depends .self LBTEST
+#' @depends .self AVALC
+#' @outputs LBTEST
+#' @outputs AVALC
+#' @returns `.self`
 new_lbtest_02 <- function(.self) {
 
   new_lbtest <- .self |>
     dplyr::filter(LBTEST == "Macrocytes" &
-                    as.numeric(gsub("[N<]",  "", AVALC))>0.5 &
+                    as.numeric(gsub("[N<]",   "", AVALC))>0.5 &
                     !is.na(AVALC)) |>
     dplyr::mutate(LBTEST = "Macrocytes (new)",
                   AVALC = "")
 
-  .self <-  rbind(.self, new_lbtest)
+  .self <-   rbind(.self, new_lbtest)
   return(.self)
 }
 
-#' new_lbtest_03
-#'
-#' @section metadata:
-#' ```yaml
-#' depend_cols:
-#'   - LBTEST
-#' outputs:
-#'   - LBTEST
-#' type: row_compute
-#' ```
-#'
+#' New lbtest 03
+#' @param .self `data.frame` Input data set
+#' @type row_compute
+#' @depends .self LBTEST
+#' @outputs LBTEST
+#' @returns `.self`
 new_lbtest_03 <- function(.self) {
 
   new_lbtest <- .self |>
@@ -118,21 +98,16 @@ new_lbtest_03 <- function(.self) {
     stop("No rows to add.")
   }
 
-  .self <-  rbind(.self, new_lbtest)
+  .self <-   rbind(.self, new_lbtest)
   return(.self)
 }
 
-#' new_lbtest_04
-#'
-#' @section metadata:
-#' ```yaml
-#' depend_cols:
-#'   - LBTEST
-#' outputs:
-#'   - LBTEST
-#' type: row_compute
-#' ```
-#'
+#' New lbtest 04
+#' @param .self `data.frame` Input data set
+#' @type row_compute
+#' @depends .self LBTEST
+#' @outputs LBTEST
+#' @returns `.self`
 new_lbtest_04 <- function(.self) {
 
   new_lbtest <- .self |>
@@ -143,28 +118,23 @@ new_lbtest_04 <- function(.self) {
     stop("No rows to add.")
   }
 
-  .self <-  rbind(.self, new_lbtest)
+  .self <-   rbind(.self, new_lbtest)
   return(.self)
 }
 
-#' new_lbtest_05
-#'
-#' @section metadata:
-#' ```yaml
-#' depend_cols:
-#'   - LBTEST
-#' outputs:
-#'   - LBTEST
-#' type: row_compute
-#' ```
-#'
+#' New lbtest 05
+#' @param .self `data.frame` Input data set
+#' @type row_compute
+#' @depends .self LBTEST
+#' @outputs LBTEST
+#' @returns `.self`
 new_lbtest_05 <- function(.self) {
 
   new_lbtest1 <- .self |>
     dplyr::filter(LBTEST == "Microcytes (new)") |>
     dplyr::mutate(LBTEST = "Microcytes (new 2)")
 
-  new_lbtest2 <-  .self |>
+  new_lbtest2 <-   .self |>
     dplyr::filter(LBTEST == "Macrocytes (new)") |>
     dplyr::mutate(LBTEST = "Macrocytes (new 2)")
 
@@ -172,30 +142,25 @@ new_lbtest_05 <- function(.self) {
     stop("No rows to add.")
   }
 
-  .self <-  rbind(.self, new_lbtest1, new_lbtest2)
+  .self <-   rbind(.self, new_lbtest1, new_lbtest2)
   return(.self)
 }
 
-#' new_lbtest_06
-#'
-#' @section metadata:
-#' ```yaml
-#' depend_cols:
-#'   - LBTEST
-#'   - AVAL
-#'   - DOMAIN
-#' outputs:
-#'   - LBTEST
-#' type: row_compute
-#' ```
-#'
+#' New lbtest 06
+#' @param .self `data.frame` Input data set
+#' @type row_compute
+#' @depends .self LBTEST
+#' @depends .self AVAL
+#' @depends .self DOMAIN
+#' @outputs LBTEST
+#' @returns `.self`
 new_lbtest_06 <- function(.self) {
 
   new_lbtest1 <- .self |>
     dplyr::filter(LBTEST == "Microcytes (new)" & AVAL>1 & !is.na(DOMAIN)) |>
     dplyr::mutate(LBTEST = "Microcytes (new 3)")
 
-  new_lbtest2 <-  .self |>
+  new_lbtest2 <-   .self |>
     dplyr::filter(LBTEST == "Microcytes (new 2)" & AVAL>1 & !is.na(DOMAIN)) |>
     dplyr::mutate(LBTEST = "Microcytes (new 4)")
 
@@ -204,42 +169,32 @@ new_lbtest_06 <- function(.self) {
     stop("No rows to add.")
   }
 
-  .self <-  rbind(.self, new_lbtest1, new_lbtest2)
+  .self <-   rbind(.self, new_lbtest1, new_lbtest2)
   return(.self)
 }
 
-#' new_aval_01
-#'
-#' @section metadata:
-#' ```yaml
-#' depend_cols:
-#'   - AVAL
-#' outputs:
-#'   - AVAL
-#' type: row_compute
-#' ```
-#'
+#' New aval 01
+#' @param .self `data.frame` Input data set
+#' @type row_compute
+#' @depends .self AVAL
+#' @outputs AVAL
+#' @returns `.self`
 new_aval_01 <- function(.self) {
 
   new_aval <- .self |>
     dplyr::filter(AVAL == 1) |>
     dplyr::mutate(AVAL = 3.14)
 
-  .self <-  rbind(.self, new_aval)
+  .self <-   rbind(.self, new_aval)
   return(.self)
 }
 
-#' new_aval_02
-#'
-#' @section metadata:
-#' ```yaml
-#' depend_cols:
-#'   - AVAL
-#' outputs:
-#'   - AVAL
-#' type: row_compute
-#' ```
-#'
+#' New aval 02
+#' @param .self `data.frame` Input data set
+#' @type row_compute
+#' @depends .self AVAL
+#' @outputs AVAL
+#' @returns `.self`
 new_aval_02 <- function(.self) {
 
   new_aval <- .self |>
@@ -250,22 +205,17 @@ new_aval_02 <- function(.self) {
     stop("No rows to add.")
   }
 
-  .self <-  rbind(.self, new_aval)
+  .self <-   rbind(.self, new_aval)
   return(.self)
 }
 
-#' new_aval_03
-#'
-#' @section metadata:
-#' ```yaml
-#' depend_cols:
-#'   - AVAL
-#'   - DOMAIN
-#' outputs:
-#'   - AVAL
-#' type: row_compute
-#' ```
-#'
+#' New aval 03
+#' @param .self `data.frame` Input data set
+#' @type row_compute
+#' @depends .self AVAL
+#' @depends .self DOMAIN
+#' @outputs AVAL
+#' @returns `.self`
 new_aval_03 <- function(.self) {
 
   new_aval <- .self |>
@@ -276,22 +226,17 @@ new_aval_03 <- function(.self) {
     stop("No rows to add.")
   }
 
-  .self <-  rbind(.self, new_aval)
+  .self <-   rbind(.self, new_aval)
   return(.self)
 }
 
-#' new_aval_04
-#'
-#' @section metadata:
-#' ```yaml
-#' depend_cols:
-#'   - AVAL
-#'   - AVALC
-#' outputs:
-#'   - AVAL
-#' type: row_compute
-#' ```
-#'
+#' New aval 04
+#' @param .self `data.frame` Input data set
+#' @type row_compute
+#' @depends .self AVAL
+#' @depends .self AVALC
+#' @outputs AVAL
+#' @returns `.self`
 new_aval_04 <- function(.self) {
 
   new_aval <- .self |>
@@ -302,21 +247,16 @@ new_aval_04 <- function(.self) {
     stop("No rows to add.")
   }
 
-  .self <-  rbind(.self, new_aval)
+  .self <-   rbind(.self, new_aval)
   return(.self)
 }
 
-#' new_visitnum_01
-#'
-#' @section metadata:
-#' ```yaml
-#' depend_cols:
-#'   - VISITNUM
-#' outputs:
-#'   - VISITNUM
-#' type: row_compute
-#' ```
-#'
+#' New visitnum 01
+#' @param .self `data.frame` Input data set
+#' @type row_compute
+#' @depends .self VISITNUM
+#' @outputs VISITNUM
+#' @returns `.self`
 new_visitnum_01 <- function(.self) {
 
   new_visitnum <- .self |>
@@ -327,21 +267,16 @@ new_visitnum_01 <- function(.self) {
     stop("No rows to add.")
   }
 
-  .self <-  rbind(.self, new_visitnum)
+  .self <-   rbind(.self, new_visitnum)
   return(.self)
 }
 
-#' new_visitnum_02
-#'
-#' @section metadata:
-#' ```yaml
-#' depend_cols:
-#'   - VISITNUM
-#' outputs:
-#'   - VISITNUM
-#' type: row_compute
-#' ```
-#'
+#' New visitnum 02
+#' @param .self `data.frame` Input data set
+#' @type row_compute
+#' @depends .self VISITNUM
+#' @outputs VISITNUM
+#' @returns `.self`
 new_visitnum_02 <- function(.self) {
 
   new_visitnum <- .self |>
@@ -352,21 +287,16 @@ new_visitnum_02 <- function(.self) {
     stop("No rows to add.")
   }
 
-  .self <-  rbind(.self, new_visitnum)
+  .self <-   rbind(.self, new_visitnum)
   return(.self)
 }
 
-#' aval_grp_01
-#'
-#' @section metadata:
-#' ```yaml
-#' depend_cols:
-#'   - AVAL
-#' outputs:
-#'   - AVAL_GRP
-#' type: col_compute
-#' ```
-#'
+#' Aval grp 01
+#' @param .self `data.frame` Input data set
+#' @type col_compute
+#' @depends .self AVAL
+#' @outputs AVAL_GRP
+#' @returns `.self`
 aval_grp_01 <- function(.self) {
   .self <- .self |>
     dplyr::mutate(AVAL_GRP = ifelse(
@@ -376,18 +306,13 @@ aval_grp_01 <- function(.self) {
   return(.self)
 }
 
-#' aval_grp_02
-#'
-#' @section metadata:
-#' ```yaml
-#' depend_cols:
-#'   - AVAL_GRP
-#' outputs:
-#'   - AVAL_GRP2
-#' type: col_compute
-#' ```
-#'
-aval_grp_02 <-  function(.self) {
+#' Aval grp 02
+#' @param .self `data.frame` Input data set
+#' @type col_compute
+#' @depends .self AVAL_GRP
+#' @outputs AVAL_GRP2
+#' @returns `.self`
+aval_grp_02 <-   function(.self) {
   .self <- .self |>
     dplyr::mutate(AVAL_GRP2 = ifelse(
       AVAL_GRP %in% c("low", "medium"), "low/medium", "high")
@@ -396,31 +321,21 @@ aval_grp_02 <-  function(.self) {
 }
 
 
-#' copy_rows_01
-#'
-#' @section metadata:
-#' ```yaml
-#' depend_cols:
-#' outputs:
-#' type: col_compute
-#' ```
-#'
-copy_rows_01 <-  function(.self) {
+#' Copy rows 01
+#' @param .self `data.frame` Input data set
+#' @type col_compute
+#' @returns `.self`
+copy_rows_01 <-   function(.self) {
   .self <- rbind(.self, .self[1:10,])
   return(.self)
 }
 
-#' new_lbtest_07
-#'
-#' @section metadata:
-#' ```yaml
-#' depend_cols:
-#'   - LBTEST
-#' outputs:
-#'   - LBTEST
-#' type: row_compute
-#' ```
-#'
+#' New lbtest 07
+#' @param .self `data.frame` Input data set
+#' @type row_compute
+#' @depends .self LBTEST
+#' @outputs LBTEST
+#' @returns `.self`
 new_lbtest_07 <- function(.self, params = list(test_val = "Phosphate")) {
   if (!is.null(params$test_val)) {
     new_lbtest <- .self |>
