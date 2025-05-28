@@ -328,8 +328,6 @@ test_that("Check external predecessor", {
 
 test_that("Dependencies between actions with core dependencies", {
 
-  skip(message = "Skip for now. Need expectations")
-
   # SETUP
   ui_path <- test_path("fixtures", "column_dependencies_adsl_07.yml")
   path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
@@ -339,7 +337,6 @@ test_that("Dependencies between actions with core dependencies", {
   output_path <- withr::local_tempdir()
 
   # ACT
-
   actual <- generate_adam_code(
     path_ui_data = ui_path,
     code_component_source_files =  std_lib_path,
@@ -348,14 +345,21 @@ test_that("Dependencies between actions with core dependencies", {
     path_output = output_path,
     data_connection = "pharmaverse"
   )
-
-  # EXPECT
   write_adam_programs(dir = output_path, programs = actual$programs)
   x <- list.files(output_path, full.names = TRUE)
-  do.call(file.edit, as.list(x))
 
+  # EXPECT
 
+  # Check generated ADSL
+  x[[1]] |> source()
+  setcolorder(ADSL, sort(names(ADSL)))
+  ADSL |> expect_snapshot_value(style = "json2")
 
+  # Check edges
+  actual$edges |>
+    data.table::setorder(node_id, parent_node) |>
+    as.data.frame() |>
+    expect_snapshot_value(style = "json2")
 })
 
 
