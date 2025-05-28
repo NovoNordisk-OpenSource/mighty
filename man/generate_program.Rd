@@ -12,6 +12,7 @@ generate_program(
   trial_metadata,
   ui_data,
   data_connection,
+  connector_config_path = NULL,
   path_output = NULL
 )
 }

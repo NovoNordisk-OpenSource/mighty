@@ -11,8 +11,8 @@ generate_node_code(
   ui_data,
   trial_metadata,
   sdtm_dataset_list,
-  adam_dataset_list,
   data_connection,
+  connector_config_path,
   path_output
 )
 }
