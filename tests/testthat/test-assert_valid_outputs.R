@@ -50,29 +50,29 @@ test_that(
   }
 )
 
-test_that(
-  "Error is triggered for a col_copy and col_echo action having the same output in two domains",
-  {
-  skip(message = "Not implemented yet.")
-  }
-)
-
-
-test_that(
-  "Error is triggered for a col_compute action with invalid column name in UI data",
-  {
-    skip(message = "Not implemented yet.")
-
-  }
-)
-
-
-test_that(
-  "Check how an action with two outputs where only one is added as an action is handled",
-  {
-    skip(message = "Not implemented yet.")
-  }
-)
+# test_that(
+#   "Error is triggered for a col_copy and col_echo action having the same output in two domains",
+#   {
+#   skip(message = "Not implemented yet.")
+#   }
+# )
+#
+#
+# test_that(
+#   "Error is triggered for a col_compute action with invalid column name in UI data",
+#   {
+#     skip(message = "Not implemented yet.")
+#
+#   }
+# )
+#
+#
+# test_that(
+#   "Check how an action with two outputs where only one is added as an action is handled",
+#   {
+#     skip(message = "Not implemented yet.")
+#   }
+# )
 
 
 

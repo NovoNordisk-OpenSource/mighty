@@ -326,10 +326,55 @@ test_that("Check external predecessor", {
 
 })
 
-test_that("Dependencies between actions with core dependencies", {
+test_that("Error is triggered when both a col_mutate and a col_copy action exist that inputs a core variable and return the ADaM variable of same name", {
 
   # SETUP
   ui_path <- test_path("fixtures", "column_dependencies_adsl_07.yml")
+  path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
+  std_lib_path <- testthat::test_path("fixtures", "adsl_0001.R")
+
+  domain_keys_path <- system.file("standards", "domain_keys.yml", package = "mighty")
+  output_path <- withr::local_tempdir()
+
+  # ACT/EXPECT
+  actual <- generate_adam_code(
+    path_ui_data = ui_path,
+    code_component_source_files =  std_lib_path,
+    path_trial_metadata = path_trial_metadata,
+    path_domain_keys = domain_keys_path,
+    path_output = output_path,
+    data_connection = "pharmaverse"
+  ) |> expect_error(regexp = "Column\\(s\\) AGE are outputted in multiple actions in domain ADSL.")
+
+})
+
+
+test_that("Error is triggered when multiple col_compute actions exist that inputs a core variable and return the ADaM variable of same name", {
+
+  # SETUP
+  ui_path <- test_path("fixtures", "column_dependencies_adsl_08.yml")
+  path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
+  std_lib_path <- testthat::test_path("fixtures", "adsl_0001.R")
+
+  domain_keys_path <- system.file("standards", "domain_keys.yml", package = "mighty")
+  output_path <- withr::local_tempdir()
+
+  # ACT/EXPECT
+  actual <- generate_adam_code(
+    path_ui_data = ui_path,
+    code_component_source_files =  std_lib_path,
+    path_trial_metadata = path_trial_metadata,
+    path_domain_keys = domain_keys_path,
+    path_output = output_path,
+    data_connection = "pharmaverse"
+  ) |> expect_error(regexp = "Column\\(s\\) AGE are outputted in multiple actions in domain ADSL.")
+
+})
+
+test_that("Dependencies between a col_compute action that inputs/returns a core variable and other action that also inputs the same core variable is handled correctly", {
+
+  # SETUP
+  ui_path <- test_path("fixtures", "column_dependencies_adsl_09.yml")
   path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
   std_lib_path <- testthat::test_path("fixtures", "adsl_0001.R")
 
@@ -362,18 +407,17 @@ test_that("Dependencies between actions with core dependencies", {
     expect_snapshot_value(style = "json2")
 })
 
-
-test_that("Error is triggered when both a col_mutate and a col_copy action exist that inputs a core variable and return the ADaM variable of same name", {
+test_that("Dependencies between a col_compute action that inputs/returns mutiple core variable and other action that also inputs the one of the core variable is handled correctly", {
 
   # SETUP
-  ui_path <- test_path("fixtures", "column_dependencies_adsl_08.yml")
+  ui_path <- test_path("fixtures", "column_dependencies_adsl_10.yml")
   path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
   std_lib_path <- testthat::test_path("fixtures", "adsl_0001.R")
 
   domain_keys_path <- system.file("standards", "domain_keys.yml", package = "mighty")
   output_path <- withr::local_tempdir()
 
-  # ACT/EXPECT
+  # ACT
   actual <- generate_adam_code(
     path_ui_data = ui_path,
     code_component_source_files =  std_lib_path,
@@ -381,30 +425,24 @@ test_that("Error is triggered when both a col_mutate and a col_copy action exist
     path_domain_keys = domain_keys_path,
     path_output = output_path,
     data_connection = "pharmaverse"
-  ) |> expect_error(regexp = "Column\\(s\\) AGE are outputted in multiple actions in domain ADSL.")
+  )
 
+  write_adam_programs(dir = output_path, programs = actual$programs)
+  x <- list.files(output_path, full.names = TRUE)
+
+  # EXPECT
+
+  # Check generated ADSL
+  x[[1]] |> source()
+  setcolorder(ADSL, sort(names(ADSL)))
+  ADSL |> expect_snapshot_value(style = "json2")
+
+  # Check edges
+  actual$edges |>
+    data.table::setorder(node_id, parent_node) |>
+    as.data.frame() |>
+    expect_snapshot_value(style = "json2")
 })
 
 
-test_that("Error is triggered when multiple col_compute actions exist that inputs a core variable and return the ADaM variable of same name", {
-
-  # SETUP
-  ui_path <- test_path("fixtures", "column_dependencies_adsl_09.yml")
-  path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
-  std_lib_path <- testthat::test_path("fixtures", "adsl_0001.R")
-
-  domain_keys_path <- system.file("standards", "domain_keys.yml", package = "mighty")
-  output_path <- withr::local_tempdir()
-
-  # ACT/EXPECT
-  actual <- generate_adam_code(
-    path_ui_data = ui_path,
-    code_component_source_files =  std_lib_path,
-    path_trial_metadata = path_trial_metadata,
-    path_domain_keys = domain_keys_path,
-    path_output = output_path,
-    data_connection = "pharmaverse"
-  ) |> expect_error(regexp = "Column\\(s\\) AGE are outputted in multiple actions in domain ADSL.")
-
-})
 

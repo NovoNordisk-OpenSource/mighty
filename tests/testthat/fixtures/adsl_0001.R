@@ -258,3 +258,32 @@ age3_01 <- function(.self) {
     dplyr::mutate(AGE3 = AGE - 1)
   return(.self)
 }
+
+#' age4_01
+#' @param .self `data.frame` Input data set
+#' @type col_compute
+#' @depends .self AGE2
+#' @outputs AGE4
+#' @returns `.self`
+age4_01 <- function(.self) {
+  .self <- .self |>
+    dplyr::mutate(AGE4 = AGE2 - 2)
+  return(.self)
+}
+
+
+#'#' age_sex_redefined_01
+#' @param .self `data.frame` Input data set
+#' @type col_compute
+#' @depends core AGE
+#' @depends core SEX
+#' @depends .self RACE
+#' @outputs AGE
+#' @outputs SEX
+#' @returns `.self`
+age_sex_redefined_01 <- function(.self) {
+  .self <- .self |>
+    dplyr::mutate(AGE = ifelse(!is.na(SEX) & !is.na(RACE), AGE, 0),
+                  SEX = toupper(SEX))
+  return(.self)
+}
