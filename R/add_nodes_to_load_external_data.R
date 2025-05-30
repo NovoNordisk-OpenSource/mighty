@@ -107,20 +107,20 @@ external_dependencies_per_program <- function(program_order, nodes, init_metadat
         "domain" = core_domains,
         "column_name" = filter_depend_cols_core,
         stringsAsFactors = FALSE
-      )
+      ) |> as.data.table()
       dep_core[["domain_type"]] <- classify_external_data_domains(dep_core[["domain"]])
 
-
       # Combine the dependencies
-      out <- rbind(dep_core, dep_adsl, dep_key, dep_src_cols_by_pgm[[i]][, c("domain", "domain_type", "column_name")]) |>
-        unique() |> setorder(domain_type, domain, column_name)
+      out <- rbind(dep_core, dep_adsl, dep_key, dep_src_cols_by_pgm[[i]][, c("domain", "domain_type", "column_name")])
 
     } else {
-      out <- dep_src_cols_by_pgm[[i]][, c("domain", "domain_type",  "column_name")] |>
-        unique() |>
-        setorder(domain_type, domain, column_name)
+      out <- dep_src_cols_by_pgm[[i]][, c("domain", "domain_type",  "column_name")]
     }
-    row.names(out) <- seq_len(nrow(out)) |> as.character()
+    out <- out |>
+      unique() |>
+      setorder(domain_type, domain, column_name) |>
+      setcolorder(c("domain", "domain_type", "column_name"))
+    row.names(out) <- seq_len(nrow(out))
     return(out)
   })
   names(ext_cols_by_pgm) <- as.character(seq_len(length(ext_cols_by_pgm)))

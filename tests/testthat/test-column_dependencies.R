@@ -33,11 +33,13 @@ test_that("No filters", {
   expect_section_order("ADSL-PLANNED_ARM", "ADSL-ARM_GRP1-arm_group_01", programs[["1_ADSL.R"]])
 
   # Check external dependencies
-  actual$program_sequence$external_dependencies_by_program[[1]] |>
-    dplyr::arrange(domain, domain_type, column_name) |>
-    dplyr::relocate(domain, domain_type, column_name) |>
-    as.data.frame() |> expect_snapshot_value(style = "json2")
-
+  exp_external_dep <- data.table(
+    domain = c("DM", "DM", "DM_VACCINE", "DM_VACCINE"),
+    domain_type = rep("sdtm", 4),
+    column_name = c("ARM", "USUBJID", "ARM", "USUBJID")
+  )
+  act_external_dep <- actual$program_sequence$external_dependencies_by_program[[1]]
+  expect_equal(act_external_dep, exp_external_dep)
 })
 
 test_that("No domain filters", {
@@ -75,11 +77,13 @@ test_that("No domain filters", {
   expect_section_order("ADSL-PLANNED_ARM", "ADSL-ARM_GRP1-arm_group_01", programs[["1_ADSL.R"]])
 
   # Check external dependencies
-  actual$program_sequence$external_dependencies_by_program[[1]] |>
-    dplyr::arrange(domain, domain_type, column_name) |>
-    dplyr::relocate(domain, domain_type, column_name) |>
-    as.data.frame() |> expect_snapshot_value(style = "json2")
-
+  exp_external_dep <- data.table(
+    domain = c("DM", "DM", "DM", "DM", "DM_VACCINE", "DM_VACCINE", "DM_VACCINE", "DM_VACCINE"),
+    domain_type = rep("sdtm", 8),
+    column_name = c("ARM", "DOMAIN", "STUDYID", "USUBJID", "ARM", "DOMAIN", "STUDYID", "USUBJID")
+  )
+  act_external_dep <- actual$program_sequence$external_dependencies_by_program[[1]]
+  expect_equal(act_external_dep, exp_external_dep)
 })
 
 test_that("No global filters", {
@@ -117,11 +121,13 @@ test_that("No global filters", {
   expect_section_order("ADSL-PLANNED_ARM", "ADSL-ARM_GRP1-arm_group_01", programs[["1_ADSL.R"]])
 
   # Check external dependencies
-  actual$program_sequence$external_dependencies_by_program[[1]] |>
-    dplyr::arrange(domain, domain_type, column_name) |>
-    dplyr::relocate(domain, domain_type, column_name) |>
-    as.data.frame() |> expect_snapshot_value(style = "json2")
-
+  exp_external_dep <-  data.table(
+    domain = c("DM", "DM", "DM", "DM_VACCINE", "DM_VACCINE", "DM_VACCINE"),
+    domain_type = rep("sdtm", 6),
+    column_name = c("AGEU", "ARM", "USUBJID", "AGEU", "ARM", "USUBJID")
+  )
+  act_external_dep <- actual$program_sequence$external_dependencies_by_program[[1]]
+  expect_equal(act_external_dep, exp_external_dep)
 })
 
 test_that("No filters and no derivations", {
@@ -154,11 +160,13 @@ test_that("No filters and no derivations", {
   ADSL |> expect_snapshot_value(style = "json2")
 
   # Check external dependencies
-  actual$program_sequence$external_dependencies_by_program[[1]] |>
-    dplyr::arrange(domain, domain_type, column_name) |>
-    dplyr::relocate(domain, domain_type, column_name) |>
-    as.data.frame() |> expect_snapshot_value(style = "json2")
-
+  exp_external_dep <- data.table(
+    domain = c("DM", "DM", "DM_VACCINE", "DM_VACCINE"),
+    domain_type = rep("sdtm", 4),
+    column_name = c("ARM", "USUBJID", "ARM", "USUBJID")
+  )
+  act_external_dep <- actual$program_sequence$external_dependencies_by_program[[1]]
+  expect_equal(act_external_dep, exp_external_dep)
 })
 
 test_that("Global filter and domain filter", {
@@ -196,10 +204,15 @@ test_that("Global filter and domain filter", {
   expect_section_order("ADSL-PLANNED_ARM", "ADSL-ARM_GRP1-arm_group_01", programs[["1_ADSL.R"]])
 
   # Check external dependencies
-  actual$program_sequence$external_dependencies_by_program[[1]] |>
-    dplyr::arrange(domain, domain_type, column_name) |>
-    dplyr::relocate(domain, domain_type, column_name) |>
-    as.data.frame() |> expect_snapshot_value(style = "json2")
+  exp_external_dep <- data.table(
+    domain = c("DM", "DM", "DM", "DM", "DM",
+               "DM_VACCINE", "DM_VACCINE", "DM_VACCINE", "DM_VACCINE", "DM_VACCINE"),
+    domain_type = rep("sdtm", 10),
+    column_name = c("AGEU", "ARM", "DOMAIN", "STUDYID", "USUBJID",
+                    "AGEU", "ARM", "DOMAIN", "STUDYID", "USUBJID")
+  )
+  act_external_dep <- actual$program_sequence$external_dependencies_by_program[[1]]
+  expect_equal(act_external_dep, exp_external_dep)
 
 })
 
@@ -407,7 +420,7 @@ test_that("Dependencies between a col_compute action that inputs/returns a core 
     expect_snapshot_value(style = "json2")
 })
 
-test_that("Dependencies between a col_compute action that inputs/returns mutiple core variable and other action that also inputs the one of the core variable is handled correctly", {
+test_that("Dependencies between a col_compute action that inputs/returns multiple core variable and other action that also inputs the one of the core variables is handled correctly", {
 
   # SETUP
   ui_path <- test_path("fixtures", "column_dependencies_adsl_10.yml")
