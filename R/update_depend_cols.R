@@ -1,17 +1,19 @@
-#' @title Update update_depend_cols
-#' @description
-#' Ensures that external domains
+#' Update Dependency Columns
+#' @description Updates the dependency columns (`depend_cols`) for nodes
 #'
-#' Additional details...
+#' @details Processes dependencies for two types of actions:
+#' - **col_echo actions**: Identifies external dependencies and enriches them with proper
+#' foreign key information.
+#' - **col_compute actions**: Adds dependencies from other actions that share similar
+#'   core column inputs, ensuring proper execution order.
 #'
-#' @param nodes
-#' @param pk
-#' @param ui_init
+#' @param nodes A `data.table` representing the nodes and their metadata
+#' @param pk A named list specifying the primary key columns for external
+#'   domains.
+#' @param ui_init `ui_init` data structure providing UI initialization details.
 #'
-#' @return
-#' @export
-#'
-#' @examples
+#' @returns A modified `data.table` of nodes with enriched `depend_cols`
+#'   information.
 update_depend_cols <- function(nodes, pk, ui_init) {
   x <- copy(nodes)
 
@@ -19,20 +21,8 @@ update_depend_cols <- function(nodes, pk, ui_init) {
   # foreign key
   index_echos <- which(x$type == "col_echo")
   if (length(index_echos) > 0) {
-    dep_domains <- vapply(x[["depend_cols"]][index_echos], function(dc)
-      dc[["domain"]], character(1))
-    nodes_echo_external <- x[["domain"]][index_echos] != dep_domains &
-      dep_domains != "core"
-    if (any(nodes_echo_external)) {
-      x <- add_foreign_key_as_depends_col(
-        x = x,
-        index_echo = index_echos,
-        nodes_echo_external = nodes_echo_external,
-        pk = pk
-      )
-    }
+    x <- process_external_echo_dependencies(x, index_echos, pk)
   }
-
   # Enrich depend_cols for col_compute actions that inputs a core column and
   # return the same column in the ADaM domain - core compute actions. The
   # enrichment consists of adding the output columns from all other actions
@@ -41,28 +31,67 @@ update_depend_cols <- function(nodes, pk, ui_init) {
   # action.
   x <- enrich_core_compute_actions(x)
 
-  # Replace "core" domain with the actual name of the core domain(s) "-tmp"
-  # This makes downstream processing easier
-  # x <- replace_core_with_named_domain(x, ui_init)
-
   return(x)
 }
 
 
-extract_domain_of_dependency_columns <- function(x) {
-  x$depend_cols |>
-    lapply(function(i) {
-      if (nrow(i) > 1) {
-        # Ignore if multiple dependencies are present in which case the action is
-        # not a col_copy, col_mutate, or col_echo, and needs no update
-        return("")
-      }
-      i$domain
-    }) |>
-    unlist()
+
+#' Process External Dependencies for col_echo Actions
+#' @description Identifies and processes external dependencies in nodes for
+#'   col_echo actions.
+#'
+#' @details Determines which col_echo actions reference external domains and
+#'   ensures that the appropriate foreign key columns are included in their
+#'   `depend_cols`. This step ensures that external dependencies are correctly
+#'   handled during processing.
+#'
+#' @param x A `data.table` of nodes representing an ADaM domain.
+#' @param index_echos An integer vector of indices corresponding to col_echo
+#'   actions in the nodes.
+#' @param pk A named list specifying primary key columns for external domains.
+#'
+#' @returns A modified `data.table` of nodes with enriched dependencies for
+#'   col_echo actions.
+process_external_echo_dependencies <-  function(x, index_echos, pk) {
+  # Extract domains from dependencies
+  dep_domains <- vapply(x[["depend_cols"]][index_echos], function(dc)
+    dc[["domain"]], character(1))
+
+  # Identify external dependencies (not in same domain and not core)
+  nodes_echo_external <- x[["domain"]][index_echos] != dep_domains &
+    dep_domains != "core"
+
+  # Add foreign keys as dependencies for external dependencies
+  if (any(nodes_echo_external)) {
+    x <- add_foreign_key_as_depends_col(
+      x = x,
+      index_echo = index_echos,
+      nodes_echo_external = nodes_echo_external,
+      pk = pk
+    )
+  }
+
+  return(x)
 }
 
-
+#' Add Foreign Key Columns to Dependency Columns for External Data Domains
+#' @description Adds foreign key columns to `depend_cols` in nodes for actions
+#'   with external dependencies.
+#'
+#' @details Iterates through the specified indices of col_echo actions and
+#'   enriches their dependency columns by appending domain-specific foreign key
+#'   information. Stops execution if an unrecognized domain is encountered.
+#'
+#' @param x A `data.table` representing the ADaM nodes structure.
+#' @param index_echo An integer vector of indices corresponding to col_echo
+#'   actions in the nodes.
+#' @param nodes_echo_external A logical vector of the same length as
+#'   `index_echo` indicating whether an action references external dependencies.
+#' @param pk A named list containing primary key column details for external
+#'   domains.
+#'
+#' @returns A modified `data.table` with enriched foreign key dependency columns
+#'   for external actions.
 add_foreign_key_as_depends_col <- function(x,
                                            index_echo,
                                            nodes_echo_external,
@@ -92,47 +121,26 @@ add_foreign_key_as_depends_col <- function(x,
   return(x)
 }
 
-replace_core_with_named_domain <- function(x, ui_init) {
 
-  for (i in seq_len(nrow(x))) {
-
-    # Extract the dependency columns and domain for the current node
-
-
-    if (x[["type"]][[i]] == "domain_init"){
-
-      domain_i <- gsub("_init$", "", x[["domain"]][[i]])
-      core_domains <- ui_init[[domain_i]][["core_domains"]]
-      dep_cols_i <- x[["depend_cols"]][[i]]
-
-      updated_dep_cols <- expand.grid(
-        "column_name" = dep_cols_i$column_name,
-        "domain" = core_domains,
-        stringsAsFactors = FALSE
-      )
-      updated_dep_cols[["domain_type"]] <-
-        classify_external_data_domains(updated_dep_cols[["domain"]])
-
-      x$depend_cols[[i]] <- updated_dep_cols |> data.table::as.data.table()
-
-    } else {
-
-      domain_i <- x[["domain"]][[i]]
-      domain_type_i <- classify_external_data_domains(domain_i)
-      dep_cols_i <- x$depend_cols[[i]]
-      is_core_dep <-  tolower(dep_cols_i$domain) == "core"
-
-      dep_cols_i[is_core_dep,
-                 `:=`(domain = domain_i,
-                      domain_type = "init")]
-
-      x$depend_cols[[i]] <- dep_cols_i
-
-    }
-  }
-  return(x)
-}
-
+#' Enrich Core Column Dependencies for col_compute Actions
+#' @description Enriches `depend_cols` for col_compute actions involving core
+#'   columns.
+#'
+#' @details Identifies col_compute actions that share core column dependencies
+#'   and ensures the proper execution order by appending the outputs of other
+#'   relevant actions to their dependency columns.
+#'
+#'   Steps:
+#' - Detect core columns used as dependencies and returned as outputs.
+#' - For each col_compute action, check if other actions within the same domain share
+#'   the same core dependencies.
+#' - Append the output columns of these related actions to the `depend_cols` of the
+#'   col_compute action being processed.
+#'
+#' @param x A `data.table` of nodes representing ADaM domain metadata.
+#'
+#' @returns A modified `data.table` of nodes with enriched `depend_cols` for
+#'   col_compute actions.
 enrich_core_compute_actions <- function(x) {
 
   # Identify depend_cols that are of domain "core"

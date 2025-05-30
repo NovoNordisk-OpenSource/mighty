@@ -41,3 +41,18 @@ extract_mutate_node_ids <- function(x, index_copy_mutate) {
 
   return(copy_mutate_nodes[copy_mutate_depend_cols != copy_mutate_output_cols, node_id])
 }
+
+
+
+extract_domain_of_dependency_columns <- function(x) {
+  x$depend_cols |>
+    lapply(function(i) {
+      if (nrow(i) > 1) {
+        # Ignore if multiple dependencies are present in which case the action is
+        # not a col_copy, col_mutate, or col_echo, and needs no update
+        return("")
+      }
+      i$domain
+    }) |>
+    unlist()
+}
