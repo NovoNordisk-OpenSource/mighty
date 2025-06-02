@@ -30,8 +30,8 @@ column_metadata:
   - column: AGE
     code_id: age_sex_redefined_01
 
-  - column: SEX
-    code_id: age_sex_redefined_01
+  # - column: SEX
+  #   code_id: age_sex_redefined_01
 
   - column: AGE2
     code_id: age2_01
