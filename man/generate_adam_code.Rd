@@ -12,12 +12,11 @@ generate_adam_code(
   path_domain_keys,
   path_output,
   data_connection = c("connector", "pharmaverse", "custom_data"),
-  connector_config_path = NULL,
   check_cross_domain_adam_dependencies = TRUE
 )
 }
 \arguments{
-\item{check_cross_domain_adam_dependencies}{}
+\item{path_trial_metadata}{}
 }
 \description{
 Generates the complete set of ADaM programs

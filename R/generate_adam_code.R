@@ -1,11 +1,13 @@
 #' Generates the complete set of ADaM programs
+#'
 #' @param path_ui_data
-#' @param path_std_lib
 #' @param path_domain_keys
 #' @param path_output
 #' @param data_connection
-#' @param connector_config_path
 #' @param check_cross_domain_adam_dependencies
+#' @param code_component_source_pkgs
+#' @param code_component_source_files
+#' @param path_trial_metadata
 #'
 #' @return
 #' @export
@@ -19,7 +21,6 @@ generate_adam_code <- function(path_ui_data,
                                path_domain_keys,
                                path_output,
                                data_connection = c("connector", "pharmaverse", "custom_data"),
-                               connector_config_path = NULL,
                                check_cross_domain_adam_dependencies = TRUE) {
 
   # Read data from UI containing explicit user input
@@ -85,8 +86,7 @@ generate_adam_code <- function(path_ui_data,
     trial_metadata,
     ui_yml,
     data_connection,
-    path_output = path_output,
-    connector_config_path = connector_config_path
+    path_output = path_output
   )
 
   return(

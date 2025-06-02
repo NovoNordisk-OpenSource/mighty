@@ -5,7 +5,6 @@ test_that("Complex test with multiple domains and column/row operations and miss
     test_path("fixtures", "adlb_complex.yml")
   )
   path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
-  connector_config_path <- file.path(getwd(),test_path("fixtures", "_connector.yml"))
   std_lib_path <- c(
     testthat::test_path("fixtures", "adsl_0001.R"),
     testthat::test_path("fixtures", "adlb_0001.R")
@@ -16,7 +15,7 @@ test_that("Complex test with multiple domains and column/row operations and miss
 
   # copy connector config
   file.copy(
-    from = file.path(getwd(), test_path("fixtures", "_connector.yml")),
+    from = test_path("fixtures", "_connector.yml"),
     to = output_path,
     overwrite = TRUE
   )
@@ -25,12 +24,12 @@ test_that("Complex test with multiple domains and column/row operations and miss
   data_path <- file.path(output_path, "data")
   sdtm_testdata_path <- file.path(data_path, "sdtm")
   adam_testdata_path <- file.path(data_path, "adam")
-  metadata_testdata_path <- file.path(data_path, "metadata")
+
 
   dir.create(data_path)
   dir.create(sdtm_testdata_path)
   dir.create(adam_testdata_path)
-  dir.create(metadata_testdata_path)
+
   # create SDTM test data based on pharmaverssdtm
   dm <- pharmaversesdtm::dm
   suppdm <- pharmaversesdtm::suppdm
@@ -48,6 +47,7 @@ test_that("Complex test with multiple domains and column/row operations and miss
   arrow::write_parquet(sv, file.path(sdtm_testdata_path, "SV.parquet"))
 
   # create symbolic link to temporary data
+  # TODO: Ensure this works platform independent (we have not tested on windows)
   file.symlink(
     data_path,
     test_path("fixtures", "data")
@@ -64,8 +64,7 @@ test_that("Complex test with multiple domains and column/row operations and miss
     path_trial_metadata = path_trial_metadata,
     path_domain_keys = domain_keys_path,
     path_output = output_path,
-    data_connection = "custom_data",
-    connector_config_path = connector_config_path
+    data_connection = "custom_data"
   )
 
   # EXPECT ------------------------------------------------------------------

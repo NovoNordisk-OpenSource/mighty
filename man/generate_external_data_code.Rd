@@ -9,12 +9,11 @@ generate_external_data_code(
   trial_metadata,
   sdtm_dataset_list,
   data_connection,
-  connector_config_path,
   path_output
 )
 }
 \arguments{
-\item{connector_config_path}{}
+\item{data_connection}{}
 }
 \description{
 Generate external data code

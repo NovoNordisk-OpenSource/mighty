@@ -1,10 +1,6 @@
 metadata:
   testthat_fixtures_root: !!expr file.path(getwd(), testthat::test_path(), "fixtures")
   testdata: "data"
-  trial: "toolpool"
-  project: "general"
-  instance: "bos/tfl_programming"
-  root_path: "~/projstat"
 datasources:
   - name: "adam"
     backend:
@@ -14,19 +10,3 @@ datasources:
     backend:
         type: "connector::connector_fs"
         path: "{metadata.testthat_fixtures_root}/{metadata.testdata}/sdtm"
-  - name: "metadata"
-    backend:
-        type: "connector::connector_fs"
-        path: "{metadata.testthat_fixtures_root}/{metadata.testdata}/metadata"
-  - name: "tfl_adam"
-    backend:
-        type: "connector::connector_fs"
-        path: "{metadata.root_path}/{metadata.project}/{metadata.trial}/{metadata.instance}/data/adam"
-  - name: "tfl_sdtm"
-    backend:
-        type: "connector::connector_fs"
-        path: "{metadata.root_path}/{metadata.project}/{metadata.trial}/{metadata.instance}/data/sdtm"
-  - name: "tfl_metadata"
-    backend:
-        type: "connector::connector_fs"
-        path: "{metadata.root_path}/{metadata.project}/{metadata.trial}/{metadata.instance}/data/metadata"

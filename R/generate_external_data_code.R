@@ -3,9 +3,8 @@
 #' @param payload
 #' @param trial_metadata
 #' @param sdtm_dataset_list
+#' @param path_output
 #' @param data_connection
-#' @param custom_data_path
-#' @param connector_config_path
 #'
 #' @return
 #' @export
@@ -15,7 +14,6 @@ generate_external_data_code <- function(payload,
                                         trial_metadata,
                                         sdtm_dataset_list,
                                         data_connection,
-                                        connector_config_path,
                                         path_output) {
   # for each element of payload, apply the following logic
   by_domain <- split(payload, payload$domain)
