@@ -3,6 +3,7 @@ table_metadata:
   keys:
     - USUBJID
 
+
 init:
   core_domains:
     - DM
@@ -17,9 +18,8 @@ column_metadata:
   - column: USUBJID
     source: core.USUBJID
 
-  - column: PLANNED_ARM
-    source: core.ARM
+  - column: AGE
+    source: core.AGE
 
-  - column: ARM_GRP1
-    label: "some text"
-    code_id: arm_group_01
+  - column: AGE
+    code_id: age_redefined_02

@@ -46,41 +46,49 @@ generate_adam_code <- function(path_ui_data,
     update_ui_data(ui_table) |>
     add_node_id_fast()
 
-  # Update predecessors:
-  #   - assign type "predecessor"
-  #   - external predecessors requiring a join are enriched with foreign keys
-  #   - 'core' is replaced with actual core domain(s) in depend_cols
-  nodes_2 <- update_predecessors(nodes_1, domain_keys, ui_init)
+  # Check that outputs are valid
+  assert_valid_outputs(nodes_1)
 
-  # Check dependencies
-  assert_valid_adam_dependencies(nodes_2, ui_init, domain_keys, check_cross_domain_adam_dependencies)
+  # Assign action types col_copy, col_echo and col_mutate
+  nodes_2 <- assign_predecessor_action_types(nodes_1)
 
-  # Create an initialize action per domain that:
-  #   - absorb core copy nodes
-  #   - redirect "rename" dependencies to the initialize actions
-  nodes_3 <- create_domain_initialize_nodes(nodes_2, ui_init)
+  # Enrich depend_cols.
+  # - For external col_echo actions: include foreign keys
+  # - For col_compute actions that input a core column and return the same
+  #   column in the ADaM domain: Add output columns from all other actions that
+  #   have the same core column as input
+  nodes_3 <- update_depend_cols(nodes_2, domain_keys, ui_init)
+
+  # Create an initialize action per domain that absorbs col_copy action
+  nodes_4 <- create_domain_initialize_nodes(nodes_3)
+
+  # Replace "core" with relevant domains
+  nodes_5 <- replace_core_with_named_domain(nodes_4, ui_init)
+
+  # Check ADaM column dependencies
+  assert_valid_adam_dependencies(nodes_5, ui_init, domain_keys, check_cross_domain_adam_dependencies)
 
   # Identify edges in the topology graph
-  edges <- make_edges(nodes_3)
+  edges <- make_edges(nodes_5)
 
   # Identify topological order of actions
-  nodes_topo_order <- weighted_node_topo_sort(edges, nodes_3, primary_domain = "ADSL")
+  nodes_topo_order <- weighted_node_topo_sort(edges, nodes_5, primary_domain = "ADSL")
 
   # Group actions into programs that can be run as batches in a sequence
-  program_sequence_1 <- group_nodes_optimal(nodes_topo_order, nodes_3, edges)
+  program_sequence_1 <- group_nodes_optimal(nodes_topo_order, nodes_5, edges)
 
   # Add initialization actions to the program sequence
-  program_sequence_2 <- add_program_init_nodes(program_sequence_1, nodes_3)
+  program_sequence_2 <- add_program_init_nodes(program_sequence_1, nodes_5)
 
   # Add action to import external dependencies to the program sequence
-  program_sequence_3 <- add_nodes_to_load_external_data(program_sequence_2, nodes_3, ui_init, domain_keys) |>
+  program_sequence_3 <- add_nodes_to_load_external_data(program_sequence_2, nodes_5, ui_init, domain_keys) |>
     add_node_to_write_data()
 
   # Create programs
   data_connection <- match.arg(data_connection)
   programs <- generate_program(
     program_sequence_3,
-    nodes_3,
+    nodes_5,
     domain_keys,
     code_component_env,
     trial_metadata,
@@ -95,7 +103,7 @@ generate_adam_code <- function(path_ui_data,
       program_sequence = program_sequence_3,
       edges = edges,
       data_for_visualization = program_sequence_1,
-      data_model = nodes_3
+      data_model = nodes_5
     )
   )
 }

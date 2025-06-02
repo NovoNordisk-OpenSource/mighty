@@ -4,10 +4,10 @@
 \alias{create_domain_initialize_nodes}
 \title{Replace "core" dependencies with domain initialization nodes}
 \usage{
-create_domain_initialize_nodes(nodes, domain_init_data)
+create_domain_initialize_nodes(nodes)
 }
 \arguments{
-\item{domain_init_data}{}
+\item{nodes}{}
 }
 \description{
 Adds new nodes representing the domain initialization steps, and

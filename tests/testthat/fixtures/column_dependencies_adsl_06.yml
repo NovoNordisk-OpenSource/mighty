@@ -1,13 +1,7 @@
 table_metadata:
   table: adsl
-  label: Subject-Level Analysis Dataset
-  class: SUBJECT LEVEL ANALYSIS DATASET
-  structure: One record per subject
   keys:
     - USUBJID
-  comment: 'MODIFY, OPTIONAL to fill: To add a link to a reference, e.g. ADRG, SAP
-    or a program file update source_documents tab in adam_cst_metdata_xxxx.xls template.
-    Syntax is explained in column header notes of the template.'
 
 init:
   core_domains:
@@ -36,6 +30,3 @@ column_metadata:
 
   - column: VAR1
     source: EX.VAR1
-
-
-

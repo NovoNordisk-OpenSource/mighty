@@ -8,7 +8,7 @@ init:
     - DM
     - DM_VACCINE
   filter_domain:
-    - DM: NA
+    - DM: '!is.na(AGEU)'
     - DM_VACCINE: NA
   filter_global: NA
   filter_depend_cols: NA
@@ -20,6 +20,11 @@ column_metadata:
   - column: PLANNED_ARM
     source: core.ARM
 
-  - column: ARM_GRP1
-    label: "some text"
-    code_id: arm_group_01
+  - column: AGE
+    code_id: age_redefined_01
+
+  - column: AGE
+    code_id: age_redefined_02
+
+  - column: AGE2
+    code_id: age2_01
