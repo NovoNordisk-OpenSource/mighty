@@ -1,0 +1,12 @@
+metadata:
+  testthat_fixtures_root: !!expr file.path(getwd(), testthat::test_path(), "fixtures")
+  testdata: "data"
+datasources:
+  - name: "adam"
+    backend:
+        type: "connector::connector_fs"
+        path: "{metadata.testthat_fixtures_root}/{metadata.testdata}/adam"
+  - name: "sdtm"
+    backend:
+        type: "connector::connector_fs"
+        path: "{metadata.testthat_fixtures_root}/{metadata.testdata}/sdtm"

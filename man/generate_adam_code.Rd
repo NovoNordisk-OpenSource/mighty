@@ -16,7 +16,7 @@ generate_adam_code(
 )
 }
 \arguments{
-\item{check_cross_domain_adam_dependencies}{}
+\item{path_trial_metadata}{}
 }
 \description{
 Generates the complete set of ADaM programs

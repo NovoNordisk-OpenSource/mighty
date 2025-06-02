@@ -2,7 +2,7 @@
 % Please edit documentation in R/generate_program.R
 \name{generate_program}
 \alias{generate_program}
-\title{Generate program(s)}
+\title{Generate Program Code}
 \usage{
 generate_program(
   program_order,
@@ -16,11 +16,39 @@ generate_program(
 )
 }
 \arguments{
-\item{data_connection}{}
+\item{program_order}{Data table containing program execution order with
+columns for node_id, domain, program_id, rank, type, and external
+dependencies}
 
-\item{path_output}{When data_connection is "pharmaverse" the generated
-programs need to point to a location where the outputs are stored}
+\item{nodes}{Data table containing node definitions and specifications}
+
+\item{domain_keys}{Named list mapping domain names to their respective key
+columns}
+
+\item{code_component_env}{Environment containing code components}
+
+\item{trial_metadata}{List containing trial-specific metadata including data
+paths and connection information}
+
+\item{ui_data}{List}
+
+\item{data_connection}{Character string specifying the data connection type
+(e.g., "pharmaverse", "connector")}
+
+\item{path_output}{Optional character string specifying the output path where
+generated programs and data should be stored, required when data_connection
+is "pharmaverse"}
+}
+\value{
+A named list of generated programs where each element contains the
+complete code for one program, with names in the format "program_id_domain"
 }
 \description{
-Generate program(s)
+Generates complete program code by processing nodes in specified
+order and combining them into executable programs.
+}
+\details{
+Merges program ordering information with node data, sorts nodes by
+program and rank, then generates code for each program by processing nodes
+sequentially.
 }

@@ -8,12 +8,11 @@ generate_program_init(
   adam_domain,
   adam_dataset_list,
   data_connection,
-  path_out,
-  file_extension = c("parquet", "sas7bdat")
+  path_out
 )
 }
 \arguments{
-\item{file_extension}{}
+\item{data_connection}{}
 }
 \description{
 Write the R code to initialize an ADaM "update" program

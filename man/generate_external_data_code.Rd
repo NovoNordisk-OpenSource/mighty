@@ -8,13 +8,12 @@ generate_external_data_code(
   payload,
   trial_metadata,
   sdtm_dataset_list,
-  adam_dataset_list,
   data_connection,
   path_output
 )
 }
 \arguments{
-\item{custom_data_path}{}
+\item{data_connection}{}
 }
 \description{
 Generate external data code

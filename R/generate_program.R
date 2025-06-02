@@ -1,19 +1,29 @@
-#' Generate program(s)
+#' Generate Program Code
+#' @description Generates complete program code by processing nodes in specified
+#'   order and combining them into executable programs.
 #'
-#' @param program_order
-#' @param nodes
-#' @param domain_keys
-#' @param std_library_path
-#' @param trial_metadata
-#' @param ui_data
-#' @param path_output When data_connection is "pharmaverse" the generated
-#'   programs need to point to a location where the outputs are stored
-#' @param data_connection
+#' @details Merges program ordering information with node data, sorts nodes by
+#'   program and rank, then generates code for each program by processing nodes
+#'   sequentially.
 #'
-#' @returns
-#' @export
+#' @param program_order Data table containing program execution order with
+#'   columns for node_id, domain, program_id, rank, type, and external
+#'   dependencies
+#' @param nodes Data table containing node definitions and specifications
+#' @param domain_keys Named list mapping domain names to their respective key
+#'   columns
+#' @param code_component_env Environment containing code components
+#' @param trial_metadata List containing trial-specific metadata including data
+#'   paths and connection information
+#' @param ui_data List
+#' @param data_connection Character string specifying the data connection type
+#'   (e.g., "pharmaverse", "connector")
+#' @param path_output Optional character string specifying the output path where
+#'   generated programs and data should be stored, required when data_connection
+#'   is "pharmaverse"
 #'
-#' @examples
+#' @returns A named list of generated programs where each element contains the
+#'   complete code for one program, with names in the format "program_id_domain"
 generate_program <- function(program_order,
                              nodes,
                              domain_keys,
@@ -34,10 +44,7 @@ generate_program <- function(program_order,
                                    external_dependencies_by_program)], nodes[, !..keep_only_from_program_order], by = "node_id", all.x = TRUE) |>
     setorder(program_id, rank)
   # Create clean, empty environment to store standard components
-
   sdtm_dataset_list <- list_all_(type = "sdtm", trial_metadata, data_connection, path_output)
-  adam_dataset_list <- list_all_(type = "adam", trial_metadata, data_connection, path_output)
-
   nodes_split <- split(nodes_and_programs, by = "program_id")
 
   programs <- lapply(
@@ -48,7 +55,6 @@ generate_program <- function(program_order,
     ui_data,
     trial_metadata,
     sdtm_dataset_list,
-    adam_dataset_list,
     data_connection,
     path_output
   )
@@ -70,15 +76,7 @@ rename_programs <- function(programs, nodes_split) {
 }
 
 
-list_all_sdtm_datasets <- function(trial_metadata) {
-  # Generate list of all SDTM datasets in the current study so later we can
-  # check if a specific supp dataset exists
 
-  sdtm_path <-
-    sdtm_connector <- connector::connector_fs()(path = sdtm_path)
-  sdtm_connector |> connector::list_content_cnt()
-
-}
 list_all_ <- function(type = c("sdtm", "adam"), trial_metadata, data_connection, custom_data_path = NULL) {
   # Generate list of all SDTM datasets in the current study so later we can
   # check if a specific supp dataset exists
@@ -110,16 +108,4 @@ list_all_ <- function(type = c("sdtm", "adam"), trial_metadata, data_connection,
     })
   }
   return(result)
-}
-
-
-make_adam_domain_ext <- function(adam_domain,
-                                 file_extension,
-                                 adam_dataset_list) {
-  adam_domain_ext <- paste(adam_domain, file_extension[1], sep = ".")
-  parquet_exists <- adam_domain_ext %in% adam_dataset_list
-  if (!parquet_exists) {
-    adam_domain_ext <- paste(adam_domain, file_extension[2], sep = ".")
-  }
-  return(adam_domain_ext)
 }
