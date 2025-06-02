@@ -14,11 +14,11 @@ init:
     - DM
     - DM_VACCINE
   filter_domain:
-    - DM: '!is.na(AGEU)'
+    - DM: 'is.na(DTHFL)'
     - DM_VACCINE: NA
   filter_global: NA
   filter_depend_cols:
-    - core.AGEU
+    - core.DTHFL
 
 column_metadata:
   - column: USUBJID

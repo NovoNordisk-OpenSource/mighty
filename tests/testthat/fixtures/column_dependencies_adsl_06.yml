@@ -36,6 +36,3 @@ column_metadata:
 
   - column: VAR1
     source: EX.VAR1
-
-
-
