@@ -77,7 +77,6 @@ test_that("assert_valid_outputs aggregates errors from single domain with duplic
   )
 })
 
-
 test_that("assert_valid_outputs aggregates errors from multiple domains", {
   # ARRANGE -------------------------------------------------------------------
   x <- data.table::data.table(
@@ -100,7 +99,6 @@ test_that("assert_valid_outputs aggregates errors from multiple domains", {
   # Should contain newline character indicating multiple errors were aggregated
   expect_true(grepl("\n", error_msg$message))
 })
-
 
 test_that("assert_valid_outputs aggregates errors from multiple domains",
           {
@@ -129,7 +127,6 @@ test_that("assert_valid_outputs aggregates errors from multiple domains",
             expect_true(grepl("AEDECOD", error_msg$message))
 
           })
-
 
 test_that("assert_valid_outputs ignores row_compute actions in validation", {
   # ARRANGE -------------------------------------------------------------------
