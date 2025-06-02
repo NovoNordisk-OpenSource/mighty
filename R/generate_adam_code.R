@@ -1,10 +1,13 @@
 #' Generates the complete set of ADaM programs
+#'
 #' @param path_ui_data
-#' @param path_std_lib
 #' @param path_domain_keys
 #' @param path_output
 #' @param data_connection
 #' @param check_cross_domain_adam_dependencies
+#' @param code_component_source_pkgs
+#' @param code_component_source_files
+#' @param path_trial_metadata
 #'
 #' @return
 #' @export

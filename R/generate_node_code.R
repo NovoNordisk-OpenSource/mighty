@@ -1,26 +1,31 @@
-#' @title Generate Node Code
+#' Generate Code for Individual Nodes
+#' @description Generates executable code for each node within a program based
+#'   on node type and specifications.
 #'
-#' @param nodes_program_i
-#' @param domain_keys
-#' @param std_code_env
-#' @param ui_data
-#' @param trial_metadata
-#' @param sdtm_dataset_list
-#' @param adam_dataset_list
-#' @param data_connection
-#' @param path_output
+#' @param nodes_program_i Data table containing nodes for a specific program
+#'   with columns for type, domain, outputs, dependencies, and parameters
+#' @param domain_keys Named list mapping domain names to their respective key
+#'   columns
+#' @param std_code_env Environment containing code components
+#' @param ui_data List with domain-specific configurations and filter
+#'   dependencies
+#' @param trial_metadata List containing trial-specific metadata including data
+#'   paths and connection information
+#' @param sdtm_dataset_list Character vector of SDTM datasets available for the
+#'   study
+#' @param data_connection Character string specifying the data connection type
+#'   (e.g., "pharmaverse", "connector")
+#' @param path_output Character string specifying the output path where
+#'   generated data should be stored
 #'
-#' @return
-#' @export
-#'
-#' @examples
+#' @returns A list containing generated code blocks for each node in the
+#'   program, with each element representing the code for one processing step
 generate_node_code <- function(nodes_program_i,
                                domain_keys,
-                               std_code_env,
+                               code_component_envr,
                                ui_data,
                                trial_metadata,
                                sdtm_dataset_list,
-                               adam_dataset_list,
                                data_connection,
                                path_output) {
   program <- list()
@@ -34,7 +39,6 @@ generate_node_code <- function(nodes_program_i,
         external_deps,
         trial_metadata,
         sdtm_dataset_list,
-        adam_dataset_list,
         data_connection,
         path_output = path_output
       ) |> paste0(collapse = "\n\n")
@@ -114,7 +118,7 @@ generate_node_code <- function(nodes_program_i,
         node_id = node_i$node_id,
         domain_name = node_i$domain,
         outputs = node_i$outputs,
-        env = std_code_env
+        env = code_component_envr
       )
       next
     }

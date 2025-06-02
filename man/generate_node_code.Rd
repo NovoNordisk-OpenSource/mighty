@@ -2,23 +2,48 @@
 % Please edit documentation in R/generate_node_code.R
 \name{generate_node_code}
 \alias{generate_node_code}
-\title{Generate Node Code}
+\title{Generate Code for Individual Nodes}
 \usage{
 generate_node_code(
   nodes_program_i,
   domain_keys,
-  std_code_env,
+  code_component_envr,
   ui_data,
   trial_metadata,
   sdtm_dataset_list,
-  adam_dataset_list,
   data_connection,
   path_output
 )
 }
 \arguments{
-\item{path_output}{}
+\item{nodes_program_i}{Data table containing nodes for a specific program
+with columns for type, domain, outputs, dependencies, and parameters}
+
+\item{domain_keys}{Named list mapping domain names to their respective key
+columns}
+
+\item{ui_data}{List with domain-specific configurations and filter
+dependencies}
+
+\item{trial_metadata}{List containing trial-specific metadata including data
+paths and connection information}
+
+\item{sdtm_dataset_list}{Character vector of SDTM datasets available for the
+study}
+
+\item{data_connection}{Character string specifying the data connection type
+(e.g., "pharmaverse", "connector")}
+
+\item{path_output}{Character string specifying the output path where
+generated data should be stored}
+
+\item{std_code_env}{Environment containing code components}
+}
+\value{
+A list containing generated code blocks for each node in the
+program, with each element representing the code for one processing step
 }
 \description{
-Generate Node Code
+Generates executable code for each node within a program based
+on node type and specifications.
 }
