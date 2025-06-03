@@ -1,0 +1,36 @@
+table_metadata:
+  table: ADSL
+  keys:
+    - USUBJID
+
+init:
+  core_domains:
+    - DM
+    - DM_VACCINE
+  filter_domain:
+    - DM: NA
+    - DM_VACCINE: NA
+  filter_global: NA
+  filter_depend_cols: NA
+
+column_metadata:
+  - column: STUDYID
+    source: core.STUDYID
+
+  - column: USUBJID
+    source: core.USUBJID
+
+  - column: PLANNED_ARM
+    source: core.ARM
+
+  - column: ARM_GRP1
+    label: "some text"
+    code_id: arm_group_01
+
+  - column: EFFICACY
+    label: "Supp: Efficacy Population Flag"
+    code_id: add_supp_dm_data_01
+
+  - column: SAFETY
+    label: "Supp: Safety Population Flag"
+    code_id: add_supp_dm_data_01
