@@ -209,7 +209,7 @@ newfl_03 <-   function(.self) {
   return(.self)
 }
 
-#'#' age_redefined_01
+#' age_redefined_01
 #' @param .self `data.frame` Input data set
 #' @type col_compute
 #' @depends core AGE
@@ -271,8 +271,7 @@ age4_01 <- function(.self) {
   return(.self)
 }
 
-
-#'#' age_sex_redefined_01
+#' age_sex_redefined_01
 #' @param .self `data.frame` Input data set
 #' @type col_compute
 #' @depends core AGE
@@ -288,8 +287,7 @@ age_sex_redefined_01 <- function(.self) {
   return(.self)
 }
 
-
-#'#' supp_dm_01
+#' supp_dm_01
 #' @param .self `data.frame` Input data set
 #' @type col_compute
 #' @depends .self STUDYID
