@@ -92,20 +92,20 @@ for_each_domain_pharmaverse <- function(i, domain_name, path_output) {
 }
 
 pharmaverse_sdtm <- function(sdtm_main, keep_vars) {
-  sdtm_dataset_list <- data(package = "pharmaversesdtm")$results[, "Item"]
-  supp_dataset_name <- paste0('supp', sdtm_main)
-  supp_exists <- supp_dataset_name %in% sdtm_dataset_list
+  # sdtm_dataset_list <- data(package = "pharmaversesdtm")$results[, "Item"]
+  # supp_dataset_name <- paste0('supp', sdtm_main)
+  # supp_exists <- supp_dataset_name %in% sdtm_dataset_list
 
-  if (supp_exists) {
-    return(
-      glue::glue(
-        "{sdtm_main}_supp <- pharmaversesdtm::{tolower(supp_dataset_name)}
-  {sdtm_main} <- pharmaversesdtm::{tolower(sdtm_main)} |>
-    dplyr::select({keep_vars})
-    rm({sdtm_main}_supp)"
-      )
-    )
-  }
+  # if (supp_exists) {
+  #   return(
+  #     glue::glue(
+  #       "{sdtm_main}_supp <- pharmaversesdtm::{tolower(supp_dataset_name)}
+  # {sdtm_main} <- pharmaversesdtm::{tolower(sdtm_main)} |>
+  #   dplyr::select({keep_vars})
+  #   rm({sdtm_main}_supp)"
+  #     )
+  #   )
+  # }
 
   return(
     glue::glue(

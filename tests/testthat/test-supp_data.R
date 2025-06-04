@@ -1,4 +1,4 @@
-test_that("Supplementary data is handled correctly - no filters", {
+test_that("Supplementary data is handled correctly", {
 
   # SETUP -------------------------------------------------------------------
 
@@ -12,7 +12,7 @@ test_that("Supplementary data is handled correctly - no filters", {
   output_path <- withr::local_tempdir()
 
   # ACT ---------------------------------------------------------------------
-browser()
+
   actual <- generate_adam_code(
     path_ui_data = ui_path,
     code_component_source_files =  std_lib_path,
@@ -22,18 +22,39 @@ browser()
     data_connection = "pharmaverse"
   )
 
-  write_adam_programs(dir = output_path, programs = actual$programs)
-  x <- list.files(output_path, full.names = TRUE)
-  do.call(file.edit, as.list(x))
+  # browser()
+  # write_adam_programs(dir = output_path, programs = actual$programs)
+  # x <- list.files(output_path, full.names = TRUE)
+  # do.call(file.edit, as.list(x))
 
   # EXPECT ------------------------------------------------------------------
+
+  # External dependencies
+  expected_ext_dep <- data.table(
+    domain = c("dm", "dm", "dm", "dm", "dm",
+               "dm_vaccine", "dm_vaccine", "dm_vaccine", "dm_vaccine", "dm_vaccine",
+               "suppdm", "suppdm", "suppdm", "suppdm", "suppdm",
+               "suppdm_vaccine", "suppdm_vaccine", "suppdm_vaccine", "suppdm_vaccine", "suppdm_vaccine"),
+    domain_type = rep("sdtm", 20),
+    column_name = c("AGEU", "ARM", "DOMAIN", "STUDYID", "USUBJID",
+                    "AGEU", "ARM", "DOMAIN", "STUDYID", "USUBJID",
+                    "QLABEL", "QNAM", "QVAL", "STUDYID", "USUBJID",
+                    "QLABEL", "QNAM", "QVAL", "STUDYID", "USUBJID")
+  )
+  expect_equal(actual$program_sequence$external_dependencies_by_program[[1]],
+               expected_ext_dep)
+
+  # Edges
+  expected_edges <- data.table(
+    parent_node = c("ADSL-PLANNED_ARM", "ADSL-domain_init", "ADSL-domain_init"),
+    node_id = c("ADSL-ARM_GRP1-arm_group_01", "ADSL-EFFICACY-SAFETY-add_supp_dm_data_01", "ADSL-PLANNED_ARM")
+  )
+  expect_equal(actual$edges,
+               expected_edges)
 
 
 })
 
-
-# suppdm <- pharmaversesdtm::suppdm |> dplyr::select(-QEVAL)
-# suppdm_vaccine <- pharmaversesdtm::suppdm_vaccine
 
 
 
