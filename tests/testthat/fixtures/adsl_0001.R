@@ -289,7 +289,7 @@ age_sex_redefined_01 <- function(.self) {
 }
 
 
-#'#' add_supp_dm_data_01
+#'#' supp_dm_01
 #' @param .self `data.frame` Input data set
 #' @type col_compute
 #' @depends .self STUDYID
@@ -307,51 +307,21 @@ age_sex_redefined_01 <- function(.self) {
 #' @outputs EFFICACY
 #' @outputs SAFETY
 #' @returns `.self`
-add_supp_dm_data_01 <- function(.self, suppdm, suppdm_vaccine) {
+supp_dm_01 <- function(.self, suppdm, suppdm_vaccine) {
 
+  # Collect supplementary data
   data_supp <- rbind(suppdm, suppdm_vaccine) |>
     dplyr::filter(QNAM %in% c("EFFICACY", "SAFETY"))
 
-  old_label <- unlist(labelled::var_label(.self))
-
-  no_idvarval <- ifelse("IDVARVAL" %in% names(data_supp), FALSE, TRUE)
-  if (no_idvarval) {
-    id_cols <- c("STUDYID", "USUBJID")
-  } else {
-    id_cols <- c("STUDYID", "USUBJID", "IDVARVAL")
-  }
-
-
+  # Transpose and join supplementary data
   supp_labels <- data_supp |> dplyr::distinct(.data$QNAM, .data$QLABEL)
   tDatasetSupp <- tidyr::pivot_wider(
     data_supp,
-    id_cols = id_cols,
+    id_cols = c("STUDYID", "USUBJID"),
     values_from = "QVAL",
     names_from = "QNAM"
   )
+  .self <- dplyr::left_join(.self, tDatasetSupp, by = c("USUBJID", "STUDYID"))
 
-  # Some domains (dm and ?) might sometimes be merged without the ID var.
-  # MEWP: Verify with trials when and why these cases exist - ideally all should
-  # use the IDVARVAL from the Supp
-  # no_idvarval <- isTRUE(all(tDatasetSupp$IDVARVAL == ""))
-  dsIdVar <- ""
-  if (no_idvarval) {
-    dataset <- dplyr::left_join(.self, tDatasetSupp, by = c("USUBJID", "STUDYID"))
-  } else {
-    dsIdVar <- names(.self)[grep(pattern = "*SPID", names(.self))]
-    names(tDatasetSupp)[names(tDatasetSupp) == "IDVARVAL"] <- dsIdVar
-    dataset <- merge(
-      x = .self,
-      y = tDatasetSupp,
-      by = intersect(names(.self), names(tDatasetSupp)),
-      all.x = TRUE,
-      suffixes = c("")
-    )
-  }
-  new_label <- c(old_label,
-                 structure(supp_labels$QLABEL, names = supp_labels$QNAM))
-  names_new <- intersect(colnames(dataset), names(new_label))
-  # labelled::var_label(dataset)[names_new] <- new_label[names_new] # fails when parsing the code
-  .self <- dataset
   return(.self)
 }

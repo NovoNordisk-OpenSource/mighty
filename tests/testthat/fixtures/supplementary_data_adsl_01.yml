@@ -34,8 +34,8 @@ column_metadata:
 
   - column: EFFICACY
     label: "Supp: Efficacy Population Flag"
-    code_id: add_supp_dm_data_01
+    code_id: supp_dm_01
 
   - column: SAFETY
     label: "Supp: Safety Population Flag"
-    code_id: add_supp_dm_data_01
+    code_id: supp_dm_01

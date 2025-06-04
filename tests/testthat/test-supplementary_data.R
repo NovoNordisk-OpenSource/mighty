@@ -2,7 +2,7 @@ test_that("Supplementary data is handled correctly", {
 
   # SETUP -------------------------------------------------------------------
 
-  ui_path <- test_path("fixtures", "supp_data_adsl_01.yml")
+  ui_path <- test_path("fixtures", "supplementary_data_adsl_01.yml")
 
   path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
 
@@ -21,11 +21,8 @@ test_that("Supplementary data is handled correctly", {
     path_output = output_path,
     data_connection = "pharmaverse"
   )
-
-  # browser()
-  # write_adam_programs(dir = output_path, programs = actual$programs)
-  # x <- list.files(output_path, full.names = TRUE)
-  # do.call(file.edit, as.list(x))
+  write_adam_programs(dir = output_path, programs = actual$programs)
+  x <- list.files(output_path, full.names = TRUE)
 
   # EXPECT ------------------------------------------------------------------
 
@@ -47,15 +44,14 @@ test_that("Supplementary data is handled correctly", {
   # Edges
   expected_edges <- data.table(
     parent_node = c("ADSL-PLANNED_ARM", "ADSL-domain_init", "ADSL-domain_init"),
-    node_id = c("ADSL-ARM_GRP1-arm_group_01", "ADSL-EFFICACY-SAFETY-add_supp_dm_data_01", "ADSL-PLANNED_ARM")
+    node_id = c("ADSL-ARM_GRP1-arm_group_01", "ADSL-EFFICACY-SAFETY-supp_dm_01", "ADSL-PLANNED_ARM")
   )
   expect_equal(actual$edges,
                expected_edges)
 
+  # Names of generated ADSL
+  x[[1]] |> source()
+  expect_setequal(names(ADSL),
+                  c("STUDYID", "USUBJID", "ARM", "EFFICACY", "SAFETY", "PLANNED_ARM", "ARM_GRP1"))
 
 })
-
-
-
-
-

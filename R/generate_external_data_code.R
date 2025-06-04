@@ -47,18 +47,9 @@ external_data <- function(data_type = c("sdtm", "adam", "metadata"),
                           domain,
                           keep_vars,
                           dataset_list = NULL) {
-  supp_exists <- FALSE
-  if (data_type == "sdtm" && !is.null(dataset_list)) {
-    supp_dataset_name <- paste0('supp', domain)
-    supp_exists <- supp_dataset_name %in% dataset_list
-  }
-
-  glue::glue(
-    ifelse(supp_exists, "{domain}_supp <- cnt${data_type}$read_cnt('{supp_dataset_name}')", ""),
+   glue::glue(
     "{domain} <- cnt${data_type}$read_cnt('{domain}') |> ",
-    ifelse(supp_exists, "mighty::sdtm_add_supp({sdtm_main}_supp) |>", ""),
-    "dplyr::select({keep_vars})",
-    ifelse(supp_exists, "rm({domain}_supp)", "")
+    "dplyr::select({keep_vars})"
   )
 }
 
@@ -92,21 +83,6 @@ for_each_domain_pharmaverse <- function(i, domain_name, path_output) {
 }
 
 pharmaverse_sdtm <- function(sdtm_main, keep_vars) {
-  # sdtm_dataset_list <- data(package = "pharmaversesdtm")$results[, "Item"]
-  # supp_dataset_name <- paste0('supp', sdtm_main)
-  # supp_exists <- supp_dataset_name %in% sdtm_dataset_list
-
-  # if (supp_exists) {
-  #   return(
-  #     glue::glue(
-  #       "{sdtm_main}_supp <- pharmaversesdtm::{tolower(supp_dataset_name)}
-  # {sdtm_main} <- pharmaversesdtm::{tolower(sdtm_main)} |>
-  #   dplyr::select({keep_vars})
-  #   rm({sdtm_main}_supp)"
-  #     )
-  #   )
-  # }
-
   return(
     glue::glue(
       "{sdtm_main} <- pharmaversesdtm::{tolower(sdtm_main)} |>
@@ -116,7 +92,6 @@ pharmaverse_sdtm <- function(sdtm_main, keep_vars) {
 }
 
 pharmaverse_adam <- function(adam_domain, keep_vars, path_output) {
-
   path_domain <- file.path(path_output, paste0(adam_domain, ".R"))
   glue::glue(
     "{adam_domain} <- readRDS(\"{path_domain}\") |>
