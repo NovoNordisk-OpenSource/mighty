@@ -11,9 +11,8 @@
 #'
 #' @return
 #' @export
-#'
-#' @examples
 #' @import data.table
+#' @examples
 generate_adam_code <- function(path_ui_data,
                                code_component_source_pkgs = NULL,
                                code_component_source_files = NULL,

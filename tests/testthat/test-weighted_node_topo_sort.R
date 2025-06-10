@@ -5,7 +5,6 @@ test_that("weighted_node_topo_sort handles basic linear graph", {
     node_id = c("A", "B", "C", "D"),
     domain = c("ADSL", "ADAE", "ADCM", "ADLB")
   )
-
   # ACT ---------------------------------------------------------------------
   result <- weighted_node_topo_sort(edges, nodes)
 
