@@ -59,7 +59,7 @@ external_dependencies_per_program <- function(program_order, nodes, init_metadat
       dplyr::filter(domain !=  unique(i$domain))
   })
 
-  ext_cols_by_pgm <- lapply(seq_len(length(nodes_by_pgm)), function(i){
+ext_cols_by_pgm <- lapply(seq_len(length(nodes_by_pgm)), function(i){
 
     y <- nodes_by_pgm[[i]]
 

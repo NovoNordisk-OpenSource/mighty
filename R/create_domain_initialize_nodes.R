@@ -32,7 +32,7 @@ create_domain_initialize_nodes <- function(nodes) {
   # Identify what columns are absorbed bu the domain_init actions
   nodes_absorbed <- nodes[is_absorbed_by_init, c("domain", "outputs")]
   nodes_absorbed_list <- paste0(nodes_absorbed$domain, ".", nodes_absorbed$outputs)
-
+browser()
   # For the retained actions, redirect any depend_cols that are absorbed by the
   # domain_init actions to the domain_init action
   nodes_retained$depend_cols <- lapply(nodes_retained$depend_cols, function(x) {
@@ -44,6 +44,22 @@ create_domain_initialize_nodes <- function(nodes) {
     }
     x
   })
+
+  # New
+  nodes_retained$depend_cols2 <- lapply(seq_len(nrow(nodes_retained)), function(i) {
+
+    domain_i <- nodes_retained$domain[[i]]
+    dep_cols <- nodes_retained$depend_cols[[i]]
+
+    redirect_to_init <- paste0(dep_cols$domain, ".", dep_cols$column_name) %in% nodes_absorbed_list
+
+    if (any(redirect_to_init)) {
+      # If the node is absorbed by a domain_init node, redirect the dependencies
+      dep_cols$domain_type[redirect_to_init] <- "init"
+    }
+    dep_cols
+  })
+
 
   # Return the collection of retained actions and domain_init actions
   return(rbind(nodes_retained, domain_init_nodes))

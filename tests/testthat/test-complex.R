@@ -15,6 +15,7 @@ test_that("Complex test with multiple domains and column/row operations", {
   output_path <- withr::local_tempdir()
 
   # ACT ---------------------------------------------------------------------
+
   actual <- generate_adam_code(
     path_ui_data = ui_path,
     code_component_source_files =  std_lib_path,
