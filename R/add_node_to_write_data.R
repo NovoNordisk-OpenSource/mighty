@@ -1,4 +1,4 @@
-add_node_to_write_data <- function(x) {
+add_nodes_to_write_data <- function(x) {
   tmp <- x[, make_write_data_node(.SD, .BY), by = program_id]
   rbindlist(list(x, tmp), fill = TRUE) |> setorder(rank, program_id)
 }
@@ -12,6 +12,6 @@ make_write_data_node <- function(node_subset, program_id) {
     domain = domain_i,
     type = "write_data",
     rank = inx,
-    external_dependencies_by_program = NA_character_
+    input_cols = NA_character_
   )
 }

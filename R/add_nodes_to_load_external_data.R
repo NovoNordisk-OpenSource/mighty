@@ -8,7 +8,7 @@
 #' @return
 #'
 #' @examples
-add_nodes_to_load_external_data <- function(program_order, nodes, init_metadata, domain_keys) {
+add_nodes_to_read_data <- function(program_order, nodes, init_metadata, domain_keys) {
   external_deps <- external_dependencies_per_program(program_order, nodes, init_metadata, domain_keys)
   x <- split(program_order, by = "program_id")
 
@@ -25,13 +25,13 @@ add_nodes_to_load_external_data <- function(program_order, nodes, init_metadata,
       rank =
         i[type=="domain_init"|type=="program_init", rank]-0.5,
       type = "read_data",
-      external_dependencies_by_program = list(deps_i)
+      input_cols = list(deps_i)
     )]
 
   }) |>
     rbindlist()
   prog_order_tmp <- copy(program_order)
-  prog_order_tmp[, external_dependencies_by_program := list(NA_character_)]
+  prog_order_tmp[, input_cols := list(NA_character_)]
   out <- rbindlist(list(prog_order_tmp, new_nodes_list)) |>
     setorder(program_id, rank)
   out[, rank := .I]

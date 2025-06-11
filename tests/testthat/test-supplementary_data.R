@@ -38,7 +38,7 @@ test_that("Supplementary data is handled correctly", {
                     "QLABEL", "QNAM", "QVAL", "STUDYID", "USUBJID",
                     "QLABEL", "QNAM", "QVAL", "STUDYID", "USUBJID")
   )
-  expect_equal(actual$program_sequence$external_dependencies_by_program[[1]],
+  expect_equal(actual$program_sequence$input_cols[[1]],
                expected_ext_dep)
 
   # Edges

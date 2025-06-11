@@ -41,7 +41,7 @@ generate_program <- function(program_order,
                                    program_id,
                                    rank,
                                    type,
-                                   external_dependencies_by_program)], nodes[, !..keep_only_from_program_order], by = "node_id", all.x = TRUE) |>
+                                   input_cols)], nodes[, !..keep_only_from_program_order], by = "node_id", all.x = TRUE) |>
     setorder(program_id, rank)
   # Create clean, empty environment to store standard components
   sdtm_dataset_list <- list_all_(type = "sdtm", trial_metadata, data_connection, path_output)

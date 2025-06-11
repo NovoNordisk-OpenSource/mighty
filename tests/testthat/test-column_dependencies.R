@@ -35,7 +35,7 @@ test_that("No filters", {
     domain_type = rep("sdtm", 4),
     column_name = c("ARM", "USUBJID", "ARM", "USUBJID")
   )
-  expect_equal(actual$program_sequence$external_dependencies_by_program[[1]],
+  expect_equal(actual$program_sequence$input_cols[[1]],
                expected_ext_dep)
 
   # Check order of derivations
@@ -89,7 +89,7 @@ test_that("No domain filters", {
     domain_type = rep("sdtm", 8),
     column_name = c("ARM", "DOMAIN", "STUDYID", "USUBJID", "ARM", "DOMAIN", "STUDYID", "USUBJID")
   )
-  expect_equal(actual$program_sequence$external_dependencies_by_program[[1]],
+  expect_equal(actual$program_sequence$input_cols[[1]],
                expected_ext_dep)
 
   # Check order of derivations
@@ -143,7 +143,7 @@ test_that("No global filters", {
     domain_type = rep("sdtm", 6),
     column_name = c("ARM", "DTHFL", "USUBJID", "ARM", "DTHFL", "USUBJID")
   )
-  expect_equal(actual$program_sequence$external_dependencies_by_program[[1]],
+  expect_equal(actual$program_sequence$input_cols[[1]],
                expected_ext_dep)
 
   # Check order of derivations
@@ -197,7 +197,7 @@ test_that("No filters and no derivations", {
     domain_type = rep("sdtm", 4),
     column_name = c("ARM", "USUBJID", "ARM", "USUBJID")
   )
-  expect_equal(actual$program_sequence$external_dependencies_by_program[[1]],
+  expect_equal(actual$program_sequence$input_cols[[1]],
                expected_ext_dep)
 
   # Check order of derivations
@@ -252,7 +252,7 @@ test_that("Global filter and domain filter", {
     column_name = c("AGEU", "ARM", "DOMAIN", "STUDYID", "USUBJID",
                     "AGEU", "ARM", "DOMAIN", "STUDYID", "USUBJID")
   )
-  expect_equal(actual$program_sequence$external_dependencies_by_program[[1]],
+  expect_equal(actual$program_sequence$input_cols[[1]],
                expected_ext_dep)
 
   # Check order of derivations
@@ -307,7 +307,7 @@ test_that("Global filter and domain filter incl. ADSL dependencies", {
     domain_type = c("adam", "adam", "adam", "sdtm", "sdtm", "sdtm", "sdtm"),
     column_name = c("SEX", "STUDYID", "USUBJID", "LBSTRESN", "STUDYID", "USUBJID", "VISITNUM")
   )
-  expect_equal(actual$program_sequence$external_dependencies_by_program[[1]],
+  expect_equal(actual$program_sequence$input_cols[[1]],
                expected_ext_dep)
 
   # Check order of derivations
@@ -355,7 +355,7 @@ test_that("Global filter and domain filter incl. adsl dependencies (lower case)"
     domain_type = c("adam", "adam", "adam", "sdtm", "sdtm", "sdtm", "sdtm"),
     column_name = c("SEX", "STUDYID", "USUBJID", "LBSTRESN", "STUDYID", "USUBJID", "VISITNUM")
   )
-  expect_equal(actual$program_sequence$external_dependencies_by_program[[1]],
+  expect_equal(actual$program_sequence$input_cols[[1]],
                expected_ext_dep)
 
   # Check order of derivations
@@ -405,7 +405,7 @@ test_that("External predecessor dependencies are handled correctly", {
                     "AGEU", "ARM", "DOMAIN", "STUDYID", "USUBJID",
                     "USUBJID", "VAR1")
   )
-  expect_equal(actual$program_sequence$external_dependencies_by_program[[1]],
+  expect_equal(actual$program_sequence$input_cols[[1]],
                expected_ext_dep)
 
   # Check order of derivations
@@ -501,7 +501,7 @@ test_that("Dependencies between a col_compute action that inputs/returns a core 
     column_name = c("AGE", "AGEU", "ARM", "RACE", "SEX", "USUBJID",
                     "AGE", "AGEU", "ARM", "RACE", "SEX", "USUBJID")
   )
-  expect_equal(actual$program_sequence$external_dependencies_by_program[[1]],
+  expect_equal(actual$program_sequence$input_cols[[1]],
                expected_ext_dep)
 
   # Check order of derivations
@@ -563,7 +563,7 @@ test_that("Dependencies between a col_compute action that inputs/returns multipl
     column_name = c("AGE", "AGEU", "RACE", "SEX", "USUBJID",
                     "AGE", "AGEU", "RACE", "SEX", "USUBJID")
   )
-  expect_equal(actual$program_sequence$external_dependencies_by_program[[1]],
+  expect_equal(actual$program_sequence$input_cols[[1]],
                expected_ext_dep)
 
   # Check order of derivations
