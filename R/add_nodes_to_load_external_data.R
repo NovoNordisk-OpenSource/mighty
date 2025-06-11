@@ -56,10 +56,13 @@ external_dependencies_per_program <- function(program_order, nodes, init_metadat
                           "program_id")
   dep_src_cols_by_pgm <- lapply(nodes_by_pgm, function(i) {
     i[, rbindlist(depend_cols), by = node_id] |>
-      dplyr::filter(domain !=  unique(i$domain))
+      dplyr::filter(domain !=  unique(i$domain)) |>
+      dplyr::mutate(domain_type = ifelse(domain_type == "init",
+                                         classify_external_data_domains(domain),
+                                         domain_type))
   })
 
-ext_cols_by_pgm <- lapply(seq_len(length(nodes_by_pgm)), function(i){
+  ext_cols_by_pgm <- lapply(seq_len(length(nodes_by_pgm)), function(i){
 
     y <- nodes_by_pgm[[i]]
 
