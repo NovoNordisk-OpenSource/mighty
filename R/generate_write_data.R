@@ -14,7 +14,7 @@ generate_write_data <- function(domain_name,
     save_table_code <- glue::glue("saveRDS(object = {domain_name}, file = \"{file_path}\")")
   }
   # Assumption: cnt (Connector) object setup earlier i.e. in
-  # generate_external_data_code
+  # generate_read_data_code
   # TODO: the parquet file format is chosen by default. Should there be a
   # setting e.g. in the trial_metadata config file to choose file format?
   else {

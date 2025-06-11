@@ -20,11 +20,11 @@ add_nodes_to_load_external_data <- function(program_order, nodes, init_metadata,
     new_node <- data.table::data.table(matrix(ncol = ncol(i))) |> setnames(names(i))
     new_node[, `:=`(
       domain = domain_i,
-      node_id = "external",
+      node_id =  paste0(domain_i, "-", i$program_id[1], "-read_data"),
       program_id = i$program_id[1],
       rank =
         i[type=="domain_init"|type=="program_init", rank]-0.5,
-      type = "external",
+      type = "read_data",
       external_dependencies_by_program = list(deps_i)
     )]
 
@@ -58,7 +58,7 @@ external_dependencies_per_program <- function(program_order, nodes, init_metadat
     i[, rbindlist(depend_cols), by = node_id] |>
       dplyr::filter(domain !=  unique(i$domain)) |>
       dplyr::mutate(domain_type = ifelse(domain_type == "init",
-                                         classify_external_data_domains(domain),
+                                         classify_data_domains(domain),
                                          domain_type))
   })
 
@@ -99,7 +99,7 @@ external_dependencies_per_program <- function(program_order, nodes, init_metadat
           "column_name" = domain_keys[["ADSL"]],
           stringsAsFactors = FALSE
         )
-        dep_key[["domain_type"]] <- classify_external_data_domains(dep_key[["domain"]])
+        dep_key[["domain_type"]] <- classify_data_domains(dep_key[["domain"]])
       } else {
         dep_key <- dep_empty
       }
@@ -111,7 +111,7 @@ external_dependencies_per_program <- function(program_order, nodes, init_metadat
         "column_name" = filter_depend_cols_core,
         stringsAsFactors = FALSE
       ) |> as.data.table()
-      dep_core[["domain_type"]] <- classify_external_data_domains(dep_core[["domain"]])
+      dep_core[["domain_type"]] <- classify_data_domains(dep_core[["domain"]])
 
       # Combine the dependencies
       out <- rbind(dep_core, dep_adsl, dep_key, dep_src_cols_by_pgm[[i]][, c("domain", "domain_type", "column_name")])

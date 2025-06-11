@@ -10,11 +10,11 @@
 #' @export
 #'
 #' @examples
-generate_external_data_code <- function(payload,
-                                        trial_metadata,
-                                        sdtm_dataset_list,
-                                        data_connection,
-                                        path_output) {
+generate_read_data_code <- function(payload,
+                                    trial_metadata,
+                                    sdtm_dataset_list,
+                                    data_connection,
+                                    path_output) {
   # for each element of payload, apply the following logic
   by_domain <- split(payload, payload$domain)
   if (data_connection == "pharmaverse") {

@@ -33,9 +33,9 @@ generate_node_code <- function(nodes_program_i,
   for (i in seq_len(nrow(nodes_program_i))) {
     node_i <- nodes_program_i[i]
 
-    if (node_i$type == "external") {
+    if (node_i$type == "read_data") {
       external_deps <- node_i$external_dependencies_by_program[[1]]
-      program[[i]] <- generate_external_data_code(
+      program[[i]] <- generate_read_data_code(
         external_deps,
         trial_metadata,
         sdtm_dataset_list,
@@ -124,8 +124,8 @@ generate_node_code <- function(nodes_program_i,
     }
     if (node_i$type == "write_data") {
       # Collect input table names
-      if (any(nodes_program_i$type == "external")) {
-        input_tables <- nodes_program_i[nodes_program_i$type == "external", ]$external_dependencies_by_program[[1]][["domain"]] |>
+      if (any(nodes_program_i$type == "read_data")) {
+        input_tables <- nodes_program_i[nodes_program_i$type == "read_data", ]$external_dependencies_by_program[[1]][["domain"]] |>
           unique()
       } else {
         input_tables <- c()
