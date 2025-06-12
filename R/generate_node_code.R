@@ -111,7 +111,7 @@ generate_node_code <- function(nodes_program_i,
       next
 
     }
-    if (node_i$type == "col_compute" || node_i$type == "row_compute") {
+    if (node_i$type %in% c("col_compute", "col_supp", "row_compute")) {
       program[[i]] <- parse_into_chunks(
         code_id = node_i$code_id,
         user_supplied_parameters = node_i$parameters |> unlist(FALSE),
