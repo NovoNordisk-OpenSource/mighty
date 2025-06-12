@@ -19,7 +19,6 @@ test_that("parameters accept R code", {
   )
 
   # EXPECT
-
   eval(parse(text = paste0(actual$programs$`1_ADSL`, collapse = "\n")))
   expect_equal(
     unname(ADSL),
