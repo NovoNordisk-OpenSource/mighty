@@ -1,8 +1,5 @@
 table_metadata:
   table: ADSL
-  keys:
-    - USUBJID
-
 
 init:
   core_domains:

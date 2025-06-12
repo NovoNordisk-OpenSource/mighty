@@ -82,3 +82,4 @@ test_that("Complex test with multiple domains and column/row operations", {
   actual$edges |> data.table::setorder(node_id, parent_node) |>  as.data.frame() |> expect_snapshot_value(style = "json2")
 })
 
+
