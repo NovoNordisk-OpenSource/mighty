@@ -29,13 +29,10 @@ column_metadata:
     source: core.ARM
 
   - column: ARM_GRP1
-    label: "some text"
     code_id: arm_group_01
 
   - column: EFFICACY
-    label: "Supp: Efficacy Population Flag"
     code_id: supp_dm_01
 
   - column: SAFETY
-    label: "Supp: Safety Population Flag"
     code_id: supp_dm_01

@@ -55,3 +55,9 @@ test_that("Supplementary data is handled correctly", {
                   c("STUDYID", "USUBJID", "ARM", "EFFICACY", "SAFETY", "PLANNED_ARM", "ARM_GRP1"))
 
 })
+
+# TODO
+# Add test to check that:
+#   - supp data action is put right after read_data when no dependency on supp is present in filter
+#   - supp data action is put right after read_data when dependency on supp is present in filter
+#   - supp data action is put right after read_data when dependency on supp is present in filter + filter with ADSL

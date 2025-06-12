@@ -289,8 +289,8 @@ age_sex_redefined_01 <- function(.self) {
 
 #' supp_dm_01
 #' @param .self `data.frame` Input data set
-#' @type col_compute
-#' @depends .self STUDYID
+#' @type col_supp
+#' @depends STUDYID
 #' @depends .self USUBJID
 #' @depends suppdm STUDYID
 #' @depends suppdm USUBJID
