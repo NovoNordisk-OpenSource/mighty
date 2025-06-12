@@ -20,41 +20,55 @@ generate_initialize_domain <-  function(.self,
                                         filter_global = NULL,
                                         keep_vars = NULL) {
 
+  browser()
+
+  stopifnot("Domain filters must be set to NA if not used" =
+              length(filter_domain) == length(core_domains))
+
   # Block header
   self <- toupper(.self)
   metadata_block_core <- glue::glue(
     "# Core {self} table ------------------------------"
   )
 
-  # Read in the core domains
-  filter_prepart <- function(domain, filter_domain = NULL) {
+  filter_domain_unlist <- unlist(filter_domain)
 
-    domain_var <- domain
-
-    if (is.null(filter_domain) || any(is.na(filter_domain))) {
-      return(glue::glue("{domain_var}_tmp <- {domain_var}"))
+  domain_filter <- lapply(core_domains, function(x){
+    filter <- filter_domain_unlist[[x]]
+    if(is.na(filter)){
+      paste0("(src_ == \"", x, "\")")
+    } else {
+      paste0("(src_ == \"", x, "\" & ", filter, ")")
     }
-    filter_domain_collapsed <- paste(filter_domain, collapse = " &&\n")
-    glue::glue("{domain_var}_tmp <- {domain_var} |> dplyr::filter({filter_domain_collapsed})")
-  }
+  }) |> paste0(collapse = " ||\n")
 
-  stopifnot("Domain filters must be set to NA if not used" =
-              length(filter_domain) == length(core_domains))
+  global_filter <-
 
-  prepart_exprs <- unlist(purrr::map2(core_domains, filter_domain, filter_prepart))
+  # Read in the core domains
+  # filter_prepart <- function(domain, filter_domain = NULL) {
+  #
+  #   domain_var <- domain
+  #
+  #   if (is.null(filter_domain) || any(is.na(filter_domain))) {
+  #     return(glue::glue("{domain_var}_tmp <- {domain_var}"))
+  #   }
+  #   filter_domain_collapsed <- paste(filter_domain, collapse = " &&\n")
+  #   glue::glue("{domain_var}_tmp <- {domain_var} |> dplyr::filter({filter_domain_collapsed})")
+  # }
+  # prepart_exprs <- unlist(purrr::map2(core_domains, filter_domain, filter_prepart))
 
   # Generate row_bind expression if there are multiple core domains
-  if (length(core_domains) > 1) {
-    bind_expr <-  glue::glue(
-      "{.self} <- rbind({paste(paste0(core_domains, '_tmp'), collapse = ', ')}) |> dplyr::as_tibble()
-      rm({paste(paste0(core_domains, '_tmp'), collapse=', ')})"
-    )
-  } else {
-    bind_expr <-  glue::glue("{.self} <- {paste0(core_domains, '_tmp')} |> dplyr::as_tibble()
-                             rm({paste0(core_domains, '_tmp')})")
-  }
+  # if (length(core_domains) > 1) {
+  #   bind_expr <-  glue::glue(
+  #     "{.self} <- rbind({paste(paste0(core_domains, '_tmp'), collapse = ', ')}) |> dplyr::as_tibble()
+  #     rm({paste(paste0(core_domains, '_tmp'), collapse=', ')})"
+  #   )
+  # } else {
+  #   bind_expr <-  glue::glue("{.self} <- {paste0(core_domains, '_tmp')} |> dplyr::as_tibble()
+  #                            rm({paste0(core_domains, '_tmp')})")
+  # }
 
-  # When the domain is NOT ADSL, we automatically merge it one in case ADSL vars
+  # When the domain is NOT ADSL, we automatically merge it on in case ADSL vars
   # are needed for global filtering.
   # TODO: This could be done smarter
   merge_expr <- if (self != "ADSL") {

@@ -14,7 +14,9 @@ generate_read_data_code <- function(payload,
                                     trial_metadata,
                                     sdtm_dataset_list,
                                     data_connection,
-                                    path_output) {
+                                    path_output,
+                                    core_domains,
+                                    adam_domain) {
   # for each element of payload, apply the following logic
   by_domain <- split(payload, payload$domain)
   if (data_connection == "pharmaverse") {
@@ -37,10 +39,22 @@ generate_read_data_code <- function(payload,
   block_header <- glue::glue(
     "
 
-# Read all datasets needed ------------------------------------------------
+# Read all data sets needed ------------------------------------------------
       "
   )
-  c(block_header, connector_setup, data_load_code)
+
+  add_src <- lapply(core_domains, function(x) {
+    glue::glue("{x} <- {x} |> dplyr::mutate(src_ = '{x}')")
+  }) |> unlist()
+
+  combine_core_domains <-
+    paste(adam_domain, "<-" , paste0("rbind(",
+                                paste0(core_domains,
+                                       collapse = ", "), ")"), "|>\nadmiral::convert_blanks_to_na()")
+
+  adam_init <- paste(c(add_src, combine_core_domains), collapse = "\n")
+
+  c(block_header, connector_setup, data_load_code, adam_init)
 }
 
 external_data <- function(data_type = c("sdtm", "adam", "metadata"),

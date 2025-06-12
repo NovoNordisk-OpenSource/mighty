@@ -40,7 +40,9 @@ generate_node_code <- function(nodes_program_i,
         trial_metadata,
         sdtm_dataset_list,
         data_connection,
-        path_output = path_output
+        path_output = path_output,
+        core_domains = ui_data[[node_i$domain]]$init$core_domains,
+        adam_domain = node_i$domain
       ) |> paste0(collapse = "\n\n")
 
       next
@@ -51,10 +53,6 @@ generate_node_code <- function(nodes_program_i,
       adsl_name <- regmatches(filter_depend_cols,
                               regexpr("ADSL|adsl", filter_depend_cols)) |>
         unique()
-
-
-
-
       program[[i]] <- generate_initialize_domain(
         .self = node_i$domain,
         core_domains = domain_metadata$core_domains,

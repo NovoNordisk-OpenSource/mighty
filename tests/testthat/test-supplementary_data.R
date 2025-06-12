@@ -1,7 +1,5 @@
 test_that("Supplementary data is added right after read_data when no supp cols are used in filters", {
 
-  skip()
-
   # SETUP -------------------------------------------------------------------
 
   ui_path <- test_path("fixtures", "supplementary_data_adsl_01.yml")
