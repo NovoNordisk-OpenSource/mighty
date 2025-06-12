@@ -1,7 +1,5 @@
 table_metadata:
   table: adlb
-  keys:
-    - USUBJID PARAMN AVISITN ADT ATM SRCSEQ
 
 
 init:

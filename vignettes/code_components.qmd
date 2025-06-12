@@ -1,0 +1,113 @@
+---
+title: "code_components"
+vignette: >
+  %\VignetteIndexEntry{code_components}
+  %\VignetteEngine{quarto::html}
+  %\VignetteEncoding{UTF-8}
+knitr:
+  opts_chunk:
+    collapse: true
+    comment: '#>'
+---
+
+```{r setup, include=FALSE}
+library(mighty)
+dummy_script <- system.file("dummy.R", package = "mighty")
+
+render_rd <- function(file) {
+  tmp <- withr::local_tempdir()
+  blocks <- roxygen2::parse_file(file = file)
+  results <- roxygen2::roclet_process(
+    x = roxygen2::rd_roclet(),
+    blocks = blocks
+  )
+  rd_file <- roxygen2::roclet_output(
+    x = roxygen2::rd_roclet(),
+    results = results,
+    base_path = tmp
+  )
+  readLines(rd_file)
+}
+```
+
+## Introduction
+
+This vignette provides a step-by-step guide for creating standard components for they {mighty} framework. 
+By following these conventions and using our custom roxygen2 tags, you will create components that are consistent, well-documented, and easily integrated into the existing ecosystem.
+
+## What is a Standard Component?
+
+In the {mighty} framework, a "component" is a function that processes input data and returns a modified version with new columns or rows. 
+Standard components share a common structure and documentation pattern, facilitating their use inside {mighty}.
+
+## Custom Roxygen Tags
+
+Our package extends the standard {roxygen2} with special "Mighty" tags that help document specialized functions. These tags enable:
+
+1. Clear identification of function types
+1. Explicit declaration of data dependencies
+1. Documentation of output variables
+
+The available tags are always required and are:
+
+| Tag        | Description                                          | Example                  |
+|------------|------------------------------------------------------|--------------------------|
+| `@type`    | Specifies type: `r mighty:::valid_types()` | `@type derivation`       |
+| `@depends` | Lists required input variables in the format of \<dataset\> \<variable\> | `@depends .self USUBJID` |
+| `@outputs` | Declares variables created                           | `@outputs NEWVAR`        |
+
+## Component Conventions
+
+Standard components follow these conventions:
+
+1. The first parameter is always named `.self` (the input dataset)
+1. Additional parameters represent other datasets or configuration options
+1. Configuration opions are passed as a named list to a `params` argument (e.g. `params = list(param1 = value1)`)
+1. The function returns the modified `.self` dataset with new variables
+1. The function is documented using standard {roxygen2} tags and the custom tags mentioned above
+1. Documentation includes specific information about type, dependencies, and outputs
+1. Include an example using appropriate data from {pharmaversesdtm} and {pharmaverseadam}
+1. Any new component will have a corresponding unit test
+
+## Creating a New Component
+
+Every component should follow this basic structure:
+
+```{r eval=FALSE}
+#' Component title
+#' @description
+#' A short description of what the component does...
+#'
+#' @param .self `data.frame` Input dataset
+#' @param param1 Other parameters as needed
+#' @param param2 Other parameters as needed
+#'
+#' @type [component type]
+#' @depends [input dependencies: {data} {variable}]
+#' @outputs [output variables: One entry per new variable]
+#'
+#' @returns `.self` with added/modified variables
+#' @export
+your_new_component <- function(.self, param1, param2) {
+  # Implementation that transforms .self
+  # ...
+  return(.self)
+}
+```
+
+## Example
+
+Let's examine a more real example:
+
+```{r eval=FALSE, file=dummy_script}
+```
+
+This generates the following roxygen documentation with a custom "Mighty" that appears below the standard roxygen sections:
+
+```Rd
+`r paste0(render_rd(dummy_script), collapse = "\n")`
+```
+
+A code component is an R function that conforms to a few rules. It contains the business logic for derivations. A code component could refer to a function used for adding new columns (a column operation) or one use for adding/modifying/deleting a subset of rows (a row-operation).
+
+During compilation, the body of the code component will be extracted and placed in the ADaM program in the appropriate location as determined by the dependencies it takes (specified by the `@depends` arguments), and the columns that it adds or modifies (specified by the `outputs` ).

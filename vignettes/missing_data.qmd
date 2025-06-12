@@ -1,0 +1,45 @@
+---
+title: "missing_data"
+vignette: >
+  %\VignetteIndexEntry{missing_data}
+  %\VignetteEngine{quarto::html}
+  %\VignetteEncoding{UTF-8}
+knitr:
+  opts_chunk:
+    collapse: true
+    comment: '#>'
+---
+
+```{r}
+#| label: setup
+library(mighty)
+```
+# Overview
+During trial conduct, users will want to run ADaM programs even though they will not have all the SDTM data required. In other words, there may be a mismatch between what they specify in the ADaM specifications, and what is possible to derive with the SDTM data avaialble at any given point in time.
+
+The users need to be able to run the subset of derivations that are possible, and ignore any derivations that do not have the requist data available.
+
+# Types of missing data
+There are 3 types of missing data:
+
+1.  Missing SDTM/ADaM domains
+2.  Missing columns inside existing domains
+3.  Missing/incomplete values inside columns
+
+Scenarios 1 and 2 will be handled by the mighty framework, but scenario 3 needs to be handled by the code components (e.g. inside a mighty.standards function).
+
+# Workflow
+
+To handle missing domains and missing columns, the input yaml file needs to be modified. This happens via an interaction between {mighty} and {mighty.metadata}:
+
+1. {mighty} - does *not* have access to trial data, soley generates the topology and ADaM code for later execution
+2. {mighty.metadata} - this *does* have access to trial data and is used to help create the ADaM specifications 
+
+Steps to Handle Missing Data:
+
+1. Wish-List Specification: Users create an ADaM specification containing all desired columns and row operations, regardless of data availability.
+2. Dependency Generation: Mighty combines the wish-list specification with corresponding code components to identify dependencies (via ancestor nodes in the topology).
+3. Trial Data Check: mighty.metadata scans trial data using {connector}, identifying which domains and columns exist.
+4. Pruning Non-Viable Nodes: Actions relying on missing ancestors are removed from the ADaM specification, creating a new "actual-list" specification containing only feasible derivations.
+5. Final ADaM Program: The actual-list is passed back to mighty to generate the ADaM program tailored to the available data.
+6. Log of removed actions: Any columns and/or row actions removed are logged and show to the user.

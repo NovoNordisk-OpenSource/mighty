@@ -1,0 +1,279 @@
+---
+title: "ADaM Specification data model"
+format: html
+editor: visual
+---
+
+# Overview
+
+The data model used by mighty is a subset of the full data model used for specifying ADaM datasets. This vignette only discusses the information required by {mighty}. Any additional fields are simply ignored by mighty.
+
+## General sturcture
+
+Each ADaM domain is defined in its own YAML file with four main sections:
+
+1.  **Table metadata** - Basic information about the ADaM domain
+2.  **Table initialization** - How to build the base table from SDTM domains\
+3.  **Column specifications** - Which columns to include and how to create them
+4.  **Row operations** - Actions that add, modify, or delete rows
+
+# Table metadata
+
+Define basic properties of your ADaM table.
+
+## Required Fields
+
+| Field | Description | Example |
+|----|----|----|
+| `table` | Name of the ADaM table | `ADLB` |
+| `keys` | Primary key columns that uniquely identify rows | `[USUBJID, PARAMCD]` |
+
+## Example
+
+``` yml
+table_metadata:
+  table: ADLB
+  keys:
+    - USUBJID
+    - PARAMCD
+    
+```
+
+# Table initialization values
+
+This section defines how to create the initial "base" ADaM table from your source SDTM domains.
+
+| Field | Description | Notes |
+|----|----|----|
+| `core_domains` | SDTM domain names to use | Case-sensitive, match your file names exactly, excluding file extension |
+| `filter_domain` | Domain-specific data filters | Use `NA` if no filter needed. Multiple filters joind via "&" |
+| `filter_global` | Data filters applied to all domains | Use `NA` if no filter needed. Multiple filters joind via "&" |
+| `filter_depend_cols` | Columns needed for filtering | Include all columns referenced in domain or global filters |
+
+Simple example
+
+``` yml
+init:
+  core_domains:
+    - LB
+  filter_domain:
+    - LB: NA
+  filter_global: []
+  filter_depend_cols: []
+```
+
+Complex example:
+
+``` yml
+init:
+  core_domains:
+    - lb
+    - xl
+  filter_domain:
+    - lb: NA
+    - xl: 'grepl("_CONV", TOPICCD)'
+  filter_global:
+    - 'LBCAT != "ANTIBODIES"'
+    - '!ARMNRS %in% c("SCREEN FAILURE")'
+  filter_depend_cols:
+    - core.LBCAT
+    - adsl.ARMNRS
+    - core.TOPICCD
+```
+
+Key Points:
+
+-   Multiple core domains are row-bound together
+-   Domain filters apply to specific domains only
+-   Global filters apply to the combined dataset
+-   Always list the set of columns used for filtering. Specifying these here allows filtering to be done on columns that the user never specifies to be included in the final ADaM dataset
+
+# Columns
+
+Define which columns to include in your ADaM dataset and how to create them.
+
+Column operations cannot modify the number of rows in the ADaM table. To modify the number of rows a row-operation is needed (see section below)
+
+Column metadata section is denoted in the yaml file by the following top-level section
+
+``` yml
+  column_metadata:
+```
+
+## Fields
+
+Each column specification uses different fields depending on whether it's a predecessor column or derived column.
+
+| Field | Used For | Description |
+|----|----|----|
+| `column` | All | Name of the column in the final dataset |
+| `source` | Predecessor | Source location (e.g., `core.USUBJID`, `ADSL.AGE`) |
+| `code_id` | Derived | R function name to generate values |
+| `parameters` | Derived | Parameters to pass to the function |
+| `depend_rows` | Derived | Row operations that must run before the running the code that generates this column |
+
+## Examples
+
+### Predecessor columns
+
+1.  Adding a column from the "core" domain:
+
+    ``` yml
+    column_metadata:
+      - column: USUBJID
+        source: core.USUBJID
+    ```
+
+    Retains the USUBJID variable from your core SDTM domain (e.g., LB.USUBJID).
+
+2.  Adding a column from the "core" domain and renaming it
+
+    ``` yml
+    column_metadata:
+      - column: AVAL
+        source: core.LBSTRESN
+    ```
+
+    Creates a new column AVAL using values from LBSTRESN in the core domain. Both columns will exist in the resulting dataset.
+
+3.  Adding a column from another ADaM domain
+
+    ``` yml
+    column_metadata:
+      - column: RACE_COUNTRY
+        source: ADSL.RACE_COUNTRY
+    ```
+
+    Joins the RACE_COUNTRY variable from ADSL onto your current ADaM table.
+
+4.  Adding a column from another ADaM domain and renaming it
+
+    ``` yml
+    column_metadata:
+      - column: ARM
+        source: ADSL.PLANNED_ARM
+    ```
+
+    Joins PLANNED_ARM from ADSL and renames it to ARM in your table.
+
+### Derived columns
+
+5.  Adding a derived column
+
+    ``` yml
+    column_metadata:
+      - column: ARM_GRP1
+        code_id: arm_group_01
+    ```
+
+    Creates `ARM_GRP1` using the code component `arm_group_01`. The function's metadata defines which columns it depends on.
+
+6.  Adding multiple derived columns with a single code component
+
+    ``` yml
+    column_metadata:
+      - column: NEWFL01
+        code_id: newfl_01
+
+      - column: NEWREA01
+        code_id: newfl_01
+    ```
+
+    Adds both `NEWFL01` and `NEWREA01` columns by calling the code component `newfl_01`. The function must be designed to output both variables.
+
+7.  Adding a derived column using a parameterized code component
+
+    ``` yml
+      - column: AGE_GRP1
+        code_id: age_group_01
+        parameters:
+          - cut_points: c(20, 45)
+    ```
+
+    Creates `AGE_GRP1` using `age_group_01` code component with custom parameters - in this case cut points c(20, 45)
+
+8.  Adding multiple derived columns with a single, parameterized code component
+
+    ``` yml
+     - column: A
+        code_id: fn_AB
+        parameters:
+          - param_1: 100
+          - param_2: "s:This is a regular string"
+          - param_3: min(1, 100)
+
+      - column: B
+        code_id: fn_AB
+        parameters:
+          - param_1: 100
+          - param_2: "s:This is a regular string"
+          - param_3: min(1, 100)
+    ```
+
+    Adds columns `A` and `B` using the same parameterized code component `fn_AB`. When one code component creates multiple columns, all columns must use identical parameter values.
+
+9.  Adding a derived column that has a row-dependency
+
+    ``` yml
+    column_metadata:
+      - column: LBTEST
+        code_id: lbtest_01
+        depend_rows:
+          - new_aval_01
+    ```
+
+    Creates `LBTEST` using `lbtest_01` code component, but only after the row operation `new_aval_01` completes.
+
+# Row operations
+
+Row operations can add, modify, or delete subsets of rows and columns in your ADaM table. For example, you might derive BMI values and add them as new rows to an existing table.
+
+Row operations are specified in the `row_actions` section of the ADaM domain yml
+
+## Examples
+
+1.  Simple row addition
+
+    ``` yml
+      row_actions:
+        - code_id: new_lbtest_01
+    ```
+
+    Executes the `new_lbtest_01` code component. The specific actions depend on the code component's implementation - you cannot determine what it does from the YAML alone.
+
+2.  Row operation depending on another row operation
+
+    ``` yml
+    row_actions:
+      - code_id: new_lbtest_03
+        depend_rows:
+          - new_lbtest_01
+    ```
+
+    Runs `new_lbtest_03` only after `new_lbtest_01` is executed. Use this when operations must happen in a specific order.
+
+3.  Row operation with parameterized code component
+
+    ``` yml
+    row_actions:
+      - code_id: new_lbtest_07
+        parameters:
+          - test_val: "s:Protein"
+    ```
+
+    Specifies `new_lbtest_07` and passes the parameter test_val = "Protein". The s: prefix ensures the string is passed literally without evaluation.
+
+4.  Multiple row operations referencing the same code component
+
+    ``` yml
+    row_actions:
+      - code_id: new_lbtest_07
+        parameters:
+          - test_val: "s:Protein"
+
+      - code_id: new_lbtest_07
+        parameters:
+        - test_val: "s:Specific Gravity"
+    ```
+
+    Uses the same code component `new_lbtest_07` twice with different parameter values. Unlike column operations, row operations allow the same code component to be called multiple times with different parameters.

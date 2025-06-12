@@ -2,12 +2,12 @@ vis_code_tree <- function(nodes, edges) {
   edges_ranked <- merge(edges, nodes[, .(node_id, rank)], by = "node_id", all.x = TRUE) |>
     setnames(old = c("node_id", "parent_node"),
              new = c("to", "from")) |>
-    setorder(rank)
+    data.table::setorder(rank)
 
 
-  nodes_vs <- copy(nodes)
+  nodes_vs <- data.table::copy(nodes)
   nodes_vs <- setnames(nodes_vs, c("node_id", "type"), c("id", "group")) |>
-    setorder(rank) |>
+    data.table::setorder(rank) |>
     unique(by = "id")
 
   nodes_vs[, label := toupper(id)]

@@ -1,0 +1,66 @@
+---
+title: "code_component_examples"
+vignette: >
+  %\VignetteIndexEntry{code_component_examples}
+  %\VignetteEngine{quarto::html}
+  %\VignetteEncoding{UTF-8}
+knitr:
+  opts_chunk:
+    collapse: true
+    comment: '#>'
+---
+
+```{r}
+#| label: setup
+library(mighty)
+```
+
+These are code component examples.
+
+For simplicity's sake, only Roxygen sections required for mighty are included in the examples
+
+
+1. Single dependency, single output, no parameters
+```r
+#' Arm group 01
+#' @param .self
+#' @type derivation
+#' @depends .self PLANNED_ARM
+#' @outputs ARM_GRP1
+#' @returns `.self`
+arm_group_01 <-   function(.self) {
+  .self <- .self |>
+    dplyr::mutate(ARM_GRP1 = ifelse(
+      PLANNED_ARM %in% c("Placebo", "Screen Failure"),
+      "Placebo or Screen Failure",
+      PLANNED_ARM
+    ))
+  return(.self)
+}
+```
+This function requires the PLANNED_ARM column from the input data set and adds outputs ARM_GRP1.
+
+2. Multiple output columns
+```r
+#' Newfl 01
+#' @param .self `data.frame` Input data set
+#' @type derivation
+#' @depends .self DTHFL
+#' @depends .self PLANNED_ARM
+#' @depends .self AGE_DIFF1
+#' @outputs NEWFL01
+#' @outputs NEWREA01
+#' @returns `.self`
+newfl_01 <-   function(.self) {
+  # Extract the minimum AVAL value for each SUBJID
+  .self <- .self |> dplyr::mutate(
+    NEWFL01 = ifelse(
+      DTHFL == 1 & PLANNED_ARM == "Placebo" & AGE_DIFF1 > 5,
+      1, 0
+    )) |>
+    dplyr::mutate(NEWREA01 = ifelse(NEWFL01 == 1, "Yes", "No"))
+  return(.self)
+}
+```
+This function takes three dependencies, `DTHFL`, `PLANNED_ARM`, and `AGE_DIFF1` and creates two new column `NEWFL01` and `NEWREA01`.
+Because it creates two columns, it needs to be referenced by two column entries in the ADaM Specs YAML file

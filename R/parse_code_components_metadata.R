@@ -23,7 +23,6 @@
 #'   \item{depend_cols}{Character vector of columns the function depends on}
 #'   \item{outputs}{Character vector of columns the function creates or modifies}
 #'   \item{type}{The function type (e.g., "col_compute" or "row_compute")}
-#' @import mighty.standards
 parse_code_components_metadata <- function(pkgs = NULL,
                                            source_files = NULL,
                                            function_names) {

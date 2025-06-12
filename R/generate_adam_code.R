@@ -11,9 +11,8 @@
 #'
 #' @return
 #' @export
-#'
-#' @examples
 #' @import data.table
+#' @examples
 generate_adam_code <- function(path_ui_data,
                                code_component_source_pkgs = NULL,
                                code_component_source_files = NULL,
@@ -37,7 +36,7 @@ generate_adam_code <- function(path_ui_data,
     code_ids = unique_code_ids
   )
 
-  domain_keys <- yaml::read_yaml(path_domain_keys)
+  domain_keys  <- collate_primary_keys(trial_metadata)
 
   # Combine UI data and standard components
   nodes_1 <- parse_code_components_metadata(pkgs = code_component_source_pkgs,

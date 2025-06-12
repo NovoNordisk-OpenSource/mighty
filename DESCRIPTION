@@ -24,8 +24,7 @@ Imports:
     combinat,
     checkmate,
     styler,
-    roxygen2,
-    mighty.standards
+    roxygen2
 Suggests: 
     knitr,
     rmarkdown,
@@ -33,5 +32,7 @@ Suggests:
     withr,
     testthat (>= 3.0.0),
     pharmaversesdtm,
-    arrow
+    arrow,
+    quarto
 Config/testthat/edition: 3
+VignetteBuilder: knitr, quarto

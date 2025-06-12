@@ -1,8 +1,5 @@
 table_metadata:
   table: ADLB
-  keys:
-    - USUBJID PARAMN AVISITN ADT ATM SRCSEQ
-
 
 init:
   core_domains:
@@ -50,12 +47,12 @@ column_metadata:
     source: core.DOMAIN
 
   - column: LBTEST
-    label: some text
     code_id: lbtest_01
-    method: |-
-      Some text
     depend_rows:
       - new_aval_01
+    label: some text
+    method: |-
+      Some text
 
   - column: AVAL_GRP
     label: some text

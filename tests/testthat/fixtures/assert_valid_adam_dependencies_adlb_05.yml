@@ -1,9 +1,5 @@
 table_metadata:
   table: ADLB
-  keys:
-    - USUBJID PARAMN AVISITN ADT ATM SRCSEQ
-
-
 init:
   core_domains:
     - LB

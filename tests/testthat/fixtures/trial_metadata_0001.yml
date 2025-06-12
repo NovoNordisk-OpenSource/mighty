@@ -2,3 +2,26 @@ trial_id: "0001"
 project_id: "nn0001"
 complete_id: "nn0001-0001"
 instance: "current"
+
+primary_keys_sdtm:
+   EX:
+    - USUBJID
+   DS:
+    - USUBJID
+
+primary_keys_adam:
+   ADSL:
+    - USUBJID
+    - STUDYID
+
+primary_keys_md:
+   MDPARAM:
+    - STUDYID
+    - TOPICCD
+   MDVISIT:
+    - STUDYID
+    - AVISITN
+   MDFLOW:
+    - STUDYID
+    - AVISITN
+    - TOPICCD
