@@ -37,7 +37,7 @@ generate_read_data_code <- function(payload,
   block_header <- glue::glue(
     "
 
-# LOAD all external datasets needed ------------------------------------------------
+# Read all datasets needed ------------------------------------------------
       "
   )
   c(block_header, connector_setup, data_load_code)
