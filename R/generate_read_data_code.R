@@ -16,7 +16,8 @@ generate_read_data_code <- function(payload,
                                     data_connection,
                                     path_output,
                                     core_domains,
-                                    adam_domain) {
+                                    adam_domain,
+                                    domain_filters_exist) {
   # for each element of payload, apply the following logic
   by_domain <- split(payload, payload$domain)
   if (data_connection == "pharmaverse") {
@@ -43,9 +44,12 @@ generate_read_data_code <- function(payload,
       "
   )
 
-  add_src <- lapply(core_domains, function(x) {
-    glue::glue("{x} <- {x} |> dplyr::mutate(src_ = '{x}')")
-  }) |> unlist()
+  add_src <- NULL
+  if (domain_filters_exist) {
+    add_src <- lapply(core_domains, function(x) {
+      glue::glue("{x} <- {x} |> dplyr::mutate(src_ = '{x}')")
+    }) |> unlist()
+  }
 
   combine_core_domains <-
     paste(adam_domain, "<-" , paste0("rbind(",

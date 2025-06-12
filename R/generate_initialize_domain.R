@@ -15,16 +15,14 @@
 generate_initialize_domain <-  function(.self,
                                         core_domains,
                                         adsl_domain_keys,
-                                        adsl_name,
                                         filter_domain = NULL,
                                         filter_global = NULL,
+                                        filter_depend_cols = NULL,
                                         keep_vars = NULL) {
-
-  browser()
 
   stopifnot("Domain filters must be set to NA if not used" =
               length(filter_domain) == length(core_domains))
-
+browser()
   # Block header
   self <- toupper(.self)
   metadata_block_core <- glue::glue(
@@ -33,16 +31,27 @@ generate_initialize_domain <-  function(.self,
 
   filter_domain_unlist <- unlist(filter_domain)
 
-  domain_filter <- lapply(core_domains, function(x){
-    filter <- filter_domain_unlist[[x]]
-    if(is.na(filter)){
-      paste0("(src_ == \"", x, "\")")
-    } else {
-      paste0("(src_ == \"", x, "\" & ", filter, ")")
-    }
-  }) |> paste0(collapse = " ||\n")
+  if (any(!is.na(filter_domain_unlist))) {
+    filter_domain_def <- lapply(core_domains, function(x) {
+      filter <- filter_domain_unlist[[x]]
+      if (is.na(filter)) {
+        paste0("(src_ == \"", x, "\")")
+      } else {
+        paste0("(src_ == \"", x, "\" & ", filter, ")")
+      }
+    }) |> paste0(collapse = " ||\n")
+    filter_domain_expr <- glue::glue(
+      "
+# Apply domain filters
+{.self} <- {.self} |>
+  dplyr::filter({filter_domain_def}) |>
+  dplyr::select(-src_)
+")
 
-  global_filter <-
+  } else {
+    filter_domain_expr <- NULL
+  }
+
 
   # Read in the core domains
   # filter_prepart <- function(domain, filter_domain = NULL) {
@@ -68,22 +77,32 @@ generate_initialize_domain <-  function(.self,
   #                            rm({paste0(core_domains, '_tmp')})")
   # }
 
-  # When the domain is NOT ADSL, we automatically merge it on in case ADSL vars
-  # are needed for global filtering.
-  # TODO: This could be done smarter
-  merge_expr <- if (self != "ADSL") {
-    keys <- paste0("\"", adsl_domain_keys, "\"", collapse = ",")
-    glue::glue("{.self} <- dplyr::left_join({.self}, {adsl_name}, by = c({keys}))")
-  } else {
-    NULL
-  }
   # Prepare filter_global conditionally
-  filter_global_val <- if (!is.null(filter_global) &&
+  filter_global_expr <- if (!is.null(filter_global) &&
                            all(!is.na(filter_global)) &&
                            is.character(filter_global)) {
     stopifnot("No empty strings allowed" = all(nchar(filter_global) > 0))
     filter_global_collapsed <- paste(filter_global, collapse = " &\n")
-    glue::glue("{.self} <- {.self} |> admiral::convert_blanks_to_na() |> dplyr::filter({filter_global_collapsed})")
+    glue::glue("# Apply global filter
+               {.self} <- {.self} |> dplyr::filter({filter_global_collapsed})")
+  } else {
+    NULL
+  }
+
+  # When the domain is NOT ADSL, we automatically merge it on in case ADSL vars
+  # are needed for global filtering.
+  browser()
+  adsl_name <- regmatches(filter_depend_cols,
+                          regexpr("ADSL|adsl", filter_depend_cols)) |>
+    unique()
+
+  regmatches(filter_depend_cols,
+             regexpr("ADSL|adsl\\.[a-zA-Z]", filter_depend_cols)) |>
+
+
+  adsl_merge_expr <- if (self != "ADSL") {
+    keys <- paste0("\"", adsl_domain_keys, "\"", collapse = ",")
+    glue::glue("{.self} <- dplyr::left_join({.self}, {adsl_name}, by = c({keys}))")
   } else {
     NULL
   }
@@ -94,6 +113,15 @@ generate_initialize_domain <-  function(.self,
   } else {
     NULL
   }
+
+browser()
+
+c(metadata_block_core,
+  filter_domain_expr,
+  adsl_merge_expr,
+  filter_global_expr,
+  select_expr
+  )
 
 
   all_exprs <- c(

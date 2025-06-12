@@ -35,31 +35,29 @@ generate_node_code <- function(nodes_program_i,
 
     if (node_i$type == "read_data") {
       external_deps <- node_i$input_cols[[1]]
+      init <- ui_data[[node_i$domain]]$init
       program[[i]] <- generate_read_data_code(
         external_deps,
         trial_metadata,
         sdtm_dataset_list,
         data_connection,
         path_output = path_output,
-        core_domains = ui_data[[node_i$domain]]$init$core_domains,
-        adam_domain = node_i$domain
+        core_domains = init$core_domains,
+        adam_domain = node_i$domain,
+        domain_filters_exist = any(!is.na(unlist(init$filter_domain)))
       ) |> paste0(collapse = "\n\n")
 
       next
     }
     if (node_i$type == "domain_init") {
       domain_metadata <- ui_data[[node_i$domain]]$init
-      filter_depend_cols <- domain_metadata$filter_depend_cols
-      adsl_name <- regmatches(filter_depend_cols,
-                              regexpr("ADSL|adsl", filter_depend_cols)) |>
-        unique()
       program[[i]] <- generate_initialize_domain(
         .self = node_i$domain,
         core_domains = domain_metadata$core_domains,
         adsl_domain_keys = domain_keys$ADSL,
-        adsl_name = adsl_name,
         filter_domain = domain_metadata$filter_domain,
         filter_global = domain_metadata$filter_global,
+        filter_depend_cols = domain_metadata$filter_depend_cols,
         keep_vars = node_i$outputs[[1]]
       )
       next
