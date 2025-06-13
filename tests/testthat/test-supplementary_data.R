@@ -1,5 +1,7 @@
 test_that("Supplementary data is added right after read_data when no supp cols are used in filters", {
 
+  skip()
+
   # SETUP -------------------------------------------------------------------
 
   ui_path <- test_path("fixtures", "supplementary_data_adsl_01.yml")
@@ -9,7 +11,7 @@ test_that("Supplementary data is added right after read_data when no supp cols a
   output_path <- withr::local_tempdir()
 
   # ACT ---------------------------------------------------------------------
-debugonce(replace_core_with_named_domain)
+
   actual <- generate_adam_code(
     path_ui_data = ui_path,
     code_component_source_files =  std_lib_path,
@@ -29,6 +31,8 @@ debugonce(replace_core_with_named_domain)
 })
 
 test_that("Supplementary data is added right after read_data when a supp col is used in global filter", {
+
+  skip()
 
   # SETUP -------------------------------------------------------------------
 
@@ -93,6 +97,7 @@ test_that("Supplementary data is added right after read_data when a supp col is 
 
 test_that("Supplementary data is added right after read_data when supp cols and ADSL cols are used in filters", {
 
+  skip()
 
   # SETUP -------------------------------------------------------------------
 

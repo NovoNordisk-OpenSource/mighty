@@ -24,7 +24,7 @@ generate_initialize_domain <-  function(.self,
 
   # Block header
   self <- toupper(.self)
-  metadata_block_core <- glue::glue("# Filter {self} table ------------------------------")
+  metadata_block_core <- glue::glue("# Filter {self} ------------------------------")
 
   # When the domain is NOT ADSL, we automatically merge it on in case ADSL vars
   # are needed for global filtering.
@@ -33,7 +33,9 @@ generate_initialize_domain <-  function(.self,
 
     keys <- paste0("\"", adsl_domain_keys, "\"", collapse = ",")
     adsl_name <- gsub("\\.[a-zA-Z]+$", "", filter_adsl_cols) |> unique()
-    filter_adsl_col_str <- c(gsub("^[a-zA-Z]+\\.", "", filter_adsl_cols), keys) |> paste(collapse = ", ")
+    filter_adsl_col_str <- c(gsub("^[a-zA-Z]+\\.", "", filter_adsl_cols), adsl_domain_keys) |>
+      unique() |>
+      paste(collapse = ", ")
 
     glue::glue(
       "# Add ADSL columns for filtering
@@ -52,9 +54,9 @@ generate_initialize_domain <-  function(.self,
     filter_domain_def <- lapply(core_domains, function(x) {
       filter <- filter_domain_unlist[[x]]
       if (is.na(filter)) {
-        paste0("(src_ == \"", x, "\")")
+        paste0("(SRC_ == \"", x, "\")")
       } else {
-        paste0("(src_ == \"", x, "\" & ", filter, ")")
+        paste0("(SRC_ == \"", x, "\" & ", filter, ")")
       }
     }) |> paste0(collapse = " |\n")
     filter_domain_expr <- glue::glue(

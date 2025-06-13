@@ -18,6 +18,13 @@ generate_read_data_code <- function(payload,
                                     core_domains,
                                     .self,
                                     domain_filters_exist) {
+
+  block_header <- glue::glue("
+
+# Read all data sets needed ------------------------------------------------
+      ")
+
+
   # for each element of payload, apply the following logic
   by_domain <- split(payload, payload$domain)
   if (data_connection == "pharmaverse") {
@@ -35,10 +42,6 @@ generate_read_data_code <- function(payload,
 
   }
 
-  block_header <- glue::glue("
-
-# Read all data sets needed ------------------------------------------------
-      ")
 
   # Add temporary column src_ to tag each source domain if domain specific
   # filters are applied

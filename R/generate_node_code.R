@@ -51,6 +51,7 @@ generate_node_code <- function(nodes_program_i,
     }
     if (node_i$type == "domain_init") {
       domain_metadata <- ui_data[[node_i$domain]]$init
+
       program[[i]] <- generate_initialize_domain(
         .self = node_i$domain,
         core_domains = domain_metadata$core_domains,

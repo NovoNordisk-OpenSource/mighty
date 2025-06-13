@@ -23,7 +23,7 @@ add_nodes_to_read_data <- function(program_order, nodes, init_metadata, domain_k
       node_id =  paste0(domain_i, "-", i$program_id[1], "-read_data"),
       program_id = i$program_id[1],
       rank =
-        i[type=="domain_init"|type=="program_init", rank]-0.5,
+        min(i$rank) - 0.5,
       type = "read_data",
       input_cols = list(deps_i)
     )]
