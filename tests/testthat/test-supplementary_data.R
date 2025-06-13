@@ -9,7 +9,7 @@ test_that("Supplementary data is added right after read_data when no supp cols a
   output_path <- withr::local_tempdir()
 
   # ACT ---------------------------------------------------------------------
-
+debugonce(replace_core_with_named_domain)
   actual <- generate_adam_code(
     path_ui_data = ui_path,
     code_component_source_files =  std_lib_path,
@@ -103,7 +103,7 @@ test_that("Supplementary data is added right after read_data when supp cols and 
   output_path <- withr::local_tempdir()
 
   # ACT ---------------------------------------------------------------------
-
+# debugonce(generate_initialize_domain)
   actual <- generate_adam_code(
     path_ui_data = ui_path,
     code_component_source_files =  std_lib_path,

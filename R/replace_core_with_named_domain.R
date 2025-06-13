@@ -7,7 +7,7 @@ replace_core_with_named_domain <- function(x, ui_init) {
 
     if (x[["type"]][[i]] == "domain_init"){
 
-      domain_i <- gsub("_init$", "", x[["domain"]][[i]])
+      domain_i <- x[["domain"]][[i]]
       core_domains <- ui_init[[domain_i]][["core_domains"]]
       dep_cols_i <- x[["depend_cols"]][[i]]
 
