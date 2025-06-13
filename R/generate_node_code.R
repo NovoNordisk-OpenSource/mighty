@@ -43,7 +43,7 @@ generate_node_code <- function(nodes_program_i,
         data_connection,
         path_output = path_output,
         core_domains = init$core_domains,
-        adam_domain = node_i$domain,
+        .self = node_i$domain,
         domain_filters_exist = any(!is.na(unlist(init$filter_domain)))
       ) |> paste0(collapse = "\n\n")
 

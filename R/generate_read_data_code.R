@@ -16,64 +16,66 @@ generate_read_data_code <- function(payload,
                                     data_connection,
                                     path_output,
                                     core_domains,
-                                    adam_domain,
+                                    .self,
                                     domain_filters_exist) {
   # for each element of payload, apply the following logic
   by_domain <- split(payload, payload$domain)
   if (data_connection == "pharmaverse") {
-
     connector_setup <- NULL
     data_load_code <-
       purrr::imap(by_domain, for_each_domain_pharmaverse, path_output = path_output)
     data_load_code <- Filter(Negate(is.null), data_load_code)
   }
   else {
-    connector_setup <- glue::glue(
-      "cnt <- connector::connect(config = '", path_output, "/_connector.yml') \n")
+    connector_setup <- glue::glue("cnt <- connector::connect(config = '",
+                                  path_output,
+                                  "/_connector.yml') \n")
     data_load_code <-
-      purrr::imap(by_domain,
-                  for_each_domain_connector,
-                  sdtm_dataset_list)
+      purrr::imap(by_domain, for_each_domain_connector, sdtm_dataset_list)
 
   }
 
-  block_header <- glue::glue(
-    "
+  block_header <- glue::glue("
 
 # Read all data sets needed ------------------------------------------------
-      "
-  )
+      ")
 
+  # Add temporary column src_ to tag each source domain if domain specific
+  # filters are applied
   add_src <- NULL
   if (domain_filters_exist) {
     add_src <- lapply(core_domains, function(x) {
-      glue::glue("{x} <- {x} |> dplyr::mutate(src_ = '{x}')")
+      glue::glue("{x} <- {x} |>
+                    dplyr::mutate(src_ = '{x}')\n\n")
     }) |> unlist()
   }
 
-  combine_core_domains <-
-    paste(adam_domain, "<-" , paste0("rbind(",
-                                paste0(core_domains,
-                                       collapse = ", "), ")"), "|>\nadmiral::convert_blanks_to_na()")
+  # Initialize ADaM table by row binding source domain(s) and selecting
+  # predecessors from source domain(s)
+  core_domains_str <- paste0(core_domains, collapse = ", ")
+  combine_core_domains <- glue::glue(
+    "{.self} <- rbind({core_domains_str}) |>
+            admiral::convert_blanks_to_na()\n\n"
+  )
 
-  adam_init <- paste(c(add_src, combine_core_domains), collapse = "\n")
+  adam_init <- paste(c(glue::glue("# Initialize {toupper(.self)} ----------------------\n\n"),
+                       add_src,
+                       combine_core_domains), collapse = "\n")
 
-  c(block_header, connector_setup, data_load_code, adam_init)
+  return(c(block_header, connector_setup, data_load_code, adam_init))
 }
 
 external_data <- function(data_type = c("sdtm", "adam", "metadata"),
                           domain,
                           keep_vars,
                           dataset_list = NULL) {
-   glue::glue(
+  glue::glue(
     "{domain} <- cnt${data_type}$read_cnt('{domain}') |> ",
     "dplyr::select({keep_vars})"
   )
 }
 
-for_each_domain_connector <- function(i,
-                                      domain_name,
-                                      sdtm_dataset_list) {
+for_each_domain_connector <- function(i, domain_name, sdtm_dataset_list) {
   keep_vars <- i[["column_name"]] |>
     toupper() |>
     unique() |>
@@ -95,9 +97,11 @@ for_each_domain_pharmaverse <- function(i, domain_name, path_output) {
     sort() |>
     paste0(collapse = ", ")
 
-  data_load_code <- switch(i$domain_type[[1]],
-                           sdtm = pharmaverse_sdtm(domain_name, keep_vars),
-                           adam = pharmaverse_adam(domain_name, keep_vars, path_output))
+  data_load_code <- switch(
+    i$domain_type[[1]],
+    sdtm = pharmaverse_sdtm(domain_name, keep_vars),
+    adam = pharmaverse_adam(domain_name, keep_vars, path_output)
+  )
 }
 
 pharmaverse_sdtm <- function(sdtm_main, keep_vars) {
@@ -109,10 +113,10 @@ pharmaverse_sdtm <- function(sdtm_main, keep_vars) {
   )
 }
 
-pharmaverse_adam <- function(adam_domain, keep_vars, path_output) {
-  path_domain <- file.path(path_output, paste0(adam_domain, ".R"))
+pharmaverse_adam <- function(.self, keep_vars, path_output) {
+  path_domain <- file.path(path_output, paste0(.self, ".R"))
   glue::glue(
-    "{adam_domain} <- readRDS(\"{path_domain}\") |>
+    "{.self} <- readRDS(\"{path_domain}\") |>
     tibble::as_tibble() |>
     dplyr::select({keep_vars})"
   )

@@ -19,15 +19,12 @@ generate_initialize_domain <-  function(.self,
                                         filter_global = NULL,
                                         filter_depend_cols = NULL,
                                         keep_vars = NULL) {
-
   stopifnot("Domain filters must be set to NA if not used" =
               length(filter_domain) == length(core_domains))
-browser()
+
   # Block header
   self <- toupper(.self)
-  metadata_block_core <- glue::glue(
-    "# Core {self} table ------------------------------"
-  )
+  metadata_block_core <- glue::glue("# Filter {self} table ------------------------------")
 
   filter_domain_unlist <- unlist(filter_domain)
 
@@ -41,102 +38,61 @@ browser()
       }
     }) |> paste0(collapse = " ||\n")
     filter_domain_expr <- glue::glue(
-      "
-# Apply domain filters
-{.self} <- {.self} |>
+      "# Apply domain filters
+            {.self} <- {.self} |>
   dplyr::filter({filter_domain_def}) |>
   dplyr::select(-src_)
 ")
-
   } else {
     filter_domain_expr <- NULL
   }
 
-
-  # Read in the core domains
-  # filter_prepart <- function(domain, filter_domain = NULL) {
-  #
-  #   domain_var <- domain
-  #
-  #   if (is.null(filter_domain) || any(is.na(filter_domain))) {
-  #     return(glue::glue("{domain_var}_tmp <- {domain_var}"))
-  #   }
-  #   filter_domain_collapsed <- paste(filter_domain, collapse = " &&\n")
-  #   glue::glue("{domain_var}_tmp <- {domain_var} |> dplyr::filter({filter_domain_collapsed})")
-  # }
-  # prepart_exprs <- unlist(purrr::map2(core_domains, filter_domain, filter_prepart))
-
-  # Generate row_bind expression if there are multiple core domains
-  # if (length(core_domains) > 1) {
-  #   bind_expr <-  glue::glue(
-  #     "{.self} <- rbind({paste(paste0(core_domains, '_tmp'), collapse = ', ')}) |> dplyr::as_tibble()
-  #     rm({paste(paste0(core_domains, '_tmp'), collapse=', ')})"
-  #   )
-  # } else {
-  #   bind_expr <-  glue::glue("{.self} <- {paste0(core_domains, '_tmp')} |> dplyr::as_tibble()
-  #                            rm({paste0(core_domains, '_tmp')})")
-  # }
-
-  # Prepare filter_global conditionally
-  filter_global_expr <- if (!is.null(filter_global) &&
-                           all(!is.na(filter_global)) &&
-                           is.character(filter_global)) {
-    stopifnot("No empty strings allowed" = all(nchar(filter_global) > 0))
-    filter_global_collapsed <- paste(filter_global, collapse = " &\n")
-    glue::glue("# Apply global filter
-               {.self} <- {.self} |> dplyr::filter({filter_global_collapsed})")
+  # When the domain is NOT ADSL, we automatically merge it on in case ADSL vars
+  # are needed for global filtering.
+  filter_adsl_cols <- filter_depend_cols[grep("^adsl\\.", filter_depend_cols, ignore.case = TRUE)]
+  adsl_merge_expr <- if (self != "ADSL" && length(filter_adsl_cols) > 0) {
+    filter_adsl_col_str <- gsub("^[a-zA-Z]+\\.", "", filter_adsl_cols) |> paste(collapse = ", ")
+    keys <- paste0("\"", adsl_domain_keys, "\"", collapse = ",")
+    glue::glue(
+      "# Add ADSL columns for filtering
+              {.self} <- dplyr::left_join({.self}, {adsl_name} |> ddplyr::select(), by = c({keys}))"
+    )
   } else {
     NULL
   }
 
-  # When the domain is NOT ADSL, we automatically merge it on in case ADSL vars
-  # are needed for global filtering.
-  browser()
-  adsl_name <- regmatches(filter_depend_cols,
-                          regexpr("ADSL|adsl", filter_depend_cols)) |>
-    unique()
-
-  regmatches(filter_depend_cols,
-             regexpr("ADSL|adsl\\.[a-zA-Z]", filter_depend_cols)) |>
-
-
-  adsl_merge_expr <- if (self != "ADSL") {
-    keys <- paste0("\"", adsl_domain_keys, "\"", collapse = ",")
-    glue::glue("{.self} <- dplyr::left_join({.self}, {adsl_name}, by = c({keys}))")
+  # Prepare filter_global conditionally
+  filter_global_expr <- if (!is.null(filter_global) &&
+                            all(!is.na(filter_global)) &&
+                            is.character(filter_global)) {
+    stopifnot("No empty strings allowed" = all(nchar(filter_global) > 0))
+    filter_global_collapsed <- paste(filter_global, collapse = " &\n")
+    glue::glue(
+      "# Apply global filter
+               {.self} <- {.self} |> dplyr::filter({filter_global_collapsed})"
+    )
   } else {
     NULL
   }
 
   select_expr <- if (!is.null(keep_vars)) {
-    glue::glue("# Select domain specific predecessors
-               {.self} <- dplyr::select({.self}, {toupper(paste(unique(keep_vars), collapse = ', '))})")
+    glue::glue(
+      "# Select {toupper(.self)} predecessors
+               {.self} <- {.self} |> dplyr::select({paste(unique(keep_vars), collapse = ', ')})"
+    )
   } else {
     NULL
   }
 
-browser()
-
-c(metadata_block_core,
-  filter_domain_expr,
-  adsl_merge_expr,
-  filter_global_expr,
-  select_expr
-  )
-
-
   all_exprs <- c(
     metadata_block_core,
-    prepart_exprs,
-    bind_expr,
-    merge_expr,
-    filter_global_val,
+    filter_domain_expr,
+    adsl_merge_expr,
+    filter_global_expr,
     select_expr
   )
 
-  # Remove NULL expressions from the list
-  all_exprs <- all_exprs[!vapply(all_exprs, is.null, logical(1L))]
-
-  combined_text <- paste(all_exprs, collapse = "\n\n")
+  combined_text <- paste(all_exprs, collapse = "\n\n") |> paste("\n")
 
   return(combined_text)
 }
