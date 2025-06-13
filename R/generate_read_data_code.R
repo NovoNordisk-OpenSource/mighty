@@ -46,17 +46,24 @@ generate_read_data_code <- function(payload,
   if (domain_filters_exist) {
     add_src <- lapply(core_domains, function(x) {
       glue::glue("{x} <- {x} |>
-                    dplyr::mutate(src_ = '{x}')\n\n")
+                    dplyr::mutate(SRC_ = '{x}')\n\n")
     }) |> unlist()
   }
 
   # Initialize ADaM table by row binding source domain(s) and selecting
   # predecessors from source domain(s)
-  core_domains_str <- paste0(core_domains, collapse = ", ")
-  combine_core_domains <- glue::glue(
-    "{.self} <- rbind({core_domains_str}) |>
+  combine_core_domains <- if (length(core_domains) > 1 ){
+    core_domains_str <- paste0(core_domains, collapse = ", ")
+    glue::glue(
+      "{.self} <- rbind({core_domains_str}) |>
             admiral::convert_blanks_to_na()\n\n"
-  )
+    )
+  } else {
+    glue::glue(
+      "{.self} <- {core_domains} |>
+            admiral::convert_blanks_to_na()\n\n"
+    )
+  }
 
   adam_init <- paste(c(glue::glue("# Initialize {toupper(.self)} ----------------------\n\n"),
                        add_src,

@@ -36,12 +36,12 @@ generate_initialize_domain <-  function(.self,
       } else {
         paste0("(src_ == \"", x, "\" & ", filter, ")")
       }
-    }) |> paste0(collapse = " ||\n")
+    }) |> paste0(collapse = " |\n")
     filter_domain_expr <- glue::glue(
       "# Apply domain filters
             {.self} <- {.self} |>
   dplyr::filter({filter_domain_def}) |>
-  dplyr::select(-src_)
+  dplyr::select(-SRC_)
 ")
   } else {
     filter_domain_expr <- NULL
@@ -55,7 +55,7 @@ generate_initialize_domain <-  function(.self,
     keys <- paste0("\"", adsl_domain_keys, "\"", collapse = ",")
     glue::glue(
       "# Add ADSL columns for filtering
-              {.self} <- dplyr::left_join({.self}, {adsl_name} |> ddplyr::select(), by = c({keys}))"
+              {.self} <- dplyr::left_join({.self}, {.self} |> ddplyr::select(), by = c({keys}))"
     )
   } else {
     NULL
