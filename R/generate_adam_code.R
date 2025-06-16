@@ -79,14 +79,16 @@ generate_adam_code <- function(path_ui_data,
   # Add initialization actions to the program sequence
   program_sequence_2 <- add_read_domain_nodes(program_sequence_1, nodes_5)
 
-  # Add action to import external dependencies to the program sequence
-  program_sequence_3 <- add_nodes_to_read_data(program_sequence_2, nodes_5, ui_init, domain_keys) |>
-    add_nodes_to_write_data()
+  # Add action to read all data sets required for each ADaM program
+  program_sequence_3 <- add_nodes_to_read_data(program_sequence_2, nodes_5, ui_init, domain_keys)
+
+  # Add action to save generated ADaM table
+  program_sequence_4 <- add_nodes_to_write_data(program_sequence_3)
 
   # Create programs
   data_connection <- match.arg(data_connection)
   programs <- generate_program(
-    program_sequence_3,
+    program_sequence_4,
     nodes_5,
     domain_keys,
     code_component_env,
@@ -99,7 +101,7 @@ generate_adam_code <- function(path_ui_data,
   return(
     list(
       programs = programs,
-      program_sequence = program_sequence_3,
+      program_sequence = program_sequence_4,
       edges = edges,
       data_for_visualization = program_sequence_1,
       data_model = nodes_5
