@@ -19,7 +19,7 @@ generate_read_data_code <- function(payload,
 
   block_header <- glue::glue("
 
-# Read all data sets needed ------------------------------------------------
+# Read data sets ------------------------------------------------
       ")
 
   # for each element of payload, apply the following logic
@@ -39,7 +39,8 @@ generate_read_data_code <- function(payload,
 
   }
 
-  return(c(block_header, connector_setup, data_load_code))
+  return(paste0(paste0(c(block_header, connector_setup, data_load_code),
+                collapse = "\n\n"), "\n"))
 }
 
 external_data <- function(data_type = c("sdtm", "adam", "metadata"),

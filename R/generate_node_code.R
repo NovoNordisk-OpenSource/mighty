@@ -43,8 +43,7 @@ generate_node_code <- function(nodes_program_i,
         data_connection,
         path_output = path_output,
         .self = node_i$domain
-      ) |> paste0(collapse = "\n\n")
-
+      )
       next
     }
     if (node_i$type == "initialize_domain") {

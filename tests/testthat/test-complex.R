@@ -30,6 +30,9 @@ test_that("Complex test with multiple domains and column/row operations", {
   write_adam_programs(dir = output_path, programs = actual$programs)
   x <- list.files(output_path, full.names = TRUE)
 
+  # browser()
+  # do.call(file.edit, as.list(x))
+
   programs <- x |> lapply(readLines)
   names(programs) <- basename(x)
 
