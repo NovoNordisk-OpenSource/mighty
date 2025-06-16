@@ -1,14 +1,13 @@
 #' Write the R code to read ADaM domain in "update" program
 #'
 #' @param adam_domain
-#' @param adam_dataset_list
 #' @param data_connection
 #'
 #' @return
 #' @export
 #'
 #' @examples
-generate_read_domain <- function(adam_domain, adam_dataset_list, data_connection, path_out) {
+generate_read_domain <- function(adam_domain, data_connection, path_out) {
   if(data_connection == "pharmaverse"){
     file_path <- file.path(path_out, paste0(adam_domain, ".R"))
 

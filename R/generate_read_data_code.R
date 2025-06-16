@@ -15,15 +15,12 @@ generate_read_data_code <- function(payload,
                                     sdtm_dataset_list,
                                     data_connection,
                                     path_output,
-                                    core_domains,
-                                    .self,
-                                    domain_filters_exist) {
+                                    .self) {
 
   block_header <- glue::glue("
 
 # Read all data sets needed ------------------------------------------------
       ")
-
 
   # for each element of payload, apply the following logic
   by_domain <- split(payload, payload$domain)
@@ -42,34 +39,7 @@ generate_read_data_code <- function(payload,
 
   }
 
-  # Initialize ADaM table by row binding source domain(s) and selecting
-  # predecessors from source domain(s).
-  combine_core_domains <- if (length(core_domains) > 1 ){
-
-    # Add temporary column src_ to tag each source domain if domain specific
-    # filters are applied
-    if (domain_filters_exist) {
-      core_domains <- lapply(core_domains, function(x) {
-        glue::glue("{x} |> dplyr::mutate(SRC_ = '{x}')")
-      }) |> unlist()
-    }
-
-    core_domains_str <- paste0(core_domains, collapse = ",\n")
-    glue::glue(
-      "{.self} <- rbind({core_domains_str}) |>
-            admiral::convert_blanks_to_na()\n\n"
-    )
-  } else {
-    glue::glue(
-      "{.self} <- {core_domains} |>
-            admiral::convert_blanks_to_na()\n\n"
-    )
-  }
-
-  adam_init <- paste(c(glue::glue("# Initialize {toupper(.self)} ----------------------\n\n"),
-                       combine_core_domains), collapse = "\n")
-
-  return(c(block_header, connector_setup, data_load_code, adam_init))
+  return(c(block_header, connector_setup, data_load_code))
 }
 
 external_data <- function(data_type = c("sdtm", "adam", "metadata"),

@@ -76,19 +76,22 @@ generate_adam_code <- function(path_ui_data,
   # Group actions into programs that can be run as batches in a sequence
   program_sequence_1 <- group_nodes_optimal(nodes_topo_order, nodes_5, edges)
 
-  # Add initialization actions to the program sequence
-  program_sequence_2 <- add_read_domain_nodes(program_sequence_1, nodes_5)
+  # Add initialize_domain actions to 'initial' programs
+  program_sequence_2 <- add_initialize_domain_nodes(program_sequence_1) # TODO
 
-  # Add action to read all data sets required for each ADaM program
-  program_sequence_3 <- add_nodes_to_read_data(program_sequence_2, nodes_5, ui_init, domain_keys)
+  # Add read_domain actions to 'update' programs
+  program_sequence_3 <- add_read_domain_nodes(program_sequence_2, nodes_5)
+
+  # Add read_data actions to read all data sets required for each ADaM program
+  program_sequence_4 <- add_read_data_nodes(program_sequence_3, nodes_5, ui_init, domain_keys)
 
   # Add action to save generated ADaM table
-  program_sequence_4 <- add_nodes_to_write_data(program_sequence_3)
+  program_sequence_5 <- add_write_data_nodes(program_sequence_4)
 
   # Create programs
   data_connection <- match.arg(data_connection)
   programs <- generate_program(
-    program_sequence_4,
+    program_sequence_5,
     nodes_5,
     domain_keys,
     code_component_env,
@@ -101,7 +104,7 @@ generate_adam_code <- function(path_ui_data,
   return(
     list(
       programs = programs,
-      program_sequence = program_sequence_4,
+      program_sequence = program_sequence_5,
       edges = edges,
       data_for_visualization = program_sequence_1,
       data_model = nodes_5

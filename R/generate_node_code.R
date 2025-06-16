@@ -42,11 +42,18 @@ generate_node_code <- function(nodes_program_i,
         sdtm_dataset_list,
         data_connection,
         path_output = path_output,
-        core_domains = init$core_domains,
-        .self = node_i$domain,
-        domain_filters_exist = any(!is.na(unlist(init$filter_domain)))
+        .self = node_i$domain
       ) |> paste0(collapse = "\n\n")
 
+      next
+    }
+    if (node_i$type == "initialize_domain") {
+      init <- ui_data[[node_i$domain]]$init
+      program[[i]] <- generate_initialize_domain(
+        .self = node_i$domain,
+        core_domains = init$core_domains,
+        domain_filters_exist = any(!is.na(unlist(init$filter_domain)))
+      )
       next
     }
     if (node_i$type == "preprocess_domain") {
@@ -66,7 +73,6 @@ generate_node_code <- function(nodes_program_i,
     if (node_i$type == "read_domain") {
       program[[i]] <- generate_read_domain(
         adam_domain = node_i$domain,
-        adam_dataset_list = adam_dataset_list,
         data_connection = data_connection,
         path_out = path_output
 
