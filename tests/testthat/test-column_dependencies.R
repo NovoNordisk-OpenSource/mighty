@@ -42,8 +42,8 @@ test_that("No filters", {
   programs <- x |> lapply(readLines)
   names(programs) <- basename(x)
   expect_section_order("Read all data sets needed", "Initialize ADSL", programs[["1_ADSL.R"]])
-  expect_section_order("Initialize ADSL", "Filter ADSL", programs[["1_ADSL.R"]])
-  expect_section_order("Filter ADSL", "ADSL-PLANNED_ARM", programs[["1_ADSL.R"]])
+  expect_section_order("Initialize ADSL", "Preprocess ADSL", programs[["1_ADSL.R"]])
+  expect_section_order("Preprocess ADSL", "ADSL-PLANNED_ARM", programs[["1_ADSL.R"]])
   expect_section_order("ADSL-PLANNED_ARM", "ADSL-ARM_GRP1-arm_group_01", programs[["1_ADSL.R"]])
   expect_section_order("ADSL-ARM_GRP1-arm_group_01", "Save ADSL", programs[["1_ADSL.R"]])
 
@@ -97,8 +97,8 @@ test_that("No domain filters", {
   programs <- x |> lapply(readLines)
   names(programs) <- basename(x)
   expect_section_order("Read all data sets needed", "Initialize ADSL", programs[["1_ADSL.R"]])
-  expect_section_order("Initialize ADSL", "Filter ADSL", programs[["1_ADSL.R"]])
-  expect_section_order("Filter ADSL", "ADSL-PLANNED_ARM", programs[["1_ADSL.R"]])
+  expect_section_order("Initialize ADSL", "Preprocess ADSL", programs[["1_ADSL.R"]])
+  expect_section_order("Preprocess ADSL", "ADSL-PLANNED_ARM", programs[["1_ADSL.R"]])
   expect_section_order("ADSL-PLANNED_ARM", "ADSL-ARM_GRP1-arm_group_01", programs[["1_ADSL.R"]])
   expect_section_order("ADSL-ARM_GRP1-arm_group_01", "Save ADSL", programs[["1_ADSL.R"]])
 
@@ -152,8 +152,8 @@ test_that("No global filters", {
   programs <- x |> lapply(readLines)
   names(programs) <- basename(x)
   expect_section_order("Read all data sets needed", "Initialize ADSL", programs[["1_ADSL.R"]])
-  expect_section_order("Initialize ADSL", "Filter ADSL", programs[["1_ADSL.R"]])
-  expect_section_order("Filter ADSL", "ADSL-PLANNED_ARM", programs[["1_ADSL.R"]])
+  expect_section_order("Initialize ADSL", "Preprocess ADSL", programs[["1_ADSL.R"]])
+  expect_section_order("Preprocess ADSL", "ADSL-PLANNED_ARM", programs[["1_ADSL.R"]])
   expect_section_order("ADSL-PLANNED_ARM", "ADSL-ARM_GRP1-arm_group_01", programs[["1_ADSL.R"]])
   expect_section_order("ADSL-ARM_GRP1-arm_group_01", "Save ADSL", programs[["1_ADSL.R"]])
 
@@ -207,8 +207,8 @@ test_that("No filters and no derivations", {
   programs <- x |> lapply(readLines)
   names(programs) <- basename(x)
   expect_section_order("Read all data sets needed", "Initialize ADSL", programs[["1_ADSL.R"]])
-  expect_section_order("Initialize ADSL", "Filter ADSL", programs[["1_ADSL.R"]])
-  expect_section_order("Filter ADSL", "ADSL-PLANNED_ARM", programs[["1_ADSL.R"]])
+  expect_section_order("Initialize ADSL", "Preprocess ADSL", programs[["1_ADSL.R"]])
+  expect_section_order("Preprocess ADSL", "ADSL-PLANNED_ARM", programs[["1_ADSL.R"]])
   expect_section_order("ADSL-PLANNED_ARM", "Save ADSL", programs[["1_ADSL.R"]])
 
   # Check generated ADSL
@@ -263,8 +263,8 @@ test_that("Global filter and domain filter", {
   programs <- x |> lapply(readLines)
   names(programs) <- basename(x)
   expect_section_order("Read all data sets needed", "Initialize ADSL", programs[["1_ADSL.R"]])
-  expect_section_order("Initialize ADSL", "Filter ADSL", programs[["1_ADSL.R"]])
-  expect_section_order("Filter ADSL", "ADSL-PLANNED_ARM", programs[["1_ADSL.R"]])
+  expect_section_order("Initialize ADSL", "Preprocess ADSL", programs[["1_ADSL.R"]])
+  expect_section_order("Preprocess ADSL", "ADSL-PLANNED_ARM", programs[["1_ADSL.R"]])
   expect_section_order("ADSL-PLANNED_ARM", "ADSL-ARM_GRP1-arm_group_01", programs[["1_ADSL.R"]])
   expect_section_order("ADSL-ARM_GRP1-arm_group_01", "Save ADSL", programs[["1_ADSL.R"]])
 
@@ -319,8 +319,8 @@ test_that("Global filter and domain filter incl. ADSL dependencies", {
   programs <- x |> lapply(readLines)
   names(programs) <- basename(x)
   expect_section_order("Read all data sets needed", "Initialize ADLB", programs[["1_ADLB.R"]])
-  expect_section_order("Initialize ADLB", "Filter ADLB", programs[["1_ADLB.R"]])
-  expect_section_order("Filter ADLB", "Save ADLB", programs[["1_ADLB.R"]])
+  expect_section_order("Initialize ADLB", "Preprocess ADLB", programs[["1_ADLB.R"]])
+  expect_section_order("Preprocess ADLB", "Save ADLB", programs[["1_ADLB.R"]])
 })
 
 test_that("Global filter and domain filter incl. adsl dependencies (lower case)", {
@@ -368,8 +368,8 @@ test_that("Global filter and domain filter incl. adsl dependencies (lower case)"
   programs <- x |> lapply(readLines)
   names(programs) <- basename(x)
   expect_section_order("Read all data sets needed", "Initialize ADLB", programs[["1_adlb.R"]])
-  expect_section_order("Initialize ADLB", "Filter ADLB", programs[["1_adlb.R"]])
-  expect_section_order("Filter ADLB", "Save ADLB", programs[["1_adlb.R"]])
+  expect_section_order("Initialize ADLB", "Preprocess ADLB", programs[["1_adlb.R"]])
+  expect_section_order("Preprocess ADLB", "Save ADLB", programs[["1_adlb.R"]])
 })
 
 test_that("External predecessor dependencies are handled correctly", {
@@ -419,8 +419,8 @@ test_that("External predecessor dependencies are handled correctly", {
   programs <- x |> lapply(readLines)
   names(programs) <- basename(x)
   expect_section_order("Read all data sets needed", "Initialize ADSL", programs[["1_adsl.R"]])
-  expect_section_order("Initialize ADSL", "Filter ADSL", programs[["1_adsl.R"]])
-  expect_section_order("Filter ADSL", "ADSL-PLANNED_ARM", programs[["1_adsl.R"]])
+  expect_section_order("Initialize ADSL", "Preprocess ADSL", programs[["1_adsl.R"]])
+  expect_section_order("Preprocess ADSL", "ADSL-PLANNED_ARM", programs[["1_adsl.R"]])
   expect_section_order("ADSL-PLANNED_ARM", "Save ADSL", programs[["1_adsl.R"]])
 })
 
@@ -493,7 +493,7 @@ test_that("Dependencies between a col_compute action that inputs/returns a core 
 
   # Check edges
   expected_edges <- data.table(
-    parent_node = c("ADSL-dpreprocess_domain", "ADSL-AGE2-age2_01", "ADSL-preprocess_domain",
+    parent_node = c("ADSL-preprocess_domain", "ADSL-AGE2-age2_01", "ADSL-preprocess_domain",
                     "ADSL-AGE-age_redefined_01", "ADSL-preprocess_domain"),
     node_id = c("ADSL-AGE-age_redefined_01", "ADSL-AGE-age_redefined_01",
                 "ADSL-AGE2-age2_01", "ADSL-AGE3-age3_01", "ADSL-PLANNED_ARM")
@@ -516,11 +516,11 @@ test_that("Dependencies between a col_compute action that inputs/returns a core 
   programs <- x |> lapply(readLines)
   names(programs) <- basename(x)
   expect_section_order("Read all data sets needed", "Initialize ADSL", programs[["1_ADSL.R"]])
-  expect_section_order("Initialize ADSL", "Filter ADSL", programs[["1_ADSL.R"]])
-  expect_section_order("Filter ADSL", "ADSL-AGE2-age2_01", programs[["1_ADSL.R"]])
+  expect_section_order("Initialize ADSL", "Preprocess ADSL", programs[["1_ADSL.R"]])
+  expect_section_order("Preprocess ADSL", "ADSL-AGE2-age2_01", programs[["1_ADSL.R"]])
   expect_section_order("ADSL-AGE2-age2_01", "ADSL-AGE-age_redefined_01", programs[["1_ADSL.R"]])
   expect_section_order("ADSL-AGE-age_redefined_01", "ADSL-AGE3-age3_01", programs[["1_ADSL.R"]])
-  expect_section_order("Filter ADSL", "ADSL-PLANNED_ARM", programs[["1_ADSL.R"]])
+  expect_section_order("Preprocess ADSL", "ADSL-PLANNED_ARM", programs[["1_ADSL.R"]])
   expect_section_order("ADSL-AGE3-age3_01", "Save ADSL", programs[["1_ADSL.R"]])
   expect_section_order("ADSL-PLANNED_ARM", "Save ADSL", programs[["1_ADSL.R"]])
 
@@ -579,8 +579,8 @@ test_that("Dependencies between a col_compute action that inputs/returns multipl
   programs <- x |> lapply(readLines)
   names(programs) <- basename(x)
   expect_section_order("Read all data sets needed", "Initialize ADSL", programs[["1_ADSL.R"]])
-  expect_section_order("Initialize ADSL", "Filter ADSL", programs[["1_ADSL.R"]])
-  expect_section_order("Filter ADSL", "ADSL-AGE2-age2_01", programs[["1_ADSL.R"]])
+  expect_section_order("Initialize ADSL", "Preprocess ADSL", programs[["1_ADSL.R"]])
+  expect_section_order("Preprocess ADSL", "ADSL-AGE2-age2_01", programs[["1_ADSL.R"]])
   expect_section_order("ADSL-AGE2-age2_01", "ADSL-AGE-SEX-age_sex_redefined_01", programs[["1_ADSL.R"]])
   expect_section_order("ADSL-AGE-SEX-age_sex_redefined_01", "ADSL-AGE3-age3_01", programs[["1_ADSL.R"]])
   expect_section_order("ADSL-AGE2-age2_01", "ADSL-AGE4-age4_01", programs[["1_ADSL.R"]])

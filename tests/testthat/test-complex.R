@@ -29,7 +29,7 @@ test_that("Complex test with multiple domains and column/row operations", {
   actual$data_model |> names() |> sort() |> expect_equal(c("code_id", "depend_cols", "depend_rows", "domain", "node_id", "outputs", "parameters", "type"))
   write_adam_programs(dir = output_path, programs = actual$programs)
   x <- list.files(output_path, full.names = TRUE)
-browser()
+
   programs <- x |> lapply(readLines)
   names(programs) <- basename(x)
 
