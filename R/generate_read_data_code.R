@@ -42,21 +42,19 @@ generate_read_data_code <- function(payload,
 
   }
 
-
-  # Add temporary column src_ to tag each source domain if domain specific
-  # filters are applied
-  add_src <- NULL
-  if (domain_filters_exist) {
-    add_src <- lapply(core_domains, function(x) {
-      glue::glue("{x} <- {x} |>
-                    dplyr::mutate(SRC_ = '{x}')\n\n")
-    }) |> unlist()
-  }
-
   # Initialize ADaM table by row binding source domain(s) and selecting
-  # predecessors from source domain(s)
+  # predecessors from source domain(s).
   combine_core_domains <- if (length(core_domains) > 1 ){
-    core_domains_str <- paste0(core_domains, collapse = ", ")
+
+    # Add temporary column src_ to tag each source domain if domain specific
+    # filters are applied
+    if (domain_filters_exist) {
+      core_domains <- lapply(core_domains, function(x) {
+        glue::glue("{x} |> dplyr::mutate(SRC_ = '{x}')")
+      }) |> unlist()
+    }
+
+    core_domains_str <- paste0(core_domains, collapse = ",\n")
     glue::glue(
       "{.self} <- rbind({core_domains_str}) |>
             admiral::convert_blanks_to_na()\n\n"
@@ -69,7 +67,6 @@ generate_read_data_code <- function(payload,
   }
 
   adam_init <- paste(c(glue::glue("# Initialize {toupper(.self)} ----------------------\n\n"),
-                       add_src,
                        combine_core_domains), collapse = "\n")
 
   return(c(block_header, connector_setup, data_load_code, adam_init))

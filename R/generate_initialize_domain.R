@@ -60,7 +60,7 @@ generate_initialize_domain <-  function(.self,
       }
     }) |> paste0(collapse = " |\n")
     filter_domain_expr <- glue::glue(
-      "# Apply domain filters
+      "# Apply domain filter
             {.self} <- {.self} |>
   dplyr::filter({filter_domain_def}) |>
   dplyr::select(-SRC_)
