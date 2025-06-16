@@ -306,7 +306,6 @@ age_sex_redefined_01 <- function(.self) {
 #' @outputs SAFETY
 #' @returns `.self`
 supp_dm_01 <- function(.self, suppdm, suppdm_vaccine) {
-
   # Collect supplementary data
   data_supp <- rbind(suppdm, suppdm_vaccine) |>
     dplyr::filter(QNAM %in% c("EFFICACY", "SAFETY"))
@@ -320,6 +319,5 @@ supp_dm_01 <- function(.self, suppdm, suppdm_vaccine) {
     names_from = "QNAM"
   )
   .self <- dplyr::left_join(.self, tDatasetSupp, by = c("USUBJID", "STUDYID"))
-
   return(.self)
 }

@@ -1,7 +1,5 @@
 test_that("Supplementary data is added right after read_data when no supp cols are used in filters", {
 
-  skip()
-
   # SETUP -------------------------------------------------------------------
 
   ui_path <- test_path("fixtures", "supplementary_data_adsl_01.yml")
@@ -25,14 +23,23 @@ test_that("Supplementary data is added right after read_data when no supp cols a
 
   # EXPECT ------------------------------------------------------------------
 
-  browser()
-  do.call(file.edit, as.list(x))
+  programs <- x |> lapply(readLines)
+  names(programs) <- basename(x)
 
+  # Check program order
+  expect_section_order("Read data sets", "Initialize ADSL", programs[["1_ADSL.R"]])
+  expect_section_order("Initialize ADSL", "ADSL-EFFICACY-SAFETY-supp_dm_01", programs[["1_ADSL.R"]])
+  expect_section_order("ADSL-EFFICACY-SAFETY-supp_dm_01", "Preprocess ADSL", programs[["1_ADSL.R"]])
+  expect_section_order("Preprocess ADSL", "ADSL-PLANNED_ARM" ,programs[["1_ADSL.R"]])
+
+  # Check ADSL
+  x[[1]] |> source()
+  expect_equal(nrow(ADSL), 306)
+  expect_setequal(names(ADSL), c("STUDYID", "USUBJID", "ARM", "PLANNED_ARM", "ARM_GRP1"))
 })
 
-test_that("Supplementary data is added right after read_data when a supp col is used in global filter", {
 
-  skip()
+test_that("Supplementary data is added right after read_data when a supp col is used in global filter", {
 
   # SETUP -------------------------------------------------------------------
 
@@ -57,15 +64,23 @@ test_that("Supplementary data is added right after read_data when a supp col is 
 
   # EXPECT ------------------------------------------------------------------
 
+  programs <- x |> lapply(readLines)
+  names(programs) <- basename(x)
 
-  browser()
-  do.call(file.edit, as.list(x))
+  # Check program order
+  expect_section_order("Read data sets", "Initialize ADSL", programs[["1_ADSL.R"]])
+  expect_section_order("Initialize ADSL", "ADSL-EFFICACY-SAFETY-supp_dm_01", programs[["1_ADSL.R"]])
+  expect_section_order("ADSL-EFFICACY-SAFETY-supp_dm_01", "Preprocess ADSL", programs[["1_ADSL.R"]])
+  expect_section_order("Preprocess ADSL", "ADSL-PLANNED_ARM" ,programs[["1_ADSL.R"]])
+
+  # Check ADSL
+  x[[1]] |> source()
+  expect_equal(nrow(ADSL), 234)
+  expect_setequal(names(ADSL), c("STUDYID", "USUBJID", "ARM", "PLANNED_ARM", "ARM_GRP1"))
 
 })
 
 test_that("Supplementary data is added right after read_data when a supp col is used in domain filter", {
-
-  skip()
 
   # SETUP -------------------------------------------------------------------
 
@@ -90,25 +105,35 @@ test_that("Supplementary data is added right after read_data when a supp col is 
 
   # EXPECT ------------------------------------------------------------------
 
-  browser()
-  do.call(file.edit, as.list(x))
+  programs <- x |> lapply(readLines)
+  names(programs) <- basename(x)
+
+  # Check program order
+  expect_section_order("Read data sets", "Initialize ADSL", programs[["1_ADSL.R"]])
+  expect_section_order("Initialize ADSL", "ADSL-EFFICACY-SAFETY-supp_dm_01", programs[["1_ADSL.R"]])
+  expect_section_order("ADSL-EFFICACY-SAFETY-supp_dm_01", "Preprocess ADSL", programs[["1_ADSL.R"]])
+  expect_section_order("Preprocess ADSL", "ADSL-PLANNED_ARM" ,programs[["1_ADSL.R"]])
+
+  # Check ADSL
+  x[[1]] |> source()
+  expect_equal(nrow(ADSL), 306)
+  expect_setequal(names(ADSL), c("STUDYID", "USUBJID", "ARM", "PLANNED_ARM", "ARM_GRP1"))
 
 })
 
-test_that("Supplementary data is added right after read_data when supp cols and ADSL cols are used in filters", {
 
-  skip()
+test_that("Supplementary data is added right after read_data when supp cols and ADSL cols are used in filters", {
 
   # SETUP -------------------------------------------------------------------
 
   ui_path <- test_path("fixtures", "supplementary_data_adae_01.yml")
   path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
-  std_lib_path <- testthat::test_path("fixtures", "adsl_0001.R")
+  std_lib_path <- testthat::test_path("fixtures", "adae_0001.R")
   domain_keys_path <- system.file("standards", "domain_keys.yml", package = "mighty")
   output_path <- withr::local_tempdir()
 
   # ACT ---------------------------------------------------------------------
-# debugonce(generate_initialize_domain)
+
   actual <- generate_adam_code(
     path_ui_data = ui_path,
     code_component_source_files =  std_lib_path,
@@ -123,7 +148,13 @@ test_that("Supplementary data is added right after read_data when supp cols and 
 
   # EXPECT ------------------------------------------------------------------
 
-  browser()
-  do.call(file.edit, as.list(x))
+  programs <- x |> lapply(readLines)
+  names(programs) <- basename(x)
+
+  # Check program order
+  expect_section_order("Read data sets", "Initialize ADAE", programs[["1_ADAE.R"]])
+  expect_section_order("Initialize ADAE", "ADAE-AETRTEM-supp_ae_01", programs[["1_ADAE.R"]])
+  expect_section_order("ADAE-AETRTEM-supp_ae_01", "Preprocess ADAE", programs[["1_ADAE.R"]])
+  expect_section_order("Preprocess ADAE", "Save ADAE" ,programs[["1_ADAE.R"]])
 
 })
