@@ -82,7 +82,7 @@ expand_child_columns <- function(nodes) {
       child_column = x$outputs[[1]],
       child_column_domain = x$domain,
       child_column_domain_type =
-        ifelse(x$type == "domain_init", "init", "adam")
+        ifelse(x$type == "preprocess_domain", "init", "adam")
     )
   }
 

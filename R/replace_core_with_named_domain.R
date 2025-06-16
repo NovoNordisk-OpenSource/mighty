@@ -2,8 +2,8 @@ replace_core_with_named_domain <- function(x, ui_init) {
 
   for (i in seq_len(nrow(x))) {
 
-    if (x[["type"]][[i]] %in% c("domain_init", "col_supp")){
-      # For domain_init and col_supp actions:
+    if (x[["type"]][[i]] %in% c("preprocess_domain", "col_supp")){
+      # For preprocess_domain and col_supp actions:
       # Replace 'core' domain and domain_type with actual core domain(s) and
       # association domain, respectively
 

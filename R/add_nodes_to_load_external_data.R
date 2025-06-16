@@ -66,7 +66,7 @@ external_dependencies_per_program <- function(program_order, nodes, init_metadat
 
     y <- nodes_by_pgm[[i]]
 
-    if(any(y$type == "domain_init")){
+    if(any(y$type == "preprocess_domain")){
       filter_depend_cols <- init_metadata[[unique(y$domain)]][["filter_depend_cols"]]
       core_domains <- init_metadata[[unique(y$domain)]][["core_domains"]]
 

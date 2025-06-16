@@ -33,7 +33,7 @@ vis_code_tree <- function(nodes, edges) {
     ) |>
     visNetwork::visNodes(shadow = list(enabled = TRUE, size = 10), color = "color") |>
     visNetwork::visGroups(groupname = "column", shape = "dot") |>
-    visNetwork::visGroups(groupname = "domain_init", shape = "star", borderWidth=2, size=30) |>
+    visNetwork::visGroups(groupname = "preprocess_domain", shape = "star", borderWidth=2, size=30) |>
     visNetwork::visGroups(groupname = "row", shape = "box") |>
     visNetwork::visGroups(groupname = "predecessor", shape = "triangle") |>
     visNetwork::visHierarchicalLayout(

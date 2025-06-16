@@ -16,8 +16,8 @@ enrich_with_external_dependencies <- function(nodes, init_metadata) {
 
     dep <- i$depend_cols[[1]][domain != i$domain]
 
-    # Special case: For domain_init, we need to add the column dependencies from the global filters
-    if (i$type != "domain_init") {
+    # Special case: For preprocess_domain, we need to add the column dependencies from the global filters
+    if (i$type != "preprocess_domain") {
       return(list(dep))
     }
 

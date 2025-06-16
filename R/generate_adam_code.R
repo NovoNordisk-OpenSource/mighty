@@ -59,7 +59,7 @@ generate_adam_code <- function(path_ui_data,
   nodes_3 <- update_depend_cols(nodes_2, domain_keys, ui_init)
 
   # Create an initialize action per domain that absorbs col_copy action
-  nodes_4 <- create_domain_initialize_nodes(nodes_3)
+  nodes_4 <- create_preprocess_domain_nodes(nodes_3)
 
   # Replace "core" with relevant domains
   nodes_5 <- replace_core_with_named_domain(nodes_4, ui_init)

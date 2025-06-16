@@ -12,7 +12,7 @@
 #' @export
 #'
 #' @examples
-generate_initialize_domain <-  function(.self,
+generate_preprocess_domain <-  function(.self,
                                         core_domains,
                                         adsl_domain_keys,
                                         filter_domain = NULL,
@@ -24,7 +24,7 @@ generate_initialize_domain <-  function(.self,
 
   # Block header
   self <- toupper(.self)
-  metadata_block_core <- glue::glue("# Filter {self} ------------------------------")
+  metadata_block_core <- glue::glue("# Preprocess {self} ------------------------------")
 
   # When the domain is NOT ADSL, we automatically merge it on in case ADSL vars
   # are needed for global filtering.
@@ -89,7 +89,7 @@ generate_initialize_domain <-  function(.self,
     glue::glue(
       "# Select {toupper(.self)} predecessors
                {.self} <- {.self} |>
-          dplyr::select({paste(unique(keep_vars), collapse = ', ')})"
+          dplyr::select({paste(unique(keep_vars), collapse = ', ')})\n\n"
     )
   } else {
     NULL

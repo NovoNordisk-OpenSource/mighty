@@ -24,7 +24,7 @@ test_that("No filters", {
 
   # Check edges
   expected_edges <-  data.table(
-    parent_node = c("ADSL-PLANNED_ARM", "ADSL-domain_init"),
+    parent_node = c("ADSL-PLANNED_ARM", "ADSL-preprocess_domain"),
     node_id = c("ADSL-ARM_GRP1-arm_group_01", "ADSL-PLANNED_ARM")
   )
   expect_equal(actual$edges, expected_edges)
@@ -79,7 +79,7 @@ test_that("No domain filters", {
 
   # Check edges
   expected_edges <-  data.table(
-    parent_node = c("ADSL-PLANNED_ARM", "ADSL-domain_init"),
+    parent_node = c("ADSL-PLANNED_ARM", "ADSL-preprocess_domain"),
     node_id = c("ADSL-ARM_GRP1-arm_group_01", "ADSL-PLANNED_ARM")
   )
   expect_equal(actual$edges, expected_edges)
@@ -134,7 +134,7 @@ test_that("No global filters", {
 
   # Check edges
   expected_edges <-  data.table(
-    parent_node = c("ADSL-PLANNED_ARM", "ADSL-domain_init"),
+    parent_node = c("ADSL-PLANNED_ARM", "ADSL-preprocess_domain"),
     node_id = c("ADSL-ARM_GRP1-arm_group_01", "ADSL-PLANNED_ARM")
   )
   expect_equal(actual$edges, expected_edges)
@@ -189,7 +189,7 @@ test_that("No filters and no derivations", {
 
   # Check edges
   expected_edges <-  data.table(
-    parent_node = c("ADSL-domain_init"),
+    parent_node = c("ADSL-preprocess_domain"),
     node_id = c("ADSL-PLANNED_ARM")
   )
   expect_equal(actual$edges, expected_edges)
@@ -243,7 +243,7 @@ test_that("Global filter and domain filter", {
 
   # Check edges
   expected_edges <-  data.table(
-    parent_node = c("ADSL-PLANNED_ARM", "ADSL-domain_init"),
+    parent_node = c("ADSL-PLANNED_ARM", "ADSL-preprocess_domain"),
     node_id = c("ADSL-ARM_GRP1-arm_group_01", "ADSL-PLANNED_ARM")
   )
   expect_equal(actual$edges, expected_edges)
@@ -397,7 +397,7 @@ test_that("External predecessor dependencies are handled correctly", {
 
   # Check edges
   expected_edges <- data.table(
-    parent_node = c("adsl-domain_init", "adsl-PLANNED_ARM", "adsl-domain_init"),
+    parent_node = c("adsl-preprocess_domain", "adsl-PLANNED_ARM", "adsl-preprocess_domain"),
     node_id = c("adsl-PLANNED_ARM", "adsl-PLANNED_ARM2", "adsl-VAR1")
   )
   expect_equal(actual$edges, expected_edges)
@@ -493,8 +493,8 @@ test_that("Dependencies between a col_compute action that inputs/returns a core 
 
   # Check edges
   expected_edges <- data.table(
-    parent_node = c("ADSL-domain_init", "ADSL-AGE2-age2_01", "ADSL-domain_init",
-                    "ADSL-AGE-age_redefined_01", "ADSL-domain_init"),
+    parent_node = c("ADSL-dpreprocess_domain", "ADSL-AGE2-age2_01", "ADSL-preprocess_domain",
+                    "ADSL-AGE-age_redefined_01", "ADSL-preprocess_domain"),
     node_id = c("ADSL-AGE-age_redefined_01", "ADSL-AGE-age_redefined_01",
                 "ADSL-AGE2-age2_01", "ADSL-AGE3-age3_01", "ADSL-PLANNED_ARM")
   )
@@ -557,7 +557,7 @@ test_that("Dependencies between a col_compute action that inputs/returns multipl
 
   # Check edges
   expected_edges <- data.table(
-    parent_node = c("ADSL-domain_init", "ADSL-AGE2-age2_01", "ADSL-domain_init",
+    parent_node = c("ADSL-preprocess_domain", "ADSL-AGE2-age2_01", "ADSL-preprocess_domain",
                     "ADSL-AGE-SEX-age_sex_redefined_01", "ADSL-AGE2-age2_01"),
     node_id = c("ADSL-AGE-SEX-age_sex_redefined_01", "ADSL-AGE-SEX-age_sex_redefined_01",
                 "ADSL-AGE2-age2_01", "ADSL-AGE3-age3_01", "ADSL-AGE4-age4_01")

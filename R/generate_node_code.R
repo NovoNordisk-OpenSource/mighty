@@ -49,10 +49,10 @@ generate_node_code <- function(nodes_program_i,
 
       next
     }
-    if (node_i$type == "domain_init") {
+    if (node_i$type == "preprocess_domain") {
       domain_metadata <- ui_data[[node_i$domain]]$init
 
-      program[[i]] <- generate_initialize_domain(
+      program[[i]] <- generate_preprocess_domain(
         .self = node_i$domain,
         core_domains = domain_metadata$core_domains,
         adsl_domain_keys = domain_keys$ADSL,

@@ -9,7 +9,10 @@ generate_read_data_code(
   trial_metadata,
   sdtm_dataset_list,
   data_connection,
-  path_output
+  path_output,
+  core_domains,
+  .self,
+  domain_filters_exist
 )
 }
 \arguments{
