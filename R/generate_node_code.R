@@ -63,8 +63,8 @@ generate_node_code <- function(nodes_program_i,
       )
       next
     }
-    if (node_i$type == "program_init") {
-      program[[i]] <- generate_program_init(
+    if (node_i$type == "read_domain") {
+      program[[i]] <- generate_read_domain(
         adam_domain = node_i$domain,
         adam_dataset_list = adam_dataset_list,
         data_connection = data_connection,

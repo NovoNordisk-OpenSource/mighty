@@ -77,7 +77,7 @@ generate_adam_code <- function(path_ui_data,
   program_sequence_1 <- group_nodes_optimal(nodes_topo_order, nodes_5, edges)
 
   # Add initialization actions to the program sequence
-  program_sequence_2 <- add_program_init_nodes(program_sequence_1, nodes_5)
+  program_sequence_2 <- add_read_domain_nodes(program_sequence_1, nodes_5)
 
   # Add action to import external dependencies to the program sequence
   program_sequence_3 <- add_nodes_to_read_data(program_sequence_2, nodes_5, ui_init, domain_keys) |>
