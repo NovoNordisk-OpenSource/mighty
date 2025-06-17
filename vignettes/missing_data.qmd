@@ -1,5 +1,5 @@
 ---
-title: "missing_data"
+title: "Missing Data"
 vignette: >
   %\VignetteIndexEntry{missing_data}
   %\VignetteEngine{quarto::html}
@@ -15,7 +15,7 @@ knitr:
 library(mighty)
 ```
 # Overview
-During trial conduct, users will want to run ADaM programs even though they will not have all the SDTM data required. In other words, there may be a mismatch between what they specify in the ADaM specifications, and what is possible to derive with the SDTM data avaialble at any given point in time.
+During trial conduct, users will want to run ADaM programs even though they will not have all the SDTM data required. In other words, there may be a mismatch between what they specify in the ADaM specifications, and what is possible to derive with the SDTM data available at any given point in time.
 
 The users need to be able to run the subset of derivations that are possible, and ignore any derivations that do not have the requist data available.
 

@@ -11,7 +11,6 @@ generate_adam_code(
   path_trial_metadata,
   path_domain_keys,
   path_output,
-  data_connection = c("connector", "pharmaverse", "custom_data"),
   check_cross_domain_adam_dependencies = TRUE
 )
 }

@@ -7,6 +7,7 @@ test_that("Check that predecessors and derivations are identified correctly and 
 
   domain_keys_path <- system.file("standards", "domain_keys.yml", package = "mighty")
   output_path <- withr::local_tempdir()
+  setup_testdata(testdata = "pharmaverse", test_data_path = output_path)
 
   # ACT
   actual <- generate_adam_code(
@@ -15,7 +16,6 @@ test_that("Check that predecessors and derivations are identified correctly and 
     path_trial_metadata = path_trial_metadata,
     path_domain_keys = domain_keys_path,
     path_output = output_path,
-    data_connection = "pharmaverse",
     check_cross_domain_adam_dependencies = FALSE
   )
   write_adam_programs(dir = output_path, programs = actual$programs)

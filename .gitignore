@@ -47,3 +47,5 @@ po/*~
 inst/doc
 **/.quarto/
 docs
+/doc/
+/Meta/

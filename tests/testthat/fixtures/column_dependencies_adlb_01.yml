@@ -5,9 +5,9 @@ table_metadata:
 
 init:
   core_domains:
-    - LB
+    - lb
   filter_domain:
-    LB: '!is.na(LBSTRESN)'
+    lb: '!is.na(LBSTRESN)'
   filter_global:
     - '!is.na(SEX)'
     - 'AETRTEM == "Y"'

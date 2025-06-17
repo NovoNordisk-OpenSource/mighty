@@ -4,16 +4,10 @@
 \alias{make_adam_program}
 \title{make_adam_program}
 \usage{
-make_adam_program(
-  path_ui_data,
-  path_std_lib,
-  path_domain_keys,
-  path_output,
-  data_connection = c("connector", "pharmaverse")
-)
+make_adam_program(path_ui_data, path_std_lib, path_domain_keys, path_output)
 }
 \arguments{
-\item{data_connection}{}
+\item{path_output}{}
 }
 \description{
 make_adam_program

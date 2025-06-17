@@ -7,6 +7,7 @@ test_that("No filters", {
 
   domain_keys_path <- system.file("standards", "domain_keys.yml", package = "mighty")
   output_path <- withr::local_tempdir()
+  setup_testdata(testdata = "pharmaverse", test_data_path = output_path)
 
   # ACT
   actual <- generate_adam_code(
@@ -14,11 +15,10 @@ test_that("No filters", {
     code_component_source_files =  std_lib_path,
     path_trial_metadata = path_trial_metadata,
     path_domain_keys = domain_keys_path,
-    path_output = output_path,
-    data_connection = "pharmaverse"
+    path_output = output_path
   )
   write_adam_programs(dir = output_path, programs = actual$programs)
-  x <- list.files(output_path, full.names = TRUE)
+  x <- list.files(output_path, pattern = ".R", full.names = TRUE)
 
   # EXPECT
 
@@ -31,7 +31,7 @@ test_that("No filters", {
 
   # Check external dependencies
   expected_ext_dep <- data.table(
-    domain = c("DM", "DM", "DM_VACCINE", "DM_VACCINE"),
+    domain = c("dm", "dm", "dm_vaccine", "dm_vaccine"),
     domain_type = rep("sdtm", 4),
     column_name = c("ARM", "USUBJID", "ARM", "USUBJID")
   )
@@ -62,6 +62,7 @@ test_that("No domain filters", {
 
   domain_keys_path <- system.file("standards", "domain_keys.yml", package = "mighty")
   output_path <- withr::local_tempdir()
+  setup_testdata(testdata = "pharmaverse", test_data_path = output_path)
 
   # ACT
   actual <- generate_adam_code(
@@ -69,11 +70,10 @@ test_that("No domain filters", {
     code_component_source_files =  std_lib_path,
     path_trial_metadata = path_trial_metadata,
     path_domain_keys = domain_keys_path,
-    path_output = output_path,
-    data_connection = "pharmaverse"
+    path_output = output_path
   )
   write_adam_programs(dir = output_path, programs = actual$programs)
-  x <- list.files(output_path, full.names = TRUE)
+  x <- list.files(output_path, pattern = ".R", full.names = TRUE)
 
   # EXPECT
 
@@ -86,7 +86,7 @@ test_that("No domain filters", {
 
   # Check external dependencies
   expected_ext_dep <- data.table(
-    domain = c("DM", "DM", "DM", "DM", "DM_VACCINE", "DM_VACCINE", "DM_VACCINE", "DM_VACCINE"),
+    domain = c("dm", "dm", "dm", "dm", "dm_vaccine", "dm_vaccine", "dm_vaccine", "dm_vaccine"),
     domain_type = rep("sdtm", 8),
     column_name = c("ARM", "DOMAIN", "STUDYID", "USUBJID", "ARM", "DOMAIN", "STUDYID", "USUBJID")
   )
@@ -117,6 +117,7 @@ test_that("No global filters", {
 
   domain_keys_path <- system.file("standards", "domain_keys.yml", package = "mighty")
   output_path <- withr::local_tempdir()
+  setup_testdata(testdata = "pharmaverse", test_data_path = output_path)
 
   # ACT
   actual <- generate_adam_code(
@@ -124,11 +125,10 @@ test_that("No global filters", {
     code_component_source_files =  std_lib_path,
     path_trial_metadata = path_trial_metadata,
     path_domain_keys = domain_keys_path,
-    path_output = output_path,
-    data_connection = "pharmaverse"
+    path_output = output_path
   )
   write_adam_programs(dir = output_path, programs = actual$programs)
-  x <- list.files(output_path, full.names = TRUE)
+  x <- list.files(output_path, pattern = ".R", full.names = TRUE)
 
   # EXPECT
 
@@ -141,7 +141,7 @@ test_that("No global filters", {
 
   # Check external dependencies
   expected_ext_dep <-   expected_ext_dep <- data.table(
-    domain = c("DM", "DM", "DM", "DM_VACCINE", "DM_VACCINE", "DM_VACCINE"),
+    domain = c("dm", "dm", "dm", "dm_vaccine", "dm_vaccine", "dm_vaccine"),
     domain_type = rep("sdtm", 6),
     column_name = c("ARM", "DTHFL", "USUBJID", "ARM", "DTHFL", "USUBJID")
   )
@@ -172,6 +172,7 @@ test_that("No filters and no derivations", {
 
   domain_keys_path <- system.file("standards", "domain_keys.yml", package = "mighty")
   output_path <- withr::local_tempdir()
+  setup_testdata(testdata = "pharmaverse", test_data_path = output_path)
 
   # ACT
   actual <- generate_adam_code(
@@ -179,11 +180,10 @@ test_that("No filters and no derivations", {
     code_component_source_files =  std_lib_path,
     path_trial_metadata = path_trial_metadata,
     path_domain_keys = domain_keys_path,
-    path_output = output_path,
-    data_connection = "pharmaverse"
+    path_output = output_path
   )
   write_adam_programs(dir = output_path, programs = actual$programs)
-  x <- list.files(output_path, full.names = TRUE)
+  x <- list.files(output_path, pattern = ".R", full.names = TRUE)
 
   # EXPECT
 
@@ -196,7 +196,7 @@ test_that("No filters and no derivations", {
 
   # Check external dependencies
   expected_ext_dep <- data.table(
-    domain = c("DM", "DM", "DM_VACCINE", "DM_VACCINE"),
+    domain = c("dm", "dm", "dm_vaccine", "dm_vaccine"),
     domain_type = rep("sdtm", 4),
     column_name = c("ARM", "USUBJID", "ARM", "USUBJID")
   )
@@ -226,6 +226,7 @@ test_that("Global filter and domain filter", {
 
   domain_keys_path <- system.file("standards", "domain_keys.yml", package = "mighty")
   output_path <- withr::local_tempdir()
+  setup_testdata(testdata = "pharmaverse", test_data_path = output_path)
 
   # ACT
   actual <- generate_adam_code(
@@ -233,11 +234,10 @@ test_that("Global filter and domain filter", {
     code_component_source_files =  std_lib_path,
     path_trial_metadata = path_trial_metadata,
     path_domain_keys = domain_keys_path,
-    path_output = output_path,
-    data_connection = "pharmaverse"
+    path_output = output_path
   )
   write_adam_programs(dir = output_path, programs = actual$programs)
-  x <- list.files(output_path, full.names = TRUE)
+  x <- list.files(output_path, pattern = ".R", full.names = TRUE)
 
   # EXPECT
 
@@ -250,8 +250,8 @@ test_that("Global filter and domain filter", {
 
   # Check external dependencies
   expected_ext_dep <- data.table(
-    domain = c("DM", "DM", "DM", "DM", "DM",
-               "DM_VACCINE", "DM_VACCINE", "DM_VACCINE", "DM_VACCINE", "DM_VACCINE"),
+    domain = c("dm", "dm", "dm", "dm", "dm",
+               "dm_vaccine", "dm_vaccine", "dm_vaccine", "dm_vaccine", "dm_vaccine"),
     domain_type = rep("sdtm", 10),
     column_name = c("AGEU", "ARM", "DOMAIN", "STUDYID", "USUBJID",
                     "AGEU", "ARM", "DOMAIN", "STUDYID", "USUBJID")
@@ -283,6 +283,7 @@ test_that("Global filter and domain filter incl. ADSL dependencies", {
 
   domain_keys_path <- system.file("standards", "domain_keys.yml", package = "mighty")
   output_path <- withr::local_tempdir()
+  setup_testdata(testdata = "pharmaverse", test_data_path = output_path)
 
   # ACT
   actual <- generate_adam_code(
@@ -291,11 +292,10 @@ test_that("Global filter and domain filter incl. ADSL dependencies", {
     path_trial_metadata = path_trial_metadata,
     path_domain_keys = domain_keys_path,
     path_output = output_path,
-    data_connection = "pharmaverse",
     check_cross_domain_adam_dependencies = FALSE
   )
   write_adam_programs(dir = output_path, programs = actual$programs)
-  x <- list.files(output_path, full.names = TRUE)
+  x <- list.files(output_path, pattern = ".R", full.names = TRUE)
 
   # EXPECT
 
@@ -308,7 +308,7 @@ test_that("Global filter and domain filter incl. ADSL dependencies", {
 
   # Check external dependencies
   expected_ext_dep <- data.table(
-    domain = c("ADSL", "ADSL", "ADSL", "LB", "LB", "LB", "LB"),
+    domain = c("ADSL", "ADSL", "ADSL", "lb", "lb", "lb", "lb"),
     domain_type = c("adam", "adam", "adam", "sdtm", "sdtm", "sdtm", "sdtm"),
     column_name = c("SEX", "STUDYID", "USUBJID", "LBSTRESN", "STUDYID", "USUBJID", "VISITNUM")
   )
@@ -332,6 +332,7 @@ test_that("Global filter and domain filter incl. adsl dependencies (lower case)"
 
   domain_keys_path <- system.file("standards", "domain_keys.yml", package = "mighty")
   output_path <- withr::local_tempdir()
+  setup_testdata(testdata = "pharmaverse", test_data_path = output_path)
 
   # ACT
   actual <- generate_adam_code(
@@ -340,11 +341,10 @@ test_that("Global filter and domain filter incl. adsl dependencies (lower case)"
     path_trial_metadata = path_trial_metadata,
     path_domain_keys = domain_keys_path,
     path_output = output_path,
-    data_connection = "pharmaverse",
     check_cross_domain_adam_dependencies = FALSE
   )
   write_adam_programs(dir = output_path, programs = actual$programs)
-  x <- list.files(output_path, full.names = TRUE)
+  x <- list.files(output_path, pattern = ".R", full.names = TRUE)
 
   # EXPECT
 
@@ -380,6 +380,7 @@ test_that("External predecessor dependencies are handled correctly", {
   std_lib_path <- testthat::test_path("fixtures", "adsl_0001.R")
   domain_keys_path <- system.file("standards", "domain_keys.yml", package = "mighty")
   output_path <- withr::local_tempdir()
+  setup_testdata(testdata = "pharmaverse", test_data_path = output_path, c("dm", "dm_vaccine", "ex"))
 
   # ACT
   actual <- generate_adam_code(
@@ -387,11 +388,10 @@ test_that("External predecessor dependencies are handled correctly", {
     code_component_source_files =  std_lib_path,
     path_trial_metadata = path_trial_metadata,
     path_domain_keys = domain_keys_path,
-    path_output = output_path,
-    data_connection = "pharmaverse"
+    path_output = output_path
   )
   write_adam_programs(dir = output_path, programs = actual$programs)
-  x <- list.files(output_path, full.names = TRUE)
+  x <- list.files(output_path, pattern = ".R", full.names = TRUE)
 
   # EXPECT
 
@@ -404,9 +404,9 @@ test_that("External predecessor dependencies are handled correctly", {
 
   # Check external dependencies
   expected_ext_dep <- data.table(
-    domain = c("DM", "DM", "DM", "DM", "DM",
-               "DM_VACCINE", "DM_VACCINE", "DM_VACCINE", "DM_VACCINE", "DM_VACCINE",
-               "EX", "EX"),
+    domain = c("dm", "dm", "dm", "dm", "dm",
+               "dm_vaccine", "dm_vaccine", "dm_vaccine", "dm_vaccine", "dm_vaccine",
+               "ex", "ex"),
     domain_type = rep("sdtm", 12),
     column_name = c("AGEU", "ARM", "DOMAIN", "STUDYID", "USUBJID",
                     "AGEU", "ARM", "DOMAIN", "STUDYID", "USUBJID",
@@ -433,6 +433,7 @@ test_that("Error is triggered when both a col_mutate and a col_copy action exist
 
   domain_keys_path <- system.file("standards", "domain_keys.yml", package = "mighty")
   output_path <- withr::local_tempdir()
+  setup_testdata(testdata = "pharmaverse", test_data_path = output_path)
 
   # ACT/EXPECT
   actual <- generate_adam_code(
@@ -440,8 +441,7 @@ test_that("Error is triggered when both a col_mutate and a col_copy action exist
     code_component_source_files =  std_lib_path,
     path_trial_metadata = path_trial_metadata,
     path_domain_keys = domain_keys_path,
-    path_output = output_path,
-    data_connection = "pharmaverse"
+    path_output = output_path
   ) |> expect_error(regexp = "Column\\(s\\) AGE are outputted in multiple actions in domain ADSL.")
 
 })
@@ -455,6 +455,7 @@ test_that("Error is triggered when multiple col_compute actions exist that input
 
   domain_keys_path <- system.file("standards", "domain_keys.yml", package = "mighty")
   output_path <- withr::local_tempdir()
+  setup_testdata(testdata = "pharmaverse", test_data_path = output_path)
 
   # ACT/EXPECT
   actual <- generate_adam_code(
@@ -462,8 +463,7 @@ test_that("Error is triggered when multiple col_compute actions exist that input
     code_component_source_files =  std_lib_path,
     path_trial_metadata = path_trial_metadata,
     path_domain_keys = domain_keys_path,
-    path_output = output_path,
-    data_connection = "pharmaverse"
+    path_output = output_path
   ) |> expect_error(regexp = "Column\\(s\\) AGE are outputted in multiple actions in domain ADSL.")
 })
 
@@ -476,6 +476,7 @@ test_that("Dependencies between a col_compute action that inputs/returns a core 
 
   domain_keys_path <- system.file("standards", "domain_keys.yml", package = "mighty")
   output_path <- withr::local_tempdir()
+  setup_testdata(testdata = "pharmaverse", test_data_path = output_path)
 
   # ACT
   actual <- generate_adam_code(
@@ -484,10 +485,9 @@ test_that("Dependencies between a col_compute action that inputs/returns a core 
     path_trial_metadata = path_trial_metadata,
     path_domain_keys = domain_keys_path,
     path_output = output_path,
-    data_connection = "pharmaverse"
   )
   write_adam_programs(dir = output_path, programs = actual$programs)
-  x <- list.files(output_path, full.names = TRUE)
+  x <- list.files(output_path, pattern = ".R", full.names = TRUE)
 
   # EXPECT
 
@@ -502,9 +502,9 @@ test_that("Dependencies between a col_compute action that inputs/returns a core 
 
   # Check external dependencies
   expected_ext_dep <- data.table(
-    domain = c("DM", "DM", "DM", "DM", "DM", "DM",
-               "DM_VACCINE", "DM_VACCINE", "DM_VACCINE", "DM_VACCINE",
-               "DM_VACCINE", "DM_VACCINE"),
+    domain = c("dm", "dm", "dm", "dm", "dm", "dm",
+               "dm_vaccine", "dm_vaccine", "dm_vaccine", "dm_vaccine",
+               "dm_vaccine", "dm_vaccine"),
     domain_type = rep("sdtm", 12),
     column_name = c("AGE", "AGEU", "ARM", "RACE", "SEX", "USUBJID",
                     "AGE", "AGEU", "ARM", "RACE", "SEX", "USUBJID")
@@ -539,6 +539,7 @@ test_that("Dependencies between a col_compute action that inputs/returns multipl
 
   domain_keys_path <- system.file("standards", "domain_keys.yml", package = "mighty")
   output_path <- withr::local_tempdir()
+  setup_testdata(testdata = "pharmaverse", test_data_path = output_path)
 
   # ACT
   actual <- generate_adam_code(
@@ -546,12 +547,11 @@ test_that("Dependencies between a col_compute action that inputs/returns multipl
     code_component_source_files =  std_lib_path,
     path_trial_metadata = path_trial_metadata,
     path_domain_keys = domain_keys_path,
-    path_output = output_path,
-    data_connection = "pharmaverse"
+    path_output = output_path
   )
 
   write_adam_programs(dir = output_path, programs = actual$programs)
-  x <- list.files(output_path, full.names = TRUE)
+  x <- list.files(output_path, pattern = ".R", full.names = TRUE)
 
   # EXPECT
 
@@ -566,8 +566,8 @@ test_that("Dependencies between a col_compute action that inputs/returns multipl
 
   # Check external dependencies
   expected_ext_dep <- data.table(
-    domain = c("DM", "DM", "DM", "DM", "DM",
-               "DM_VACCINE", "DM_VACCINE", "DM_VACCINE", "DM_VACCINE", "DM_VACCINE"),
+    domain = c("dm", "dm", "dm", "dm", "dm",
+               "dm_vaccine", "dm_vaccine", "dm_vaccine", "dm_vaccine", "dm_vaccine"),
     domain_type = rep("sdtm", 10),
     column_name = c("AGE", "AGEU", "RACE", "SEX", "USUBJID",
                     "AGE", "AGEU", "RACE", "SEX", "USUBJID")

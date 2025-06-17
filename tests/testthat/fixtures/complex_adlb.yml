@@ -3,9 +3,9 @@ table_metadata:
 
 init:
   core_domains:
-    - LB
+    - lb
   filter_domain:
-    LB: NA
+    lb: NA
   filter_global:
     - '!is.na(SEX)'
   filter_depend_cols:

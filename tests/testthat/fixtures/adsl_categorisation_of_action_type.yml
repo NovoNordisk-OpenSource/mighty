@@ -5,7 +5,7 @@ table_metadata:
 
 init:
   core_domains:
-    - DM
+    - dm
   filter_domain: NA
   filter_global: NA
   filter_depend_cols: NA
@@ -33,7 +33,7 @@ column_metadata:
     source: PLANNED_ARM
 
   - column: VAR2
-    source: DS.DSSEQ
+    source: ds.DSSEQ
 
   - column: VISITDY
-    source: DS.DSCAT
+    source: ds.DSCAT

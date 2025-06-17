@@ -11,7 +11,6 @@ generate_node_code(
   ui_data,
   trial_metadata,
   sdtm_dataset_list,
-  data_connection,
   path_output
 )
 }
@@ -30,9 +29,6 @@ paths and connection information}
 
 \item{sdtm_dataset_list}{Character vector of SDTM datasets available for the
 study}
-
-\item{data_connection}{Character string specifying the data connection type
-(e.g., "pharmaverse", "connector")}
 
 \item{path_output}{Character string specifying the output path where
 generated data should be stored}

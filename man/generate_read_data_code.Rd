@@ -8,15 +8,19 @@ generate_read_data_code(
   payload,
   trial_metadata,
   sdtm_dataset_list,
+<<<<<<< HEAD:man/generate_read_data_code.Rd
   data_connection,
   path_output,
   core_domains,
   .self,
   domain_filters_exist
+=======
+  path_output
+>>>>>>> main:man/generate_external_data_code.Rd
 )
 }
 \arguments{
-\item{data_connection}{}
+\item{path_output}{}
 }
 \description{
 Generate external data code

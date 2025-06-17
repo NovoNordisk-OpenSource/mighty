@@ -13,8 +13,6 @@
 #'   paths and connection information
 #' @param sdtm_dataset_list Character vector of SDTM datasets available for the
 #'   study
-#' @param data_connection Character string specifying the data connection type
-#'   (e.g., "pharmaverse", "connector")
 #' @param path_output Character string specifying the output path where
 #'   generated data should be stored
 #'
@@ -26,7 +24,6 @@ generate_node_code <- function(nodes_program_i,
                                ui_data,
                                trial_metadata,
                                sdtm_dataset_list,
-                               data_connection,
                                path_output) {
   program <- list()
 
@@ -38,11 +35,8 @@ generate_node_code <- function(nodes_program_i,
       init <- ui_data[[node_i$domain]]$init
       program[[i]] <- generate_read_data_code(
         external_deps,
-        trial_metadata,
         sdtm_dataset_list,
-        data_connection,
-        path_output = path_output,
-        .self = node_i$domain
+        path_output = path_output
       )
       next
     }
@@ -71,14 +65,10 @@ generate_node_code <- function(nodes_program_i,
     }
     if (node_i$type == "read_domain") {
       program[[i]] <- generate_read_domain(
-        adam_domain = node_i$domain,
-        data_connection = data_connection,
-        path_out = path_output
-
-      )
+        adam_domain = node_i$domain
+        )
       next
     }
-
     if (grepl("col_mutate|col_echo", node_i$type)) {
       is_mutate <- node_i$depend_cols[[1]] |> nrow() == 1
       if (is_mutate) {
@@ -135,7 +125,6 @@ generate_node_code <- function(nodes_program_i,
 
       program[[i]] <- generate_write_data(
         domain_name = node_i$domain,
-        data_connection = data_connection,
         path_output = path_output,
         input_tables
       ) |> paste0(collapse = "\n\n")

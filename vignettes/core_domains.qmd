@@ -1,5 +1,5 @@
 ---
-title: "core_domains"
+title: "Core Domains"
 vignette: >
   %\VignetteIndexEntry{core_domains}
   %\VignetteEngine{quarto::html}

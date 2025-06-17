@@ -26,6 +26,51 @@ test_that("create_consolidated_env errors on non-existent package", {
   )
 })
 
+test_that("create_consolidated_env handles code_ids not found in any source", {
+  # ARRANGE -------------------------------------------------------------------
+  # Create a temporary R file with a function that doesn't match our code_ids
+  temp_file <- tempfile(fileext = ".R")
+  writeLines("existing_function <- function() { return('I exist') }", temp_file)
+
+  # Use a real package (base) and specify code_ids that don't exist anywhere
+  packages <- c("base", "stats")
+  source_files <- temp_file
+  code_ids <- c("existing_function", "nonexistent_function", "another_missing_function", "paste", "AIC")
+
+  # ACT & ASSERT ---------------------------------------------------------------
+  create_consolidated_env(
+    packages = packages,
+    source_files = source_files,
+    code_ids = code_ids
+  ) |> expect_error("The following code_ids were not found in any source")
+
+  create_consolidated_env(
+    packages = packages,
+    source_files = source_files,
+    code_ids = code_ids
+  ) |> expect_error("nonexistent_function")
+
+  create_consolidated_env(
+    packages = packages,
+    source_files = source_files,
+    code_ids = code_ids
+  ) |> expect_error("another_missing_function")
+
+  # Expect an error that does NOT contain "paste" in the missing functions list
+  expect_error(
+    create_consolidated_env(
+      packages = packages,
+      source_files = source_files,
+      code_ids = code_ids
+    ),
+    regexp = "^(?!.*'paste').*The following code_ids were not found.*",
+    perl = TRUE,
+    info = "Error message should not include 'paste' as it exists in base package"
+  )
+  # CLEANUP -------------------------------------------------------------------
+  unlink(temp_file)
+})
+
 
 testthat::test_that("create_consolidated_env detects duplicate function names from files",
                     {

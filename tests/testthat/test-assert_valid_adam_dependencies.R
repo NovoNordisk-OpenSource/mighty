@@ -8,6 +8,7 @@ test_that(
 
     domain_keys_path <- system.file("standards", "domain_keys.yml", package = "mighty")
     output_path <- withr::local_tempdir()
+    setup_testdata(testdata = "pharmaverse", test_data_path = output_path)
 
     # EXPECT
     actual <- generate_adam_code(
@@ -16,7 +17,6 @@ test_that(
       path_trial_metadata = path_trial_metadata,
       path_domain_keys = domain_keys_path,
       path_output = output_path,
-      data_connection = "pharmaverse",
       check_cross_domain_adam_dependencies = FALSE
     ) |> expect_no_error()
 
@@ -34,6 +34,7 @@ test_that(
 
     domain_keys_path <- system.file("standards", "domain_keys.yml", package = "mighty")
     output_path <- withr::local_tempdir()
+    setup_testdata(testdata = "pharmaverse", test_data_path = output_path)
 
     # EXPECT
     actual <- generate_adam_code(
@@ -42,7 +43,6 @@ test_that(
       path_trial_metadata = path_trial_metadata,
       path_domain_keys = domain_keys_path,
       path_output = output_path,
-      data_connection = "pharmaverse",
       check_cross_domain_adam_dependencies = TRUE
     ) |> expect_no_error()
     actual$data_model |> names() |> sort() |> expect_equal(c("code_id", "depend_cols", "depend_rows", "domain", "node_id", "outputs", "parameters", "type"))
@@ -59,6 +59,7 @@ test_that(
 
     domain_keys_path <- system.file("standards", "domain_keys.yml", package = "mighty")
     output_path <- withr::local_tempdir()
+    setup_testdata(testdata = "pharmaverse", test_data_path = output_path)
 
     # EXPECT
     generate_adam_code(
@@ -67,7 +68,6 @@ test_that(
       path_trial_metadata = path_trial_metadata,
       path_domain_keys = domain_keys_path,
       path_output = output_path,
-      data_connection = "pharmaverse",
       check_cross_domain_adam_dependencies = TRUE
     ) |> expect_error(
       regexp = ".*ADaM spec:\n\tadsl\\.AGE\n\tadsl\\.STUDYID\n\tadsl\\.USUBJID\nto execute:\n\tadlb\\.AGE")
@@ -84,6 +84,7 @@ test_that(
 
     domain_keys_path <- system.file("standards", "domain_keys.yml", package = "mighty")
     output_path <- withr::local_tempdir()
+    setup_testdata(testdata = "pharmaverse", test_data_path = output_path)
 
     # EXPECT
     actual <- generate_adam_code(
@@ -92,7 +93,6 @@ test_that(
       path_trial_metadata = path_trial_metadata,
       path_domain_keys = domain_keys_path,
       path_output = output_path,
-      data_connection = "pharmaverse",
       check_cross_domain_adam_dependencies = FALSE
     ) |> expect_no_error()
     actual$data_model |> names() |> sort() |> expect_equal(c("code_id", "depend_cols", "depend_rows", "domain", "node_id", "outputs", "parameters", "type"))
@@ -109,6 +109,7 @@ test_that(
 
     domain_keys_path <- system.file("standards", "domain_keys.yml", package = "mighty")
     output_path <- withr::local_tempdir()
+    setup_testdata(testdata = "pharmaverse", test_data_path = output_path)
 
     # EXPECT
     generate_adam_code(
@@ -117,7 +118,6 @@ test_that(
       path_trial_metadata = path_trial_metadata,
       path_domain_keys = domain_keys_path,
       path_output = output_path,
-      data_connection = "pharmaverse",
       check_cross_domain_adam_dependencies = FALSE
     ) |> expect_error(
       regexp =  ".*ADLB spec:\n\tadlb.VISITNUM\nto execute:\n\tadlb\\.VISITNUM2")
@@ -134,6 +134,7 @@ test_that(
 
     domain_keys_path <- system.file("standards", "domain_keys.yml", package = "mighty")
     output_path <- withr::local_tempdir()
+    setup_testdata(testdata = "pharmaverse", test_data_path = output_path)
 
     # EXPECT
     generate_adam_code(
@@ -142,7 +143,6 @@ test_that(
       path_trial_metadata = path_trial_metadata,
       path_domain_keys = domain_keys_path,
       path_output = output_path,
-      data_connection = "pharmaverse",
       check_cross_domain_adam_dependencies = TRUE
     ) |> expect_error(
       regexp = ".*ADaM spec:\n\tadlb.VISITNUM\nto execute:\n\tadlb\\.VISITNUM2")
@@ -160,6 +160,7 @@ test_that(
 
     domain_keys_path <- system.file("standards", "domain_keys.yml", package = "mighty")
     output_path <- withr::local_tempdir()
+    setup_testdata(testdata = "pharmaverse", test_data_path = output_path)
 
     # EXPECT
     generate_adam_code(
@@ -168,7 +169,6 @@ test_that(
       path_trial_metadata = path_trial_metadata,
       path_domain_keys = domain_keys_path,
       path_output = output_path,
-      data_connection = "pharmaverse",
       check_cross_domain_adam_dependencies = FALSE
     ) |> expect_error(regexp = ".*ADLB spec:\n\tadlb\\.STUDYID\n\tadlb\\.VISITNUM\nto execute:\n\tadlb\\.AGE\n\tadlb\\.VISITNUM2")
   }
@@ -184,6 +184,7 @@ test_that(
 
     domain_keys_path <- system.file("standards", "domain_keys.yml", package = "mighty")
     output_path <- withr::local_tempdir()
+    setup_testdata(testdata = "pharmaverse", test_data_path = output_path)
 
     # EXPECT
     generate_adam_code(
@@ -192,7 +193,6 @@ test_that(
       path_trial_metadata = path_trial_metadata,
       path_domain_keys = domain_keys_path,
       path_output = output_path,
-      data_connection = "pharmaverse",
       check_cross_domain_adam_dependencies = TRUE
     ) |> expect_error(regexp = paste0("The following columns are missing in the ADaM spec:",
                                       "\n\tadlb\\.STUDYID\n\tadlb\\.VISITNUM\n\tadsl\\.AGE",
@@ -211,6 +211,7 @@ test_that(
 
     domain_keys_path <- system.file("standards", "domain_keys.yml", package = "mighty")
     output_path <- withr::local_tempdir()
+    setup_testdata(testdata = "pharmaverse", test_data_path = output_path)
 
     # EXPECT
     actual <- generate_adam_code(
@@ -219,7 +220,6 @@ test_that(
       path_trial_metadata = path_trial_metadata,
       path_domain_keys = domain_keys_path,
       path_output = output_path,
-      data_connection = "pharmaverse",
       check_cross_domain_adam_dependencies = TRUE
     ) |> expect_error(regexp = paste0(".*ADaM spec:",
                                       "\n\tADSL\\.SEX\n\tADSL\\.STUDYID\n\tADSL\\.USUBJID",
@@ -238,6 +238,7 @@ test_that(
 
     domain_keys_path <- system.file("standards", "domain_keys.yml", package = "mighty")
     output_path <- withr::local_tempdir()
+    setup_testdata(testdata = "pharmaverse", test_data_path = output_path)
 
     # EXPECT
     actual <- generate_adam_code(
@@ -246,7 +247,6 @@ test_that(
       path_trial_metadata = path_trial_metadata,
       path_domain_keys = domain_keys_path,
       path_output = output_path,
-      data_connection = "pharmaverse",
       check_cross_domain_adam_dependencies = FALSE
     ) |> expect_no_error()
     actual$data_model |> names() |> sort() |> expect_equal(c("code_id", "depend_cols", "depend_rows", "domain", "node_id", "outputs", "parameters", "type"))
@@ -263,6 +263,7 @@ test_that(
 
     domain_keys_path <- system.file("standards", "domain_keys.yml", package = "mighty")
     output_path <- withr::local_tempdir()
+    setup_testdata(testdata = "pharmaverse", test_data_path = output_path)
 
     # EXPECT
     actual <- generate_adam_code(
@@ -271,7 +272,6 @@ test_that(
       path_trial_metadata = path_trial_metadata,
       path_domain_keys = domain_keys_path,
       path_output = output_path,
-      data_connection = "pharmaverse",
       check_cross_domain_adam_dependencies = TRUE
     ) |> expect_error(regexp =
                         paste0(".*ADaM spec:",
@@ -290,6 +290,7 @@ test_that(
 
     domain_keys_path <- system.file("standards", "domain_keys.yml", package = "mighty")
     output_path <- withr::local_tempdir()
+    setup_testdata(testdata = "pharmaverse", test_data_path = output_path)
 
     # EXPECT
     actual <- generate_adam_code(
@@ -298,7 +299,6 @@ test_that(
       path_trial_metadata = path_trial_metadata,
       path_domain_keys = domain_keys_path,
       path_output = output_path,
-      data_connection = "pharmaverse",
       check_cross_domain_adam_dependencies = FALSE
     ) |> expect_no_error()
     actual$data_model |> names() |> sort() |> expect_equal(c("code_id", "depend_cols", "depend_rows", "domain", "node_id", "outputs", "parameters", "type"))
@@ -319,6 +319,7 @@ test_that(
 
     domain_keys_path <- system.file("standards", "domain_keys.yml", package = "mighty")
     output_path <- withr::local_tempdir()
+    setup_testdata(testdata = "pharmaverse", test_data_path = output_path)
 
     # EXPECT
     actual <- generate_adam_code(
@@ -327,7 +328,6 @@ test_that(
       path_trial_metadata = path_trial_metadata,
       path_domain_keys = domain_keys_path,
       path_output = output_path,
-      data_connection = "pharmaverse",
       check_cross_domain_adam_dependencies = TRUE
     ) |> expect_error(regexp =
                       ".*ADaM spec:\n\tADSL\\.AGE\n\tADSL\\.SEX\n\tADSL\\.STUDYID\n\tADSL\\.USUBJID\nto execute:\n\tADLB filter\n\tADLB\\.AGE\n\tADVS filter")
@@ -347,6 +347,7 @@ test_that(
 
     domain_keys_path <- system.file("standards", "domain_keys.yml", package = "mighty")
     output_path <- withr::local_tempdir()
+    setup_testdata(testdata = "pharmaverse", test_data_path = output_path)
 
     # EXPECT
     actual <- generate_adam_code(
@@ -355,7 +356,6 @@ test_that(
       path_trial_metadata = path_trial_metadata,
       path_domain_keys = domain_keys_path,
       path_output = output_path,
-      data_connection = "pharmaverse",
       check_cross_domain_adam_dependencies = FALSE
     ) |> expect_no_error()
     actual$data_model |> names() |> sort() |> expect_equal(c("code_id", "depend_cols", "depend_rows", "domain", "node_id", "outputs", "parameters", "type"))
@@ -375,6 +375,7 @@ test_that(
 
     domain_keys_path <- system.file("standards", "domain_keys.yml", package = "mighty")
     output_path <- withr::local_tempdir()
+    setup_testdata(testdata = "pharmaverse", test_data_path = output_path)
 
     # EXPECT
     actual <- generate_adam_code(
@@ -383,7 +384,6 @@ test_that(
       path_trial_metadata = path_trial_metadata,
       path_domain_keys = domain_keys_path,
       path_output = output_path,
-      data_connection = "pharmaverse",
       check_cross_domain_adam_dependencies = FALSE
     ) |> expect_error(regexp = paste0(".*ADLB spec:\n\tadlb\\.VISITNUM\nto execute:",
                                       "\n\tadlb\\.VISITNUM2\n\n.*ADVS spec:",
@@ -402,6 +402,7 @@ test_that(
 
     domain_keys_path <- system.file("standards", "domain_keys.yml", package = "mighty")
     output_path <- withr::local_tempdir()
+    setup_testdata(testdata = "pharmaverse", test_data_path = output_path)
 
     # EXPECT
     actual <- generate_adam_code(
@@ -410,7 +411,6 @@ test_that(
       path_trial_metadata = path_trial_metadata,
       path_domain_keys = domain_keys_path,
       path_output = output_path,
-      data_connection = "pharmaverse",
       check_cross_domain_adam_dependencies = FALSE
     ) |> expect_error(regexp = paste0(".*ADLB spec:\n\tadlb\\.LBTEST\nto execute:",
                                       "\n\tadlb\\.LBTEST2\n\tadlb\\.LBTEST3\n\tadlb\\.LBTEST3_FLG"))
@@ -427,6 +427,7 @@ test_that(
 
     domain_keys_path <- system.file("standards", "domain_keys.yml", package = "mighty")
     output_path <- withr::local_tempdir()
+    setup_testdata(testdata = "pharmaverse", test_data_path = output_path)
 
     # EXPECT
     actual <- generate_adam_code(
@@ -435,7 +436,6 @@ test_that(
       path_trial_metadata = path_trial_metadata,
       path_domain_keys = domain_keys_path,
       path_output = output_path,
-      data_connection = "pharmaverse",
       check_cross_domain_adam_dependencies = TRUE
     ) |> expect_error(regexp = paste0(".*ADaM spec:\n\tadlb\\.LBTEST\nto execute:",
                                       "\n\tadlb\\.LBTEST2\n\tadlb\\.LBTEST3\n\tadlb\\.LBTEST3_FLG"))

@@ -14,8 +14,7 @@ test_that("Multiple columns using same code_id, but diff parameters errors out",
       std_lib_path,
       path_trial_metadata,
       domain_keys_path,
-      output_path,
-      data_connection = "pharmaverse"
+      output_path
     ),
     regexp = "Code_id `fn_AB` is used in multiple columns with different paramenters"
   )

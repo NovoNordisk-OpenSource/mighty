@@ -6,7 +6,7 @@ table_metadata:
 
 init:
   core_domains:
-  - VS
+  - vs
   filter_domain: NA
   filter_global:
     - '!is.na(SEX)'

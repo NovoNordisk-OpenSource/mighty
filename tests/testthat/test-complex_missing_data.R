@@ -9,53 +9,10 @@ test_that("Complex test with multiple domains and column/row operations and miss
     testthat::test_path("fixtures", "adsl_0001.R"),
     testthat::test_path("fixtures", "adlb_0001.R")
   )
-
   domain_keys_path <- system.file("standards", "domain_keys.yml", package = "mighty")
+
   output_path <- withr::local_tempdir()
-
-  # copy connector config
-  file.copy(
-    from = test_path("fixtures", "_connector.yml"),
-    to = output_path,
-    overwrite = TRUE
-  )
-
-  # setup temporary data area
-  data_path <- file.path(output_path, "data")
-  sdtm_testdata_path <- file.path(data_path, "sdtm")
-  adam_testdata_path <- file.path(data_path, "adam")
-
-
-  dir.create(data_path)
-  dir.create(sdtm_testdata_path)
-  dir.create(adam_testdata_path)
-
-  # create SDTM test data based on pharmaverssdtm
-  dm <- pharmaversesdtm::dm
-  suppdm <- pharmaversesdtm::suppdm
-  dm_vaccine <- pharmaversesdtm::dm_vaccine
-  lb <- pharmaversesdtm::lb
-  sv <- pharmaversesdtm::sv
-  # manipulate (remove) data to create missing data
-  # TODO: What data should be missing: Specific visits, records, columns etc.?
-
-  # Write manipulated test data
-  arrow::write_parquet(dm, file.path(sdtm_testdata_path, "DM.parquet"))
-  arrow::write_parquet(suppdm, file.path(sdtm_testdata_path, "SUPPDM.parquet"))
-  arrow::write_parquet(dm_vaccine, file.path(sdtm_testdata_path, "DM_VACCINE.parquet"))
-  arrow::write_parquet(lb, file.path(sdtm_testdata_path, "LB.parquet"))
-  arrow::write_parquet(sv, file.path(sdtm_testdata_path, "SV.parquet"))
-
-  # create symbolic link to temporary data
-  # TODO: Ensure this works platform independent (we have not tested on windows)
-  file.symlink(
-    data_path,
-    test_path("fixtures", "data")
-  )
-  on.exit(
-    unlink(test_path("fixtures", "data"), recursive = TRUE, force = TRUE),
-    add = TRUE
-  )
+  setup_testdata(testdata = "pharmaverse", test_data_path = output_path)
 
   # ACT ---------------------------------------------------------------------
   actual <- generate_adam_code(
@@ -63,8 +20,7 @@ test_that("Complex test with multiple domains and column/row operations and miss
     code_component_source_files =  std_lib_path,
     path_trial_metadata = path_trial_metadata,
     path_domain_keys = domain_keys_path,
-    path_output = output_path,
-    data_connection = "custom_data"
+    path_output = output_path
   )
 
   # EXPECT ------------------------------------------------------------------

@@ -11,7 +11,6 @@ generate_program(
   code_component_env,
   trial_metadata,
   ui_data,
-  data_connection,
   path_output = NULL
 )
 }
@@ -32,12 +31,8 @@ paths and connection information}
 
 \item{ui_data}{List}
 
-\item{data_connection}{Character string specifying the data connection type
-(e.g., "pharmaverse", "connector")}
-
 \item{path_output}{Optional character string specifying the output path where
-generated programs and data should be stored, required when data_connection
-is "pharmaverse"}
+generated programs and data should be stored.}
 }
 \value{
 A named list of generated programs where each element contains the

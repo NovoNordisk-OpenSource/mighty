@@ -4,20 +4,20 @@
 #' @depends .self USUBJID
 #' @depends .self LBSEQ
 #' @depends .self AVAL
-#' @depends LB USUBJID
-#' @depends LB LBSEQ
-#' @depends LB LBTEST
+#' @depends lb USUBJID
+#' @depends lb LBSEQ
+#' @depends lb LBTEST
 #' @depends ADSL USUBJID
 #' @depends ADSL PLANNED_ARM
 #' @outputs LBTEST
 #' @returns `.self`
-lbtest_01 <-   function(.self, LB, ADSL) {
+lbtest_01 <-   function(.self, lb, ADSL) {
 
   # join with adsl, only derive lbtest if adsl.planned_arm != "" and
   # if aval is na them lbtest = "Invalid"
   .self <- .self |>
     dplyr::left_join(
-      LB |> dplyr::select(USUBJID, LBSEQ, LBTEST),
+      lb |> dplyr::select(USUBJID, LBSEQ, LBTEST),
       by = c("USUBJID" = "USUBJID", "LBSEQ" = "LBSEQ")
     ) |>
     dplyr::left_join(
@@ -41,9 +41,9 @@ lbtest_01 <-   function(.self, LB, ADSL) {
 #' @param .self `data.frame` Input data set
 #' @type row_compute
 #' @depends .self LBTEST
-#' @depends SV VISITNUM
-#' @depends SV USUBJID
-#' @depends SV VISITDY
+#' @depends sv VISITNUM
+#' @depends sv USUBJID
+#' @depends sv VISITDY
 #' @outputs LBTEST
 #' @returns `.self`
 new_lbtest_01 <-   function(.self) {
@@ -53,7 +53,7 @@ new_lbtest_01 <-   function(.self) {
     dplyr::mutate(LBTEST = "Microcytes (new)")
 
   new_lbtest <-   new_lbtest |>
-    dplyr::left_join(SV, by = c("USUBJID", "VISITNUM")) |>
+    dplyr::left_join(sv, by = c("USUBJID", "VISITNUM")) |>
     dplyr::filter(VISITDY > 20) |>
     dplyr::select(-VISITDY)
 

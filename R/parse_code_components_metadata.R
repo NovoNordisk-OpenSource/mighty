@@ -58,7 +58,6 @@ return(c(pkg_out, source_file_out))
 #' @return A list where each element is named after a function and contains
 #'   metadata about its dependencies and outputs
 parse_code_components_metadata_from_package_rd <- function(pkg, function_names) {
-
   rd_db <- tools::Rd_db(pkg)
   out <- lapply(function_names,
                 parse_code_component_i,

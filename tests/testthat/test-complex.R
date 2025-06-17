@@ -13,6 +13,7 @@ test_that("Complex test with multiple domains and column/row operations", {
 
   domain_keys_path <- system.file("standards", "domain_keys.yml", package = "mighty")
   output_path <- withr::local_tempdir()
+  setup_testdata(testdata = "pharmaverse", test_data_path = output_path)
 
   # ACT ---------------------------------------------------------------------
 
@@ -21,15 +22,14 @@ test_that("Complex test with multiple domains and column/row operations", {
     code_component_source_files =  std_lib_path,
     path_trial_metadata = path_trial_metadata,
     path_domain_keys = domain_keys_path,
-    path_output = output_path,
-    data_connection = "pharmaverse"
+    path_output = output_path
   )
 
   # EXPECT ------------------------------------------------------------------
 
   actual$data_model |> names() |> sort() |> expect_equal(c("code_id", "depend_cols", "depend_rows", "domain", "node_id", "outputs", "parameters", "type"))
   write_adam_programs(dir = output_path, programs = actual$programs)
-  x <- list.files(output_path, full.names = TRUE)
+  x <- list.files(output_path, pattern = ".R", full.names = TRUE)
 
   programs <- x |> lapply(readLines)
   names(programs) <- basename(x)
