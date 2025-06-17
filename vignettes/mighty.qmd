@@ -5,18 +5,13 @@ format: html
 
 # Getting started
 
-The mighty framework consist of 3 main components:
+`mighty`is an "orchestrater" to build ADaM programs from a specification, by 
+using standard components (such as those in 
+[`mighty.standards`](https://github.com/NN-OpenSource/mighty.standards)) and custom components 
+(that either cannot be standardised or hasn't been so yet).
 
-1. An ADaM specification
-2. A library of code components
-3. An "orchestrater" to build the ADaM programs from the information in 1. and 2.
 
-At it's most basic, the ADaM specifications allow you to specify *what* you want
-(which predecessors, derivations, new rows, etc), and the code components
-specify *how* to get those.
+# TODO: How to use the package(?)
 
-Let's take a concrete example and say we want BMI 
-
-you define what you want you ADaM programs to look like in the ADaM
-specification file (which columns, which new rows). How these new columns are
-made is defined by the code components. The information contained in both the specifications and the 
+currently we basically create an initialisation file which will not
+be the case in the final product(?) 

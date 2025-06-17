@@ -3,7 +3,6 @@
 #' @param path_ui_data
 #' @param path_domain_keys
 #' @param path_output
-#' @param data_connection
 #' @param check_cross_domain_adam_dependencies
 #' @param code_component_source_pkgs
 #' @param code_component_source_files
@@ -19,7 +18,6 @@ generate_adam_code <- function(path_ui_data,
                                path_trial_metadata,
                                path_domain_keys,
                                path_output,
-                               data_connection = c("connector", "pharmaverse", "custom_data"),
                                check_cross_domain_adam_dependencies = TRUE) {
 
   # Read data from UI containing explicit user input
@@ -84,7 +82,6 @@ generate_adam_code <- function(path_ui_data,
     add_node_to_write_data()
 
   # Create programs
-  data_connection <- match.arg(data_connection)
   programs <- generate_program(
     program_sequence_3,
     nodes_5,
@@ -92,7 +89,6 @@ generate_adam_code <- function(path_ui_data,
     code_component_env,
     trial_metadata,
     ui_yml,
-    data_connection,
     path_output = path_output
   )
 

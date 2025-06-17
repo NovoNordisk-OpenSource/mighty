@@ -1,5 +1,5 @@
 ---
-title: "code_components"
+title: "Code Components"
 vignette: >
   %\VignetteIndexEntry{code_components}
   %\VignetteEngine{quarto::html}

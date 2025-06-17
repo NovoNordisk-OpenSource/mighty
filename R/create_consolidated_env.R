@@ -33,10 +33,11 @@ create_consolidated_env <- function(packages = NULL,
   if (!is.null(source_files)) {
     function_sources$file <- load_functions_from_files(source_files, function_sources, envr = consolidated_env)
   }
+  assert_all_code_id_sources_exist(function_sources, code_ids)
 
   # This assertion is done after all loading, so that if there are multiple
-  # instances of duliication, all will be reported in the error message.
-  # Otherswise it might cause the user to iterate until no more duplicates were
+  # instances of duplication, all will be reported in the error message.
+  # Otherwise it might cause the user to iterate until no more duplicates were
   # found
   assert_no_duplicate_fn_names(function_sources)
   return(consolidated_env)
@@ -190,4 +191,37 @@ load_functions_from_files <- function(source_files, function_sources, envr) {
     }
   }
   return(function_sources$file)
+}
+
+
+#' Assert All Code ID Sources Exist
+#' @description Verifies that all specified code IDs are found in the loaded
+#'   function sources, raising an error if any are missing.
+#'
+#' @param x List containing function sources divided into `pkg` and `file`
+#'   entries, each containing details of loaded functions with names as keys.
+#' @param code_ids Character vector containing function names that should be
+#'   present in the sources.
+#'
+#' @returns Returns TRUE invisibly if all code IDs are found, otherwise raises
+#'   an error with details about missing functions.
+assert_all_code_id_sources_exist <- function(x, code_ids){
+  from_pkgs <- lapply(x$pkg, names) |> unlist()
+  from_source_files <- lapply(x$file, names) |> unlist()
+  all_fns <- c(from_pkgs, from_source_files)
+
+  missing_fns <- setdiff(code_ids, all_fns)
+  if(length(missing_fns)==0){
+    return(invisible(TRUE))
+  }
+  error_msg <- paste0(
+    "The following code_ids were not found in any source:\n",
+    paste0("  - '", missing_fns, "'", collapse = "\n"),
+    "\n\nPlease ensure these functions are either:\n",
+    "  1. Exported from one of the code component packages (like mighty.standards), or\n",
+    "  2. Defined in one of the code component source files"
+  )
+
+  stop(error_msg)
+
 }

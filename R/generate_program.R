@@ -16,11 +16,8 @@
 #' @param trial_metadata List containing trial-specific metadata including data
 #'   paths and connection information
 #' @param ui_data List
-#' @param data_connection Character string specifying the data connection type
-#'   (e.g., "pharmaverse", "connector")
 #' @param path_output Optional character string specifying the output path where
-#'   generated programs and data should be stored, required when data_connection
-#'   is "pharmaverse"
+#'   generated programs and data should be stored.
 #'
 #' @returns A named list of generated programs where each element contains the
 #'   complete code for one program, with names in the format "program_id_domain"
@@ -30,7 +27,6 @@ generate_program <- function(program_order,
                              code_component_env,
                              trial_metadata,
                              ui_data,
-                             data_connection,
                              path_output = NULL) {
   # Merge the program_id and rank column from program_order onto nodes
   # data.table to get the program_id for each node. Then sort the nodes by
@@ -44,7 +40,7 @@ generate_program <- function(program_order,
                                    external_dependencies_by_program)], nodes[, !..keep_only_from_program_order], by = "node_id", all.x = TRUE) |>
     setorder(program_id, rank)
   # Create clean, empty environment to store standard components
-  sdtm_dataset_list <- list_all_(type = "sdtm", trial_metadata, data_connection, path_output)
+  sdtm_dataset_list <- list_all_(type = "sdtm", trial_metadata, path_output)
   nodes_split <- split(nodes_and_programs, by = "program_id")
 
   programs <- lapply(
@@ -55,7 +51,6 @@ generate_program <- function(program_order,
     ui_data,
     trial_metadata,
     sdtm_dataset_list,
-    data_connection,
     path_output
   )
 
@@ -77,28 +72,17 @@ rename_programs <- function(programs, nodes_split) {
 
 
 
-list_all_ <- function(type = c("sdtm", "adam"), trial_metadata, data_connection, custom_data_path = NULL) {
+list_all_ <- function(type = c("sdtm", "adam"), trial_metadata, custom_data_path = NULL) {
   # Generate list of all SDTM datasets in the current study so later we can
   # check if a specific supp dataset exists
-  path <- get_data_connector_path(
-    type = type,
-    trial_metadata = trial_metadata,
-    data_connection = data_connection,
-    custom_data_path = custom_data_path
-  )
+  # TODO: The above mentions SUPPDM - should this function be general and keep the type, or do we only
+  # need it for validating precense of SDTM datasets?
+  cnt <- eval(parse(text = glue::glue("connector::connect(config = '{custom_data_path}/_connector.yml')${type}")))
 
-  # If data_connector is pharmaverse, path is set to null. Otherwise a path
-  # must be set in the get_data_connector_path function
-  if (is.null(path)) {
-    result <- character()
-  }
-  else {
-    # This is needed when testing and referencing trial data locations that don't
-    # exist, or the testing environment doesn't have access to
-    result <- tryCatch({
-
-      connector::connector_fs(path = path) |>
-        connector::list_content_cnt()
+  # This is needed when testing and referencing trial data locations that don't
+  # exist, or the testing environment doesn't have access to
+  result <- tryCatch({
+    cnt |> connector::list_content_cnt()
     }, error = function(e) {
       if (grepl("directory.*does not.*exist", e$message, ignore.case = TRUE)) {
         return(NULL)
@@ -106,6 +90,5 @@ list_all_ <- function(type = c("sdtm", "adam"), trial_metadata, data_connection,
         stop(e)  # re-throws the original error for all other cases
       }
     })
-  }
   return(result)
 }

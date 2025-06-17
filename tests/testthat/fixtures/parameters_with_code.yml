@@ -8,9 +8,9 @@ table_metadata:
 
 init:
   core_domains:
-    - DM
+    - dm
   filter_domain:
-    LB: NA
+    lb: NA
   filter_global: NA
   filter_depend_cols: NA
 

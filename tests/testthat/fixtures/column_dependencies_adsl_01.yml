@@ -5,11 +5,11 @@ table_metadata:
 
 init:
   core_domains:
-    - DM
-    - DM_VACCINE
+    - dm
+    - dm_vaccine
   filter_domain:
-    - DM: NA
-    - DM_VACCINE: NA
+    - dm: NA
+    - dm_vaccine: NA
   filter_global: NA
   filter_depend_cols: NA
 

@@ -3,11 +3,11 @@ table_metadata:
 
 init:
   core_domains:
-    - DM
-    - DM_VACCINE
+    - dm
+    - dm_vaccine
   filter_domain:
-    - DM: '!is.na(AGEU)'
-    - DM_VACCINE: NA
+    - dm: '!is.na(AGEU)'
+    - dm_vaccine: NA
   filter_global: NA
   filter_depend_cols: NA
 

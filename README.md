@@ -84,10 +84,11 @@ column_metadata:
     code_id: der_complsfl
 ```
 
-This specification points to the code component called der_complsfl -
+This specification points to the code component called `der_complsfl` -
 which is an R function. As mighty matures, more of these functions will
 be pre-defined and ready for use, so nothing more would need to be done
-by the user.
+by the user. For more information, please refer to
+[`mighty.standards`](https://github.com/NN-OpenSource/mighty.standards).
 
 See \[\] section for more details on the ADaM Specification data model.
 

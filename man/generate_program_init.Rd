@@ -4,15 +4,10 @@
 \alias{generate_program_init}
 \title{Write the R code to initialize an ADaM "update" program}
 \usage{
-generate_program_init(
-  adam_domain,
-  adam_dataset_list,
-  data_connection,
-  path_out
-)
+generate_program_init(adam_domain, adam_dataset_list, path_out)
 }
 \arguments{
-\item{data_connection}{}
+\item{adam_dataset_list}{}
 }
 \description{
 Write the R code to initialize an ADaM "update" program

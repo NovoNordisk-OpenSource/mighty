@@ -1,5 +1,5 @@
 ---
-title: "code_component_examples"
+title: "Code Component Examples"
 vignette: >
   %\VignetteIndexEntry{code_component_examples}
   %\VignetteEngine{quarto::html}
@@ -15,52 +15,40 @@ knitr:
 library(mighty)
 ```
 
-These are code component examples.
+These are code component examples. They are not meant to be realisic examples, but rather to show how different types of code components should be specified in terms of metadata
 
 For simplicity's sake, only Roxygen sections required for mighty are included in the examples
 
 
 1. Single dependency, single output, no parameters
 ```r
-#' Arm group 01
+#' Fn 1
 #' @param .self
 #' @type derivation
-#' @depends .self PLANNED_ARM
-#' @outputs ARM_GRP1
+#' @depends .self A
+#' @outputs B
 #' @returns `.self`
-arm_group_01 <-   function(.self) {
-  .self <- .self |>
-    dplyr::mutate(ARM_GRP1 = ifelse(
-      PLANNED_ARM %in% c("Placebo", "Screen Failure"),
-      "Placebo or Screen Failure",
-      PLANNED_ARM
-    ))
+fn_1 <-   function(.self) {
+ # Busines logic here
   return(.self)
 }
 ```
-This function requires the PLANNED_ARM column from the input data set and adds outputs ARM_GRP1.
+This function requires the `A` column from the input data set and adds outputs ARM_GRP1.
 
 2. Multiple output columns
 ```r
-#' Newfl 01
-#' @param .self `data.frame` Input data set
+#' fn_2
+#' @param .self 
 #' @type derivation
-#' @depends .self DTHFL
-#' @depends .self PLANNED_ARM
-#' @depends .self AGE_DIFF1
-#' @outputs NEWFL01
-#' @outputs NEWREA01
+#' @depends .self A
+#' @depends .self B
+#' @outputs C
+#' @outputs D
 #' @returns `.self`
-newfl_01 <-   function(.self) {
-  # Extract the minimum AVAL value for each SUBJID
-  .self <- .self |> dplyr::mutate(
-    NEWFL01 = ifelse(
-      DTHFL == 1 & PLANNED_ARM == "Placebo" & AGE_DIFF1 > 5,
-      1, 0
-    )) |>
-    dplyr::mutate(NEWREA01 = ifelse(NEWFL01 == 1, "Yes", "No"))
+fn_2 <-   function(.self) {
+ # Busines logic here
   return(.self)
 }
 ```
-This function takes three dependencies, `DTHFL`, `PLANNED_ARM`, and `AGE_DIFF1` and creates two new column `NEWFL01` and `NEWREA01`.
+This function takes two dependencies, `A` and `B`, and creates two new column `C` and `D`.
 Because it creates two columns, it needs to be referenced by two column entries in the ADaM Specs YAML file

@@ -15,7 +15,6 @@ test_that("Error is triggered for a col_copy and col_echo action having the same
               path_trial_metadata = path_trial_metadata,
               path_domain_keys = domain_keys_path,
               path_output = output_path,
-              data_connection = "pharmaverse",
               check_cross_domain_adam_dependencies = TRUE
             ) |> expect_error(regexp = "Column\\(s\\) ARM are outputted in multiple actions in domain ADSL.")
           })
@@ -37,7 +36,6 @@ test_that("Error is triggered for a col_copy and col_compute action having an ou
               path_trial_metadata = path_trial_metadata,
               path_domain_keys = domain_keys_path,
               path_output = output_path,
-              data_connection = "pharmaverse",
               check_cross_domain_adam_dependencies = TRUE
             ) |> expect_error(regexp = "Column\\(s\\) AGE are outputted in multiple actions in domain ADSL.")
 

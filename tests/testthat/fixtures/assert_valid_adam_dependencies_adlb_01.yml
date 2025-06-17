@@ -4,7 +4,7 @@ table_metadata:
 
 init:
   core_domains:
-  - LB
+  - lb
   filter_domain: NA
   filter_global: NA
   filter_depend_cols: NA

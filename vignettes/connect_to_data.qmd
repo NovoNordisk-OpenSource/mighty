@@ -1,0 +1,49 @@
+---
+title: "Connecting to Data"
+vignette: >
+  %\VignetteIndexEntry{connect_to_data}
+  %\VignetteEngine{quarto::html}
+  %\VignetteEncoding{UTF-8}
+knitr:
+  opts_chunk:
+    collapse: true
+    comment: '#>'
+---
+
+```{r}
+#| label: setup
+library(mighty)
+```
+
+Mighty in itself does not read any data, but the generated programs will be
+need to connect to a data source to be able to execute. Thus, the programs
+will use the
+[`connector`](https://github.com/NovoNordisk-OpenSource/connector/tree/main?tab=readme-ov-file#readme) 
+package to connect to study data. Connector is setup via the `_connector.yml` 
+configuration and must be placed under the `inst` folder.
+
+An example of a generated program can be seen below, where the `cnt` object is 
+
+*   created by reading `_connector.yml`, 
+*   used to read `dm` and `dm_vaccine`, and finally 
+*   save the created `ADSL` data set.
+
+
+```r
+# LOAD all external datasets needed ------------------------------------------------
+
+cnt <- connector::connect(config = "_connector.yml")
+
+dm <- cnt$sdtm$read_cnt("dm") |> dplyr::select(ACTARM, AGE, AGEU, ARM, COUNTRY, DOMAIN, DTHFL, RACE, SEX, STUDYID, USUBJID)
+
+dm_vaccine <- cnt$sdtm$read_cnt("dm_vaccine") |> dplyr::select(ACTARM, AGE, AGEU, ARM, COUNTRY, DOMAIN, DTHFL, RACE, SEX, STUDYID, USUBJID)
+
+### Generated ADaM program code (removed for simplicity)
+
+# Save ADSL ------------------------------------------------
+
+cnt$adam$write_cnt(ADSL, "ADSL.parquet", overwrite = TRUE)
+
+# Remove input tables
+rm(list = c("dm", "dm_vaccine"))
+```
