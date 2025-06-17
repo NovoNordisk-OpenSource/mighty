@@ -7,6 +7,8 @@ test_that("Supplementary data is added right after read_data when no supp cols a
   std_lib_path <- testthat::test_path("fixtures", "adsl_0001.R")
   domain_keys_path <- system.file("standards", "domain_keys.yml", package = "mighty")
   output_path <- withr::local_tempdir()
+  setup_testdata(testdata = "pharmaverse", test_data_path = output_path,
+                 sdtm_domains = c("dm", "dm_vaccine", "suppdm", "suppdm_vaccine"))
 
   # ACT ---------------------------------------------------------------------
 
@@ -15,16 +17,15 @@ test_that("Supplementary data is added right after read_data when no supp cols a
     code_component_source_files =  std_lib_path,
     path_trial_metadata = path_trial_metadata,
     path_domain_keys = domain_keys_path,
-    path_output = output_path,
-    data_connection = "pharmaverse"
+    path_output = output_path
   )
+
   write_adam_programs(dir = output_path, programs = actual$programs)
-  x <- list.files(output_path, full.names = TRUE)
-
-  # EXPECT ------------------------------------------------------------------
-
+  x <- list.files(output_path, pattern = ".R", full.names = TRUE)
   programs <- x |> lapply(readLines)
   names(programs) <- basename(x)
+
+  # EXPECT ------------------------------------------------------------------
 
   # Check program order
   expect_section_order("Read data sets", "Initialize ADSL", programs[["1_ADSL.R"]])
@@ -48,6 +49,8 @@ test_that("Supplementary data is added right after read_data when a supp col is 
   std_lib_path <- testthat::test_path("fixtures", "adsl_0001.R")
   domain_keys_path <- system.file("standards", "domain_keys.yml", package = "mighty")
   output_path <- withr::local_tempdir()
+  setup_testdata(testdata = "pharmaverse", test_data_path = output_path,
+                 sdtm_domains = c("dm", "dm_vaccine", "suppdm", "suppdm_vaccine"))
 
   # ACT ---------------------------------------------------------------------
 
@@ -56,16 +59,15 @@ test_that("Supplementary data is added right after read_data when a supp col is 
     code_component_source_files =  std_lib_path,
     path_trial_metadata = path_trial_metadata,
     path_domain_keys = domain_keys_path,
-    path_output = output_path,
-    data_connection = "pharmaverse"
+    path_output = output_path
   )
+
   write_adam_programs(dir = output_path, programs = actual$programs)
-  x <- list.files(output_path, full.names = TRUE)
-
-  # EXPECT ------------------------------------------------------------------
-
+  x <- list.files(output_path, pattern = ".R", full.names = TRUE)
   programs <- x |> lapply(readLines)
   names(programs) <- basename(x)
+
+  # EXPECT ------------------------------------------------------------------
 
   # Check program order
   expect_section_order("Read data sets", "Initialize ADSL", programs[["1_ADSL.R"]])
@@ -89,6 +91,8 @@ test_that("Supplementary data is added right after read_data when a supp col is 
   std_lib_path <- testthat::test_path("fixtures", "adsl_0001.R")
   domain_keys_path <- system.file("standards", "domain_keys.yml", package = "mighty")
   output_path <- withr::local_tempdir()
+  setup_testdata(testdata = "pharmaverse", test_data_path = output_path,
+                 sdtm_domains = c("dm", "dm_vaccine", "suppdm", "suppdm_vaccine"))
 
   # ACT ---------------------------------------------------------------------
 
@@ -97,16 +101,15 @@ test_that("Supplementary data is added right after read_data when a supp col is 
     code_component_source_files =  std_lib_path,
     path_trial_metadata = path_trial_metadata,
     path_domain_keys = domain_keys_path,
-    path_output = output_path,
-    data_connection = "pharmaverse"
+    path_output = output_path
   )
+
   write_adam_programs(dir = output_path, programs = actual$programs)
-  x <- list.files(output_path, full.names = TRUE)
-
-  # EXPECT ------------------------------------------------------------------
-
+  x <- list.files(output_path, pattern = ".R", full.names = TRUE)
   programs <- x |> lapply(readLines)
   names(programs) <- basename(x)
+
+  # EXPECT ------------------------------------------------------------------
 
   # Check program order
   expect_section_order("Read data sets", "Initialize ADSL", programs[["1_ADSL.R"]])
@@ -131,6 +134,8 @@ test_that("Supplementary data is added right after read_data when supp cols and 
   std_lib_path <- testthat::test_path("fixtures", "adae_0001.R")
   domain_keys_path <- system.file("standards", "domain_keys.yml", package = "mighty")
   output_path <- withr::local_tempdir()
+  setup_testdata(testdata = "pharmaverse", test_data_path = output_path,
+                 sdtm_domains = c("dm", "dm_vaccine", "suppdm", "suppdm_vaccine"))
 
   # ACT ---------------------------------------------------------------------
 
@@ -140,11 +145,13 @@ test_that("Supplementary data is added right after read_data when supp cols and 
     path_trial_metadata = path_trial_metadata,
     path_domain_keys = domain_keys_path,
     path_output = output_path,
-    data_connection = "pharmaverse",
     check_cross_domain_adam_dependencies = FALSE
   )
+
   write_adam_programs(dir = output_path, programs = actual$programs)
-  x <- list.files(output_path, full.names = TRUE)
+  x <- list.files(output_path, pattern = ".R", full.names = TRUE)
+  programs <- x |> lapply(readLines)
+  names(programs) <- basename(x)
 
   # EXPECT ------------------------------------------------------------------
 

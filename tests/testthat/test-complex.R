@@ -1,19 +1,20 @@
 test_that("Complex test with multiple domains and column/row operations", {
 
   # SETUP -------------------------------------------------------------------
+
   ui_path <- c(
     test_path("fixtures", "complex_adsl.yml"),
     test_path("fixtures", "complex_adlb.yml")
-  )
+    )
   path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
   std_lib_path <- c(
     testthat::test_path("fixtures", "adsl_0001.R"),
     testthat::test_path("fixtures", "adlb_0001.R")
-  )
-
+    )
   domain_keys_path <- system.file("standards", "domain_keys.yml", package = "mighty")
   output_path <- withr::local_tempdir()
-  setup_testdata(testdata = "pharmaverse", test_data_path = output_path)
+  setup_testdata(testdata = "pharmaverse", test_data_path = output_path,
+                 sdtm_domains = c("dm", "dm_vaccine", "lb", "sv"))
 
   # ACT ---------------------------------------------------------------------
 
