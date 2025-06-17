@@ -4,23 +4,10 @@
 \alias{generate_read_data_code}
 \title{Generate external data code}
 \usage{
-generate_read_data_code(
-  payload,
-  trial_metadata,
-  sdtm_dataset_list,
-<<<<<<< HEAD:man/generate_read_data_code.Rd
-  data_connection,
-  path_output,
-  core_domains,
-  .self,
-  domain_filters_exist
-=======
-  path_output
->>>>>>> main:man/generate_external_data_code.Rd
-)
+generate_read_data_code(payload, sdtm_dataset_list, path_output)
 }
 \arguments{
-\item{path_output}{}
+\item{data_connection}{}
 }
 \description{
 Generate external data code

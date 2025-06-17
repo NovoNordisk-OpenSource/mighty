@@ -4,7 +4,7 @@
 \alias{generate_read_domain}
 \title{Write the R code to read ADaM domain in "update" program}
 \usage{
-generate_read_domain(adam_domain, data_connection, path_out)
+generate_read_domain(adam_domain)
 }
 \arguments{
 \item{data_connection}{}
