@@ -84,7 +84,7 @@ generate_adam_code <- function(path_ui_data,
   program_sequence_4 <- add_read_data_nodes(program_sequence_3, nodes_5, ui_init, domain_keys)
 
   # Add action to save generated ADaM table
-  program_sequence_5 <- add_write_data_nodes(program_sequence_4)
+  program_sequence_5 <- add_write_domain_nodes(program_sequence_4)
 
   # Create programs
   programs <- generate_program(

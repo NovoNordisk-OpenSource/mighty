@@ -114,7 +114,7 @@ generate_node_code <- function(nodes_program_i,
       )
       next
     }
-    if (node_i$type == "write_data") {
+    if (node_i$type == "write_domain") {
       # Collect input table names
       if (any(nodes_program_i$type == "read_data")) {
         input_tables <- nodes_program_i[nodes_program_i$type == "read_data", ]$input_cols[[1]][["domain"]] |>
@@ -123,7 +123,7 @@ generate_node_code <- function(nodes_program_i,
         input_tables <- c()
       }
 
-      program[[i]] <- generate_write_data(
+      program[[i]] <- generate_write_domain(
         domain_name = node_i$domain,
         path_output = path_output,
         input_tables

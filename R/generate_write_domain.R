@@ -1,4 +1,4 @@
-generate_write_data <- function(domain_name,
+generate_write_domain <- function(domain_name,
                                 path_output,
                                 input_tables) {
   domain_name_upper <- toupper(domain_name)
