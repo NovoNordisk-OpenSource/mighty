@@ -2,7 +2,6 @@
 #'
 #' @param payload
 #' @param trial_metadata
-#' @param sdtm_dataset_list
 #' @param path_output
 #' @param data_connection
 #'
@@ -11,7 +10,6 @@
 #'
 #' @examples
 generate_read_data_code <- function(payload,
-                                    sdtm_dataset_list,
                                     path_output) {
   block_header <- glue::glue("
 # Read data sets ------------------------------------------------
@@ -24,7 +22,7 @@ generate_read_data_code <- function(payload,
                                 path_output,
                                 "/_connector.yml') \n")
   data_load_code <-
-    purrr::imap(by_domain, for_each_domain_connector, sdtm_dataset_list)
+    purrr::imap(by_domain, for_each_domain_connector)
 
 
   return(paste0(paste0(
@@ -34,15 +32,15 @@ generate_read_data_code <- function(payload,
 
 external_data <- function(data_type = c("sdtm", "adam", "metadata"),
                           domain,
-                          keep_vars,
-                          dataset_list = NULL) {
+                          keep_vars
+                          ) {
   glue::glue(
     "{domain} <- cnt${data_type}$read_cnt('{domain}') |> ",
     "dplyr::select({keep_vars})"
   )
 }
 
-for_each_domain_connector <- function(i, domain_name, sdtm_dataset_list) {
+for_each_domain_connector <- function(i, domain_name) {
   keep_vars <- i[["column_name"]] |>
     toupper() |>
     unique() |>
@@ -51,7 +49,7 @@ for_each_domain_connector <- function(i, domain_name, sdtm_dataset_list) {
 
   data_load_code <- switch(
     i$domain_type[[1]],
-    sdtm = external_data("sdtm", domain_name, keep_vars, sdtm_dataset_list),
+    sdtm = external_data("sdtm", domain_name, keep_vars),
     adam = external_data("adam", domain_name, keep_vars),
     md = external_data("metadata", domain_name, keep_vars)
   )
