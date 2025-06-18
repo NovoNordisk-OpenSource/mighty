@@ -1,7 +1,7 @@
 table_metadata:
   table: ADLB
   keys:
-    - USUBJID PARAMN AVISITN ADT ATM SRCSEQ
+    - SUBJID AEREFID
 
 init:
   core_domains:
@@ -10,9 +10,11 @@ init:
     lb: '!is.na(LBSTRESN)'
   filter_global:
     - '!is.na(SEX)'
+    - 'AETRTEM == "Y"'
   filter_depend_cols:
     - core.LBSTRESN
     - ADSL.SEX
+    - AETRTEM
 
 column_metadata:
   - column: USUBJID

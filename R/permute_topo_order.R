@@ -10,7 +10,7 @@
 permute_topo_order <- function(topo_order_names, vertices){
 
   # Names of domain init nodes
-  init_node_id <- vertices[vertices$type == "domain_init",][["node_id"]]
+  init_node_id <- vertices[vertices$type == "preprocess_domain",][["node_id"]]
 
   # Indices of domain init nodes in topo_order_names
   init_nodes_idx <- which(topo_order_names %in% init_node_id)

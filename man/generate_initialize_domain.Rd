@@ -2,28 +2,13 @@
 % Please edit documentation in R/generate_initialize_domain.R
 \name{generate_initialize_domain}
 \alias{generate_initialize_domain}
-\title{Write the R code to initialize a domain}
+\title{Write the R code to initialize ADaM domain in "initial" programs}
 \usage{
-generate_initialize_domain(
-  .self,
-  core_domains,
-  adsl_domain_keys,
-  adsl_name,
-  filter_domain = NULL,
-  filter_global = NULL,
-  keep_vars = NULL
-)
+generate_initialize_domain(.self, core_domains, domain_filters_exist)
 }
 \arguments{
-\item{.self}{Character of length 1. Name of domain}
-
-\item{core_domains}{list of core SDTM domains used to make "base" table}
-
-\item{filter_global}{String. Global filter to be applied after merging}
-
-\item{keep_vars}{Vector of strings naming variables from SDTM core domains
-kept}
+\item{domain_filters_exist}{}
 }
 \description{
-Write the R code to initialize a domain
+Write the R code to initialize ADaM domain in "initial" programs
 }

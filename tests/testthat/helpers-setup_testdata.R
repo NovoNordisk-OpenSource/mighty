@@ -6,7 +6,7 @@
 #' Under \code{test_data_path}, a folder \code{data} is created, and in here the folders
 #' \code{sdtm}, \code{adam}, and \code{metadata} are created.
 #' The \code{connector} package is used \todo(can we link to where the data is loaded, e.g. 
-#' \code{generate_external_data_code} and \code{generate_write_data}?) when creating ADaM
+#' \code{generate_external_data_code} and \code{generate_write_domain}?) when creating ADaM
 #' programs. Since the path to test data is expected to be dynamic, a symbolic link is used 
 #' to link the test data area. The symbolic link \code{data} is created in the 
 #' \code{tests\testthat\fixtures} folder and is removed when the parent (test-)function exits. 

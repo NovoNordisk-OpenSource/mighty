@@ -22,7 +22,7 @@ assign_predecessor_action_types <- function(nodes) {
 
   # Assign action types "col_copy" and "col_mutate"
   # We need to distinguish between col_copy and col_mutate nodes, because downstream
-  # col_copy nodes will be absorbed my the domain_init nodes, but mutates nodes will
+  # col_copy nodes will be absorbed my the preprocess_domain nodes, but mutates nodes will
   # not
   mutate_node_ids <- extract_mutate_node_ids(x, index_copy_mutate)
   x[index_copy_mutate, type := "col_copy"]

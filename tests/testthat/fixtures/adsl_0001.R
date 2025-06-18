@@ -209,7 +209,7 @@ newfl_03 <-   function(.self) {
   return(.self)
 }
 
-#'#' age_redefined_01
+#' age_redefined_01
 #' @param .self `data.frame` Input data set
 #' @type col_compute
 #' @depends core AGE
@@ -271,8 +271,7 @@ age4_01 <- function(.self) {
   return(.self)
 }
 
-
-#'#' age_sex_redefined_01
+#' age_sex_redefined_01
 #' @param .self `data.frame` Input data set
 #' @type col_compute
 #' @depends core AGE
@@ -285,5 +284,40 @@ age_sex_redefined_01 <- function(.self) {
   .self <- .self |>
     dplyr::mutate(AGE = ifelse(!is.na(SEX) & !is.na(RACE), AGE, 0),
                   SEX = toupper(SEX))
+  return(.self)
+}
+
+#' supp_dm_01
+#' @param .self `data.frame` Input data set
+#' @type col_supp
+#' @depends core STUDYID
+#' @depends core USUBJID
+#' @depends suppdm STUDYID
+#' @depends suppdm USUBJID
+#' @depends suppdm QNAM
+#' @depends suppdm QLABEL
+#' @depends suppdm QVAL
+#' @depends suppdm_vaccine STUDYID
+#' @depends suppdm_vaccine USUBJID
+#' @depends suppdm_vaccine QNAM
+#' @depends suppdm_vaccine QLABEL
+#' @depends suppdm_vaccine QVAL
+#' @outputs EFFICACY
+#' @outputs SAFETY
+#' @returns `.self`
+supp_dm_01 <- function(.self, suppdm, suppdm_vaccine) {
+  # Collect supplementary data
+  data_supp <- rbind(suppdm, suppdm_vaccine) |>
+    dplyr::filter(QNAM %in% c("EFFICACY", "SAFETY"))
+
+  # Transpose and join supplementary data
+  supp_labels <- data_supp |> dplyr::distinct(.data$QNAM, .data$QLABEL)
+  tDatasetSupp <- tidyr::pivot_wider(
+    data_supp,
+    id_cols = c("STUDYID", "USUBJID"),
+    values_from = "QVAL",
+    names_from = "QNAM"
+  )
+  .self <- dplyr::left_join(.self, tDatasetSupp, by = c("USUBJID", "STUDYID"))
   return(.self)
 }

@@ -24,7 +24,7 @@ test_that("No filters", {
 
   # Check edges
   expected_edges <-  data.table(
-    parent_node = c("ADSL-PLANNED_ARM", "ADSL-domain_init"),
+    parent_node = c("ADSL-PLANNED_ARM", "ADSL-preprocess_domain"),
     node_id = c("ADSL-ARM_GRP1-arm_group_01", "ADSL-PLANNED_ARM")
   )
   expect_equal(actual$edges, expected_edges)
@@ -35,14 +35,15 @@ test_that("No filters", {
     domain_type = rep("sdtm", 4),
     column_name = c("ARM", "USUBJID", "ARM", "USUBJID")
   )
-  expect_equal(actual$program_sequence$external_dependencies_by_program[[1]],
+  expect_equal(actual$program_sequence$input_cols[[1]],
                expected_ext_dep)
 
   # Check order of derivations
   programs <- x |> lapply(readLines)
   names(programs) <- basename(x)
-  expect_section_order("LOAD all external datasets needed", "Core ADSL table", programs[["1_ADSL.R"]])
-  expect_section_order("Core ADSL table", "ADSL-PLANNED_ARM", programs[["1_ADSL.R"]])
+  expect_section_order("Read data sets", "Initialize ADSL", programs[["1_ADSL.R"]])
+  expect_section_order("Initialize ADSL", "Preprocess ADSL", programs[["1_ADSL.R"]])
+  expect_section_order("Preprocess ADSL", "ADSL-PLANNED_ARM", programs[["1_ADSL.R"]])
   expect_section_order("ADSL-PLANNED_ARM", "ADSL-ARM_GRP1-arm_group_01", programs[["1_ADSL.R"]])
   expect_section_order("ADSL-ARM_GRP1-arm_group_01", "Save ADSL", programs[["1_ADSL.R"]])
 
@@ -78,7 +79,7 @@ test_that("No domain filters", {
 
   # Check edges
   expected_edges <-  data.table(
-    parent_node = c("ADSL-PLANNED_ARM", "ADSL-domain_init"),
+    parent_node = c("ADSL-PLANNED_ARM", "ADSL-preprocess_domain"),
     node_id = c("ADSL-ARM_GRP1-arm_group_01", "ADSL-PLANNED_ARM")
   )
   expect_equal(actual$edges, expected_edges)
@@ -89,14 +90,15 @@ test_that("No domain filters", {
     domain_type = rep("sdtm", 8),
     column_name = c("ARM", "DOMAIN", "STUDYID", "USUBJID", "ARM", "DOMAIN", "STUDYID", "USUBJID")
   )
-  expect_equal(actual$program_sequence$external_dependencies_by_program[[1]],
+  expect_equal(actual$program_sequence$input_cols[[1]],
                expected_ext_dep)
 
   # Check order of derivations
   programs <- x |> lapply(readLines)
   names(programs) <- basename(x)
-  expect_section_order("LOAD all external datasets needed", "Core ADSL table", programs[["1_ADSL.R"]])
-  expect_section_order("Core ADSL table", "ADSL-PLANNED_ARM", programs[["1_ADSL.R"]])
+  expect_section_order("Read data sets", "Initialize ADSL", programs[["1_ADSL.R"]])
+  expect_section_order("Initialize ADSL", "Preprocess ADSL", programs[["1_ADSL.R"]])
+  expect_section_order("Preprocess ADSL", "ADSL-PLANNED_ARM", programs[["1_ADSL.R"]])
   expect_section_order("ADSL-PLANNED_ARM", "ADSL-ARM_GRP1-arm_group_01", programs[["1_ADSL.R"]])
   expect_section_order("ADSL-ARM_GRP1-arm_group_01", "Save ADSL", programs[["1_ADSL.R"]])
 
@@ -132,7 +134,7 @@ test_that("No global filters", {
 
   # Check edges
   expected_edges <-  data.table(
-    parent_node = c("ADSL-PLANNED_ARM", "ADSL-domain_init"),
+    parent_node = c("ADSL-PLANNED_ARM", "ADSL-preprocess_domain"),
     node_id = c("ADSL-ARM_GRP1-arm_group_01", "ADSL-PLANNED_ARM")
   )
   expect_equal(actual$edges, expected_edges)
@@ -143,14 +145,15 @@ test_that("No global filters", {
     domain_type = rep("sdtm", 6),
     column_name = c("ARM", "DTHFL", "USUBJID", "ARM", "DTHFL", "USUBJID")
   )
-  expect_equal(actual$program_sequence$external_dependencies_by_program[[1]],
+  expect_equal(actual$program_sequence$input_cols[[1]],
                expected_ext_dep)
 
   # Check order of derivations
   programs <- x |> lapply(readLines)
   names(programs) <- basename(x)
-  expect_section_order("LOAD all external datasets needed", "Core ADSL table", programs[["1_ADSL.R"]])
-  expect_section_order("Core ADSL table", "ADSL-PLANNED_ARM", programs[["1_ADSL.R"]])
+  expect_section_order("Read data sets", "Initialize ADSL", programs[["1_ADSL.R"]])
+  expect_section_order("Initialize ADSL", "Preprocess ADSL", programs[["1_ADSL.R"]])
+  expect_section_order("Preprocess ADSL", "ADSL-PLANNED_ARM", programs[["1_ADSL.R"]])
   expect_section_order("ADSL-PLANNED_ARM", "ADSL-ARM_GRP1-arm_group_01", programs[["1_ADSL.R"]])
   expect_section_order("ADSL-ARM_GRP1-arm_group_01", "Save ADSL", programs[["1_ADSL.R"]])
 
@@ -186,7 +189,7 @@ test_that("No filters and no derivations", {
 
   # Check edges
   expected_edges <-  data.table(
-    parent_node = c("ADSL-domain_init"),
+    parent_node = c("ADSL-preprocess_domain"),
     node_id = c("ADSL-PLANNED_ARM")
   )
   expect_equal(actual$edges, expected_edges)
@@ -197,14 +200,15 @@ test_that("No filters and no derivations", {
     domain_type = rep("sdtm", 4),
     column_name = c("ARM", "USUBJID", "ARM", "USUBJID")
   )
-  expect_equal(actual$program_sequence$external_dependencies_by_program[[1]],
+  expect_equal(actual$program_sequence$input_cols[[1]],
                expected_ext_dep)
 
   # Check order of derivations
   programs <- x |> lapply(readLines)
   names(programs) <- basename(x)
-  expect_section_order("LOAD all external datasets needed", "Core ADSL table", programs[["1_ADSL.R"]])
-  expect_section_order("Core ADSL table", "ADSL-PLANNED_ARM", programs[["1_ADSL.R"]])
+  expect_section_order("Read data sets", "Initialize ADSL", programs[["1_ADSL.R"]])
+  expect_section_order("Initialize ADSL", "Preprocess ADSL", programs[["1_ADSL.R"]])
+  expect_section_order("Preprocess ADSL", "ADSL-PLANNED_ARM", programs[["1_ADSL.R"]])
   expect_section_order("ADSL-PLANNED_ARM", "Save ADSL", programs[["1_ADSL.R"]])
 
   # Check generated ADSL
@@ -239,7 +243,7 @@ test_that("Global filter and domain filter", {
 
   # Check edges
   expected_edges <-  data.table(
-    parent_node = c("ADSL-PLANNED_ARM", "ADSL-domain_init"),
+    parent_node = c("ADSL-PLANNED_ARM", "ADSL-preprocess_domain"),
     node_id = c("ADSL-ARM_GRP1-arm_group_01", "ADSL-PLANNED_ARM")
   )
   expect_equal(actual$edges, expected_edges)
@@ -252,14 +256,15 @@ test_that("Global filter and domain filter", {
     column_name = c("AGEU", "ARM", "DOMAIN", "STUDYID", "USUBJID",
                     "AGEU", "ARM", "DOMAIN", "STUDYID", "USUBJID")
   )
-  expect_equal(actual$program_sequence$external_dependencies_by_program[[1]],
+  expect_equal(actual$program_sequence$input_cols[[1]],
                expected_ext_dep)
 
   # Check order of derivations
   programs <- x |> lapply(readLines)
   names(programs) <- basename(x)
-  expect_section_order("LOAD all external datasets needed", "Core ADSL table", programs[["1_ADSL.R"]])
-  expect_section_order("Core ADSL table", "ADSL-PLANNED_ARM", programs[["1_ADSL.R"]])
+  expect_section_order("Read data sets", "Initialize ADSL", programs[["1_ADSL.R"]])
+  expect_section_order("Initialize ADSL", "Preprocess ADSL", programs[["1_ADSL.R"]])
+  expect_section_order("Preprocess ADSL", "ADSL-PLANNED_ARM", programs[["1_ADSL.R"]])
   expect_section_order("ADSL-PLANNED_ARM", "ADSL-ARM_GRP1-arm_group_01", programs[["1_ADSL.R"]])
   expect_section_order("ADSL-ARM_GRP1-arm_group_01", "Save ADSL", programs[["1_ADSL.R"]])
 
@@ -307,14 +312,15 @@ test_that("Global filter and domain filter incl. ADSL dependencies", {
     domain_type = c("adam", "adam", "adam", "sdtm", "sdtm", "sdtm", "sdtm"),
     column_name = c("SEX", "STUDYID", "USUBJID", "LBSTRESN", "STUDYID", "USUBJID", "VISITNUM")
   )
-  expect_equal(actual$program_sequence$external_dependencies_by_program[[1]],
+  expect_equal(actual$program_sequence$input_cols[[1]],
                expected_ext_dep)
 
   # Check order of derivations
   programs <- x |> lapply(readLines)
   names(programs) <- basename(x)
-  expect_section_order("LOAD all external datasets needed", "Core ADLB table", programs[["1_ADLB.R"]])
-  expect_section_order("Core ADLB table", "Save ADLB", programs[["1_ADLB.R"]])
+  expect_section_order("Read data sets", "Initialize ADLB", programs[["1_ADLB.R"]])
+  expect_section_order("Initialize ADLB", "Preprocess ADLB", programs[["1_ADLB.R"]])
+  expect_section_order("Preprocess ADLB", "Save ADLB", programs[["1_ADLB.R"]])
 })
 
 test_that("Global filter and domain filter incl. adsl dependencies (lower case)", {
@@ -355,14 +361,15 @@ test_that("Global filter and domain filter incl. adsl dependencies (lower case)"
     domain_type = c("adam", "adam", "adam", "sdtm", "sdtm", "sdtm", "sdtm"),
     column_name = c("SEX", "STUDYID", "USUBJID", "LBSTRESN", "STUDYID", "USUBJID", "VISITNUM")
   )
-  expect_equal(actual$program_sequence$external_dependencies_by_program[[1]],
+  expect_equal(actual$program_sequence$input_cols[[1]],
                expected_ext_dep)
 
   # Check order of derivations
   programs <- x |> lapply(readLines)
   names(programs) <- basename(x)
-  expect_section_order("LOAD all external datasets needed", "Core ADLB table", programs[["1_adlb.R"]])
-  expect_section_order("Core ADLB table", "Save ADLB", programs[["1_adlb.R"]])
+  expect_section_order("Read data sets", "Initialize ADLB", programs[["1_adlb.R"]])
+  expect_section_order("Initialize ADLB", "Preprocess ADLB", programs[["1_adlb.R"]])
+  expect_section_order("Preprocess ADLB", "Save ADLB", programs[["1_adlb.R"]])
 })
 
 test_that("External predecessor dependencies are handled correctly", {
@@ -390,7 +397,7 @@ test_that("External predecessor dependencies are handled correctly", {
 
   # Check edges
   expected_edges <- data.table(
-    parent_node = c("adsl-domain_init", "adsl-PLANNED_ARM", "adsl-domain_init"),
+    parent_node = c("adsl-preprocess_domain", "adsl-PLANNED_ARM", "adsl-preprocess_domain"),
     node_id = c("adsl-PLANNED_ARM", "adsl-PLANNED_ARM2", "adsl-VAR1")
   )
   expect_equal(actual$edges, expected_edges)
@@ -405,15 +412,16 @@ test_that("External predecessor dependencies are handled correctly", {
                     "AGEU", "ARM", "DOMAIN", "STUDYID", "USUBJID",
                     "USUBJID", "VAR1")
   )
-  expect_equal(actual$program_sequence$external_dependencies_by_program[[1]],
+  expect_equal(actual$program_sequence$input_cols[[1]],
                expected_ext_dep)
 
   # Check order of derivations
   programs <- x |> lapply(readLines)
   names(programs) <- basename(x)
-  expect_section_order("LOAD all external datasets needed", "Core ADSL table", programs[["1_adsl.R"]])
-  expect_section_order("Core ADSL table", "ADSL-PLANNED_ARM", programs[["1_adsl.R"]])
-  expect_section_order("Core ADSL table", "Save ADSL", programs[["1_adsl.R"]])
+  expect_section_order("Read data sets", "Initialize ADSL", programs[["1_adsl.R"]])
+  expect_section_order("Initialize ADSL", "Preprocess ADSL", programs[["1_adsl.R"]])
+  expect_section_order("Preprocess ADSL", "ADSL-PLANNED_ARM", programs[["1_adsl.R"]])
+  expect_section_order("ADSL-PLANNED_ARM", "Save ADSL", programs[["1_adsl.R"]])
 })
 
 test_that("Error is triggered when both a col_mutate and a col_copy action exist that inputs a core variable and return the ADaM variable of same name", {
@@ -485,8 +493,8 @@ test_that("Dependencies between a col_compute action that inputs/returns a core 
 
   # Check edges
   expected_edges <- data.table(
-    parent_node = c("ADSL-domain_init", "ADSL-AGE2-age2_01", "ADSL-domain_init",
-                    "ADSL-AGE-age_redefined_01", "ADSL-domain_init"),
+    parent_node = c("ADSL-preprocess_domain", "ADSL-AGE2-age2_01", "ADSL-preprocess_domain",
+                    "ADSL-AGE-age_redefined_01", "ADSL-preprocess_domain"),
     node_id = c("ADSL-AGE-age_redefined_01", "ADSL-AGE-age_redefined_01",
                 "ADSL-AGE2-age2_01", "ADSL-AGE3-age3_01", "ADSL-PLANNED_ARM")
   )
@@ -501,17 +509,18 @@ test_that("Dependencies between a col_compute action that inputs/returns a core 
     column_name = c("AGE", "AGEU", "ARM", "RACE", "SEX", "USUBJID",
                     "AGE", "AGEU", "ARM", "RACE", "SEX", "USUBJID")
   )
-  expect_equal(actual$program_sequence$external_dependencies_by_program[[1]],
+  expect_equal(actual$program_sequence$input_cols[[1]],
                expected_ext_dep)
 
   # Check order of derivations
   programs <- x |> lapply(readLines)
   names(programs) <- basename(x)
-  expect_section_order("LOAD all external datasets needed", "Core ADSL table", programs[["1_ADSL.R"]])
-  expect_section_order("Core ADSL table", "ADSL-AGE2-age2_01", programs[["1_ADSL.R"]])
+  expect_section_order("Read data sets", "Initialize ADSL", programs[["1_ADSL.R"]])
+  expect_section_order("Initialize ADSL", "Preprocess ADSL", programs[["1_ADSL.R"]])
+  expect_section_order("Preprocess ADSL", "ADSL-AGE2-age2_01", programs[["1_ADSL.R"]])
   expect_section_order("ADSL-AGE2-age2_01", "ADSL-AGE-age_redefined_01", programs[["1_ADSL.R"]])
   expect_section_order("ADSL-AGE-age_redefined_01", "ADSL-AGE3-age3_01", programs[["1_ADSL.R"]])
-  expect_section_order("Core ADSL table", "ADSL-PLANNED_ARM", programs[["1_ADSL.R"]])
+  expect_section_order("Preprocess ADSL", "ADSL-PLANNED_ARM", programs[["1_ADSL.R"]])
   expect_section_order("ADSL-AGE3-age3_01", "Save ADSL", programs[["1_ADSL.R"]])
   expect_section_order("ADSL-PLANNED_ARM", "Save ADSL", programs[["1_ADSL.R"]])
 
@@ -548,7 +557,7 @@ test_that("Dependencies between a col_compute action that inputs/returns multipl
 
   # Check edges
   expected_edges <- data.table(
-    parent_node = c("ADSL-domain_init", "ADSL-AGE2-age2_01", "ADSL-domain_init",
+    parent_node = c("ADSL-preprocess_domain", "ADSL-AGE2-age2_01", "ADSL-preprocess_domain",
                     "ADSL-AGE-SEX-age_sex_redefined_01", "ADSL-AGE2-age2_01"),
     node_id = c("ADSL-AGE-SEX-age_sex_redefined_01", "ADSL-AGE-SEX-age_sex_redefined_01",
                 "ADSL-AGE2-age2_01", "ADSL-AGE3-age3_01", "ADSL-AGE4-age4_01")
@@ -563,26 +572,23 @@ test_that("Dependencies between a col_compute action that inputs/returns multipl
     column_name = c("AGE", "AGEU", "RACE", "SEX", "USUBJID",
                     "AGE", "AGEU", "RACE", "SEX", "USUBJID")
   )
-  expect_equal(actual$program_sequence$external_dependencies_by_program[[1]],
+  expect_equal(actual$program_sequence$input_cols[[1]],
                expected_ext_dep)
 
   # Check order of derivations
   programs <- x |> lapply(readLines)
   names(programs) <- basename(x)
-  expect_section_order("LOAD all external datasets needed", "Core ADSL table", programs[["1_ADSL.R"]])
-  expect_section_order("Core ADSL table", "ADSL-AGE2-age2_01", programs[["1_ADSL.R"]])
+  expect_section_order("Read data sets", "Initialize ADSL", programs[["1_ADSL.R"]])
+  expect_section_order("Initialize ADSL", "Preprocess ADSL", programs[["1_ADSL.R"]])
+  expect_section_order("Preprocess ADSL", "ADSL-AGE2-age2_01", programs[["1_ADSL.R"]])
   expect_section_order("ADSL-AGE2-age2_01", "ADSL-AGE-SEX-age_sex_redefined_01", programs[["1_ADSL.R"]])
   expect_section_order("ADSL-AGE-SEX-age_sex_redefined_01", "ADSL-AGE3-age3_01", programs[["1_ADSL.R"]])
   expect_section_order("ADSL-AGE2-age2_01", "ADSL-AGE4-age4_01", programs[["1_ADSL.R"]])
   expect_section_order("ADSL-AGE3-age3_01", "Save ADSL", programs[["1_ADSL.R"]])
   expect_section_order("ADSL-AGE4-age4_01", "Save ADSL", programs[["1_ADSL.R"]])
 
-
   # Check generated ADSL
   x[[1]] |> source()
   expect_setequal(names(ADSL),  c("USUBJID", "AGE", "AGE2", "AGE3", "AGE4", "RACE", "SEX"))
   expect_equal(nrow(ADSL), 308)
 })
-
-
-

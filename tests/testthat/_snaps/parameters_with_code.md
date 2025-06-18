@@ -2,6 +2,14 @@
 
     {
       "type": "character",
+      "attributes": {},
+      "value": ["# Preprocess ADSL ------------------------------\n\n# Select ADSL predecessors\n     ADSL <- ADSL |>\ndplyr::select(USUBJID)\n"]
+    }
+
+---
+
+    {
+      "type": "character",
       "attributes": {
         "class": {
           "type": "character",
@@ -24,19 +32,5 @@
         }
       },
       "value": ["# ADSL-D-fn_mixed_defaults_and_user_params-list(param_user = \"s:User-supplied string\") -----------------------------------------------------\nparams <- list(param_defualt = 5, param_user = \"User-supplied string\")\n\n\n  ADSL <- c(ADSL, params)\n  \n# Remove interim objects\nrm(params)\n"]
-    }
-
----
-
-    {
-      "type": "character",
-      "attributes": {
-        "class": {
-          "type": "character",
-          "attributes": {},
-          "value": ["glue", "character"]
-        }
-      },
-      "value": ["# ADSL-C-fn_no_params -----------------------------------------------------\n\n  ADSL <- c(ADSL)\n  "]
     }
 

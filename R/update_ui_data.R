@@ -177,7 +177,7 @@ process_column_dependencies <- function(dependencies, current_domain) {
   if (length(elements_with_dot) > 0) {
     domains <-  sub("\\.(.*)", "", elements_with_dot)
     columns <- sub("^[^.]*\\.", "", elements_with_dot)
-    domain_types <- classify_external_data_domains(domains)
+    domain_types <- classify_data_domains(domains)
 
     result[[1]] <- data.table::data.table(
       column_name = columns,
@@ -191,7 +191,7 @@ process_column_dependencies <- function(dependencies, current_domain) {
     result[[length(result) + 1]] <-  data.table::data.table(
       column_name = elements_without_dot,
       domain = current_domain,
-      domain_type = classify_external_data_domains(current_domain)
+      domain_type = classify_data_domains(current_domain)
     )
   }
 

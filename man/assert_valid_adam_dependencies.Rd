@@ -34,9 +34,9 @@ Validates that all required parent columns are available for each ADaM domain.
 This function performs comprehensive dependency checking across ADaM domains
 to ensure data integrity. It operates in two modes:
 \enumerate{
-\item When \code{check_external_adam = TRUE}: Checks that all dependencies across domains are
+\item When \code{check_cross_domain_adam_dependencies = TRUE}: Checks that all dependencies across domains are
 satisfied, including external dependencies between different ADaM domains.
-\item When \code{check_external_adam = FALSE}: Only checks that internal dependencies within
+\item When \code{check_cross_domain_adam_dependencies = FALSE}: Only checks that internal dependencies within
 each ADaM domain are satisfied.
 }
 

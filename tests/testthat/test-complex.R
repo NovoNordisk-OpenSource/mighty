@@ -1,21 +1,23 @@
 test_that("Complex test with multiple domains and column/row operations", {
 
   # SETUP -------------------------------------------------------------------
+
   ui_path <- c(
     test_path("fixtures", "complex_adsl.yml"),
     test_path("fixtures", "complex_adlb.yml")
-  )
+    )
   path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
   std_lib_path <- c(
     testthat::test_path("fixtures", "adsl_0001.R"),
     testthat::test_path("fixtures", "adlb_0001.R")
-  )
-
+    )
   domain_keys_path <- system.file("standards", "domain_keys.yml", package = "mighty")
   output_path <- withr::local_tempdir()
-  setup_testdata(testdata = "pharmaverse", test_data_path = output_path)
+  setup_testdata(testdata = "pharmaverse", test_data_path = output_path,
+                 sdtm_domains = c("dm", "dm_vaccine", "lb", "sv"))
 
   # ACT ---------------------------------------------------------------------
+
   actual <- generate_adam_code(
     path_ui_data = ui_path,
     code_component_source_files =  std_lib_path,
@@ -25,12 +27,14 @@ test_that("Complex test with multiple domains and column/row operations", {
   )
 
   # EXPECT ------------------------------------------------------------------
+
   actual$data_model |> names() |> sort() |> expect_equal(c("code_id", "depend_cols", "depend_rows", "domain", "node_id", "outputs", "parameters", "type"))
   write_adam_programs(dir = output_path, programs = actual$programs)
   x <- list.files(output_path, pattern = ".R", full.names = TRUE)
 
   programs <- x |> lapply(readLines)
   names(programs) <- basename(x)
+
   # Check program 1: ADSL part 1
   expect_section_order("ADSL-PLANNED_ARM", "ADSL-ARM_GRP1-arm_group_01", programs[["1_ADSL.R"]])
   expect_section_order("ADSL-PLANNED_ARM", "ADSL-NEW_ARM-arm_01", programs[["1_ADSL.R"]])

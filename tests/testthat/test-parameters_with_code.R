@@ -8,7 +8,6 @@ test_that("parameters accept R code", {
   output_path <- withr::local_tempdir()
   setup_testdata(testdata = "pharmaverse", test_data_path = output_path)
 
-
   # ACT
 
   actual <- generate_adam_code(
@@ -18,6 +17,7 @@ test_that("parameters accept R code", {
     path_domain_keys = domain_keys_path,
     path_output = output_path
   )
+
   # EXPECT
   expect_snapshot_value(actual$programs$`1_ADSL`[[3]], style = "json2")
   expect_snapshot_value(actual$programs$`1_ADSL`[[4]], style = "json2")

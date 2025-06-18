@@ -1,0 +1,38 @@
+table_metadata:
+  table: ADSL
+  keys:
+    - USUBJID
+
+init:
+  core_domains:
+    - dm
+    - dm_vaccine
+  filter_domain:
+    - dm: '!is.na(AGEU)'
+    - dm_vaccine: NA
+  filter_global:
+    - 'STUDYID == "CDISCPILOT01"'
+    - 'DOMAIN == "DM"'
+  filter_depend_cols:
+    - core.AGEU
+    - core.STUDYID
+    - core.DOMAIN
+
+column_metadata:
+  - column: STUDYID
+    source: core.STUDYID
+
+  - column: USUBJID
+    source: core.USUBJID
+
+  - column: PLANNED_ARM
+    source: core.ARM
+
+  - column: ARM_GRP1
+    code_id: arm_group_01
+
+  - column: EFFICACY
+    code_id: supp_dm_01
+
+  - column: SAFETY
+    code_id: supp_dm_01

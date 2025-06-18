@@ -37,10 +37,9 @@ generate_program <- function(program_order,
                                    program_id,
                                    rank,
                                    type,
-                                   external_dependencies_by_program)], nodes[, !..keep_only_from_program_order], by = "node_id", all.x = TRUE) |>
+                                   input_cols)], nodes[, !..keep_only_from_program_order], by = "node_id", all.x = TRUE) |>
     setorder(program_id, rank)
   # Create clean, empty environment to store standard components
-  sdtm_dataset_list <- list_all_(type = "sdtm", trial_metadata, path_output)
   nodes_split <- split(nodes_and_programs, by = "program_id")
 
   programs <- lapply(
@@ -50,7 +49,6 @@ generate_program <- function(program_order,
     code_component_env,
     ui_data,
     trial_metadata,
-    sdtm_dataset_list,
     path_output
   )
 
@@ -68,27 +66,4 @@ rename_programs <- function(programs, nodes_split) {
   new_names <- paste0(current_names, "_", program_domains)
   names(programs) <- new_names
   return(programs)
-}
-
-
-
-list_all_ <- function(type = c("sdtm", "adam"), trial_metadata, custom_data_path = NULL) {
-  # Generate list of all SDTM datasets in the current study so later we can
-  # check if a specific supp dataset exists
-  # TODO: The above mentions SUPPDM - should this function be general and keep the type, or do we only
-  # need it for validating precense of SDTM datasets?
-  cnt <- eval(parse(text = glue::glue("connector::connect(config = '{custom_data_path}/_connector.yml')${type}")))
-
-  # This is needed when testing and referencing trial data locations that don't
-  # exist, or the testing environment doesn't have access to
-  result <- tryCatch({
-    cnt |> connector::list_content_cnt()
-    }, error = function(e) {
-      if (grepl("directory.*does not.*exist", e$message, ignore.case = TRUE)) {
-        return(NULL)
-      } else {
-        stop(e)  # re-throws the original error for all other cases
-      }
-    })
-  return(result)
 }

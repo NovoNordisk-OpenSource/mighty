@@ -112,7 +112,7 @@ add_foreign_key_as_depends_col <- function(x,
       data.table(
         column_name = c(col, col),
         domain = c(domain_i, dep_domain),
-        domain_type = c("init", classify_external_data_domains(dep_domain))
+        domain_type = c("init", classify_data_domains(dep_domain))
       )
     }) |> rbindlist()
 
@@ -173,7 +173,7 @@ enrich_core_compute_actions <- function(x) {
           depend_cols_new <- data.table(
             column_name = unlist(x$output[has_same_core_dep_i]),
             domain = domain_i,
-            domain_type = classify_external_data_domains(domain_i)
+            domain_type = classify_data_domains(domain_i)
           )
           x$depend_cols[[i]] <- rbind(x$depend_cols[[i]], depend_cols_new)
         }

@@ -57,7 +57,7 @@ generate_adam_code <- function(path_ui_data,
   nodes_3 <- update_depend_cols(nodes_2, domain_keys, ui_init)
 
   # Create an initialize action per domain that absorbs col_copy action
-  nodes_4 <- create_domain_initialize_nodes(nodes_3)
+  nodes_4 <- create_preprocess_domain_nodes(nodes_3)
 
   # Replace "core" with relevant domains
   nodes_5 <- replace_core_with_named_domain(nodes_4, ui_init)
@@ -74,16 +74,21 @@ generate_adam_code <- function(path_ui_data,
   # Group actions into programs that can be run as batches in a sequence
   program_sequence_1 <- group_nodes_optimal(nodes_topo_order, nodes_5, edges)
 
-  # Add initialization actions to the program sequence
-  program_sequence_2 <- add_program_init_nodes(program_sequence_1, nodes_5)
+  # Add initialize_domain actions to 'initial' programs
+  program_sequence_2 <- add_initialize_domain_nodes(program_sequence_1) # TODO
 
-  # Add action to import external dependencies to the program sequence
-  program_sequence_3 <- add_nodes_to_load_external_data(program_sequence_2, nodes_5, ui_init, domain_keys) |>
-    add_node_to_write_data()
+  # Add read_domain actions to 'update' programs
+  program_sequence_3 <- add_read_domain_nodes(program_sequence_2, nodes_5)
+
+  # Add read_data actions to read all data sets required for each ADaM program
+  program_sequence_4 <- add_read_data_nodes(program_sequence_3, nodes_5, ui_init, domain_keys)
+
+  # Add action to save generated ADaM table
+  program_sequence_5 <- add_write_domain_nodes(program_sequence_4)
 
   # Create programs
   programs <- generate_program(
-    program_sequence_3,
+    program_sequence_5,
     nodes_5,
     domain_keys,
     code_component_env,
@@ -95,7 +100,7 @@ generate_adam_code <- function(path_ui_data,
   return(
     list(
       programs = programs,
-      program_sequence = program_sequence_3,
+      program_sequence = program_sequence_5,
       edges = edges,
       data_for_visualization = program_sequence_1,
       data_model = nodes_5
