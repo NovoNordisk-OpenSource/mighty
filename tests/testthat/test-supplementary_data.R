@@ -36,7 +36,8 @@ test_that("Supplementary data is added right after read_data when no supp cols a
   # Check ADSL
   x[[1]] |> source()
   expect_equal(nrow(ADSL), 306)
-  expect_setequal(names(ADSL), c("STUDYID", "USUBJID", "ARM", "PLANNED_ARM", "ARM_GRP1"))
+  expect_setequal(names(ADSL), c("STUDYID", "USUBJID", "ARM", "PLANNED_ARM", "ARM_GRP1", "EFFICACY", "SAFETY"))
+
 })
 
 
@@ -78,7 +79,8 @@ test_that("Supplementary data is added right after read_data when a supp col is 
   # Check ADSL
   x[[1]] |> source()
   expect_equal(nrow(ADSL), 234)
-  expect_setequal(names(ADSL), c("STUDYID", "USUBJID", "ARM", "PLANNED_ARM", "ARM_GRP1"))
+  expect_setequal(names(ADSL), c("STUDYID", "USUBJID", "ARM", "PLANNED_ARM", "ARM_GRP1", "EFFICACY", "SAFETY"))
+
 
 })
 
@@ -120,7 +122,7 @@ test_that("Supplementary data is added right after read_data when a supp col is 
   # Check ADSL
   x[[1]] |> source()
   expect_equal(nrow(ADSL), 306)
-  expect_setequal(names(ADSL), c("STUDYID", "USUBJID", "ARM", "PLANNED_ARM", "ARM_GRP1"))
+  expect_setequal(names(ADSL), c("STUDYID", "USUBJID", "ARM", "PLANNED_ARM", "ARM_GRP1", "EFFICACY", "SAFETY"))
 
 })
 

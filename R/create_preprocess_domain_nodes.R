@@ -13,14 +13,27 @@ create_preprocess_domain_nodes <- function(nodes) {
 
   # For each domain: Identify the core variables for col_copy/col_mutate nodes
   # core_vars <- nodes_split |>
-  core_vars <- lapply(nodes_split, function(x) {
-    lapply(x$depend_cols, function(y) {
-      y[domain == "core",]
+  dep_vars <- lapply(nodes_split, function(x) {
+    # core vars
+    core_vars <- lapply(x$depend_cols, function(y) {
+      y[domain == "core", ]
     }) |> rbindlist() |> unique()
+
+    is_supp <- x$type == "col_supp"
+    supp_vars <- if (any(is_supp)) {
+      data.table::data.table(
+        column_name = x[is_supp, ]$outputs[[1]],
+        domain = x$domain[[1]],
+        domain_type = classify_data_domains(x$domain[[1]])
+      )
+    } else {
+      NULL
+    }
+    rbind(core_vars, supp_vars)
   })
 
   # Create a preprocess_domain action for each domain
-  preprocess_domain_nodes <- purrr::imap(core_vars,
+  preprocess_domain_nodes <- purrr::imap(dep_vars,
                                          create_preprocess_domain_node_i,
                                          nodes) |>
     rbindlist()
@@ -49,7 +62,7 @@ create_preprocess_domain_nodes <- function(nodes) {
   return(rbind(nodes_retained, preprocess_domain_nodes))
 }
 
-create_preprocess_domain_node_i <- function(core_vars_domain_i,
+create_preprocess_domain_node_i <- function(vars_i,
                                       nm,
                                       nodes) {
   new_node_i <- data.table::data.table(matrix(ncol = ncol(nodes), nrow = 1)) |>
@@ -61,7 +74,7 @@ create_preprocess_domain_node_i <- function(core_vars_domain_i,
     depend_rows = NA_character_,
     parameters = NA_character_,
     type = "preprocess_domain",
-    depend_cols = list(core_vars_domain_i),
-    outputs = list(core_vars_domain_i$column_name)
+    depend_cols = list(vars_i),
+    outputs = list(vars_i$column_name)
   )][, node_id := paste0(nm, "-", "preprocess_domain")]
 }
