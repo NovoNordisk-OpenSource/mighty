@@ -73,7 +73,6 @@ test_that("Can read code components from another package", {
         path_ui_data = "ui_yml.yml",
         code_component_source_pkgs = "tmpcodepkg",
         path_trial_metadata = "trial_metadata_yml.yml",
-        path_domain_keys = domain_keys_path,
         path_output = "."
       )
 

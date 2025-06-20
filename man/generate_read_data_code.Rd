@@ -4,7 +4,7 @@
 \alias{generate_read_data_code}
 \title{Generate external data code}
 \usage{
-generate_read_data_code(payload, sdtm_dataset_list, path_output)
+generate_read_data_code(payload, path_output)
 }
 \arguments{
 \item{data_connection}{}

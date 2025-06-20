@@ -16,7 +16,7 @@ test_that("Supplementary data is added right after read_data when no supp cols a
     path_ui_data = ui_path,
     code_component_source_files =  std_lib_path,
     path_trial_metadata = path_trial_metadata,
-    path_domain_keys = domain_keys_path,
+
     path_output = output_path
   )
 
@@ -59,7 +59,7 @@ test_that("Supplementary data is added right after read_data when a supp col is 
     path_ui_data = ui_path,
     code_component_source_files =  std_lib_path,
     path_trial_metadata = path_trial_metadata,
-    path_domain_keys = domain_keys_path,
+
     path_output = output_path
   )
 
@@ -102,7 +102,7 @@ test_that("Supplementary data is added right after read_data when a supp col is 
     path_ui_data = ui_path,
     code_component_source_files =  std_lib_path,
     path_trial_metadata = path_trial_metadata,
-    path_domain_keys = domain_keys_path,
+
     path_output = output_path
   )
 
@@ -145,7 +145,7 @@ test_that("Supplementary data is added right after read_data when supp cols and 
     path_ui_data = ui_path,
     code_component_source_files =  std_lib_path,
     path_trial_metadata = path_trial_metadata,
-    path_domain_keys = domain_keys_path,
+
     path_output = output_path,
     check_cross_domain_adam_dependencies = FALSE
   )

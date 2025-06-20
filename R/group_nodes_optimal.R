@@ -8,7 +8,11 @@
 #' @export
 #'
 #' @examples
-group_nodes_optimal <- function(ordered_nodes, nodes, edges){
+group_nodes_optimal <- function(nodes, edges){
+
+  # Identify topological order of actions
+  ordered_nodes <- weighted_node_topo_sort(edges, nodes, primary_domain = "ADSL")
+
   # When edges has additional columns, things go wrong
   edges <- edges[,.(parent_node, node_id)]
 

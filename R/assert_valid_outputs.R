@@ -24,6 +24,8 @@ assert_valid_outputs <- function(x) {
   if (length(error_list) > 0) {
     stop(paste(error_list, collapse = "\n"))
   }
+
+  return(invisible(x))
 }
 
 error_duplicate_columns_outputed <- function(domain, multiple_output_cols) {

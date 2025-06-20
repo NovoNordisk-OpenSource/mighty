@@ -14,7 +14,7 @@ test_that("No filters", {
     path_ui_data = ui_path,
     code_component_source_files =  std_lib_path,
     path_trial_metadata = path_trial_metadata,
-    path_domain_keys = domain_keys_path,
+
     path_output = output_path
   )
   write_adam_programs(dir = output_path, programs = actual$programs)
@@ -69,7 +69,7 @@ test_that("No domain filters", {
     path_ui_data = ui_path,
     code_component_source_files =  std_lib_path,
     path_trial_metadata = path_trial_metadata,
-    path_domain_keys = domain_keys_path,
+
     path_output = output_path
   )
   write_adam_programs(dir = output_path, programs = actual$programs)
@@ -124,7 +124,7 @@ test_that("No global filters", {
     path_ui_data = ui_path,
     code_component_source_files =  std_lib_path,
     path_trial_metadata = path_trial_metadata,
-    path_domain_keys = domain_keys_path,
+
     path_output = output_path
   )
   write_adam_programs(dir = output_path, programs = actual$programs)
@@ -179,7 +179,7 @@ test_that("No filters and no derivations", {
     path_ui_data = ui_path,
     code_component_source_files =  std_lib_path,
     path_trial_metadata = path_trial_metadata,
-    path_domain_keys = domain_keys_path,
+
     path_output = output_path
   )
   write_adam_programs(dir = output_path, programs = actual$programs)
@@ -233,7 +233,7 @@ test_that("Global filter and domain filter", {
     path_ui_data = ui_path,
     code_component_source_files =  std_lib_path,
     path_trial_metadata = path_trial_metadata,
-    path_domain_keys = domain_keys_path,
+
     path_output = output_path
   )
   write_adam_programs(dir = output_path, programs = actual$programs)
@@ -290,7 +290,7 @@ test_that("Global filter and domain filter incl. ADSL dependencies", {
     path_ui_data = ui_path,
     code_component_source_files =  std_lib_path,
     path_trial_metadata = path_trial_metadata,
-    path_domain_keys = domain_keys_path,
+
     path_output = output_path,
     check_cross_domain_adam_dependencies = FALSE
   )
@@ -339,7 +339,7 @@ test_that("Global filter and domain filter incl. adsl dependencies (lower case)"
     path_ui_data = ui_path,
     code_component_source_files =  std_lib_path,
     path_trial_metadata = path_trial_metadata,
-    path_domain_keys = domain_keys_path,
+
     path_output = output_path,
     check_cross_domain_adam_dependencies = FALSE
   )
@@ -387,7 +387,7 @@ test_that("External predecessor dependencies are handled correctly", {
     path_ui_data = ui_path,
     code_component_source_files =  std_lib_path,
     path_trial_metadata = path_trial_metadata,
-    path_domain_keys = domain_keys_path,
+
     path_output = output_path
   )
   write_adam_programs(dir = output_path, programs = actual$programs)
@@ -440,7 +440,7 @@ test_that("Error is triggered when both a col_mutate and a col_copy action exist
     path_ui_data = ui_path,
     code_component_source_files =  std_lib_path,
     path_trial_metadata = path_trial_metadata,
-    path_domain_keys = domain_keys_path,
+
     path_output = output_path
   ) |> expect_error(regexp = "Column\\(s\\) AGE are outputted in multiple actions in domain ADSL.")
 
@@ -462,7 +462,7 @@ test_that("Error is triggered when multiple col_compute actions exist that input
     path_ui_data = ui_path,
     code_component_source_files =  std_lib_path,
     path_trial_metadata = path_trial_metadata,
-    path_domain_keys = domain_keys_path,
+
     path_output = output_path
   ) |> expect_error(regexp = "Column\\(s\\) AGE are outputted in multiple actions in domain ADSL.")
 })
@@ -483,7 +483,7 @@ test_that("Dependencies between a col_compute action that inputs/returns a core 
     path_ui_data = ui_path,
     code_component_source_files =  std_lib_path,
     path_trial_metadata = path_trial_metadata,
-    path_domain_keys = domain_keys_path,
+
     path_output = output_path,
   )
   write_adam_programs(dir = output_path, programs = actual$programs)
@@ -546,7 +546,7 @@ test_that("Dependencies between a col_compute action that inputs/returns multipl
     path_ui_data = ui_path,
     code_component_source_files =  std_lib_path,
     path_trial_metadata = path_trial_metadata,
-    path_domain_keys = domain_keys_path,
+
     path_output = output_path
   )
 

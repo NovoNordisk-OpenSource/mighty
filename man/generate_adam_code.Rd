@@ -9,7 +9,6 @@ generate_adam_code(
   code_component_source_pkgs = NULL,
   code_component_source_files = NULL,
   path_trial_metadata,
-  path_domain_keys,
   path_output,
   check_cross_domain_adam_dependencies = TRUE
 )

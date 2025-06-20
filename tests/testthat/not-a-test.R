@@ -23,7 +23,7 @@ test_that("Complex test with multiple domains and column/row operations", {
   write_adam_programs(dir = output_path, programs = actual$programs)
   x <- list.files(output_path, full.names = TRUE)
   programs <- x |> lapply(readLines)
-  browser()
+
   vis_code_tree(nodes = actual$data_for_visualization, edges = actual$edges)
   names(programs) <- basename(x)
 

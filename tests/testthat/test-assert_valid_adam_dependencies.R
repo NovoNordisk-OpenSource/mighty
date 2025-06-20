@@ -15,7 +15,7 @@ test_that(
       path_ui_data = ui_path,
       code_component_source_files =  std_lib_path,
       path_trial_metadata = path_trial_metadata,
-      path_domain_keys = domain_keys_path,
+
       path_output = output_path,
       check_cross_domain_adam_dependencies = FALSE
     ) |> expect_no_error()
@@ -41,7 +41,7 @@ test_that(
       path_ui_data = ui_path,
       code_component_source_files =  std_lib_path,
       path_trial_metadata = path_trial_metadata,
-      path_domain_keys = domain_keys_path,
+
       path_output = output_path,
       check_cross_domain_adam_dependencies = TRUE
     ) |> expect_no_error()
@@ -66,7 +66,7 @@ test_that(
       path_ui_data = ui_path,
       code_component_source_files =  std_lib_path,
       path_trial_metadata = path_trial_metadata,
-      path_domain_keys = domain_keys_path,
+
       path_output = output_path,
       check_cross_domain_adam_dependencies = TRUE
     ) |> expect_error(
@@ -91,7 +91,7 @@ test_that(
       path_ui_data = ui_path,
       code_component_source_files =  std_lib_path,
       path_trial_metadata = path_trial_metadata,
-      path_domain_keys = domain_keys_path,
+
       path_output = output_path,
       check_cross_domain_adam_dependencies = FALSE
     ) |> expect_no_error()
@@ -116,7 +116,7 @@ test_that(
       path_ui_data = ui_path,
       code_component_source_files =  std_lib_path,
       path_trial_metadata = path_trial_metadata,
-      path_domain_keys = domain_keys_path,
+
       path_output = output_path,
       check_cross_domain_adam_dependencies = FALSE
     ) |> expect_error(
@@ -141,7 +141,7 @@ test_that(
       path_ui_data = ui_path,
       code_component_source_files =  std_lib_path,
       path_trial_metadata = path_trial_metadata,
-      path_domain_keys = domain_keys_path,
+
       path_output = output_path,
       check_cross_domain_adam_dependencies = TRUE
     ) |> expect_error(
@@ -167,7 +167,7 @@ test_that(
       path_ui_data = ui_path,
       code_component_source_files =  std_lib_path,
       path_trial_metadata = path_trial_metadata,
-      path_domain_keys = domain_keys_path,
+
       path_output = output_path,
       check_cross_domain_adam_dependencies = FALSE
     ) |> expect_error(regexp = ".*ADLB spec:\n\tadlb\\.STUDYID\n\tadlb\\.VISITNUM\nto execute:\n\tadlb\\.AGE\n\tadlb\\.VISITNUM2")
@@ -191,7 +191,7 @@ test_that(
       path_ui_data = ui_path,
       code_component_source_files =  std_lib_path,
       path_trial_metadata = path_trial_metadata,
-      path_domain_keys = domain_keys_path,
+
       path_output = output_path,
       check_cross_domain_adam_dependencies = TRUE
     ) |> expect_error(regexp = paste0("The following columns are missing in the ADaM spec:",
@@ -218,7 +218,7 @@ test_that(
       path_ui_data = ui_path,
       code_component_source_files =  std_lib_path,
       path_trial_metadata = path_trial_metadata,
-      path_domain_keys = domain_keys_path,
+
       path_output = output_path,
       check_cross_domain_adam_dependencies = TRUE
     ) |> expect_error(regexp = paste0(".*ADaM spec:",
@@ -245,7 +245,7 @@ test_that(
       path_ui_data = ui_path,
       code_component_source_files =  std_lib_path,
       path_trial_metadata = path_trial_metadata,
-      path_domain_keys = domain_keys_path,
+
       path_output = output_path,
       check_cross_domain_adam_dependencies = FALSE
     ) |> expect_no_error()
@@ -270,7 +270,7 @@ test_that(
       path_ui_data = ui_path,
       code_component_source_files =  std_lib_path,
       path_trial_metadata = path_trial_metadata,
-      path_domain_keys = domain_keys_path,
+
       path_output = output_path,
       check_cross_domain_adam_dependencies = TRUE
     ) |> expect_error(regexp =
@@ -297,7 +297,7 @@ test_that(
       path_ui_data = ui_path,
       code_component_source_files =  std_lib_path,
       path_trial_metadata = path_trial_metadata,
-      path_domain_keys = domain_keys_path,
+
       path_output = output_path,
       check_cross_domain_adam_dependencies = FALSE
     ) |> expect_no_error()
@@ -326,7 +326,7 @@ test_that(
       path_ui_data = ui_path,
       code_component_source_files =  std_lib_path,
       path_trial_metadata = path_trial_metadata,
-      path_domain_keys = domain_keys_path,
+
       path_output = output_path,
       check_cross_domain_adam_dependencies = TRUE
     ) |> expect_error(regexp =
@@ -354,7 +354,7 @@ test_that(
       path_ui_data = ui_path,
       code_component_source_files =  std_lib_path,
       path_trial_metadata = path_trial_metadata,
-      path_domain_keys = domain_keys_path,
+
       path_output = output_path,
       check_cross_domain_adam_dependencies = FALSE
     ) |> expect_no_error()
@@ -382,7 +382,7 @@ test_that(
       path_ui_data = ui_path,
       code_component_source_files =  std_lib_path,
       path_trial_metadata = path_trial_metadata,
-      path_domain_keys = domain_keys_path,
+
       path_output = output_path,
       check_cross_domain_adam_dependencies = FALSE
     ) |> expect_error(regexp = paste0(".*ADLB spec:\n\tadlb\\.VISITNUM\nto execute:",
@@ -409,7 +409,7 @@ test_that(
       path_ui_data = ui_path,
       code_component_source_files =  std_lib_path,
       path_trial_metadata = path_trial_metadata,
-      path_domain_keys = domain_keys_path,
+
       path_output = output_path,
       check_cross_domain_adam_dependencies = FALSE
     ) |> expect_error(regexp = paste0(".*ADLB spec:\n\tadlb\\.LBTEST\nto execute:",
@@ -434,7 +434,7 @@ test_that(
       path_ui_data = ui_path,
       code_component_source_files =  std_lib_path,
       path_trial_metadata = path_trial_metadata,
-      path_domain_keys = domain_keys_path,
+
       path_output = output_path,
       check_cross_domain_adam_dependencies = TRUE
     ) |> expect_error(regexp = paste0(".*ADaM spec:\n\tadlb\\.LBTEST\nto execute:",

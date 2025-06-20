@@ -14,7 +14,6 @@ test_that("Check that predecessors and derivations are identified correctly and 
     path_ui_data = ui_path,
     code_component_source_files =  std_lib_path,
     path_trial_metadata = path_trial_metadata,
-    path_domain_keys = domain_keys_path,
     path_output = output_path,
     check_cross_domain_adam_dependencies = FALSE
   )

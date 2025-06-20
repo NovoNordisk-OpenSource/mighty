@@ -39,7 +39,7 @@ update_default_parameters <- function(call_obj, user_params) {
       new_expr <- parse(text = param_value)[[1]]
       call_obj[[param_name]] <- new_expr
     }, error = function(e) {
-      browser()
+
       warning("Failed to parse R code: ", r_code, " - using as literal string")
       call_obj[[param_name]] <- r_code
     })

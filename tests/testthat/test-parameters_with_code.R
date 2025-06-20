@@ -14,7 +14,6 @@ test_that("parameters accept R code", {
     path_ui_data = ui_path,
     code_component_source_files =  std_lib_path,
     path_trial_metadata = path_trial_metadata,
-    path_domain_keys = domain_keys_path,
     path_output = output_path
   )
 

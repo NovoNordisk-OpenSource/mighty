@@ -10,7 +10,6 @@ generate_node_code(
   code_component_envr,
   ui_data,
   trial_metadata,
-  sdtm_dataset_list,
   path_output
 )
 }
@@ -25,9 +24,7 @@ columns}
 dependencies}
 
 \item{trial_metadata}{List containing trial-specific metadata including data
-paths and connection information}
-
-\item{sdtm_dataset_list}{Character vector of SDTM datasets available for the
+paths and connection information
 study}
 
 \item{path_output}{Character string specifying the output path where

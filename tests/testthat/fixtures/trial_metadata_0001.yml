@@ -1,6 +1,6 @@
 trial_id: "0001"
-project_id: "nn0001"
-complete_id: "nn0001-0001"
+project_id: "1234"
+complete_id: "0001-1234"
 instance: "current"
 
 primary_keys_sdtm:

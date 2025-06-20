@@ -72,6 +72,8 @@ assert_valid_adam_dependencies <- function(x, ui_init, domain_keys, check_cross_
       stop(error_msg)
     }
   }
+
+  return(invisible(x))
 }
 
 
