@@ -10,3 +10,7 @@ datasources:
     backend:
         type: "connector::connector_fs"
         path: "{metadata.testthat_fixtures_root}/{metadata.testdata}/sdtm"
+  - name: "metadata"
+    backend:
+        type: "connector::connector_fs"
+        path: "{metadata.testthat_fixtures_root}/{metadata.testdata}/metadata"

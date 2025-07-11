@@ -1,7 +1,8 @@
 #' Prepare Test Data for Unit Tests
 #'
 #' The `setup_testdata` function prepares test data required for unit testing. 
-#' Currently it extracts \code{pharmaversesdtm} datasets and sets up the test environment by storing
+#' Currently it extracts \code{pharmaversesdtm} and \code{pharmaversesdtm} 
+#' datasets and sets up the test environment by storing
 #' the relevant domains as data set files (\code{.parquet}) in a temporary directory.
 #' Under \code{test_data_path}, a folder \code{data} is created, and in here the folders
 #' \code{sdtm}, \code{adam}, and \code{metadata} are created.
@@ -14,6 +15,7 @@
 #' @param testdata Character. Currently only \code{pharmaverse} is supported.
 #' @param test_data_path Character. The directory path where test data should be created or loaded.
 #' @param sdtm_domains Character vector. A list of SDTM domains to store as \code{.parquet} files.
+#' @param adam_domains Character vector. A list of ADaM domains to store as \code{.parquet} files.
 #' @return Invisibly returns the path to the test data directory.
 #' @details
 #' This helper is intended to be used in the setup phase of testthat test files.
@@ -24,7 +26,7 @@
 #'
 #' @seealso [testthat::setup()], [withr::local_tempdir()]
 #' @export
-setup_testdata <- function(testdata = c("pharmaverse"), test_data_path, sdtm_domains = c("dm", "suppdm", "dm_vaccine", "ae", "lb", "sv")) {
+setup_testdata <- function(testdata = c("pharmaverse"), test_data_path, sdtm_domains = c("dm", "suppdm", "dm_vaccine", "ae", "lb", "sv"), adam_domains = c()) {
 
   testdata <- match.arg(testdata)
   # TODO: Should we only allow a set of SDTM domains to be available (in case sdtmpharmaverse gets extended?)
@@ -50,7 +52,7 @@ setup_testdata <- function(testdata = c("pharmaverse"), test_data_path, sdtm_dom
     dir.create(adam_testdata_path)
     dir.create(metadata_testdata_path)
 
-    # create SDTM test data based on pharmaverssdtm
+    # create SDTM test data based on pharmaversesdtm
     # loop over sdtm_domains to store data into sdtm_testdata_path
     lapply(
       sdtm_domains,
@@ -69,12 +71,36 @@ setup_testdata <- function(testdata = c("pharmaverse"), test_data_path, sdtm_dom
         })
       }
     )
+    # create ADaM test data based on pharmaversadam
+    # loop over adam_domains to store data into adam_testdata_path
+    lapply(
+      adam_domains,
+      function(x) {
+        tryCatch({
+          dataset <- eval(parse(text = paste0("pharmaverseadam::", x)))
+          arrow::write_parquet(
+            dataset,
+            file.path(adam_testdata_path, paste0(x, ".parquet"))
+          )
+        }, error = function(e) {
+          message("Error writing dataset: ", e$message,
+                  "\nPlease ensure the dataset ",
+                  paste0(x),
+                  " exists in pharmaverseadam.")
+        })
+      }
+    )
 
     # Create symbolic link to temporary data and ensure it is removed after test
     # is completed. This is needed to ensure that
     # since the connector needs to link to a static file location, whereas
     # the test data is created in a temporary location that will be cleaned up
     # after testing
+    
+    # Ensure link is removed, if it exists
+    unlink(test_path("fixtures", "data"), recursive = TRUE, force = TRUE)
+
+    # Create link
     file.symlink(
       data_path,
       test_path("fixtures", "data")

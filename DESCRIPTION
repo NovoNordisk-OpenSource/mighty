@@ -33,6 +33,7 @@ Suggests:
     fs,
     testthat (>= 3.0.0),
     pharmaversesdtm,
+    pharmaverseadam,
     arrow,
     quarto
 Config/testthat/edition: 3
