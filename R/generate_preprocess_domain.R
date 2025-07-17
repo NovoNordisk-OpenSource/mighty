@@ -1,7 +1,7 @@
 #' Write the R code to initialize a domain
 #'
 #' @param .self Character of length 1. Name of domain
-#' @param core_domains list of core SDTM domains used to make "base" table
+#' @param base_domains list of core SDTM domains used to make "base" table
 #' @param adsl_domain_keys
 #' @param filter_domain
 #' @param filter_global String. Global filter to be applied after merging
@@ -13,14 +13,14 @@
 #'
 #' @examples
 generate_preprocess_domain <-  function(.self,
-                                        core_domains,
+                                        base_domains,
                                         adsl_domain_keys,
                                         filter_domain = NULL,
                                         filter_global = NULL,
                                         filter_depend_cols = NULL,
                                         keep_vars = NULL) {
   stopifnot("Domain filters must be set to NA if not used" =
-              length(filter_domain) == length(core_domains))
+              length(filter_domain) == length(base_domains))
 
   # Block header
   self <- toupper(.self)
@@ -51,7 +51,7 @@ generate_preprocess_domain <-  function(.self,
   # Prepare domain filter conditionally
   filter_domain_unlist <- unlist(filter_domain)
   if (any(!is.na(filter_domain_unlist))) {
-    filter_domain_def <- lapply(core_domains, function(x) {
+    filter_domain_def <- lapply(base_domains, function(x) {
       filter <- filter_domain_unlist[[x]]
       if (is.na(filter)) {
         paste0("(SRC_ == \"", x, "\")")

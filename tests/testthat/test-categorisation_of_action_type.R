@@ -1,31 +1,48 @@
-test_that("Check that predecessors and derivations are identified correctly and that predecessors can be renamed while extracting from core", {
+test_that("Check that action types are classified correctly", {
 
-  # SETUP
-  ui_path <- testthat::test_path("fixtures", "adsl_categorisation_of_action_type.yml")
-  path_trial_metadata <- testthat::test_path("fixtures", "trial_metadata_0001.yml")
-  std_lib_path <- testthat::test_path("fixtures", "adsl_0001.R")
+  # SETUP -------------------------------------------------------------------
 
-  domain_keys_path <- system.file("standards", "domain_keys.yml", package = "mighty")
-  output_path <- withr::local_tempdir()
-  setup_testdata(testdata = "pharmaverse", test_data_path = output_path)
+  path_ui_data <- testthat::test_path("fixtures", "categorisation_of_action_type_adlb_01.yml")
+  path_ui_data_rendered <- setup_yml_file_for_testing(path_ui_data, environment())
+  path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
+  path_trial <- withr::local_tempdir()
 
-  # ACT
+  setup_testdata(
+    testdata = "pharmaverse",
+    test_data_path = path_trial,
+    sdtm_domains = c("lb", "sv")
+  )
+  standards_lib <- "mighy.standards"
+
+  # ACT -------------------------------------------------------------------
+
   actual <- generate_adam_code(
-    path_ui_data = ui_path,
-    code_component_source_files =  std_lib_path,
+    path_ui_data = path_ui_data_rendered,
+    standards_lib = standards_lib,
     path_trial_metadata = path_trial_metadata,
-    path_output = output_path,
+    path_trial = path_trial,
     check_cross_domain_adam_dependencies = FALSE
   )
-  write_adam_programs(dir = output_path, programs = actual$programs)
-  x <- list.files(output_path, full.names = TRUE)
 
-  # EXPECT
-  expect_equal(actual$data_model$type,
-               c("col_mutate", rep("col_echo", 4),rep("col_compute", 2), "preprocess_domain"))
-  expect_equal(actual$data_model$code_id,
-               c(rep(NA, 5), "arm_group_01", "arm_match_01", NA))
+  write_adam_programs(dir = path_trial, programs = actual$programs)
+  x <- list.files(path_trial, pattern = ".R", full.names = TRUE)
 
+  # EXPECT -------------------------------------------------------------------
 
-  actual$edges |> as.data.frame() |>  expect_snapshot_value(style = "json2")
+  ps <- actual$program_sequence
+  expect_equal(ps[ps$node_id == "ADLB-1-read_data", ][["type"]], "read_data")
+  expect_equal(ps[ps$node_id == "ADLB-init_domain", ][["type"]], "init_domain")
+  expect_equal(ps[grepl("ADLB-PLANNED_ARM-", ps$node_id), ][["type"]], "col_echo")
+  expect_equal(ps[grepl("ADLB-ARM-", ps$node_id), ][["type"]], "col_echo")
+  expect_equal(ps[grepl("ADLB-AVAL-", ps$node_id), ][["type"]], "col_mutate")
+  expect_equal(ps[grepl("ADLB-AVAL_GRP-", ps$node_id), ][["type"]], "col_compute")
+  expect_equal(ps[grepl("ADLB-AVAL2-", ps$node_id), ][["type"]], "col_mutate")
+  expect_equal(ps[grepl("ADLB-LBTEST-.*\\/lbtest_01\\.R$", ps$node_id), ][["type"]], "col_compute")
+  expect_equal(ps[grepl("ADLB-AVALFL-AVALREA-", ps$node_id), ][["type"]], "col_compute")
+  expect_equal(ps[grepl("ADLB-LBTEST-.*\\/new_lbtest_01\\.R$", ps$node_id), ][["type"]], "row_compute")
+  expect_equal(ps[ps$node_id == "ADLB-1-write_data", ][["type"]], "write_data")
+
 })
+
+
+

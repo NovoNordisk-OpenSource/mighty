@@ -2,7 +2,7 @@ table_metadata:
   table: ADLB
 
 init:
-  core_domains:
+  base_domains:
     - lb
   filter_domain:
     lb: NA
@@ -13,10 +13,8 @@ init:
 
 column_metadata:
   - column: USUBJID
-    source: core.USUBJID
 
   - column: VISITNUM
-    source: core.VISITNUM
 
   - column: ARM
     source: ADSL.PLANNED_ARM
@@ -25,91 +23,78 @@ column_metadata:
     source: ADSL.RACE_COUNTRY
 
   - column: AVAL
-    source: core.LBSTRESN
+    source: LBSTRESN
 
   - column: AVALC
-    source: core.LBSTRESC
+    source: LBSTRESC
 
   - column: STUDYID
-    label: "some text"
-    source: core.STUDYID
 
   - column: LBSEQ
-    source: core.LBSEQ
 
   - column: LBSTRESN
-    source: core.LBSTRESN
 
   - column: LBSTRESC
-    source: core.LBSTRESC
 
   - column: DOMAIN
-    source: core.DOMAIN
 
   - column: LBTEST
-    code_id: lbtest_01
+    code_id: {path_base}/fixtures/components/lbtest_01.R
     depend_rows:
-      - new_aval_01
-    label: some text
-    method: |-
-      Some text
+      - {path_base}/fixtures/components/new_aval_01.R
 
   - column: AVAL_GRP
-    label: some text
-    code_id: aval_grp_01
+    code_id: {path_base}/fixtures/components/aval_grp_01.R
     depend_rows:
-      - new_lbtest_01
+      - {path_base}/fixtures/components/new_lbtest_01.R
 
   - column: AVAL_GRP2
-    label: some text
-    code_id: aval_grp_02
+    code_id: {path_base}/fixtures/components/aval_grp_02.R
     depend_rows:
-      - new_lbtest_01
+      - {path_base}/fixtures/components/new_lbtest_01.R
 
 row_actions:
-  - code_id: new_lbtest_01
+  - code_id: {path_base}/fixtures/components/new_lbtest_01.R
 
-  - code_id: new_lbtest_02
+  - code_id: {path_base}/fixtures/components/new_lbtest_02.R
 
-  - code_id: new_lbtest_03
+  - code_id: {path_base}/fixtures/components/new_lbtest_03.R
     depend_rows:
-        - new_lbtest_01
+        - {path_base}/fixtures/components/new_lbtest_01.R
 
-  - code_id: new_lbtest_04
+  - code_id: {path_base}/fixtures/components/new_lbtest_04.R
     depend_rows:
-      - new_lbtest_02
+      - {path_base}/fixtures/components/new_lbtest_02.R
 
-  - code_id: new_lbtest_05
+  - code_id: {path_base}/fixtures/components/new_lbtest_05.R
     depend_rows:
-      - new_lbtest_01
-      - new_lbtest_02
+      - {path_base}/fixtures/components/new_lbtest_01.R
+      - {path_base}/fixtures/components/new_lbtest_02.R
 
-  - code_id: new_lbtest_06
+  - code_id: {path_base}/fixtures/components/new_lbtest_06.R
     depend_rows:
-      - new_lbtest_03
+      - {path_base}/fixtures/components/new_lbtest_03.R
 
-  - code_id: new_aval_01
+  - code_id: {path_base}/fixtures/components/new_aval_01.R
 
-  - code_id: new_aval_02
+  - code_id: {path_base}/fixtures/components/new_aval_02.R
     depend_rows:
-      - new_aval_01
+      - {path_base}/fixtures/components/new_aval_01.R
 
-  - code_id: new_aval_03
+  - code_id: {path_base}/fixtures/components/new_aval_03.R
 
-  - code_id: new_aval_04
+  - code_id: {path_base}/fixtures/components/new_aval_04.R
 
-  - code_id: new_visitnum_01
+  - code_id: {path_base}/fixtures/components/new_visitnum_01.R
 
-  - code_id: new_visitnum_02
+  - code_id: {path_base}/fixtures/components/new_visitnum_02.R
     depend_rows:
-      - new_visitnum_01
+      - {path_base}/fixtures/components/new_visitnum_01.R
 
-  - code_id: new_lbtest_07
+  - code_id: {path_base}/fixtures/components/new_lbtest_07.R
 
-  - code_id: new_lbtest_07
-    parameters:
-      - test_val: "s:Protein"
+  - code_id: {path_base}/fixtures/components/new_lbtest_09.R
+    
 
-  - code_id: new_lbtest_07
-    parameters:
-      - test_val: "s:Specific Gravity"
+  - code_id: {path_base}/fixtures/components/new_lbtest_08.R
+    

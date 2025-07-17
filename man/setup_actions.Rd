@@ -4,12 +4,19 @@
 \alias{setup_actions}
 \title{Setup actions for ADaM Code Generation}
 \usage{
-setup_actions(ui_yml, code_component_source_pkgs, code_component_source_files)
+setup_actions(
+  ui_yml,
+  standards_lib,
+  check_cross_domain_adam_dependencies,
+  domain_keys
+)
 }
 \arguments{
 \item{ui_yml}{List containing UI YAML specifications for ADaM domains,
 typically read from YAML files containing column metadata and domain
 configurations}
+
+\item{domain_keys}{}
 
 \item{code_component_source_pkgs}{Optional character vector of package names
 containing code components to be loaded into the consolidated environment}
@@ -44,9 +51,7 @@ can be used by downstream functions.
 # Prepare pipeline with package-based code components
 ui_data <- read_adam_specs("path/to/yaml/files")
 pipeline_prep <- setup_actions(
-  ui_yml = ui_data,
-  code_component_source_pkgs = c("mighty.standards", "custom.package"),
-  code_component_source_files = NULL
+  ui_yml = ui_data
 )
 
 # Access the prepared components

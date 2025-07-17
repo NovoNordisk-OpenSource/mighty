@@ -14,26 +14,74 @@
 #'
 #' @examples
 #' # Example usage would go here
-update_ui_data <-  function(code_component_metadata, ui_data) {
-  # If there are no code_id references, return the original data
-  if (!has_code_id_references(ui_data)) {
+update_ui_data <- function(code_component_metadata, ui_data) {
+  if (length(code_component_metadata) > 0) {
+    # Extract and prepare metadata for active code IDs
+    code_id_data <- extract_code_component_metadata(
+      code_component_metadata,
+      ui_data
+    )
+
+    # Merge UI data with code metadata
+    ui_data_updated <- merge_ui_with_metadata(ui_data, code_id_data)
+  } else {
+    # If there are no code_id references, return the original data
     # Remove "column" field because this is removed in the processing step when
     # there are code_id references
-    ui_data$column <- NULL
-    return(process_depend_cols(ui_data))
+    ui_data_updated <- ui_data[, -c("column")]
   }
 
-  # Extract and prepare metadata for active code IDs
-  code_id_data <- extract_code_component_metadata(code_component_metadata, ui_data)
+  # Assign action types to predecessor action types
+  action_types <- purrr::pmap(
+    ui_data_updated[, .(code_id, type, depend_cols, outputs, domain)],
+    pred_type
+  ) |>
+    unlist()
+  ui_data_updated[, type := action_types]
 
-  # Merge UI data with code metadata
-  merged_data <- merge_ui_with_metadata(ui_data, code_id_data)
+  # Assign internal code_id for predecessor action types
+  ui_data_updated[ui_data_updated$type == "col_echo", code_id := "_col_echo"]
+  ui_data_updated[
+    ui_data_updated$type == "col_mutate",
+    code_id := "_col_mutate"
+  ]
 
   # Process dependent columns
-  processed_data <- process_depend_cols(merged_data)
+  processed_data <- process_depend_cols(ui_data_updated)
 
   return(processed_data)
 }
+
+pred_type <- function(code_id, type, depend_cols, outputs, domain) {
+  # Check if code_id is provided and retrieve the type
+  if (!is.na(code_id)) {
+    return(type) # Directly return type if code_id is not NA
+  }
+
+  # Check if depend_cols are all NA
+  if (all(sapply(depend_cols, is.na))) {
+    return("col_copy")
+  }
+
+  if (!grepl("\\.", depend_cols[[1]]) && depend_cols[[1]] != outputs[[1]]) {
+    return("col_mutate")
+  }
+
+  # Split the depend_cols and take the first part directly
+  v <- strsplit(depend_cols[!is.na(depend_cols)], "\\.")
+
+  # Check if there's a valid dependency
+  if (length(v[[1]]) == 2) {
+    dep_domain <- v[[1]][1] # Get the first part of the first valid depend_col
+    if (domain != dep_domain) {
+      return("col_echo")
+    }
+  }
+
+  # If no criteria are met
+  stop("Unable to determine action type.")
+}
+
 
 #' Check if UI data contains code_id references
 #' @description
@@ -46,7 +94,10 @@ update_ui_data <-  function(code_component_metadata, ui_data) {
 #'
 #' @return Logical value: TRUE if code_id references exist, FALSE otherwise
 has_code_id_references <- function(ui_data) {
-  active_code_ids <- unique(ui_data[!is.na(code_id), code_id])
+  active_code_ids <- unique(ui_data[
+    !is.na(code_id) & !grepl("^_", code_id),
+    code_id
+  ])
   return(length(active_code_ids) > 0)
 }
 
@@ -62,7 +113,7 @@ has_code_id_references <- function(ui_data) {
 #' @param ui_data Data table containing UI data with code_id references
 #'
 #' @return Data table with formatted metadata for active code IDs, or NULL if no metadata found
-extract_code_component_metadata <-  function(code_component_metadata, ui_data) {
+extract_code_component_metadata <- function(code_component_metadata, ui_data) {
   active_code_ids <- unique(ui_data[!is.na(code_id), code_id])
   metadata_from_active_code_ids <- code_component_metadata[active_code_ids]
 
@@ -71,8 +122,13 @@ extract_code_component_metadata <-  function(code_component_metadata, ui_data) {
     return(NULL)
   }
 
-  metadata_transposed <- purrr::list_transpose(metadata_from_active_code_ids)
-
+  metadata_transposed <- purrr::list_transpose(
+    metadata_from_active_code_ids,
+    simplify = FALSE
+  )
+  metadata_transposed$type <- metadata_transposed$type |> unlist(F)
+  
+  
   code_id_data <- data.table::data.table(
     code_id = names(metadata_from_active_code_ids),
     type = metadata_transposed$type,
@@ -111,11 +167,14 @@ merge_ui_with_metadata <- function(ui_data, code_id_data) {
   assert_outputs_identical(merged_data)
 
   # Consolidate columns for data that is redundant
-  merged_data[!is.na(code_id), `:=` (
-    depend_cols = depend_cols_from_code,
-    type = type_from_code,
-    outputs = outputs_from_code
-  )]
+  merged_data[
+    !is.na(code_id),
+    `:=`(
+      depend_cols = depend_cols_from_code,
+      type = type_from_code,
+      outputs = outputs_from_code
+    )
+  ]
 
   # Clean up redundant columns
   merged_data$outputs_from_code <- NULL
@@ -137,9 +196,14 @@ merge_ui_with_metadata <- function(ui_data, code_id_data) {
 #'
 #' @return Data with processed depend_cols column
 process_depend_cols <- function(data) {
-  data[, depend_cols := purrr::map2(depend_cols, domain, process_column_dependencies)]
+  results <- purrr::pmap(
+    data[, .(depend_cols, domain, outputs)],
+    process_column_dependencies
+  )
+  data[, depend_cols := results]
   return(data)
 }
+
 
 #' Process column dependencies
 #' @description
@@ -149,22 +213,36 @@ process_depend_cols <- function(data) {
 #' elements (containing dots) and elements without domain prefixes. Creates a data table
 #' with column names, domains, and domain types.
 #'
-#' @param dependencies List of column dependencies to process
-#' @param current_domain Current domain value to use for elements without domain prefixes
+#' @param depend_cols List of column dependencies to process
+#' @param domain Current domain value to use for elements without domain prefixes
+#' @param outputs list of outputs from action
 #'
 #' @return Data table with processed dependencies, containing column_name, domain, and domain_type
-process_column_dependencies <- function(dependencies, current_domain) {
-  # Handle empty dependencies
-  if (length(dependencies) == 0 || is.null(dependencies)) {
-    return(data.table::data.table(
-      column_name = character(0),
-      domain = character(0),
-      domain_type = character(0)
-    ))
+process_column_dependencies <- function(depend_cols, domain, outputs) {
+  # Empty depend_cols means that the action is a col_copy action.
+  if (all(is.na(depend_cols))) {
+    return(
+      data.table::data.table(
+        column_name = outputs,
+        domain = domain,
+        domain_type = classify_data_domains(domain)
+      )
+    )
   }
 
+  if (is.data.frame(depend_cols)) {
+    out <- data.table::as.data.table(depend_cols)
+    return(
+      out[, domain_type := classify_data_domains(domain)] |>
+        setnames(
+          old = c("column", "domain"),
+          new = c("column_name", "domain")
+        ) |>
+        setcolorder(c("column_name", "domain", "domain_type"))
+    )
+  }
   # Extract all elements
-  elements <- unlist(dependencies)
+  elements <- unlist(depend_cols)
 
   # Process based on element format
   elements_with_dot <- elements[grepl("\\.", elements)]
@@ -175,7 +253,7 @@ process_column_dependencies <- function(dependencies, current_domain) {
 
   # Process elements with domain prefix (containing dots)
   if (length(elements_with_dot) > 0) {
-    domains <-  sub("\\.(.*)", "", elements_with_dot)
+    domains <- sub("\\.(.*)", "", elements_with_dot)
     columns <- sub("^[^.]*\\.", "", elements_with_dot)
     domain_types <- classify_data_domains(domains)
 
@@ -188,10 +266,10 @@ process_column_dependencies <- function(dependencies, current_domain) {
 
   # Process elements without domain prefix
   if (length(elements_without_dot) > 0) {
-    result[[length(result) + 1]] <-  data.table::data.table(
+    result[[length(result) + 1]] <- data.table::data.table(
       column_name = elements_without_dot,
-      domain = current_domain,
-      domain_type = classify_data_domains(current_domain)
+      domain = domain,
+      domain_type = classify_data_domains(domain)
     )
   }
 
@@ -206,6 +284,7 @@ process_column_dependencies <- function(dependencies, current_domain) {
     ))
   }
 }
+
 
 #' Add node IDs to data
 #' @description
@@ -224,10 +303,14 @@ add_node_id_fast <- function(nodes) {
   formatted_parameters <- format_parameters(nodes$parameters)
 
   # Combine components to create node ID
-  nodes$node_id <- paste0(nodes$domain, "-",
-                          formatted_outputs,
-                          formatted_code_id,
-                          formatted_parameters)
+  nodes$node_id <- paste0(
+    "ID::",
+    nodes$domain,
+    "-",
+    formatted_outputs,
+    formatted_code_id,
+    formatted_parameters
+  )
 
   return(nodes)
 }
@@ -242,9 +325,11 @@ add_node_id_fast <- function(nodes) {
 #'
 #' @return Vector of formatted output strings
 format_outputs <- function(outputs) {
-  ifelse(!is.na(outputs),
-         lapply(outputs, function(x) paste0(unlist(x), collapse = "-")),
-         "")
+  ifelse(
+    !is.na(outputs),
+    lapply(outputs, function(x) paste0(unlist(x), collapse = "-")),
+    ""
+  )
 }
 
 #' Format code ID for node ID

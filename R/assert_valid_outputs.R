@@ -2,7 +2,8 @@ assert_valid_outputs <- function(x) {
 
   # Check that no columns are outputted in multiple column actions per ADaM domain
   is_column_action <- is.na(x$type) | substr(x$type, 1, 3) != "row"
-  x_split <- split(x[is_column_action, c("domain", "depend_cols", "outputs")], by = "domain")
+  x_split <- x[is_column_action, c("domain", "depend_cols", "outputs")] |> 
+    split(by = "domain")
 
   # Process each domain to detect errors and collect them
   error_list <- lapply(x_split, function(y) {

@@ -1,0 +1,31 @@
+table_metadata:
+  table: ADLB
+  
+init:
+  base_domains:
+    - lb
+  filter_domain:
+    lb: '!is.na(LBSTRESN)'
+  filter_global:
+    - '!is.na(SEX)'
+    - 'LBSTRESU == "fL"'
+  filter_depend_cols:
+    - LBSTRESN
+    - ADSL.SEX
+    - LBSTRESU
+
+column_metadata:
+  - column: USUBJID
+
+  - column: STUDYID
+
+  - column: VISITNUM
+
+  - column: LBSTRESN
+
+  - column: LBSTRESU
+
+  - column: AGE
+    source: ADSL.AGE
+
+

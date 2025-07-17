@@ -1,9 +1,8 @@
 table_metadata:
   table: adlb
 
-
 init:
-  core_domains:
+  base_domains:
   - lb
   filter_domain: NA
   filter_global: NA
@@ -11,13 +10,10 @@ init:
 
 column_metadata:
   - column: STUDYID
-    source: core.STUDYID
 
   - column: USUBJID
-    source: core.USUBJID
 
   - column: VISITNUM
-    source: core.VISITNUM
 
   - column: VISITNUM2
     source: VISITNUM

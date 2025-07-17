@@ -8,14 +8,14 @@ replace_core_with_named_domain <- function(x, ui_init) {
       # association domain, respectively
 
       domain_i <- x[["domain"]][[i]]
-      core_domains <- ui_init[[domain_i]][["core_domains"]]
+      base_domains <- ui_init[[domain_i]][["base_domains"]]
       dep_cols_i <- x[["depend_cols"]][[i]]
 
       is_core_dep <- tolower(dep_cols_i$domain) == "core"
 
       updated_dep_cols <- expand.grid(
         "column_name" = dep_cols_i$column_name[is_core_dep],
-        "domain" = core_domains,
+        "domain" = base_domains,
         stringsAsFactors = FALSE
       )
       updated_dep_cols[["domain_type"]] <-

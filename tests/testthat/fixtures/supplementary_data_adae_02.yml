@@ -1,0 +1,32 @@
+table_metadata:
+  table: ADAE
+  
+init:
+  base_domains:
+    - ae
+  filter_domain:
+    ae: 'AEBODSYS_GRP == "MILD DISORDER"'
+  filter_global:
+  filter_depend_cols:
+    - AEBODSYS_GRP
+
+column_metadata:
+
+  - column: STUDYID
+
+  - column: USUBJID
+
+  - column: AESEV
+
+  - column: AEBODSYS
+
+  - column: AGE
+    source: ADSL.AGE
+
+  - column: AESEV_GRP
+    code_id: {path_base}/fixtures/components/aesev_grp_01.R
+
+  - column: AEBODSYS_GRP
+    code_id: {path_base}/fixtures/components/aebodsys_grp_01.R
+
+

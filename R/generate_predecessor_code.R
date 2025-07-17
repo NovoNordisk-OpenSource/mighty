@@ -1,13 +1,45 @@
-generate_mutate_code <-  function(.self, rename_var, source_var, node_id) {
-  #header <- sub(".*-", "", node_id)
-  header <- node_id
+generate_mutate_code <- function(.self, rename_var, source_var, node_id) {
+  template <- '
+# {{header_upper}} -----------------------------------------------------
 
-  glue::glue('
- # {toupper(header)} -----------------------------------------------------
+{{self}} <- {{self}} |> dplyr::mutate({{rename_var_upper}} = {{source_var_upper}})
 
-  {.self} <- {.self} |> dplyr::mutate({toupper(rename_var)} = {toupper(source_var)})
+'
 
-')
+  data <- list(
+    header_upper = toupper(node_id),
+    self = .self,
+    rename_var_upper = toupper(rename_var),
+    source_var_upper = toupper(source_var)
+  )
+
+  whisker::whisker.render(template, data)
+}
+
+
+generate_col_echo_code <- function(
+  .self,
+  depend_cols,
+  depend_domains,
+  outputs,
+  node_id,
+  domain_keys
+) {
+  x <- pre_process_generate_rename_left_join_code(
+    depend_cols,
+    depend_domains,
+    outputs,
+    .self,
+    domain_keys
+  )
+  generate_rename_left_join_code(
+    .self = .self,
+    join_dataset = x$join_dataset,
+    var_to_add = x$var_to_add,
+    by_vars = x$by_vars,
+    node_id = node_id,
+    output_var = x$output_var
+  )
 }
 
 
@@ -18,14 +50,19 @@ generate_mutate_code <-  function(.self, rename_var, source_var, node_id) {
 #' @export
 #'
 
-pre_process_generate_rename_left_join_code <- function(depend_columns, depend_domains, outputs, domain, domain_keys) {
-
+pre_process_generate_rename_left_join_code <- function(
+  depend_columns,
+  depend_domains,
+  outputs,
+  domain,
+  domain_keys
+) {
   # Extract the domain (everything before the first ".")
   depend_domains <- depend_domains |> unique()
   join_dataset <- depend_domains[!grepl(domain, depend_domains)]
-  checkmate::assertTRUE(length(join_dataset)==1)
+  checkmate::assertTRUE(length(join_dataset) == 1)
   by_vars <- domain_keys[[toupper(join_dataset)]]
-  if(is.null(by_vars)){
+  if (is.null(by_vars)) {
     stop("The domain keys for ", join_dataset, " are not defined")
   }
   # Remove the join variables from the depend_cols
@@ -42,8 +79,14 @@ pre_process_generate_rename_left_join_code <- function(depend_columns, depend_do
   ))
 }
 
-generate_rename_left_join_code <- function(.self, join_dataset, var_to_add, by_vars, node_id, output_var) {
-
+generate_rename_left_join_code <- function(
+  .self,
+  join_dataset,
+  var_to_add,
+  by_vars,
+  node_id,
+  output_var
+) {
   by_vars_str <- paste(sprintf('"%s"', by_vars), collapse = ", ")
   select_expr <- c(by_vars, var_to_add) |>
     unique() |>
@@ -60,14 +103,18 @@ generate_rename_left_join_code <- function(.self, join_dataset, var_to_add, by_v
     by = c({by_vars_str}))"
   )
 
-  if (var_to_add != output_var){
-    left_join_code <- glue::glue("{left_join_code} |>
-                                 dplyr::rename({output_var} = {var_to_add})")
+  if (var_to_add != output_var) {
+    left_join_code <- glue::glue(
+      "{left_join_code} |>
+                                 dplyr::rename({output_var} = {var_to_add})"
+    )
   }
 
-  left_join_code <- glue::glue("{left_join_code}
+  left_join_code <- glue::glue(
+    "{left_join_code}
 
-  ")
+  "
+  )
 
   return(as.character(left_join_code))
 }

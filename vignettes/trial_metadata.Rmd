@@ -1,0 +1,55 @@
+---
+title: "Trial Level etadata"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{trial_metadata}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+# Overview
+
+This YAML file provides a standard schema for specifying trial-level metadata. There are two main sections:
+ 
+- Trial & Project identification
+- Primary keys for each SDTM/ADaM/MD domain
+ 
+# Trial & Project identification
+At the top of the YAML file, you will find several fields:
+
+| Field       | Description                                                                         |
+|-------------|-------------------------------------------------------------------------------------|
+| `trial_id`    | The unique identifier for the clinical trial (e.g., "0001").                        |
+| `project_id`  | An internal or sponsor project identifier (e.g., "1234").                           |
+| `complete_id` | A compound identifier (concatenation of trial and project), e.g., "0001-1234".      |
+| `instance`    | Used to specify the "instance" (e.g., "current", etc). |
+
+### Example
+```yml
+trial_id: "0001"
+project_id: "1234"
+complete_id: "0001-1234"
+instance: "current"
+```
+
+# Primary key mappings
+
+This data should ideally be autopotulated from metadata sources
+Each data model has it's own section
+
+**IMPORTANT:** the casing of the domains need to match how the files are stored at source, e.g. use upper (`ADSL`) or lower  (`adsl`) depending on the file names. This casing also needs to match the casing in the adam-specific yml specification files. 
+
+### Examples:
+
+```yml
+primary_keys_sdtm:
+  DM:
+    - USUBJID
+    - STUDYID
+  EX:
+    - USUBJID
+
+primary_keys_adam:
+  ADSL:
+    - USUBJID
+    - STUDYID
+```

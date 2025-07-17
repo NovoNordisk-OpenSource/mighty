@@ -4,12 +4,14 @@
 \alias{process_column_dependencies}
 \title{Process column dependencies}
 \usage{
-process_column_dependencies(dependencies, current_domain)
+process_column_dependencies(depend_cols, domain, outputs)
 }
 \arguments{
-\item{dependencies}{List of column dependencies to process}
+\item{depend_cols}{List of column dependencies to process}
 
-\item{current_domain}{Current domain value to use for elements without domain prefixes}
+\item{domain}{Current domain value to use for elements without domain prefixes}
+
+\item{outputs}{list of outputs from action}
 }
 \value{
 Data table with processed dependencies, containing column_name, domain, and domain_type

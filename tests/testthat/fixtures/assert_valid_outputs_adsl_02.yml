@@ -2,7 +2,7 @@ table_metadata:
   table: ADSL
 
 init:
-  core_domains:
+  base_domains:
     - dm
     - dm_vaccine
   filter_domain:
@@ -13,10 +13,8 @@ init:
 
 column_metadata:
   - column: USUBJID
-    source: core.USUBJID
 
   - column: AGE
-    source: core.AGE
 
   - column: AGE
-    code_id: age_redefined_02
+    code_id: {path_base}/fixtures/components/age_redefined_02.R

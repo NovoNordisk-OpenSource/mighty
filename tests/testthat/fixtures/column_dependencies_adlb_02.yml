@@ -1,24 +1,28 @@
 table_metadata:
   table: adlb
-  keys:
-    - USUBJID PARAMN AVISITN ADT ATM SRCSEQ
-
-
+  
 init:
-  core_domains:
+  base_domains:
     - lb
   filter_domain:
     lb: '!is.na(LBSTRESN)'
   filter_global:
     - '!is.na(SEX)'
+    - 'LBSTRESU == "fL"'
   filter_depend_cols:
-    - core.LBSTRESN
+    - LBSTRESN
     - adsl.SEX
+    - LBSTRESU
 
 column_metadata:
   - column: USUBJID
-    source: core.USUBJID
+
+  - column: STUDYID
 
   - column: VISITNUM
-    source: core.VISITNUM
+
+  - column: LBSTRESN
+
+  - column: LBSTRESU
+
 

@@ -2,7 +2,7 @@ table_metadata:
   table: ADSL
 
 init:
-  core_domains:
+  base_domains:
     - dm
     - dm_vaccine
   filter_domain:
@@ -13,7 +13,9 @@ init:
 
 column_metadata:
   - column: USUBJID
-    source: core.USUBJID
+
+  - column: ARM
 
   - column: PLANNED_ARM
-    source: core.ARM
+    source: ARM
+

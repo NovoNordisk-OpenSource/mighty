@@ -1,29 +1,33 @@
 table_metadata:
   table: ADAE
-  keys:
-    - USUBJID PARAMN AVISITN ADT ATM SRCSEQ
-
+  
 init:
-  core_domains:
-    - AE
+  base_domains:
+    - ae
   filter_domain:
-    AE: '!is.na(AEBODSYS)'
+    ae: '!is.na(AEBODSYS)'
   filter_global:
     - '!is.na(SEX)'
     - 'AETRTEM == "Y"'
   filter_depend_cols:
-    - core.AEBODSYS
+    - AEBODSYS
     - ADSL.SEX
     - AETRTEM
 
 column_metadata:
+
+  - column: STUDYID
+
   - column: USUBJID
-    source: core.USUBJID
 
   - column: AESOC
-    source: core.AESOC
+
+  - column: AEBODSYS
+
+  - column: AGE
+    source: ADSL.AGE
 
   - column: AETRTEM
-    code_id: supp_ae_01
+    code_id: {path_base}/fixtures/components/supp_ae_01.R
 
 

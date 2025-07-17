@@ -18,15 +18,20 @@
 #' @return A data.table with two columns (parent_node, node_id) representing the
 #'   directed edges in the computational graph
 #'
-make_edges <-  function(nodes, primary_domain = "ADSL") {
+make_edges <- function(nodes, primary_domain = "ADSL") {
+
   # Process column dependencies to create edges
   column_edges <- create_column_dependency_edges(nodes)
 
   # Process row dependencies if they exist
   row_edges <- create_row_dependency_edges(nodes)
 
+  # Remove column edges that point from filter_domain to actions that
+  # filter_domain depends on. This is to avoid circular dependencies.
+  column_edges_2 <- remove_child_filter_edges(column_edges, nodes)
+
   # Combine all edges and clean them up
-  all_edges <- combine_and_clean_edges(column_edges, row_edges)
+  all_edges <- combine_and_clean_edges(column_edges_2, row_edges)
 
   return(all_edges)
 }
@@ -37,11 +42,14 @@ make_edges <-  function(nodes, primary_domain = "ADSL") {
 #' @param nodes The nodes data.table
 #' @return A data.table of edges based on column dependencies
 create_column_dependency_edges <- function(nodes) {
+
+  nodes2 <- nodes[nodes$type != "col_copy",]
+
   # Get expanded parent columns that each node depends on
-  parents_expanded <- expand_parent_columns(nodes)
+  parents_expanded <- expand_parent_columns(nodes2)
 
   # Get expanded child columns that each node produces
-  children_expanded <- expand_child_columns(nodes)
+  children_expanded <- expand_child_columns(nodes2)
 
   # Merge to create edges
   edges <- data.table::merge.data.table(
@@ -122,6 +130,47 @@ create_row_dependency_edges <- function(nodes) {
     data.table::setnames(old = "node_id_parent", "parent_node")
 
   return(row_edges)
+}
+
+remove_child_filter_edges <- function(edges, actions) {
+
+  # Split actions by ADaM domain
+  actions_split <- split(actions, by = "domain")
+
+  # Loop over each ADaM domain and update edges
+  for (nm in names(actions_split)) {
+
+    # Extract filter action
+    filter_action <- actions_split[[nm]] |>
+      dplyr::filter(type == "filter_domain")
+
+    # Extract any other action
+    other_actions <- actions_split[[nm]] |>
+      dplyr::filter(type != "filter_domain")
+
+    if (nrow(filter_action) > 0) {
+
+      # Filter actions outputs
+      filter_action_outputs <- filter_action$outputs[[1]]
+
+      # Identify children of filter action that are other than col_copys
+      # These children must be removed in the edges to avoid circular dependencies
+      children_to_remove <- lapply(seq_len(nrow(other_actions)), function(i) {
+        is_child_to_remove <- other_actions$type[[i]] != "col_copy" &
+          other_actions$outputs[[i]] %in% filter_action_outputs |>
+          any()
+        if (is_child_to_remove) {
+          return(other_actions$node_id[[i]])
+        }
+      }) |> unlist()
+
+      # Remove edges from filter action to the identified children
+      edges <- edges[!(edges$parent_node == filter_action$node_id & edges$node_id %in% children_to_remove)]
+
+    }
+  }
+
+  return(edges)
 }
 
 #' @title Combine and clean all edges

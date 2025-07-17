@@ -40,7 +40,6 @@ setup_testdata <- function(testdata = c("pharmaverse"), test_data_path, sdtm_dom
       to = test_data_path,
       overwrite = TRUE
     )
-
     # setup temporary data area
     data_path <- file.path(test_data_path, "data")
     sdtm_testdata_path <- file.path(data_path, "sdtm")

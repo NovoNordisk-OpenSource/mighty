@@ -13,6 +13,8 @@ primary_keys_adam:
    ADSL:
     - USUBJID
     - STUDYID
+   ADLB:
+    - USUBJID
 
 primary_keys_md:
    MDPARAM:

@@ -1,25 +1,26 @@
 table_metadata:
   table: ADLB
-  keys:
-    - SUBJID AEREFID
 
 init:
-  core_domains:
+  base_domains:
     - lb
   filter_domain:
     lb: '!is.na(LBSTRESN)'
   filter_global:
     - '!is.na(SEX)'
-    - 'AETRTEM == "Y"'
+    - 'LBSTRESU == "fL"'
   filter_depend_cols:
-    - core.LBSTRESN
+    - LBSTRESN
     - ADSL.SEX
-    - AETRTEM
+    - LBSTRESU
 
 column_metadata:
   - column: USUBJID
-    source: core.USUBJID
+
+  - column: STUDYID
 
   - column: VISITNUM
-    source: core.VISITNUM
 
+  - column: LBSTRESN
+
+  - column: LBSTRESU

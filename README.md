@@ -62,11 +62,9 @@ is “COMPLETED.”
 ``` yml
 table_metadata:
   table: ADSL
-  keys:
-    - USUBJID
 
 init:
-  core_domains:
+  base_domains:
     - DM
   filter_domain:
     - DM: NA
@@ -75,19 +73,37 @@ init:
 
 column_metadata:
   - column: USUBJID
-    source: core.USUBJID
+    source: USUBJID
 
   - column: EOSSTT
-    source: core.EOSSTT
+    source: EOSSTT
 
   - column: COMPLSFL
     code_id: der_complsfl
 ```
 
-This specification points to the code component called `der_complsfl` -
-which is an R function. As mighty matures, more of these functions will
-be pre-defined and ready for use, so nothing more would need to be done
-by the user. For more information, please refer to
+This specification points to the code component called `der_complsfl`.
+
+# Code components
+
+Code components can either be validated standard components or custom
+(un-validated) components. In this example `der_comflsfl` is a standard
+component. We can see this is the case because we simply refer to the
+name of the component.
+
+Custom components need to be specified with a path to their location:
+
+``` yml
+  - column: COMPLSFL
+    code_id: path/to/custom/component/der_complsfl.R
+```
+
+Notice the `.R` extension. Custom components are simply R functiond that
+adhere to a few simple rules. See \[\] for more details
+
+As mighty matures, more of these functions will be pre-defined and ready
+for use, so nothing more would need to be done by the user. For more
+information, please refer to
 [`mighty.standards`](https://github.com/NN-OpenSource/mighty.standards).
 
 See \[\] section for more details on the ADaM Specification data model.
@@ -101,9 +117,7 @@ it ourselves:
 #' @description This function adds a `COMPLSFL` column to the input data frame,
 #' indicating whether a subject's end-of-study status is marked as "COMPLETED".
 #' 
-#' @param .self `data.frame` Input that will be modified to include a new column.
-#' 
-#' @type col_compute
+#' @type derivation
 #' 
 #' @depends .self EOSSTT
 #' 
@@ -123,6 +137,3 @@ complsfl <- function(.self) {
   return(.self)  
 }
 ```
-
-Code components are simply R functiond that adhere to a few simple
-rules. See \[\] for more details

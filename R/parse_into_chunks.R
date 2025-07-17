@@ -19,7 +19,6 @@ parse_into_chunks <- function(code_id,
 
   # Get function definition from the environment
   f_def <- get(code_id, envir = env)
-
   # Check that the function follows the required standards
   validate_std_action_return(f_def = f_def, fn_name = code_id)
 
@@ -45,6 +44,7 @@ parse_into_chunks <- function(code_id,
   }
 
   out <- gsub(".self", domain_name, code_chunk)
+
   # Temporary objects to remove
   interim_objects_to_rm <- get_scope_objects(f_def)
 

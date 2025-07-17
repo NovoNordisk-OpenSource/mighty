@@ -4,14 +4,14 @@
 \alias{assert_all_code_id_sources_exist}
 \title{Assert All Code ID Sources Exist}
 \usage{
-assert_all_code_id_sources_exist(x, code_ids)
+assert_all_code_id_sources_exist(code_components, code_ids)
 }
 \arguments{
-\item{x}{List containing function sources divided into \code{pkg} and \code{file}
-entries, each containing details of loaded functions with names as keys.}
-
 \item{code_ids}{Character vector containing function names that should be
 present in the sources.}
+
+\item{x}{List containing function sources divided into \code{pkg} and \code{file}
+entries, each containing details of loaded functions with names as keys.}
 }
 \value{
 Returns TRUE invisibly if all code IDs are found, otherwise raises

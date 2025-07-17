@@ -4,16 +4,16 @@
 \alias{create_consolidated_env}
 \title{Create a Consolidated Environment}
 \usage{
-create_consolidated_env(packages = NULL, source_files = NULL, code_ids)
+create_consolidated_env(standards_lib = NULL, code_ids)
 }
 \arguments{
+\item{code_ids}{Mandatory character vector containing function names to be
+consolidated.}
+
 \item{packages}{Optional character vector specifying package names to load.}
 
 \item{source_files}{Optional character vector specifying file paths to load R
 scripts from.}
-
-\item{code_ids}{Mandatory character vector containing function names to be
-consolidated.}
 }
 \value{
 A new environment containing the loaded functions.

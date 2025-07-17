@@ -1,12 +1,9 @@
 table_metadata:
   table: ADVS
-  keys:
-    - USUBJID PARAMN AVISITN ADT SRCSEQ
-
 
 init:
-  core_domains:
-  - vs
+  base_domains:
+    - vs
   filter_domain: NA
   filter_global:
     - '!is.na(SEX)'
@@ -15,7 +12,5 @@ init:
 
 column_metadata:
   - column: STUDYID
-    source: core.STUDYID
 
   - column: USUBJID
-    source: core.USUBJID

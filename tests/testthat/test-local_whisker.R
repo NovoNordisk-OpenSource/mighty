@@ -1,0 +1,64 @@
+test_that("Depends parameters replaced with actual user-supplied values", {
+  # ARRANGE -----------------------------------------------------------------
+
+  yml <- "
+table_metadata:
+  table: ADSL
+init:
+  base_domains:
+    - DM
+  filter_domain:
+    - DM: NA
+  filter_global: NA
+  filter_depend_cols:
+column_metadata:
+  - column: USUBJID
+  - column: A
+    code_id: {{ady_custom}}
+    parameters:
+      - depends_var: 'USUBJID'
+      - output_var: 'A'
+"
+
+  tmp_file <- withr::local_tempdir() |>
+    file.path("ady.mustache")
+  "
+#' Analysis relative day
+#' @description
+#' Derives the relative day compared to the treatment start date.
+#'
+#' @param depends_var depends variable
+#' @param output_var output variable
+#' @type derivation
+#' @depends ADSL {{depends_var}}
+#' @outputs {{output_var}}
+{{output_var}} <- {{output_var}} |> 
+  dplyr::mutate(U2={{depends_var}})
+}
+ " |>
+    writeLines(con = tmp_file)
+  trial_path <- withr::local_tempdir()
+
+  path_ui_data <- file.path(trial_path, "ui_yml.yml")
+  yaml::read_yaml(
+    text = whisker::whisker.render(yml, data = list(ady_custom = tmp_file))
+  ) |>
+    yaml::write_yaml(path_ui_data)
+  path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
+  output_path <- trial_path
+  # ACT ------------------------------------------------------------
+
+  actual <- generate_adam_code(
+    path_ui_data = path_ui_data,
+    path_trial_metadata = path_trial_metadata,
+    path_trial = trial_path,check_cross_domain_adam_dependencies = FALSE
+  )
+
+
+# ASSERT -----------------------------------------------------------------
+# 
+  actual$program_sequence[outputs=="A",code] |> strsplit("\n") |> _[[1]][4:5] |> expect_snapshot()
+
+
+})
+

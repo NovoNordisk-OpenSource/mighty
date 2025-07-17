@@ -1,10 +1,8 @@
 table_metadata:
   table: ADSL
-  keys:
-    - USUBJID
 
 init:
-  core_domains:
+  base_domains:
     - dm
     - dm_vaccine
   filter_domain:
@@ -15,11 +13,11 @@ init:
 
 column_metadata:
   - column: USUBJID
-    source: core.USUBJID
+
+  - column: ARM
 
   - column: PLANNED_ARM
-    source: core.ARM
+    source: ARM
 
   - column: ARM_GRP1
-    label: "some text"
-    code_id: arm_group_01
+    code_id: {path_base}/fixtures/components/arm_group_01.R

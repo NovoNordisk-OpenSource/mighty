@@ -26,7 +26,7 @@
 #'     and code references}
 #'   \item{domain}{Character string specifying the domain name (e.g., "ADSL", "ADLB")}
 #'   \item{keys}{Character vector of primary key columns for the domain}
-#'   \item{init}{List containing initialization settings including core_domains,
+#'   \item{init}{List containing initialization settings including base_domains,
 #'     filter specifications,
 read_adam_specs <- function(paths){
   missing_files <- paths[!file.exists(paths)]

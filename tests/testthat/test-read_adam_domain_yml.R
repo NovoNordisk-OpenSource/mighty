@@ -33,7 +33,7 @@ test_that("read_adam_specs errors on missing required top-level elements", {
   # Missing table_metadata
   yml_no_table <- "
 init:
-  core_domains:
+  base_domains:
     - DM
 
 column_metadata:
@@ -58,7 +58,7 @@ table_metadata:
   table: ADSL
 
 init:
-  core_domains:
+  base_domains:
     - DM
 
 column_metadata: []
@@ -81,7 +81,7 @@ table_metadata:
   table: ADSL
 
 init:
-  core_domains:
+  base_domains:
     - DM
   filter_global: 42  # Should be character or list
 

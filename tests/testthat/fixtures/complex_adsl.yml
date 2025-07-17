@@ -2,7 +2,7 @@ table_metadata:
   table: ADSL
 
 init:
-  core_domains:
+  base_domains:
     - dm
     - dm_vaccine
   filter_domain:
@@ -12,97 +12,78 @@ init:
     - 'STUDYID == "CDISCPILOT01"'
     - 'DOMAIN == "DM"'
   filter_depend_cols:
-    - core.STUDYID
-    - core.DOMAIN
-    - core.AGEU
+    - STUDYID
+    - DOMAIN
+    - AGEU
 
 column_metadata:
   - column: USUBJID
-    source: core.USUBJID
+
+  - column: DOMAIN
+
+  - column: AGEU
 
   - column: PLANNED_ARM
-    source: core.ARM
+    source: ARM
 
   - column: SEX
-    source: core.SEX
 
   - column: ARM_GRP1
-    label: "some text"
-    code_id: arm_group_01
+    code_id: {path_base}/fixtures/components/arm_group_01.R
 
   - column: ARM_CAT1
-    label: "some text"
-    code_id: arm_category_01
+    code_id: {path_base}/fixtures/components/arm_category_01.R
 
   - column: ARM_MATCH
-    label: "some text"
-    code_id: arm_match_01
+    code_id: {path_base}/fixtures/components/arm_match_01.R
 
   - column: AGE2
-    code_id: age_crop_01
+    code_id: {path_base}/fixtures/components/age_crop_01.R
 
   - column: AGE_DIFF1
-    code_id: age_diff_01
+    code_id: {path_base}/fixtures/components/age_diff_01.R
 
   - column: AGE_DIFF2
-    code_id: age_diff_02
+    code_id: {path_base}/fixtures/components/age_diff_02.R
 
   - column: RACE_COUNTRY
-    code_id: race_x_country_01
+    code_id: {path_base}/fixtures/components/race_x_country_01.R
 
   - column: NEW_ARM
-    code_id: arm_01
+    code_id: {path_base}/fixtures/components/arm_01.R
 
   - column: MIN_AVAL
-    code_id: min_aval_01
+    code_id: {path_base}/fixtures/components/min_aval_01.R
 
   - column: ARM
-    source: core.ARM
 
   - column: DTHFL
-    source: core.DTHFL
 
   - column: AGE
-    source: core.AGE
 
   - column: NEWFL01
-    label: "some text"
-    code_id: newfl_01
+    code_id: {path_base}/fixtures/components/newfl_01.R
 
   - column: NEWREA01
-    label: "some text"
-    code_id: newfl_01
+    code_id: {path_base}/fixtures/components/newfl_01.R
 
   - column: NEWFL02
-    label: "some text"
-    code_id: newfl_02
+    code_id: {path_base}/fixtures/components/newfl_02.R
 
   - column: NEWFL03
-    label: "some text"
-    code_id: newfl_03
+    code_id: {path_base}/fixtures/components/newfl_03.R
 
   - column: NEWREA03
-    label: "some text"
-    code_id: newfl_03
+    code_id: {path_base}/fixtures/components/newfl_03.R
 
   - column: STUDYID
-    label: "some text"
-    source: core.STUDYID
 
   - column: ACTARM
-    label: "some text"
-    source: core.ACTARM
 
   - column: COUNTRY
-    label: "some text"
-    source: core.COUNTRY
 
   - column: RACE
-    label: "some text"
-    source: core.RACE
 
   - column: AGE_GRP1
-    label: "some text"
-    code_id: age_group_01
-    parameters:
-      - cut_points: c(20, 45)
+    code_id: {path_base}/fixtures/components/age_group_01.R
+    

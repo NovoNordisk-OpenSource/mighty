@@ -2,7 +2,7 @@ table_metadata:
   table: adlb
 
 init:
-  core_domains:
+  base_domains:
   - LB
   filter_domain: NA
   filter_global: NA
@@ -10,7 +10,6 @@ init:
 
 column_metadata:
   - column: USUBJID
-    source: core.USUBJID
 
   - column: VISITNUM2
     source: VISITNUM

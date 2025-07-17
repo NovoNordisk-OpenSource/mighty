@@ -2,7 +2,7 @@ table_metadata:
   table: ADSL
 
 init:
-  core_domains:
+  base_domains:
     - dm
     - dm_vaccine
   filter_domain:
@@ -10,15 +10,17 @@ init:
     - dm_vaccine: NA
   filter_global: NA
   filter_depend_cols:
-    - core.DTHFL
+    - DTHFL
 
 column_metadata:
   - column: USUBJID
-    source: core.USUBJID
+
+  - columnm: ARM
 
   - column: PLANNED_ARM
-    source: core.ARM
+    source: ARM
+
+  - column: DTHFL
 
   - column: ARM_GRP1
-    label: "some text"
-    code_id: arm_group_01
+    code_id: {path_base}/fixtures/components/arm_group_01.R

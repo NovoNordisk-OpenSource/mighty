@@ -68,7 +68,7 @@ external_dependencies_per_program <- function(program_order, nodes, init_metadat
 
     if(any(y$type == "preprocess_domain")){
       filter_depend_cols <- init_metadata[[unique(y$domain)]][["filter_depend_cols"]]
-      core_domains <- init_metadata[[unique(y$domain)]][["core_domains"]]
+      base_domains <- init_metadata[[unique(y$domain)]][["base_domains"]]
 
       # Create template for empty dependencies
       dep_empty <- data.table::data.table(
@@ -95,7 +95,7 @@ external_dependencies_per_program <- function(program_order, nodes, init_metadat
       # If ADSL is required in the core filter, then add foreign key to filter dependency
       if (nrow(dep_adsl) > 0) {
         dep_key <- expand.grid(
-          "domain" = c(adsl_name, core_domains),
+          "domain" = c(adsl_name, base_domains),
           "column_name" = domain_keys[["ADSL"]],
           stringsAsFactors = FALSE
         )
@@ -107,7 +107,7 @@ external_dependencies_per_program <- function(program_order, nodes, init_metadat
       # Column dependencies coming from the "core" domain(s)
       filter_depend_cols_core <- gsub("^core\\.", "", filter_depend_cols[grepl("^core\\.", filter_depend_cols, ignore.case = TRUE)])
       dep_core <- expand.grid(
-        "domain" = core_domains,
+        "domain" = base_domains,
         "column_name" = filter_depend_cols_core,
         stringsAsFactors = FALSE
       ) |> as.data.table()

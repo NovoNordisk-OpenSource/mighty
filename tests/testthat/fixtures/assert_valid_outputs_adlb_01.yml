@@ -1,0 +1,20 @@
+table_metadata:
+  table: ADLB
+
+init:
+  base_domains:
+    - lb
+  filter_domain: NA
+  filter_global: NA
+  filter_depend_cols: NA
+
+column_metadata:
+  - column: USUBJID
+
+  - source: LBSTRESN
+
+  - column: AVAL
+    source: LBSTRESN
+
+  - column: AVALFL
+    code_id: {path_base}/fixtures/components/avalfl_01.R

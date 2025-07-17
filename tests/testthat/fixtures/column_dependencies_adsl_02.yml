@@ -1,10 +1,8 @@
 table_metadata:
   table: ADSL
-  keys:
-    - USUBJID
-
+  
 init:
-  core_domains:
+  base_domains:
     - dm
     - dm_vaccine
   filter_domain:
@@ -14,16 +12,20 @@ init:
     - 'STUDYID == "CDISCPILOT01"'
     - 'DOMAIN == "DM"'
   filter_depend_cols:
-    - core.STUDYID
-    - core.DOMAIN
+    - STUDYID
+    - DOMAIN
 
 column_metadata:
   - column: USUBJID
-    source: core.USUBJID
+
+  - column: DOMAIN
+
+  - column: STUDYID
+
+  - column: ARM
 
   - column: PLANNED_ARM
-    source: core.ARM
+    source: ARM
 
   - column: ARM_GRP1
-    label: "some text"
-    code_id: arm_group_01
+    code_id: {path_base}/fixtures/components/arm_group_01.R

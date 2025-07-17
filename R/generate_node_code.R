@@ -28,30 +28,29 @@ generate_node_code <- function(nodes_program_i,
   for (i in seq_len(nrow(nodes_program_i))) {
     node_i <- nodes_program_i[i]
 
-    if (node_i$type == "read_data") {
-      external_deps <- node_i$input_cols[[1]]
-      init <- ui_data[[node_i$domain]]$init
+    if (node_i$code_id == "_read_data") {
       program[[i]] <- generate_read_data_code(
-        external_deps,
+        payload = node_i$outputs[[1]],
+        domain = node_i$domain,
         path_output = path_output
       )
       next
     }
-    if (node_i$type == "initialize_domain") {
+    if (node_i$code_id == "_init_domain") {
       init <- ui_data[[node_i$domain]]$init
-      program[[i]] <- generate_initialize_domain(
+      program[[i]] <- generate_init_domain_code(
         .self = node_i$domain,
-        core_domains = init$core_domains,
+        base_domains = init$base_domains,
         domain_filters_exist = any(!is.na(unlist(init$filter_domain)))
       )
       next
     }
-    if (node_i$type == "preprocess_domain") {
+    if (node_i$code_id == "_filter_domain") {
       domain_metadata <- ui_data[[node_i$domain]]$init
 
       program[[i]] <- generate_preprocess_domain(
         .self = node_i$domain,
-        core_domains = domain_metadata$core_domains,
+        base_domains = domain_metadata$base_domains,
         adsl_domain_keys = domain_keys$ADSL,
         filter_domain = domain_metadata$filter_domain,
         filter_global = domain_metadata$filter_global,

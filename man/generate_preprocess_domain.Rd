@@ -6,7 +6,7 @@
 \usage{
 generate_preprocess_domain(
   .self,
-  core_domains,
+  base_domains,
   adsl_domain_keys,
   filter_domain = NULL,
   filter_global = NULL,
@@ -17,7 +17,7 @@ generate_preprocess_domain(
 \arguments{
 \item{.self}{Character of length 1. Name of domain}
 
-\item{core_domains}{list of core SDTM domains used to make "base" table}
+\item{base_domains}{list of core SDTM domains used to make "base" table}
 
 \item{filter_global}{String. Global filter to be applied after merging}
 

@@ -4,10 +4,10 @@
 \alias{generate_read_data_code}
 \title{Generate external data code}
 \usage{
-generate_read_data_code(payload, path_output)
+generate_read_data_code(payload, domain, path_trial)
 }
 \arguments{
-\item{data_connection}{}
+\item{path_trial}{}
 }
 \description{
 Generate external data code

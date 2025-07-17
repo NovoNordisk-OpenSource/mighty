@@ -4,7 +4,7 @@
 \alias{write_adam_programs}
 \title{Write the ADaM progrms to disk and style them}
 \usage{
-write_adam_programs(programs, dir)
+write_adam_programs(programs, dir, style = FALSE)
 }
 \arguments{
 \item{dir}{}

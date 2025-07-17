@@ -1,10 +1,8 @@
 table_metadata:
   table: ADSL
-  keys:
-    - USUBJID
-
+  
 init:
-  core_domains:
+  base_domains:
     - dm
     - dm_vaccine
   filter_domain:
@@ -15,26 +13,30 @@ init:
     - 'DOMAIN == "DM"'
     - 'EFFICACY == "Y"'
   filter_depend_cols:
-    - core.AGEU
-    - core.STUDYID
-    - core.DOMAIN
+    - AGEU
+    - STUDYID
+    - DOMAIN
     - EFFICACY
 
 column_metadata:
   - column: STUDYID
-    source: core.STUDYID
 
   - column: USUBJID
-    source: core.USUBJID
+
+  - column: AGEU
+
+  - column: DOMAIN
+
+  - column: ARM
 
   - column: PLANNED_ARM
-    source: core.ARM
+    source: ARM
 
   - column: ARM_GRP1
-    code_id: arm_group_01
+    code_id: {path_base}/fixtures/components/arm_group_01.R
 
   - column: EFFICACY
-    code_id: supp_dm_01
+    code_id: {path_base}/fixtures/components/supp_dm_01.R
 
   - column: SAFETY
-    code_id: supp_dm_01
+    code_id: {path_base}/fixtures/components/supp_dm_01.R

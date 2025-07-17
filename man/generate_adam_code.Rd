@@ -6,10 +6,9 @@
 \usage{
 generate_adam_code(
   path_ui_data,
-  code_component_source_pkgs = NULL,
-  code_component_source_files = NULL,
+  standards_lib = NULL,
   path_trial_metadata,
-  path_output,
+  path_trial,
   check_cross_domain_adam_dependencies = TRUE
 )
 }

@@ -1,8 +1,7 @@
 convert_yml_to_data_table <- function(yml_list) {
 
   lapply(yml_list, function(i) {
-    convert_yml_to_data_table_(i$columns, i$domain) |>
-      merge_rows_with_same_code_id()
+    convert_yml_to_data_table_(i$columns, i$domain)
   }) |>
     data.table::rbindlist()
 }
@@ -17,6 +16,7 @@ convert_yml_to_data_table_ <- function(nested_list, domain) {
   parameters <- vector("character", length(parent_names))
   depend_rows_list <- vector("character", length(parent_names))
   parent_names_chr <- vector("character", length(parent_names))
+
 
   # Extract data from each parent element
   for (i in seq_along(parent_names)) {
@@ -46,6 +46,8 @@ convert_yml_to_data_table_ <- function(nested_list, domain) {
       parent_data$code_id
     else
       NA_character_
+
+
   }
 
   dt <- data.table::data.table(
@@ -63,19 +65,19 @@ convert_yml_to_data_table_ <- function(nested_list, domain) {
   return(dt)
 }
 
-merge_rows_with_same_code_id <- function(x) {
+merge_rows_with_same_function_call <- function(x) {
   # This logic is needed because for columns, a single code_id can be referenced
   # by multiple columns, but each MUST be paramaterized the same - because in
   # essence this code ID can only appear once per ADaM domain in the final ADaM
   # program. In contrast, multiple row nodes can have the same code_id with
   # DIFFERENT parameters.
-
   nodes_referencing_code <- x[!is.na(code_id)]
-  nodes_referencing_code[column == "", tmp_id := paste0(code_id, parameters)]
-  nodes_referencing_code[column != "", tmp_id := code_id]
+
+  # Row_computes can have a different set of parameters
+  nodes_referencing_code[type == "row_compute", tmp_id := paste0(code_id, outputs, parameters)]
+  nodes_referencing_code[type == "col_compute", tmp_id := paste0(code_id, outputs)]
 
   result <- nodes_referencing_code[, .(
-    column = column |> unlist() |> unique() |> list(),
     type = unique(type),
     domain = unique(domain),
     parameters = collect_parameters(parameters, unique(code_id)),
@@ -129,10 +131,7 @@ collect_parameters <- function(parameters, code_id) {
     dub_param <- unique_entries[["name"]][duplicated(unique_entries["name"])]
     stop(
       paste0(
-        "\nCode_id `", code_id, "` is used in multiple columns with different paramenters.\n",
-        "If a code_id is used in multiple columns, the parameter values must be the same. \n",
-        "This restriction may be relaxed in future versions.\n",
-        "For now, if you need the same underlying logic, create multiple functions by writing a thin wrapper around the core code",
+        "\nCode_id `", code_id, "` is parameterized incorrectly",
         paste(dub_param, collapse = ", ") ,
         "."
       )

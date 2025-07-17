@@ -1,73 +1,66 @@
 #' Generates the complete set of ADaM programs
 #'
 #' @param path_ui_data
-#' @param path_output
+#' @param path_trial
 #' @param check_cross_domain_adam_dependencies
-#' @param code_component_source_pkgs
-#' @param code_component_source_files
 #' @param path_trial_metadata
 #'
 #' @return
 #' @export
 #' @import data.table
 #' @examples
-generate_adam_code <- function(path_ui_data,
-                               code_component_source_pkgs = NULL,
-                               code_component_source_files = NULL,
-                               path_trial_metadata,
-                               path_output,
-                               check_cross_domain_adam_dependencies = TRUE) {
-
+generate_adam_code <- function(
+  path_ui_data,
+  standards_lib = NULL,
+  path_trial_metadata,
+  path_trial,
+  check_cross_domain_adam_dependencies = TRUE
+) {
   # Read data from UI containing explicit user input
   ui_yml <- read_adam_specs(path_ui_data)
   ui_init <- purrr::list_transpose(ui_yml)[["init"]]
-  trial_metadata <- yaml::read_yaml(path_trial_metadata) |> assert_valid_trial_config()
+  trial_metadata <- yaml::read_yaml(path_trial_metadata) |>
+    assert_valid_trial_config()
+  domain_keys <- collate_primary_keys(trial_metadata)
 
   # Prepare the initial internal nodes data model and create environment to store
   # standard components
   actions_configuration <- setup_actions(
     ui_yml = ui_yml,
-    code_component_source_pkgs = code_component_source_pkgs,
-    code_component_source_files = code_component_source_files
+    standards_lib = standards_lib,
+    check_cross_domain_adam_dependencies,
+    domain_keys
   )
 
-
-  domain_keys  <- collate_primary_keys(trial_metadata)
-
-  actions <- processing_actions(
-    actions_configuration$actions,
-    domain_keys = domain_keys,
-    ui_init = ui_init,
-    check_cross_domain_adam_dependencies = check_cross_domain_adam_dependencies
+  actions_01_base <- actions_configuration$actions
+  actions_02_init <- add_initialize_domain_actions(actions_01_base, ui_init)
+  actions_03_filter <- add_filter_domain_actions(
+    actions_02_init,
+    ui_init,
+    domain_keys
   )
+  edges <- make_edges(actions_03_filter)
+  actions_04_org <- organize_actions(actions_03_filter, edges) # need to revisit permute domain_init
+  actions_05_read <- add_read_data_actions(actions_04_org, ui_init)
+  actions_06_write <- add_write_data_actions(actions_05_read)
 
-  # Identify edges in the topology graph
-  edges <- make_edges(actions)
-
-  program_sequence <- make_program_sequence(
-    nodes = actions,
-    edges = edges,
-    ui_init = ui_init,
-    domain_keys = domain_keys
-  )
+  # Stop here as generate_program() does not yet work with the updates
 
   # Create programs
-  programs <- generate_program(
-    program_sequence,
-    actions,
-    domain_keys,
-    actions_configuration$code_component_env,
-    trial_metadata,
-    ui_yml,
-    path_output = path_output
-  )
-
+  actions_07_code <- render_code(
+    actions = actions_06_write,
+    domain_keys = domain_keys,
+    ui_data = ui_yml,
+    path_trial = path_trial,
+    standards_lib = standards_lib
+  ) 
+  
   return(
     list(
-      programs = programs,
-      program_sequence = program_sequence,
+      programs = compile_into_programs(actions_07_code),
+      program_sequence = actions_07_code,
       edges = edges,
-      data_model = actions
+      data_model = actions_configuration
     )
   )
 }

@@ -22,34 +22,44 @@
 expect_section_order <- function(start_section, end_section, section_list) {
   # Check if the start_section is before the end_section
   start_idx <- c()
-  for (i in start_section) {
-    start_idx <- c(start_idx, grep(paste0("^# ", i, " -----"), section_list))
+  
 
+  for (i in start_section) {
+    m <- grep(paste0(i, ".*-----"), section_list)
     testthat::expect_true(
-      length(start_idx) > 0,
+      length(m) > 0,
       info = paste0("The section ", i, " does not exist in the document")
     )
+    start_idx[i] <- m
   }
 
   # Escape paraentheses in end_section
   end_section2 <- end_section |>
-    gsub("\\(", "\\\\(", x=_) |>
-    gsub("\\)", "\\\\)", x=_)
+    gsub("\\(", "\\\\(", x = _) |>
+    gsub("\\)", "\\\\)", x = _)
 
-  end_idx <-  grep(paste0("^# ", end_section2, " ---"), section_list)
+  end_idx <- grep(paste0("", end_section2, ".*---"), section_list)
 
   testthat::expect_true(
     length(end_idx) > 0,
-    info = paste0("The section ", end_section, " does not exist in the document")
-  )
-
-  testthat::expect_true(
-    max(start_idx) < end_idx,
     info = paste0(
       "The section ",
-      start_section,
-      " should be before the section ",
-      end_section
+      end_section,
+      " does not exist in the document"
     )
   )
+  
+  inx <- start_idx < end_idx
+  for (i in seq_along(inx)) {
+    testthat::expect_true(
+      inx[i],
+      info = paste0(
+        "The section <",
+        names(inx[i]),
+        "> should be before the section <",
+        end_section,
+        ">"
+      )
+    )
+  }
 }

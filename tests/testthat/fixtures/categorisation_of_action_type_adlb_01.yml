@@ -1,0 +1,45 @@
+table_metadata:
+  table: ADLB
+
+init:
+  base_domains:
+    - lb
+  filter_domain: NA
+  filter_global: NA
+  filter_depend_cols: NA
+
+column_metadata:
+  - column: USUBJID
+
+  - column: STUDYID
+
+  - column: LBSEQ
+
+  - column: LBSTRESN
+
+  - column: PLANNED_ARM
+    source: ADSL.PLANNED_ARM
+
+  - column: ARM
+    source: ADSL.PLANNED_ARM
+
+  - column: AVAL
+    source: LBSTRESN
+
+  - column: AVAL_GRP
+    code_id: {path_base}/fixtures/components/aval_grp_01.R
+
+  - column: AVAL2
+    source: AVAL
+
+  - column: LBTEST
+    code_id: {path_base}/fixtures/components/lbtest_01.R
+
+  - column: AVALFL
+    code_id: {path_base}/fixtures/components/avalfl_01.R
+
+  - column: AVALREA
+    code_id: {path_base}/fixtures/components/avalfl_01.R
+
+row_actions:
+  - code_id: {path_base}/fixtures/components/new_lbtest_01.R

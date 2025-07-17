@@ -21,21 +21,41 @@ assert_outputs_identical <- function(x) {
   # Only col_compute can have discrepancies as they have "column" defined both
   # in yml and in code components
 
-  x_sub <- x[type_from_code %in% c("col_compute", "col_supp"), .(code_id, outputs, outputs_from_code)]
-  inx <- purrr::map2(x_sub$outputs, x_sub$outputs_from_code, function(yml, code) {
-    setdiff(yml,code) |> length()==0
-  }) |> unlist()
+  x_sub <- x[
+    type_from_code %in% c("col_compute", "col_supp"),
+    .(code_id, outputs, outputs_from_code, parameters)
+  ]
 
-  if(sum(!inx)==0) return(TRUE)
-  x_error<- x_sub[!inx]
+  # Need to collapse when code_id is used multiple locations.
+  x_sub <- x_sub[,
+                 .(
+                   outputs = list(unlist(outputs)),
+                   outputs_from_code = outputs_from_code |> unlist() |> unique() |> list()
+                 ),
+                 by = .(code_id, parameters_str = sapply(parameters, paste, collapse = ","))
+  ]
+
+  inx <- purrr::map2(
+    x_sub$outputs,
+    x_sub$outputs_from_code,
+    function(yml, code) {
+      setdiff(code, yml) |> length() == 0
+    }
+  ) |>
+    unlist()
+
+  if (sum(!inx) == 0) {
+    return(TRUE)
+  }
+  x_error <- x_sub[!inx]
   error_list <- list()
-  for(i in seq_len(nrow(x_error))){
-
+  for (i in seq_len(nrow(x_error))) {
     error_list[[x_error[i, code_id]]] <-
-      list(Outputs_from_code_component = x_error[i, unlist(outputs_from_code)],
-           Outputs_from_specificaton = x_error[i, unlist(outputs)])
+      list(
+        Outputs_from_code_component = x_error[i, unlist(outputs_from_code)],
+        Outputs_from_specificaton = x_error[i, unlist(outputs)]
+      )
   }
 
   stop(error_list |> pretty_error_outputs())
-
 }

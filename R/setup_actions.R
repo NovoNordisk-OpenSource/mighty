@@ -20,6 +20,8 @@
 #'   containing code components to be loaded into the consolidated environment
 #' @param code_component_source_files Optional character vector of file paths to
 #'   R source files containing code components
+#' @param check_cross_domain_adam_dependencies
+#' @param domain_keys
 #'
 #' @return A list containing two elements:
 #'   \item{code_component_env}{Environment containing consolidated code components
@@ -37,37 +39,43 @@
 #' # Prepare pipeline with package-based code components
 #' ui_data <- read_adam_specs("path/to/yaml/files")
 #' pipeline_prep <- setup_actions(
-#'   ui_yml = ui_data,
-#'   code_component_source_pkgs = c("mighty.standards", "custom.package"),
-#'   code_component_source_files = NULL
+#'   ui_yml = ui_data
 #' )
 #'
 #' # Access the prepared components
 #' code_env <- pipeline_prep$code_component_env
 #' nodes <- pipeline_prep$nodes
 #' }
-setup_actions <- function(ui_yml, code_component_source_pkgs, code_component_source_files){
+setup_actions <- function(
+  ui_yml,
+  standards_lib,
+  check_cross_domain_adam_dependencies,
+  domain_keys
+) {
+
   checkmate::assert_list(ui_yml)
 
   ui_table <- convert_yml_to_data_table(ui_yml)
 
   # Create a consolidated environment for code components
-  unique_code_ids <- ui_table[!is.na(code_id) & !duplicated(code_id), code_id]
-  code_component_env <- create_consolidated_env(
-    packages = code_component_source_pkgs,
-    source_files = code_component_source_files,
-    code_ids = unique_code_ids
-  )
+  unique_code_ids <- ui_table[
+    !is.na(code_id) & !duplicated(code_id),
+    .(code_id, parameters)
+  ]
 
-  # Combine UI data and standard components
-  actions <- parse_code_components_metadata(pkgs = code_component_source_pkgs,
-                                 source_files = code_component_source_files,
-                                 function_names = unique_code_ids) |>
+  components_rendered <- render_components(unique_code_ids)
+  actions <- components_rendered |>
+    get_component_metadata() |>
     update_ui_data(ui_table) |>
+    remove_duplicated_actions() |>
     add_node_id_fast() |>
+    update_depend_cols(domain_keys, purrr::list_transpose(ui_yml)[["init"]]) |>
     assert_valid_outputs() |>
-    assign_predecessor_action_types()
+    assert_valid_depend_cols(ui_yml, domain_keys, check_cross_domain_adam_dependencies)
 
-  return(list(code_component_env=code_component_env,
-              actions = actions))
+  return(list(
+    code_components_rendered = components_rendered,
+    actions = actions
+  ))
+
 }

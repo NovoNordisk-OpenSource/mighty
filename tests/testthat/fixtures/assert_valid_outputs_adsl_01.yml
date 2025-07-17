@@ -1,11 +1,8 @@
 table_metadata:
   table: ADSL
-  keys:
-    - USUBJID
-
 
 init:
-  core_domains:
+  base_domains:
     - dm
     - dm_vaccine
   filter_domain:
@@ -16,10 +13,10 @@ init:
 
 column_metadata:
   - column: USUBJID
-    source: core.USUBJID
 
   - column: ARM
-    source: core.ARM
+
+  - column: ACTARM
 
   - column: ARM
-    source: core.ACTARM
+    source: ACTARM

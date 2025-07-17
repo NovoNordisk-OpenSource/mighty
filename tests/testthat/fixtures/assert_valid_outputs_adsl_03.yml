@@ -1,0 +1,20 @@
+table_metadata:
+  table: ADSL
+
+init:
+  base_domains:
+    - dm
+    - dm_vaccine
+  filter_domain:
+    - dm: NA
+    - dm_vaccine: NA
+  filter_global: NA
+  filter_depend_cols: NA
+
+column_metadata:
+  - column: USUBJID
+
+  - column: AGE
+
+  - column: AGE_INVALID
+    code_id: {path_base}/fixtures/components/age_redefined_02.R

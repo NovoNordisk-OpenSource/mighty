@@ -1,22 +1,25 @@
 table_metadata:
   table: ADLB
+
 init:
-  core_domains:
+  base_domains:
     - LB
   filter_domain:
     LB: '!is.na(LBSTRESN)'
   filter_global:
     - '!is.na(SEX)'
   filter_depend_cols:
-    - core.LBSTRESN
+    - LBSTRESN
     - ADSL.SEX
 
 column_metadata:
   - column: USUBJID
-    source: core.USUBJID
+
+  - column: STUDYID
+
+  - column: LBSTRESN
 
   - column: VISITNUM
-    source: core.VISITNUM
 
   - column: VISITNUM2
     source: VISITNUM

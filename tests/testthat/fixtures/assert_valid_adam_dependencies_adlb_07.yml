@@ -2,31 +2,28 @@ table_metadata:
   table: adlb
 
 init:
-  core_domains:
-  - LB
+  base_domains:
+    - LB
   filter_domain: NA
   filter_global: NA
   filter_depend_cols: NA
 
 column_metadata:
   - column: STUDYID
-    source: core.STUDYID
 
   - column: USUBJID
-    source: core.USUBJID
 
   - column: VISITNUM
-    source: core.VISITNUM
 
   - column: VISITNUM2
     source: VISITNUM
 
   - column: LBTEST2
-    code_id: lbtest2
+    code_id: {path_base}/fixtures/components/lbtest_02.R
 
   - column: LBTEST3
-    code_id: lbtest3
+    code_id: {path_base}/fixtures/components/lbtest_03.R
 
   - column: LBTEST3_FLG
-    code_id: lbtest3
+    code_id: {path_base}/fixtures/components/lbtest_03.R
 
