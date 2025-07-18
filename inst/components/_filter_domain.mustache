@@ -1,0 +1,40 @@
+#' @type derivation
+#' @param self Character string. The name of the primary dataset being filtered and modified.
+#' @param joins List of join specifications. Each element is a list containing:
+#'   \describe{
+#'     \item{table}{Character string. Name of the dataset to join with}
+#'     \item{cols}{Named character vector. Column names to select from the join dataset, where names indicate the source dataset}
+#'     \item{keys}{Character string. Comma-separated list of quoted column names used as join keys}
+#'   }
+#'   Example: `list(list(table = "ADSL", cols = c(ADSL = "SEX", ADSL1 = "USUBJID"), keys = "\"USUBJID\""))`
+#' @param has_domain_filter Logical. Whether to apply domain-specific filtering to the dataset.
+#' @param domain_filter Character string or NULL. Filter expression for domain-specific filtering, typically involving SRC_ column conditions. Only used when `has_domain_filter` is `TRUE`.
+#' @param has_global_filter Logical. Whether to apply global filtering to the dataset.
+#' @param global_filter Character vector or NULL. One or more filter expressions to apply globally to the dataset. Multiple expressions are applied sequentially.
+#' @param has_keep_columns Logical. Whether to select only specific columns from the final dataset.
+#' @param keep_columns Character string or NULL. Comma-separated list of column names to retain in the final dataset. Only used when `has_keep_columns` is `TRUE`.
+
+# Filter {{self}} ----------------------
+
+{{#joins}}
+{{self}} <- {{self}} |>
+  dplyr::left_join({{table}} |> dplyr::select({{cols}}),
+                   by = c({{{keys}}}))
+
+{{/joins}}
+{{#has_domain_filter}}
+{{self}} <-  {{self}} |>
+  dplyr::filter({{{domain_filter}}}) |>
+  dplyr::select(-SRC_)
+
+{{/has_domain_filter}}
+{{#has_global_filter}}
+{{self}} <-  {{self}} |>
+  dplyr::filter({{{global_filter}}})
+
+{{/has_global_filter}}
+{{#has_keep_columns}}
+{{self}} <-  {{self}} |>
+  dplyr::select({{keep_columns}})
+
+{{/has_keep_columns}}

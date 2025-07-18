@@ -26,8 +26,6 @@ R source files containing code components}
 }
 \value{
 A list containing two elements:
-\item{code_component_env}{Environment containing consolidated code components
-from specified packages and source files}
 \item{nodes}{Data.table containing processed node definitions with columns
 for node_id, domain, type, dependencies, outputs, and other metadata}
 }
@@ -46,22 +44,8 @@ The function serves as a preprocessing step that transforms user
 specifications and code components into a standardized internal format that
 can be used by downstream functions.
 }
-\examples{
-\dontrun{
-# Prepare pipeline with package-based code components
-ui_data <- read_adam_specs("path/to/yaml/files")
-pipeline_prep <- setup_actions(
-  ui_yml = ui_data
-)
-
-# Access the prepared components
-code_env <- pipeline_prep$code_component_env
-nodes <- pipeline_prep$nodes
-}
-}
 \seealso{
 \code{\link{convert_yml_to_data_table}} for YAML to data.table
-conversion \code{\link{create_consolidated_env}} for environment creation
-\code{\link{parse_code_components_metadata}} for metadata parsing
+conversion
 \code{\link{update_ui_data}} for UI data enrichment
 }

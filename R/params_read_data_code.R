@@ -8,23 +8,8 @@
 #' @export
 #'
 #' @examples
-generate_read_data_code <- function(payload, domain, path_trial) {
+params_read_data_code <- function(payload, domain, path_trial) {
   # Whisker template
-  template <- "
-# Read data sets ------------------------------------------------
-
-cnt <- connector::connect(config = '{{path_trial}}/_connector.yml')
-{{#domains}}
-  {{#is_self_domain}}
-  {{domain_name}} <-  cnt${{data_type}}$read_cnt('{{domain_name}}')
-  {{/is_self_domain}}
-  {{^is_self_domain}}
-  {{domain_name}} <-  cnt${{data_type}}$read_cnt('{{domain_name}}') |>
-  dplyr::select({{keep_vars}})
-  {{/is_self_domain}}
-  {{/domains}}
-
-"
 
   v <- strsplit(payload, "\\.")
   payload_dt <- data.table(
@@ -35,13 +20,13 @@ cnt <- connector::connect(config = '{{path_trial}}/_connector.yml')
 
   # Prepare template data
   by_domain <- split(payload_dt, by = "domain")
-  template_data <- list(
+  return(list(
     path_trial = path_trial,
     domains = purrr::imap(by_domain, prepare_domain_data, .self = domain) |>
       unname()
   )
+)
 
-  whisker::whisker.render(template, template_data)
 }
 
 prepare_domain_data <- function(domain_data, domain_name, .self) {

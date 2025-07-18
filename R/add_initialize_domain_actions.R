@@ -34,7 +34,7 @@ add_initialize_domain_actions <- function(actions, ui_init) {
 
       domain_init_action <- data.table(
         node_id = paste0(domain_i, "-init_domain"),
-        code_id = "_init_domain",
+        code_id = "_init_domain.mustache",
         type = "init_domain",
         depend_cols =  list(depend_cols_i),
         outputs = list(outputs_i_final),

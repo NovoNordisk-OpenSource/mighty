@@ -1,0 +1,17 @@
+#' @type derivation
+#' @param self Character string. The name of the dataset being created or modified.
+#' @param self_upper Character string. The uppercase version of the dataset name, typically used for comments or headers in the generated code.
+#' @param keep_columns Character vector. Column names to select and retain in the final dataset after row binding and processing.
+#' @param source_domain_rbind Character string. R expression for combining source datasets using `rbind()` or similar row-binding functions.
+#' @param src_mutations List of lists. Each element contains mutation specifications for source domains, where each sub-list has a `domain` element specifying the dataset name to be modified with a source identifier column. For example: `list(list(domain = "dm"), list(domain = "dm_vaccine"))`.
+
+# Initialize {{self_upper}} ----------------------
+
+{{#src_mutations}}
+{{domain}} <- {{domain}} |>
+  dplyr::mutate(SRC_ = "{{domain}}")
+
+{{/src_mutations}}
+{{self}} <-  {{source_domain_rbind}} |>
+    dplyr::select({{keep_columns}}) |> 
+    admiral::convert_blanks_to_na()

@@ -7,7 +7,7 @@ test_that("Complex test with multiple domains and column/row operations and miss
   )
   path_ui_data_rendered <- setup_yml_file_for_testing(path_ui_data, environment())
   path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
-  
+
   output_path <- withr::local_tempdir()
   setup_testdata(testdata = "pharmaverse", test_data_path = output_path)
 

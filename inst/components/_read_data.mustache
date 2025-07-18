@@ -1,0 +1,39 @@
+#' @type derivation
+#' @param path_trial Character string. The file path to the trial directory containing the connector configuration file (_connector.yml).
+#' @param domains List of lists. Each element represents a domain/dataset to be read, containing the following components:
+#'   \describe{
+#'     \item{is_self_domain}{Logical. Whether to read the entire dataset (TRUE) or apply variable selection (FALSE). Is generally only true for an "update" program - e.g. ADSL "update"}
+#'     \item{domain_name}{Character string. The name of the domain/dataset to read.}
+#'     \item{data_type}{Character string. The type of data connector to use (e.g., "sdtm", "adam").}
+#'     \item{keep_vars}{Character string. Comma-separated list of variable names to select when is_self_domain is FALSE. Ignored when is_self_domain is TRUE.}
+#'   }
+#'   
+#'   Example:
+#'   \preformatted{
+#'   domains <- list(
+#'     list(
+#'       is_self_domain = TRUE,
+#'       domain_name = "ADSL",
+#'       data_type = "adam",
+#'       keep_vars = "ARM_MATCH, COUNTRY, NEWFL01, USUBJID"
+#'     ),
+#'     list(
+#'       is_self_domain = FALSE,
+#'       domain_name = "ADLB",
+#'       data_type = "adam",
+#'       keep_vars = "AVAL, LBTEST, USUBJID"
+#'     )
+#'   )
+#'   }
+
+# Read data sets ------------------------------------------------
+cnt <- connector::connect(config = '{{path_trial}}/_connector.yml')
+{{#domains}}
+  {{#is_self_domain}}
+  {{domain_name}} <-  cnt${{data_type}}$read_cnt('{{domain_name}}')
+  {{/is_self_domain}}
+  {{^is_self_domain}}
+  {{domain_name}} <-  cnt${{data_type}}$read_cnt('{{domain_name}}') |>
+  dplyr::select({{keep_vars}})
+  {{/is_self_domain}}
+  {{/domains}}

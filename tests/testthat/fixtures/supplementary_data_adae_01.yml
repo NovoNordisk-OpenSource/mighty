@@ -1,6 +1,6 @@
 table_metadata:
   table: ADAE
-  
+
 init:
   base_domains:
     - ae
@@ -11,7 +11,7 @@ init:
     - 'AETRTEM == "Y"'
   filter_depend_cols:
     - AEBODSYS
-    - ADSL.SEX
+    - adsl.SEX
     - AETRTEM
 
 column_metadata:
@@ -20,12 +20,14 @@ column_metadata:
 
   - column: USUBJID
 
+  - column: AESEQ
+
   - column: AESOC
 
   - column: AEBODSYS
 
   - column: AGE
-    source: ADSL.AGE
+    source: adsl.AGE
 
   - column: AETRTEM
     code_id: {path_base}/fixtures/components/supp_ae_01.R

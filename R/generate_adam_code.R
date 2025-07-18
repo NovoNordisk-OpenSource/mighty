@@ -40,21 +40,18 @@ generate_adam_code <- function(
     domain_keys
   )
   edges <- make_edges(actions_03_filter)
-  actions_04_org <- organize_actions(actions_03_filter, edges) # need to revisit permute domain_init
+  actions_04_org <- organize_actions(actions_03_filter, edges)
   actions_05_read <- add_read_data_actions(actions_04_org, ui_init)
   actions_06_write <- add_write_data_actions(actions_05_read)
-
-  # Stop here as generate_program() does not yet work with the updates
 
   # Create programs
   actions_07_code <- render_code(
     actions = actions_06_write,
     domain_keys = domain_keys,
     ui_data = ui_yml,
-    path_trial = path_trial,
-    standards_lib = standards_lib
-  ) 
-  
+    path_trial = path_trial
+  )
+
   return(
     list(
       programs = compile_into_programs(actions_07_code),

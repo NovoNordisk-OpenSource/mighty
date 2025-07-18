@@ -33,7 +33,7 @@ add_read_data_actions <- function(actions, ui_init) {
       node_id = paste(dom, pgm, "read_data", sep = "-"),
       program_id = pgm,
       rank = 0,
-      code_id = "_read_data",
+      code_id = "_read_data.mustache",
       type = "read_data",
       depend_cols =  list(NA_character_),
       outputs = list(paste0(dep_cols$domain, ".", dep_cols$column_name)),

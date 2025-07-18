@@ -7,24 +7,9 @@
 #' @export
 #'
 #' @examples
-generate_init_domain_code <- function(.self, keep_columns, source_domains) {
+params_init_domain_code <- function(.self, keep_columns, source_domains) {
   # Initialize ADaM table by row binding source domain(s) and selecting
   # predecessors from source domain(s).
-
-  # Single template that handles both cases
-  template <- "# Initialize {{self_upper}} ----------------------
-
-{{#src_mutations}}
-{{domain}} <- {{domain}} |>
-  dplyr::mutate(SRC_ = \"{{domain}}\")
-
-{{/src_mutations}}
-{{self}} <-  {{source_domain_rbind}} |>
-    dplyr::select({{keep_columns}}) |> 
-    admiral::convert_blanks_to_na()
-
-
-"
 
   # Data preparation for SRC_ mutations
   src_mutations <- list()
@@ -45,13 +30,13 @@ generate_init_domain_code <- function(.self, keep_columns, source_domains) {
     )
   }
 
-  data <- list(
+  return(list(
     self = .self,
     self_upper = toupper(.self),
     keep_columns = keep_columns,
     source_domain_rbind = source_domain_rbind,
     src_mutations = src_mutations
   )
+  )
 
-  whisker::whisker.render(template, data)
 }

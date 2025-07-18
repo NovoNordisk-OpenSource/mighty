@@ -99,7 +99,7 @@ add_filter_domain_actions <- function(actions, ui_init, domain_keys) {
     # Consolidate domain_filter action for domain d
     data.table(
       node_id = paste0(d, "-filter_domain"),
-      code_id = "_filter_domain",
+      code_id = "_filter_domain.mustache",
       type = "filter_domain",
       depend_cols = list(filter_domain_dep_cols),
       outputs = list(filter_domain_outputs),

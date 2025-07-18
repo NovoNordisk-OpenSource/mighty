@@ -1,27 +1,35 @@
 #' supp_ae_01
 #'
 #' @type col_compute
-#' @depends ADAE STUDYID
 #' @depends ADAE USUBJID
-#' @depends suppae STUDYID
+#' @depends ADAE AESEQ
 #' @depends suppae USUBJID
+#' @depends suppae IDVAR
+#' @depends suppae IDVARVAL
 #' @depends suppae QNAM
 #' @depends suppae QVAL
 #' @outputs AETRTEM
-#' @returns `.self`
+#' @returns `ADAE`
 supp_ae_01 <- function(ADAE, suppae) {
-  # Collect supplementary data
-  data_supp <- suppae |>
-    dplyr::select(STUDYID, USUBJID, QNAM, QVAL) |>
-    dplyr::filter(QNAM == "AETRTEM")
 
-  # Transpose and join supplementary data
-  tDatasetSupp <- tidyr::pivot_wider(
-    data_supp,
-    id_cols = c("STUDYID", "USUBJID"),
-    values_from = "QVAL",
-    names_from = "QNAM"
+  # Collect supplementary data
+  supp_data <- suppae |>
+    dplyr::select(USUBJID, IDVAR, IDVARVAL, QNAM, QVAL) |>
+    dplyr::filter(QNAM == "AETRTEM") |>
+    tidyr::pivot_wider(names_from = QNAM, values_from = QVAL)
+
+  idvar <- unique(supp_data$IDVAR)
+  idclass <- class(ADAE[[idvar]])
+
+  # Join supplementary data
+  supp_data[["IDVARVAL"]] <- do.call(
+    what = get(paste0("as.", idclass)),
+    args = list(supp_data$IDVARVAL)
   )
-  ADAE <- dplyr::left_join(ADAE, tDatasetSupp, by = c("USUBJID", "STUDYID"))
+  ADAE <- ADAE |>
+    dplyr::left_join(
+      supp_data |> dplyr::select(-IDVAR),
+      by = c("USUBJID", stats::setNames("IDVARVAL", idvar))
+    )
   return(ADAE)
 }

@@ -29,6 +29,7 @@ test_that("No filters", {
 
   # EXPECT -------------------------------------------------------------------
 
+  x <- list.files(path_trial, pattern = ".R", full.names = TRUE)
   # Check outputs of read_data
   expected_outputs <- c("dm.USUBJID", "dm.ARM", "dm_vaccine.USUBJID", "dm_vaccine.ARM")
   expect_setequal(actual$program_sequence$outputs[[1]],

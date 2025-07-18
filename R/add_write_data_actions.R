@@ -22,7 +22,7 @@ add_write_data_actions <- function(actions) {
       node_id = paste(dom, pgm, "write_data", sep = "-"),
       program_id = pgm,
       rank = max(x$rank) + 1,
-      code_id = "_write_data",
+      code_id = "_write_data.mustache",
       type = "write_data",
       depend_cols = list(depend_cols),
       outputs = list(NA),

@@ -40,10 +40,10 @@ update_ui_data <- function(code_component_metadata, ui_data) {
   ui_data_updated[, type := action_types]
 
   # Assign internal code_id for predecessor action types
-  ui_data_updated[ui_data_updated$type == "col_echo", code_id := "_col_echo"]
+  ui_data_updated[ui_data_updated$type == "col_echo", code_id := "_col_echo.mustache"]
   ui_data_updated[
     ui_data_updated$type == "col_mutate",
-    code_id := "_col_mutate"
+    code_id := "_col_mutate.mustache"
   ]
 
   # Process dependent columns

@@ -1,4 +1,4 @@
-generate_domain_filter_code <- function(
+params_domain_filter_code <- function(
   .self,
   source_domains,
   init_metadata,
@@ -10,7 +10,7 @@ generate_domain_filter_code <- function(
   domain_required_for_filter = init_metadata$filter_depend_cols |>
     format_filter_depends() |>
     names()
-  keys_by_domain <- domain_keys[domain_required_for_filter]
+  keys_by_domain <- domain_keys[toupper(domain_required_for_filter)]
   unique_domain_keys <- keys_by_domain |>
     unlist() |>
     unique()
@@ -31,8 +31,8 @@ generate_domain_filter_code <- function(
     joins <- lapply(domain_required_for_filter, function(i) {
       list(
         table = i,
-        cols = c(filter_cols[i], keys_by_domain[i]) |> unlist(),
-        keys = paste0('"', keys_by_domain[i] |> unlist(), '"', collapse = ", ")
+        cols = c(filter_cols[i], keys_by_domain[toupper(i)]) |> unlist(),
+        keys = paste0('"', keys_by_domain[toupper(i)] |> unlist(), '"', collapse = ", ")
       )
     })
   }
@@ -54,7 +54,7 @@ generate_domain_filter_code <- function(
   keep_cols <- setdiff(keep_columns, "SRC_") |>
     paste0(collapse = ", ")
 
-  data <- list(
+  return(list(
     self = .self,
     joins = joins,
     has_domain_filter = has_domain_filter,
@@ -64,34 +64,7 @@ generate_domain_filter_code <- function(
     has_keep_columns = has_keep_columns,
     keep_columns = keep_cols
   )
-
-  template <- "# Filter {{self}} ----------------------
-
-{{#joins}}
-{{self}} <- {{self}} |>
-  dplyr::left_join({{table}} |> dplyr::select({{cols}}),
-                   by = c({{{keys}}}))
-
-{{/joins}}
-{{#has_domain_filter}}
-{{self}} <-  {{self}} |>
-  dplyr::filter({{{domain_filter}}}) |>
-  dplyr::select(-SRC_)
-
-{{/has_domain_filter}}
-{{#has_global_filter}}
-{{self}} <-  {{self}} |>
-  dplyr::filter({{{global_filter}}})
-
-{{/has_global_filter}}
-{{#has_keep_columns}}
-{{self}} <-  {{self}} |>
-  dplyr::select({{keep_columns}})
-
-{{/has_keep_columns}}
-"
-
-  whisker::whisker.render(template, data)
+  )
 }
 
 
