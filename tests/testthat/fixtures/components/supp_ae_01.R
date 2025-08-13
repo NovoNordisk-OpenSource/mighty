@@ -1,5 +1,5 @@
-#' supp_ae_01
-#'
+#' @title supp_ae_01
+#' @description A description
 #' @type col_compute
 #' @depends ADAE USUBJID
 #' @depends ADAE AESEQ

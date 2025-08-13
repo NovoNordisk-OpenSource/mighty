@@ -1,14 +1,14 @@
+#' @title Col echo
+#' @description Template description here
 #' @type derivation
 #' @param self Character string. The name of the primary dataset being modified (left-hand side of the join operation).
-#' @param header Character string. A unique identifier or header for the code block, typically used as a comment in the generated code.
+
 #' @param join_dataset Character string. The name of the dataset to join with the primary dataset (right-hand side of the join operation).
 #' @param select_expr Character string. Comma-separated list of column names to select from the join dataset before performing the join.
 #' @param by_vars_str Character string. Comma-separated list of quoted column names used as join keys, formatted for use in dplyr's `by` parameter.
 #' @param needs_rename Logical. Whether the added variable needs to be renamed after the join operation. If `TRUE`, a rename operation will be included in the generated code.
 #' @param output_var Character string. The desired name for the output variable after the join and potential rename operation.
 #' @param var_to_add Character string. The name of the variable being added from the join dataset, before any renaming.
-
-# {{header}} -----------------------------------------------------
 
 {{self}} <- {{self}} |>
     dplyr::left_join({{join_dataset}} |> dplyr::select({{select_expr}}),

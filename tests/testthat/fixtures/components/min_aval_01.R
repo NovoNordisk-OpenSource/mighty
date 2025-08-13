@@ -1,5 +1,5 @@
-#' Min aval 01
-#' 
+#' @title Min aval 01
+#' @description A description 
 #' @type col_compute
 #' @depends ADSL USUBJID
 #' @depends ADLB USUBJID

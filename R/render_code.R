@@ -100,7 +100,6 @@ define_params <- function(
       depend_cols = depend_columns,
       depend_domains = depend_domains,
       outputs = output_cols,
-      node_id = node_id,
       domain_keys = domain_keys
     ),
     "_write_data.mustache" = params_write_domain_code(.self = .self),

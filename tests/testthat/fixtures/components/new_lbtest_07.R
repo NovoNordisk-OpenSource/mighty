@@ -1,5 +1,5 @@
-#' New lbtest 07
-#' 
+#' @title lbtest 07
+#' @description A description 
 #' @type row_compute
 #' @depends ADLB LBTEST
 #' @outputs LBTEST

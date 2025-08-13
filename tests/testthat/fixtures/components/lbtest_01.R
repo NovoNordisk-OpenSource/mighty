@@ -1,5 +1,5 @@
-#' Lbtest 01
-#' 
+#' @title Lbtest 01
+#' @description A description 
 #' @type col_compute
 #' @depends ADLB USUBJID
 #' @depends ADLB LBSEQ

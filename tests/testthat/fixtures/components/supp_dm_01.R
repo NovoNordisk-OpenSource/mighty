@@ -1,5 +1,5 @@
-#' supp_dm_01
-#'
+#' @title supp_dm_01
+#' @description A description
 #' @type col_compute
 #' @depends ADSL STUDYID
 #' @depends ADSL USUBJID

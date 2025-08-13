@@ -1,4 +1,6 @@
-#' ACTARM
+#' @title ACTARM
+#' @description A description
+#' 
 #' @type col_compute
 #' @depends dm STUDYID
 #' @depends dm USUBJID

@@ -23,8 +23,8 @@ column_metadata:
   tmp_file <- withr::local_tempdir() |>
     file.path("ady.mustache")
   "
-#' Analysis relative day
-#' @description
+#' @title Analysis relative day
+#' @description desc
 #' Derives the relative day compared to the treatment start date.
 #'
 #' @param depends_var depends variable

@@ -1,5 +1,5 @@
-#' New lbtest 01
-#' 
+#' @title New lbtest 01
+#' @description A description 
 #' @type row_compute
 #' @depends ADLB LBTEST
 #' @depends sv VISITNUM

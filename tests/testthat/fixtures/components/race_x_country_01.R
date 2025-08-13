@@ -1,6 +1,5 @@
-
-#' Race x country 01
-#' 
+#' @title Race x country 01
+#' @description A description
 #' @type col_compute
 #' @depends ADSL RACE
 #' @depends ADSL COUNTRY

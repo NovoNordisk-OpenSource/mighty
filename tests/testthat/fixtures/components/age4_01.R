@@ -1,5 +1,5 @@
-#' age4_01
-#' 
+#' @title age4_01
+#' @description A description 
 #' @type col_compute
 #' @depends ADLB AGE2
 #' @outputs AGE4

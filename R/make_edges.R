@@ -108,22 +108,52 @@ expand_child_columns <- function(nodes) {
 #' @return A data.table of edges based on row dependencies, or NULL if none
 #'   exist
 create_row_dependency_edges <- function(nodes) {
-  # Check if any nodes have row dependencies
-  has_row_dependencies <- nodes[!is.na(depend_rows)] |> nrow() > 0
 
-  if (!has_row_dependencies) {
+  # Check if there are any row operations and exit early if not
+  has_row_operations <- nodes[type == "row_compute"] |> nrow() > 0
+  if (!has_row_operations) {
     return(NULL)
   }
 
-  # Extract row dependencies
-  new_row_edges <-  nodes[!is.na(depend_rows),
-                          unlist(depend_rows),
-                          by = .(node_id, domain)] |>
-    data.table::setnames(c("node_id", "domain", "parent_node"))
+  # Row dependencies come from 2 sources:
+  #  1) depend_rows in any actions
+  #  2) depend_cols in row actions that originates from init_domain or filter_domain
+
+  # 1) Extract row dependencies from depend_rows
+  new_row_edges1 <-
+    if (any(!is.na(nodes$depend_rows))) {
+      nodes[!is.na(depend_rows), unlist(depend_rows), by = .(node_id, domain)] |>
+        data.table::setnames(c("node_id", "domain", "parent_node"))
+    } else {
+      data.table(node_id = character(0),
+                 domain = character(0),
+                 parent_node = character(0))
+    }
+
+  # 2) Extract dependencies to row actions from init_domain and filter_domain
+
+  # Get row action dependencies
+  parents_expanded <- expand_parent_columns(nodes[type == "row_compute",])
+
+  # Get outputs of init_domain and filter_domain actions
+  children_expanded <- expand_child_columns(nodes[type %in% c("init_domain","filter_domain")])
+
+  # Join to identify edges
+  new_row_edges2 <- data.table::merge.data.table(
+    parents_expanded[,.(node_id, parent_column, parent_column_domain)],
+    children_expanded[,.(node_id, child_column, child_column_domain)],
+    by.x = c("parent_column", "parent_column_domain"),
+    by.y = c("child_column", "child_column_domain"),
+    suffixes = c("", "_parent")
+  ) |>
+    setnames(c("consumes_variable", "domain","node_id", "parent_node")) |>
+    data.table::setcolorder(c("node_id", "domain", "parent_node")) |>
+    data.table::setkey(node_id)
+  new_row_edges2[, consumes_variable := NULL]
 
   # Match code_ids to node_ids to create proper edges
-  row_edges <-  nodes[, .(code_id, node_id, domain)] |>
-    merge(new_row_edges,
+  row_edges <- nodes[, .(code_id, node_id, domain)] |>
+    merge(rbind(new_row_edges1, new_row_edges2),
           by.x = c("code_id", "domain"),
           by.y = c("parent_node", "domain"),
           suffixes = c("_parent", "")) |>

@@ -1,6 +1,5 @@
-
-#' aebodsys grouping 01
-#' 
+#' @title aebodsys grouping 01
+#' @description A description 
 #' @type col_compute
 #' @depends ADAE AEBODSYS
 #' @depends ADAE AESEV_GRP

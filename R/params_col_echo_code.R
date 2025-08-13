@@ -3,7 +3,6 @@ params_col_echo_code <- function(
   depend_cols,
   depend_domains,
   outputs,
-  node_id,
   domain_keys
 ) {
   join_specs <- pre_process_generate_rename_left_join_code(
@@ -15,7 +14,6 @@ params_col_echo_code <- function(
   )
 
   return(list(
-    header = node_id,
     self = .self,
     join_dataset = join_specs$join_dataset,
     select_expr = paste(

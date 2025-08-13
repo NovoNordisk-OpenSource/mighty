@@ -469,6 +469,7 @@ test_that("External predecessor dependencies are handled correctly in filter and
   # Check order of derivations
   programs <- x |> lapply(readLines)
   names(programs) <- basename(x)
+
   expect_section_order("Read data sets", "Initialize ADLB", programs[["1_ADLB.R"]])
   expect_section_order("Initialize ADLB", "Filter ADLB", programs[["1_ADLB.R"]])
   expect_section_order("Filter ADLB", "ADLB-AGE", programs[["1_ADLB.R"]])

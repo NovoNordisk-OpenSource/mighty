@@ -8,7 +8,7 @@
 #' @export
 #'
 #' @examples
-group_nodes <- function(ordered_nodes, vertices, edges) {
+group_actions <- function(ordered_nodes, vertices, edges) {
   checkmate::assert_data_table(edges)
   checkmate::assert_data_table(vertices)
   n_remaining <- data.table(node_id = ordered_nodes)[, rank := .I] |>
@@ -29,7 +29,7 @@ group_nodes <- function(ordered_nodes, vertices, edges) {
   # Apply tree growth until depletion of nodes or node_group reaches 1000
   node_group <- 1
   while (nrow(n_remaining) > 0 & node_group <= 1000) {
-    res <- traverse_and_group_nodes(n_remaining, n_stack, edges, node_group)
+    res <- traverse_and_group_actions(n_remaining, n_stack, edges, node_group)
     n_remaining <- res[["n_remaining"]]
     n_stack <- res[["n_stack"]]
     node_group <- node_group + 1
@@ -63,7 +63,7 @@ group_nodes <- function(ordered_nodes, vertices, edges) {
 #' @export
 #'
 #' @examples
-traverse_and_group_nodes <- function(n_remaining,
+traverse_and_group_actions <- function(n_remaining,
                                      n_stack,
                                      edges,
                                      node_group,
@@ -135,7 +135,7 @@ traverse_and_group_nodes <- function(n_remaining,
                                                           node_id]
   }
   for (j in node_id_children_accepted) {
-    res <- traverse_and_group_nodes(n_remaining, n_stack, edges, node_group, j, domain_i, node_level_i+1)
+    res <- traverse_and_group_actions(n_remaining, n_stack, edges, node_group, j, domain_i, node_level_i+1)
     n_remaining <- res[["n_remaining"]]
     n_stack <- res[["n_stack"]]
   }

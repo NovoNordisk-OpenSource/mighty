@@ -1,5 +1,5 @@
-#' Arm match 01
-#' 
+#' @title Arm match 01
+#' @description A description 
 #' @type col_compute
 #' @depends ADSL PLANNED_ARM
 #' @depends ADSL ACTARM

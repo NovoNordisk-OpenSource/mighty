@@ -1,5 +1,5 @@
-#' Aval grp 01
-#' 
+#' @title Aval grp 01
+#' @description A description 
 #' @type col_compute
 #' @depends ADLB AVAL
 #' @outputs AVAL_GRP

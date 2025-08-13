@@ -1,5 +1,5 @@
-#' Newfl 02
-#' 
+#' @title Newfl 02
+#' @description A description 
 #' @type col_compute
 #' @depends ADSL USUBJID
 #' @depends ADSL COUNTRY

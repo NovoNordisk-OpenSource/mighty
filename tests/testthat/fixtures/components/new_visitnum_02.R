@@ -1,5 +1,5 @@
-#' New visitnum 02
-#' 
+#' @title New visitnum 02
+#' @description A description 
 #' @type row_compute
 #' @depends ADLB VISITNUM
 #' @outputs VISITNUM

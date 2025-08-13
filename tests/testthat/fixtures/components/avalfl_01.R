@@ -1,5 +1,5 @@
-#' avalfl_01
-#'
+#' @title avalfl_01
+#' @description A description
 #' @type col_compute
 #' @depends ADLB AVAL
 #' @outputs AVALFL

@@ -1,5 +1,5 @@
-#' New aval 04
-#' 
+#' @title New aval 04
+#' @description A description 
 #' @type row_compute
 #' @depends ADLB AVAL
 #' @depends ADLB AVALC

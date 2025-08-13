@@ -1,5 +1,5 @@
-#' age_redefined_01
-#' 
+#' @title age_redefined_01
+#' @description A description 
 #' @type col_compute
 #' @depends core AGE
 #' @depends core SEX

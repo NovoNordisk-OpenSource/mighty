@@ -1,5 +1,5 @@
-#' Age diff 02
-#' 
+#' @title Age diff 02
+#' @description A description 
 #' @type col_compute
 #' @depends ADSL AGE_DIFF1
 #' @depends ADSL PLANNED_ARM

@@ -30,6 +30,12 @@ expect_section_order <- function(start_section, end_section, section_list) {
       length(m) > 0,
       info = paste0("The section ", i, " does not exist in the document")
     )
+    testthat::expect_true(
+      length(m) < 2,
+      info = paste0("The section ", i, " exists in multiple places")
+    )
+    
+    
     start_idx[i] <- m
   }
 
@@ -49,6 +55,15 @@ expect_section_order <- function(start_section, end_section, section_list) {
     )
   )
   
+testthat::expect_true(
+    length(end_idx) < 2,
+    info = paste0(
+      "The section ",
+      end_section,
+      " exists in multiple places"
+    )
+  )
+
   inx <- start_idx < end_idx
   for (i in seq_along(inx)) {
     testthat::expect_true(

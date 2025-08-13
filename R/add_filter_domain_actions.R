@@ -86,9 +86,15 @@ add_filter_domain_actions <- function(actions, ui_init, domain_keys) {
     # This has two sources:
     # 1) Outputs inherited from domain_init, i.e. all col_copy + SRC_ (if domain filters are present)
     # 2) filter dependencies
+
+    depend_cols_nm <-
+      if (has_domain_filter[[d]]) {
+        c(filter_domain_outputs, "SRC_")
+      } else {
+        filter_domain_outputs
+      }
     inherited_depends_cols <-
-      data.table(column_name = c(filter_domain_outputs,
-                                  ifelse(has_domain_filter[[d]], "SRC_", character(0))),
+      data.table(column_name = depend_cols_nm,
                  domain = d,
                  domain_type = classify_data_domains(d))
 

@@ -1,4 +1,5 @@
-#' lbtest_02
+#' @title lbtest_02
+#' @description A description
 #' @type col_compute
 #' @depends ADLB LBTEST
 #' @outputs LBTEST2

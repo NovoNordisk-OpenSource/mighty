@@ -1,5 +1,5 @@
-#' Arm category 01
-#' 
+#' @title Arm category 01
+#' @description A description 
 #' @type col_compute
 #' @depends ADSL ARM_GRP1
 #' @outputs ARM_CAT1
