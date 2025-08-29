@@ -7,7 +7,14 @@
 sort_actions(edges, nodes, primary_domain = "ADSL")
 }
 \arguments{
-\item{primary_domain}{}
+\item{edges}{A data frame representing edges in the directed graph with two columns (from, to).}
+
+\item{nodes}{A data frame representing nodes including their identifiers and associated domains.}
+
+\item{primary_domain}{A string representing the primary domain used for prioritization.}
+}
+\value{
+A character vector of node IDs sorted in topological order.
 }
 \description{
 Sort actions according to topological order and dependencies

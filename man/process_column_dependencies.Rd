@@ -4,7 +4,7 @@
 \alias{process_column_dependencies}
 \title{Process column dependencies}
 \usage{
-process_column_dependencies(depend_cols, domain, outputs)
+process_column_dependencies(type, depend_cols, domain, outputs)
 }
 \arguments{
 \item{depend_cols}{List of column dependencies to process}

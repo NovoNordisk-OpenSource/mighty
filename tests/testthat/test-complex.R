@@ -9,7 +9,6 @@ test_that("Complex test with multiple domains and column/row operations", {
     path_ui_data,
     environment()
   )
-
   path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
   path_trial <- withr::local_tempdir()
 
@@ -55,53 +54,47 @@ test_that("Complex test with multiple domains and column/row operations", {
   programs <- x |> lapply(readLines)
   names(programs) <- basename(x)
 
-  path_comp <- paste0("-", test_path(), "/fixtures/components/")
-
   # Check program 1: ADSL part 1
   expect_section_order(
-    "ADSL-PLANNED_ARM",
-    paste0("ADSL-ARM_GRP1", path_comp, "arm_group_01.R"),
+    "ADSL-PLANNED_ARM-",
+    "ADSL-ARM_GRP1-",
     programs[["1_ADSL.R"]]
   )
   expect_section_order(
-    "ADSL-PLANNED_ARM",
-    paste0("ADSL-NEW_ARM", path_comp, "arm_01.R"),
+    "ADSL-PLANNED_ARM-",
+    "ADSL-NEW_ARM-",
     programs[["1_ADSL.R"]]
   )
   expect_section_order(
-    "ADSL-PLANNED_ARM",
-    paste0("ADSL-ARM_MATCH", path_comp, "arm_match_01.R"),
+    "ADSL-PLANNED_ARM-",
+    "ADSL-ARM_MATCH-",
     programs[["1_ADSL.R"]]
   )
   expect_section_order(
-    paste0("ADSL-ARM_GRP1", path_comp, "arm_group_01.R"),
-    paste0("ADSL-ARM_CAT1", path_comp, "arm_category_01"),
+    "ADSL-ARM_GRP1-",
+    "ADSL-ARM_CAT1-",
     programs[["1_ADSL.R"]]
   )
   expect_section_order(
-    paste0("ADSL-AGE2", path_comp, "age_crop_01.R"),
-    paste0("ADSL-AGE_DIFF1", path_comp, "age_diff_01.R"),
+    "ADSL-AGE2",
+    "ADSL-AGE_DIFF1-",
     programs[["1_ADSL.R"]]
   )
   expect_section_order(
-    c(
-      "ADSL-PLANNED_ARM",
-      paste0("ADSL-AGE_DIFF1", path_comp, "age_diff_01.R")
-    ),
-    paste0("ADSL-AGE_DIFF2", path_comp, "age_diff_02.R"),
+    c("ADSL-PLANNED_ARM-",
+      "ADSL-AGE_DIFF1-"),
+    "ADSL-AGE_DIFF2-",
     programs[["1_ADSL.R"]]
   )
   expect_section_order(
-    c(
-      "ADSL-PLANNED_ARM",
-      paste0("ADSL-AGE_DIFF1", path_comp, "age_diff_01.R")
-    ),
-    paste0("ADSL-NEWFL01-NEWREA01", path_comp, "newfl_01.R"),
+    c("ADSL-PLANNED_ARM-",
+      "ADSL-AGE_DIFF1-"),
+    "ADSL-NEWFL01-NEWREA01-",
     programs[["1_ADSL.R"]]
   )
   expect_section_order(
-    paste0("ADSL-AGE2", path_comp, "age_crop_01.R"),
-    paste0("ADSL-AGE_GRP1", path_comp, "age_group_01.R"),
+    "ADSL-AGE2-",
+    "ADSL-AGE_GRP1-",
     programs[["1_ADSL.R"]]
   )
 
@@ -113,113 +106,82 @@ test_that("Complex test with multiple domains and column/row operations", {
   # Check program 2: ADLB
 
   expect_section_order(
-    c(
-      "ADLB-AVAL-_col_mutate",
-      paste0("ADLB-LBTEST", path_comp, "new_lbtest_01.R")
-    ),
-    paste0("ADLB-AVAL_GRP", path_comp, "aval_grp_01.R"),
+    c("ADLB-AVAL-", "new_microcytes-"),
+    "ADLB-AVAL_GRP-",
     programs[["2_ADLB.R"]]
   )
   expect_section_order(
-    paste0("ADLB-AVAL", path_comp, "new_aval_01.R"),
-    paste0("ADLB-LBTEST", path_comp, "lbtest_01.R"),
+    "new_aval_01-",
+    "ADLB-LBTEST-",
     programs[["2_ADLB.R"]]
   )
   expect_section_order(
-    c(
-      paste0("ADLB-LBTEST", path_comp, "new_lbtest_01.R"),
-      paste0("ADLB-AVAL_GRP", path_comp, "aval_grp_01.R")
-    ),
-    paste0("ADLB-AVAL_GRP2", path_comp, "aval_grp_02.R"),
+    c("new_microcytes-",
+      "ADLB-AVAL_GRP-"),
+    "ADLB-AVAL_GRP2-",
     programs[["2_ADLB.R"]]
   )
   expect_section_order(
-    "ADLB-AVAL-_col_mutate",
-    paste0("ADLB-AVAL", path_comp, "new_aval_01.R"),
+    "ADLB-AVAL-",
+    "new_aval_01-",
     programs[["2_ADLB.R"]]
   )
   expect_section_order(
-    "ADLB-AVAL-_col_mutate",
-    paste0("ADLB-AVAL", path_comp, "new_aval_03.R"),
+    "ADLB-AVAL-",
+    "new_aval_03-",
     programs[["2_ADLB.R"]]
   )
   expect_section_order(
-    c("ADLB-AVAL-_col_mutate", "ADLB-AVALC-_col_mutate"),
-    paste0("ADLB-AVAL", path_comp, "new_aval_04.R"),
+    c("ADLB-AVAL-", "ADLB-AVALC-"),
+    "new_aval_04-",
     programs[["2_ADLB.R"]]
   )
   expect_section_order(
-    paste0("ADLB-LBTEST", path_comp, "lbtest_01.R"),
-    paste0("ADLB-LBTEST", path_comp, "new_lbtest_01.R"),
+    "ADLB-LBTEST-",
+    "new_microcytes-",
     programs[["2_ADLB.R"]]
   )
   expect_section_order(
-    c(
-      "ADLB-AVALC-_col_mutate",
-      paste0("ADLB-LBTEST", path_comp, "lbtest_01.R")
-    ),
-    paste0(
-      "ADLB-LBTEST-AVALC-",
-      test_path(),
-      "/fixtures/components/new_lbtest_02.R"
-    ),
+    c("ADLB-AVALC-",
+      "ADLB-LBTEST-"),
+    "new_macrocytes-",
     programs[["2_ADLB.R"]]
   )
   expect_section_order(
-    paste0(
-      "ADLB-LBTEST-",
-      test_path(),
-      "/fixtures/components/new_lbtest_01.R"
-    ),
-    paste0(
-      "ADLB-LBTEST-",
-      test_path(),
-      "/fixtures/components/new_lbtest_04.R"
-    ),
+    "new_microcytes-",
+    "new_macrocytes2",
     programs[["2_ADLB.R"]]
   )
   expect_section_order(
-    c(
-      paste0("ADLB-LBTEST", path_comp, "new_lbtest_01.R"),
-      paste0("ADLB-LBTEST", path_comp, "new_lbtest_01.R")
-    ),
-    paste0("ADLB-LBTEST", path_comp, "new_lbtest_05.R"),
+    c("new_microcytes-", "new_macrocytes-"),
+    "new_microcytes2_macrocytes2-",
     programs[["2_ADLB.R"]]
   )
   expect_section_order(
-    c(
-      paste0("ADLB-LBTEST", path_comp, "lbtest_01.R"),
-      paste0("ADLB-LBTEST", path_comp, "new_lbtest_01.R")
-    ),
-    paste0(
-      "ADLB-LBTEST-",
-      test_path(),
-      "/fixtures/components/new_lbtest_03.R"
-    ),
+    c("ADLB-LBTEST-",
+      "new_microcytes-"),
+    "new_microcytes2-",
     programs[["2_ADLB.R"]]
   )
   expect_section_order(
-    c(
-      "ADLB-AVAL-_col_mutate",
-      paste0("ADLB-AVAL", path_comp, "new_aval_01.R")
-    ),
-    paste0("ADLB-AVAL", path_comp, "new_aval_02.R"),
+    c("ADLB-AVAL-",
+      "new_aval_01-"),
+    "new_aval_02-",
     programs[["2_ADLB.R"]]
   )
   expect_section_order(
-    paste0("ADLB-VISITNUM", path_comp, "new_visitnum_01.R"),
-    paste0("ADLB-VISITNUM", path_comp, "new_visitnum_02.R"),
+    "new_visitnum_01-",
+    "new_visitnum_02-",
     programs[["2_ADLB.R"]]
   )
   expect_section_order(
-    paste0("ADLB-LBTEST", path_comp, "lbtest_01.R"),
-    paste0("ADLB-LBTEST", path_comp, "new_lbtest_07.R"),
+    "ADLB-LBTEST-",
+    "new_protein-",
     programs[["2_ADLB.R"]]
   )
-
   expect_section_order(
-    paste0("ADLB-LBTEST", path_comp, "lbtest_01.R"),
-    paste0("ADLB-LBTEST", path_comp, "new_lbtest_08.R"),
+    "ADLB-LBTEST-",
+    "new_specific_gravity-",
     programs[["2_ADLB.R"]]
   )
 
@@ -235,8 +197,8 @@ test_that("Complex test with multiple domains and column/row operations", {
 
   # Check program 3: ADSL part 2
   expect_section_order(
-    paste0("ADSL-NEWFL02", path_comp, "newfl_02.R"),
-    paste0("ADSL-NEWFL03-NEWREA03", path_comp, "newfl_03.R"),
+    "ADSL-NEWFL02-",
+    "ADSL-NEWFL03-NEWREA03-",
     programs[["3_ADSL.R"]]
   )
 
@@ -257,3 +219,4 @@ test_that("Complex test with multiple domains and column/row operations", {
   #   as.data.frame() |>
   #   expect_snapshot_value(style = "json2", variant = "edges")
 })
+

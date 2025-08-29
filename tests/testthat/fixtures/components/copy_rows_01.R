@@ -1,6 +1,6 @@
 #' @title Copy rows 01
 #' @description A description 
-#' @type col_compute
+#' @type derivation
 #' @returns `ADLB`
 copy_rows_01 <-   function(ADLB) {
   ADLB <- rbind(ADLB, ADLB[1:10,])

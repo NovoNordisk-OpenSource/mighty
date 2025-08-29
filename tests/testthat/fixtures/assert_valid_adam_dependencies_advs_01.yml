@@ -4,7 +4,8 @@ table_metadata:
 init:
   base_domains:
     - vs
-  filter_domain: NA
+  filter_domain:
+    - vs: NA
   filter_global:
     - '!is.na(SEX)'
   filter_depend_cols:

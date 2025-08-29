@@ -4,7 +4,7 @@
 \alias{extract_code_component_metadata}
 \title{Extract and format metadata for active code IDs}
 \usage{
-extract_code_component_metadata(code_component_metadata, ui_data)
+extract_code_component_metadata(code_component_metadata)
 }
 \arguments{
 \item{code_component_metadata}{List of metadata for code components, indexed by code_id}

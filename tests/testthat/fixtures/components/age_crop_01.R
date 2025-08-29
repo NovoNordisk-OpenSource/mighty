@@ -1,6 +1,6 @@
 #' @title Age crop 01
 #' @description A description 
-#' @type col_compute
+#' @type derivation
 #' @depends ADSL AGE
 #' @outputs AGE2
 #' @returns `ADSL`

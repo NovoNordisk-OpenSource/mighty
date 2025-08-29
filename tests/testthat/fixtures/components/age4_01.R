@@ -1,6 +1,6 @@
 #' @title age4_01
 #' @description A description 
-#' @type col_compute
+#' @type derivation
 #' @depends ADLB AGE2
 #' @outputs AGE4
 #' @returns `ADLB`

@@ -3,15 +3,6 @@
 #' @param ui_yml The UI YAML input to validate
 #' @return Invisible TRUE if valid, otherwise stops with error
 assert_valid_ui_yml <-  function(ui_yml) {
-  # Check basic type
-  if (!is.list(ui_yml)) {
-    stop("ui_yml must be a list, got: ", class(ui_yml)[1])
-  }
-
-  # Check not empty
-  if (length(ui_yml) == 0) {
-    stop("ui_yml cannot be empty")
-  }
 
   # Check all elements are named
   if (is.null(names(ui_yml)) || any(names(ui_yml) == "")) {

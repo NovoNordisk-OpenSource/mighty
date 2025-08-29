@@ -1,6 +1,6 @@
 #' @title Newfl 02
 #' @description A description 
-#' @type col_compute
+#' @type derivation
 #' @depends ADSL USUBJID
 #' @depends ADSL COUNTRY
 #' @depends ADSL ARM_MATCH

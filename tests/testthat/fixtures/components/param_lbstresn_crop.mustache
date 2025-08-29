@@ -1,0 +1,9 @@
+#' @title param_lbstresn_crop
+#' @description Test function that crops LBSTRESN based on parameter value
+#' @param LBSTRESN_MINVAL `numeric` Threshold for LBSTRESN. If below then assign NA.
+#' @type derivation
+#' @depends ADLB LBSTRESN
+#' @outputs LBSTRESN_CROP
+
+ADLB <- ADLB |>
+  dplyr::mutate(LBSTRESN_CROP = ifelse(LBSTRESN <= {{LBSTRESN_MINVAL}}, NA, LBSTRESN))

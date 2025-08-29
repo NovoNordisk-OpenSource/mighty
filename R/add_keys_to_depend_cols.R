@@ -14,7 +14,7 @@
 #'
 #' @returns A modified `data.table` of nodes with enriched `depend_cols`
 #'   information.
-update_depend_cols <- function(nodes, pk, ui_init) {
+add_keys_to_depend_cols <- function(nodes, pk, ui_init) {
   x <- copy(nodes)
 
   # Enrich depend_cols for col_echo actions having an external dependency with

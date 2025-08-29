@@ -1,6 +1,6 @@
 #' @title New lbtest 03
 #' @description A description 
-#' @type row_compute
+#' @type row
 #' @depends ADLB LBTEST
 #' @outputs LBTEST
 #' @returns `ADLB`

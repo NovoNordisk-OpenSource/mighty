@@ -16,7 +16,7 @@ convert_yml_to_data_table_ <- function(nested_list, domain) {
   parameters <- vector("character", length(parent_names))
   depend_rows_list <- vector("character", length(parent_names))
   parent_names_chr <- vector("character", length(parent_names))
-
+  id_chr <- vector("character", length(parent_names))
 
   # Extract data from each parent element
   for (i in seq_along(parent_names)) {
@@ -46,8 +46,10 @@ convert_yml_to_data_table_ <- function(nested_list, domain) {
       parent_data$code_id
     else
       NA_character_
-
-
+    id_chr[[i]] <- if (!is.null(parent_data$id))
+      parent_data$id
+    else
+      NA_character_
   }
 
   dt <- data.table::data.table(
@@ -58,8 +60,8 @@ convert_yml_to_data_table_ <- function(nested_list, domain) {
     depend_rows = unlist(depend_rows_list, recursive = FALSE),
     parameters = unlist(parameters, recursive = FALSE),
     code_id = code_id_chr,
-    domain = rep(domain, length(parent_names))
-
+    domain = rep(domain, length(parent_names)),
+    id = unlist(id_chr, recursive = FALSE)
   )
 
   return(dt)

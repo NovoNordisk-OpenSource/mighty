@@ -4,14 +4,17 @@ table_metadata:
 init:
   base_domains:
     - lb
-  filter_domain: NA
-  filter_global: NA
-  filter_depend_cols: NA
+  filter_domain:
+    - lb: NA
+  filter_global:
+  - NA
+  filter_depend_cols:
+  - NA
 
 column_metadata:
   - column: USUBJID
 
-  - source: LBSTRESN
+  - column: LBSTRESN
 
   - column: AVAL
     source: LBSTRESN

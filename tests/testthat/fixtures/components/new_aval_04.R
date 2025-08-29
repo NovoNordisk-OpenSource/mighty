@@ -1,6 +1,6 @@
 #' @title New aval 04
 #' @description A description 
-#' @type row_compute
+#' @type row
 #' @depends ADLB AVAL
 #' @depends ADLB AVALC
 #' @outputs AVAL

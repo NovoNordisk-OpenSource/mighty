@@ -5,7 +5,7 @@ init:
   base_domains:
     - ae
   filter_domain:
-    ae: '!is.na(AEBODSYS)'
+    - ae: '!is.na(AEBODSYS)'
   filter_global:
     - '!is.na(SEX)'
     - 'AETRTEM == "Y"'

@@ -1,6 +1,6 @@
 #' Fn AB
 #' @param .self `data.frame` Input data set
-#' @type col_compute
+#' @type derivation
 #' @depends .self USUBJID
 #' @outputs A
 #' @outputs B
@@ -12,7 +12,7 @@ fn_AB <- function(.self, params = list(param_1=NULL, param_2 = NULL)){
 
 #' Fn C
 #' @param .self `data.frame` Input data set
-#' @type col_compute
+#' @type derivation
 #' @depends .self USUBJID
 #' @outputs C
 #' @returns `.self`
@@ -23,7 +23,7 @@ fn_C <- function(.self, params = list(param_1=NULL)){
 
 #' Fn D
 #' @param .self `data.frame` Input data set
-#' @type row_compute
+#' @type row
 #' @depends .self USUBJID
 #' @outputs C
 #' @returns `.self`
@@ -33,7 +33,7 @@ fn_D <- function(.self, params = list(param_1=NULL)){
 
 #' Fn E
 #' @param .self `data.frame` Input data set
-#' @type row_compute
+#' @type row
 #' @depends .self USUBJID
 #' @outputs C
 #' @returns `.self`

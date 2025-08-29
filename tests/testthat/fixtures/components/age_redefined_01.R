@@ -1,6 +1,6 @@
 #' @title age_redefined_01
 #' @description A description 
-#' @type col_compute
+#' @type derivation
 #' @depends core AGE
 #' @depends core SEX
 #' @depends ADLB RACE

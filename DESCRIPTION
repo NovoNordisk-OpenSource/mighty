@@ -25,7 +25,8 @@ Imports:
     checkmate,
     styler,
     roxygen2,
-    whisker
+    whisker,
+    jsonvalidate
 Suggests: 
     knitr,
     mighty.standards,

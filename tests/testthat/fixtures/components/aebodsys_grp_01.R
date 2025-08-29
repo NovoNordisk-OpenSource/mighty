@@ -1,6 +1,6 @@
 #' @title aebodsys grouping 01
 #' @description A description 
-#' @type col_compute
+#' @type derivation
 #' @depends ADAE AEBODSYS
 #' @depends ADAE AESEV_GRP
 #' @outputs AEBODSYS_GRP

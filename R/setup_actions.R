@@ -28,7 +28,7 @@
 #'     for node_id, domain, type, dependencies, outputs, and other metadata}
 #'
 #' @seealso \code{\link{convert_yml_to_data_table}} for YAML to data.table
-#' conversion 
+#' conversion
 #' \code{\link{update_ui_data}} for UI data enrichment
 #'
 #' @examples
@@ -42,21 +42,22 @@ setup_actions <- function(
 
   checkmate::assert_list(ui_yml)
 
+  # Extract init metadata
+  ui_init <- purrr::list_transpose(ui_yml)[["init"]]
+
+  # Get UI data in tabular format
   ui_table <- convert_yml_to_data_table(ui_yml)
+  ui_table$column <- NULL
 
-  # Create a consolidated environment for code components
-  unique_code_ids <- ui_table[
-    !is.na(code_id) & !duplicated(code_id),
-    .(code_id, parameters)
-  ]
+  actions_base <- extract_actions(ui_table)
 
-  components_rendered <- render_components(unique_code_ids)
+  # Render code components for each action given the specifications per action
+  components_rendered <- render_components(actions_base)
+
   actions <- components_rendered |>
     get_component_metadata() |>
-    update_ui_data(ui_table) |>
-    remove_duplicated_actions() |>
-    add_node_id_fast() |>
-    update_depend_cols(domain_keys, purrr::list_transpose(ui_yml)[["init"]]) |>
+    consolidate_metadata(actions_base) |>
+    add_keys_to_depend_cols(domain_keys, ui_init) |>
     assert_valid_outputs() |>
     assert_valid_depend_cols(ui_yml, domain_keys, check_cross_domain_adam_dependencies)
 

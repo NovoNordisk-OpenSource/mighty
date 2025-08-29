@@ -35,3 +35,11 @@ setup_yml_file_for_testing <- function(config_files, test_env) {
   }
   return(result |> unlist(use.names = F))
 }
+
+
+# Helper function to create temporary YAML files for testing
+create_temp_yaml <- function(content) {
+  tmp_file <- tempfile(fileext = ".yml")
+  writeLines(content, tmp_file)
+  return(tmp_file)
+}

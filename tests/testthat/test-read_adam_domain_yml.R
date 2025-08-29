@@ -32,6 +32,7 @@ test_that("read_adam_specs handles missing files correctly", {
 test_that("read_adam_specs errors on missing required top-level elements", {
   # Missing table_metadata
   yml_no_table <- "
+
 init:
   base_domains:
     - DM
@@ -43,37 +44,14 @@ column_metadata:
 
   trial_path <- withr::local_tempdir()
   ui_path <- file.path(trial_path, "invalid.yml")
-  yaml::read_yaml(text = yml_no_table) |>
-    yaml::write_yaml(ui_path)
-
-  expect_error(
-    read_adam_specs(ui_path),
-    "All elements in ui_yml must be named "
-  )
+  yml_no_table |>
+  writeLines(ui_path)
+  
+  
+    read_adam_specs(ui_path) |> expect_error(regexp = "Missing required field 'table_metadata'")
 })
 
-test_that("read_adam_specs errors on empty columns", {
-  yml_empty_columns <-  "
-table_metadata:
-  table: ADSL
 
-init:
-  base_domains:
-    - DM
-
-column_metadata: []
-"
-
-  trial_path <- withr::local_tempdir()
-  ui_path <- file.path(trial_path, "invalid.yml")
-  yaml::read_yaml(text = yml_empty_columns) |>
-    yaml::write_yaml(ui_path)
-
-  expect_error(
-    read_adam_specs(ui_path),
-    "'columns' element for domain 'ADSL' cannot be empty"
-  )
-})
 
 test_that("read_adam_specs errors on invalid filter specifications", {
   yml_invalid_filter <-  "
@@ -83,20 +61,22 @@ table_metadata:
 init:
   base_domains:
     - DM
-  filter_global: 42  # Should be character or list
+  filter_domain:
+    - DM: NA
+  filter_global:
+    - 42  # Should be character or list
+  filter_depend_cols:
+    - NA
 
 column_metadata:
   - column: USUBJID
-    source: core.USUBJID
 "
 
   trial_path <- withr::local_tempdir()
-  ui_path <- file.path(trial_path, "invalid_filter.yml")
-  yaml::read_yaml(text = yml_invalid_filter) |>
-    yaml::write_yaml(ui_path)
-
+  
+  ui_path <- create_temp_yaml(yml_invalid_filter)
   expect_error(
     read_adam_specs(ui_path),
-    "filter_global in `init` section for domain 'ADSL' must be character vector or list"
+    "Expected type 'string"
   )
 })

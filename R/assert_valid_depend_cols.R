@@ -184,12 +184,15 @@ get_all_adam_dependencies <- function(x, filter_dep) {
 #' @returns A character vector of fully qualified column names
 #'   (domain.column_name) that represent dependencies from ADaM domains
 get_adam_dependencies_from_actions <- function(domain_table, depend_col) {
-  # Filter for dependencies from ADaM domains
-  adam_deps <- depend_col[domain_type == "adam",]
-  if (nrow(adam_deps) == 0) {
-    return(character(0))
+
+  if(all(!is.na(depend_col))) {
+    # Filter for dependencies from ADaM domains
+    adam_deps <- depend_col[domain_type == "adam",]
+    if (nrow(adam_deps) == 0) {
+      return(character(0))
+    }
+    return(adam_deps[, paste0(domain, ".", column_name)])
   }
-  adam_deps[, paste0(domain, ".", column_name)]
 }
 
 #' Check for External ADaM Dependencies

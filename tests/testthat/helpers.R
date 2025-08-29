@@ -22,7 +22,7 @@
 expect_section_order <- function(start_section, end_section, section_list) {
   # Check if the start_section is before the end_section
   start_idx <- c()
-  
+
 
   for (i in start_section) {
     m <- grep(paste0(i, ".*-----"), section_list)
@@ -34,8 +34,8 @@ expect_section_order <- function(start_section, end_section, section_list) {
       length(m) < 2,
       info = paste0("The section ", i, " exists in multiple places")
     )
-    
-    
+
+
     start_idx[i] <- m
   }
 
@@ -54,7 +54,7 @@ expect_section_order <- function(start_section, end_section, section_list) {
       " does not exist in the document"
     )
   )
-  
+
 testthat::expect_true(
     length(end_idx) < 2,
     info = paste0(

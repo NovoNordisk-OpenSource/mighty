@@ -1,7 +1,7 @@
 #' @title ACTARM
 #' @description A description
 #' 
-#' @type col_compute
+#' @type derivation
 #' @depends dm STUDYID
 #' @depends dm USUBJID
 #' @depends dm ACTARM

@@ -1,6 +1,6 @@
 #' @title Aval grp 02
-#' @description A description 
-#' @type col_compute
+#' @description A description
+#' @type derivation
 #' @depends ADLB AVAL_GRP
 #' @outputs AVAL_GRP2
 #' @returns `ADLB`

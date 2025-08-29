@@ -8,8 +8,10 @@ init:
   filter_domain:
     - dm: NA
     - dm_vaccine: NA
-  filter_global: NA
-  filter_depend_cols: NA
+  filter_global:
+  - NA
+  filter_depend_cols:
+  - NA
 
 column_metadata:
   - column: USUBJID

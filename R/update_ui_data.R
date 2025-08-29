@@ -14,30 +14,25 @@
 #'
 #' @examples
 #' # Example usage would go here
-update_ui_data <- function(code_component_metadata, ui_data) {
+consolidate_metadata <- function(code_component_metadata, ui_data) {
   if (length(code_component_metadata) > 0) {
+
     # Extract and prepare metadata for active code IDs
-    code_id_data <- extract_code_component_metadata(
-      code_component_metadata,
-      ui_data
-    )
+    code_id_data <- extract_code_component_metadata(code_component_metadata)
 
     # Merge UI data with code metadata
     ui_data_updated <- merge_ui_with_metadata(ui_data, code_id_data)
   } else {
-    # If there are no code_id references, return the original data
-    # Remove "column" field because this is removed in the processing step when
-    # there are code_id references
-    ui_data_updated <- ui_data[, -c("column")]
+    ui_data_updated <- ui_data[, type_from_code := NA_character_]
   }
 
   # Assign action types to predecessor action types
-  action_types <- purrr::pmap(
-    ui_data_updated[, .(code_id, type, depend_cols, outputs, domain)],
+  ui_data_updated[["type"]] <- purrr::pmap(
+    ui_data_updated[, .(code_id, type_from_code, depend_cols, outputs, domain)],
     pred_type
   ) |>
     unlist()
-  ui_data_updated[, type := action_types]
+  ui_data_updated[,type_from_code := NULL]
 
   # Assign internal code_id for predecessor action types
   ui_data_updated[ui_data_updated$type == "col_echo", code_id := "_col_echo.mustache"]
@@ -52,10 +47,15 @@ update_ui_data <- function(code_component_metadata, ui_data) {
   return(processed_data)
 }
 
-pred_type <- function(code_id, type, depend_cols, outputs, domain) {
+pred_type <- function(code_id, type_from_code, depend_cols, outputs, domain) {
+
   # Check if code_id is provided and retrieve the type
   if (!is.na(code_id)) {
-    return(type) # Directly return type if code_id is not NA
+    if (type_from_code %in% c("derivation", "predecessor")) { return("col_compute") }
+    else if (type_from_code == "row") { return("row_compute") }
+    else {
+      stop(paste0("Invalid action type ", type_from_code, " for ", code_id), ".")
+    }
   }
 
   # Check if depend_cols are all NA
@@ -113,24 +113,22 @@ has_code_id_references <- function(ui_data) {
 #' @param ui_data Data table containing UI data with code_id references
 #'
 #' @return Data table with formatted metadata for active code IDs, or NULL if no metadata found
-extract_code_component_metadata <- function(code_component_metadata, ui_data) {
-  active_code_ids <- unique(ui_data[!is.na(code_id), code_id])
-  metadata_from_active_code_ids <- code_component_metadata[active_code_ids]
+extract_code_component_metadata <- function(code_component_metadata) {
 
   # Skip if no metadata found
-  if (length(metadata_from_active_code_ids) == 0) {
+  if (length(code_component_metadata) == 0) {
     return(NULL)
   }
 
   metadata_transposed <- purrr::list_transpose(
-    metadata_from_active_code_ids,
+    code_component_metadata,
     simplify = FALSE
   )
   metadata_transposed$type <- metadata_transposed$type |> unlist(F)
-  
-  
+
+
   code_id_data <- data.table::data.table(
-    code_id = names(metadata_from_active_code_ids),
+    node_id = names(code_component_metadata),
     type = metadata_transposed$type,
     depend_cols = metadata_transposed$depend_cols,
     outputs = metadata_transposed$outputs,
@@ -155,11 +153,13 @@ merge_ui_with_metadata <- function(ui_data, code_id_data) {
     return(ui_data)
   }
 
+  rnm_cols <- names(code_id_data) != "node_id"
+  names(code_id_data)[rnm_cols] <- paste0(names(code_id_data)[rnm_cols], "_from_code")
+
   merged_data <- merge(
     ui_data,
     code_id_data,
-    by = "code_id",
-    suffixes = c("", "_from_code"),
+    by = "node_id",
     all.x = TRUE
   )
 
@@ -171,16 +171,13 @@ merge_ui_with_metadata <- function(ui_data, code_id_data) {
     !is.na(code_id),
     `:=`(
       depend_cols = depend_cols_from_code,
-      type = type_from_code,
       outputs = outputs_from_code
     )
   ]
 
   # Clean up redundant columns
   merged_data$outputs_from_code <- NULL
-  merged_data$type_from_code <- NULL
   merged_data$depend_cols_from_code <- NULL
-  merged_data$column <- NULL
 
   return(merged_data)
 }
@@ -197,7 +194,7 @@ merge_ui_with_metadata <- function(ui_data, code_id_data) {
 #' @return Data with processed depend_cols column
 process_depend_cols <- function(data) {
   results <- purrr::pmap(
-    data[, .(depend_cols, domain, outputs)],
+    data[, .(type, depend_cols, domain, outputs)],
     process_column_dependencies
   )
   data[, depend_cols := results]
@@ -218,9 +215,9 @@ process_depend_cols <- function(data) {
 #' @param outputs list of outputs from action
 #'
 #' @return Data table with processed dependencies, containing column_name, domain, and domain_type
-process_column_dependencies <- function(depend_cols, domain, outputs) {
-  # Empty depend_cols means that the action is a col_copy action.
-  if (all(is.na(depend_cols))) {
+process_column_dependencies <- function(type, depend_cols, domain, outputs) {
+  # col_copy actions have dependencies on themselves
+  if (type == "col_copy") {
     return(
       data.table::data.table(
         column_name = outputs,
@@ -228,8 +225,17 @@ process_column_dependencies <- function(depend_cols, domain, outputs) {
         domain_type = classify_data_domains(domain)
       )
     )
+  } else if(type == "col_compute" & all(is.na(depend_cols))){
+    # col_compute actions with no dependencies will have an empty dependency table
+    return(
+      data.table::data.table(
+        column_name = character(0),
+        domain = character(0),
+        domain_type = character(0)
+      )
+    )
   }
-
+  # If the depend_cols is already a data.frame then add the domain of each dependency to that data.frame and rename
   if (is.data.frame(depend_cols)) {
     out <- data.table::as.data.table(depend_cols)
     return(
@@ -296,21 +302,24 @@ process_column_dependencies <- function(depend_cols, domain, outputs) {
 #' @param nodes Data table to add node IDs to
 #'
 #' @return Data table with node_id column added
-add_node_id_fast <- function(nodes) {
+add_node_id <- function(nodes) {
   # Format components of the node ID
   formatted_outputs <- format_outputs(nodes$outputs)
-  formatted_code_id <- format_code_id(nodes$code_id)
-  formatted_parameters <- format_parameters(nodes$parameters)
 
   # Combine components to create node ID
-  nodes$node_id <- paste0(
-    "ID::",
-    nodes$domain,
-    "-",
-    formatted_outputs,
-    formatted_code_id,
-    formatted_parameters
-  )
+  nodes$node_id <- lapply(seq_len(nrow(nodes)), function(i) {
+    domain <- toupper(nodes$domain[[i]])
+    if (!is.na(nodes$id[[i]])) {
+      paste0(domain, "-", nodes$id[[i]])
+    } else {
+      paste0(
+        domain,
+        "-",
+        formatted_outputs[[i]]
+      )
+
+    }
+  }) |> unlist()
 
   return(nodes)
 }

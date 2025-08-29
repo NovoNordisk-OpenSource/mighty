@@ -1,6 +1,6 @@
 #' @title supp_ae_01
 #' @description A description
-#' @type col_compute
+#' @type derivation
 #' @depends ADAE USUBJID
 #' @depends ADAE AESEQ
 #' @depends suppae USUBJID

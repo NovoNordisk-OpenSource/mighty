@@ -1,6 +1,6 @@
 #' @title Age group 01
 #' @description A description 
-#' @type col_compute
+#' @type derivation
 #' @depends ADSL AGE2
 #' @outputs AGE_GRP1
 #' @returns `ADSL`

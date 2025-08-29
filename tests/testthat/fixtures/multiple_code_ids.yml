@@ -5,7 +5,7 @@ init:
   base_domains:
     - LB
   filter_domain:
-    LB: NA
+    - LB: NA
   filter_global:
     - '!is.na(SEX)'
   filter_depend_cols:

@@ -1,6 +1,6 @@
 #' @title avalfl_01
 #' @description A description
-#' @type col_compute
+#' @type derivation
 #' @depends ADLB AVAL
 #' @outputs AVALFL
 #' @outputs AVALREA

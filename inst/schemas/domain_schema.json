@@ -1,0 +1,184 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ADaM Specifications Schema",
+  "description": "Schema for validating ADaM domain specifications YAML files",
+  "type": "object",
+  "required": [
+    "table_metadata",
+    "init",
+    "column_metadata"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "table_metadata": {
+      "$ref": "#/definitions/table_metadata"
+    },
+    "init": {
+      "$ref": "#/definitions/init"
+    },
+    "column_metadata": {
+      "$ref": "#/definitions/column_metadata"
+    },
+    "row_actions": {
+      "$ref": "#/definitions/row_actions"
+    }
+  },
+  "definitions": {
+    "table_metadata": {
+      "type": "object",
+      "description": "Basic table information",
+      "required": ["table"],
+      "additionalProperties": false,
+      "properties": {
+        "table": {
+          "type": "string",
+          "description": "Name of the table (e.g., ADLB, ADSL)",
+          "minLength": 1
+        }
+      }
+    },
+    "init": {
+      "type": "object",
+      "description": "Initialization configuration for the ADaM table",
+      "required": [
+        "base_domains",
+        "filter_domain",
+        "filter_global",
+        "filter_depend_cols"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "base_domains": {
+          "type": "array",
+          "description": "Array of base domains",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "pattern": "^[a-zA-Z][a-zA-Z0-9_]*$",
+            "minLength": 1
+          }
+        },
+        "filter_domain": {
+          "type": "array",
+          "description": "Domain filters",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "patternProperties": {
+              "^[a-zA-Z_][a-zA-Z0-9_]*$": {
+                "oneOf": [
+                  {"type": "string"},
+                  {"type": "null"}
+                ]
+              }
+            }
+          }
+        },
+        "filter_global": {
+          "type": "array",
+          "description": "Global filter expressions",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "filter_depend_cols": {
+          "type": "array",
+          "description": "Columns that filters depend on",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "column_metadata": {
+      "type": "array",
+      "description": "Metadata for each column",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/definitions/column_item"
+      }
+    },
+    "column_item": {
+      "type": "object",
+      "required": ["column"],
+      "additionalProperties": false,
+      "properties": {
+        "column": {
+          "type": "string",
+          "description": "Column name",
+          "minLength": 1
+        },
+        "source": {
+          "type": "string",
+          "description": "Source column (e.g., ADSL.AGE)",
+          "minLength": 1
+        },
+        "code_id": {
+          "type": "string",
+          "description": "Standard component or path to R function file",
+          "minLength": 1
+        },
+        "parameters": {
+          "$ref": "#/definitions/parameters_array"
+        },
+        "depend_rows": {
+          "$ref": "#/definitions/depend_rows_array"
+        }
+      }
+    },
+    "row_actions": {
+      "type": "array",
+      "description": "Array of row-level actions to be performed",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/definitions/row_action_item"
+      }
+    },
+    "row_action_item": {
+      "type": "object",
+      "required": ["id", "code_id"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the row action. Usually the code_id and the passed parameters"
+        },
+        "code_id": {
+          "type": "string",
+          "description": "The standard component name or the path to the custom component"
+        },
+        "depend_rows": {
+          "$ref": "#/definitions/depend_rows_array"
+        },
+        "parameters": {
+          "$ref": "#/definitions/parameters_array"
+        }
+      }
+    },
+    "parameters_array": {
+      "type": "array",
+      "description": "Array of parameters to pass to standard components",
+      "items": {
+        "type": "object",
+        "description": "Parameter key-value pair",
+        "minProperties": 1,
+        "additionalProperties": {
+          "type": "string",
+          "description": "Parameter value"
+        }
+      }
+    },
+    "depend_rows_array": {
+      "type": "array",
+      "description": "Unique identifier for the row action the current row action depends upon",
+      "minItems": 1,
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

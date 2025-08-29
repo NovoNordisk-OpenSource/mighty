@@ -1,6 +1,6 @@
 #' Lbtest 01
 #' @param .self `data.frame` Input data set
-#' @type col_compute
+#' @type derivation
 #' @depends .self USUBJID
 #' @depends .self LBSEQ
 #' @depends .self AVAL
@@ -39,7 +39,7 @@ lbtest_01 <-   function(.self, lb, ADSL) {
 
 #' New lbtest 01
 #' @param .self `data.frame` Input data set
-#' @type row_compute
+#' @type row
 #' @depends .self LBTEST
 #' @depends sv VISITNUM
 #' @depends sv USUBJID
@@ -63,7 +63,7 @@ new_lbtest_01 <-   function(.self) {
 
 #' New lbtest 02
 #' @param .self `data.frame` Input data set
-#' @type row_compute
+#' @type row
 #' @depends .self LBTEST
 #' @depends .self AVALC
 #' @outputs LBTEST
@@ -84,7 +84,7 @@ new_lbtest_02 <- function(.self) {
 
 #' New lbtest 03
 #' @param .self `data.frame` Input data set
-#' @type row_compute
+#' @type row
 #' @depends .self LBTEST
 #' @outputs LBTEST
 #' @returns `.self`
@@ -104,7 +104,7 @@ new_lbtest_03 <- function(.self) {
 
 #' New lbtest 04
 #' @param .self `data.frame` Input data set
-#' @type row_compute
+#' @type row
 #' @depends .self LBTEST
 #' @outputs LBTEST
 #' @returns `.self`
@@ -124,7 +124,7 @@ new_lbtest_04 <- function(.self) {
 
 #' New lbtest 05
 #' @param .self `data.frame` Input data set
-#' @type row_compute
+#' @type row
 #' @depends .self LBTEST
 #' @outputs LBTEST
 #' @returns `.self`
@@ -148,7 +148,7 @@ new_lbtest_05 <- function(.self) {
 
 #' New lbtest 06
 #' @param .self `data.frame` Input data set
-#' @type row_compute
+#' @type row
 #' @depends .self LBTEST
 #' @depends .self AVAL
 #' @depends .self DOMAIN
@@ -175,7 +175,7 @@ new_lbtest_06 <- function(.self) {
 
 #' New aval 01
 #' @param .self `data.frame` Input data set
-#' @type row_compute
+#' @type row
 #' @depends .self AVAL
 #' @outputs AVAL
 #' @returns `.self`
@@ -191,7 +191,7 @@ new_aval_01 <- function(.self) {
 
 #' New aval 02
 #' @param .self `data.frame` Input data set
-#' @type row_compute
+#' @type row
 #' @depends .self AVAL
 #' @outputs AVAL
 #' @returns `.self`
@@ -211,7 +211,7 @@ new_aval_02 <- function(.self) {
 
 #' New aval 03
 #' @param .self `data.frame` Input data set
-#' @type row_compute
+#' @type row
 #' @depends .self AVAL
 #' @depends .self DOMAIN
 #' @outputs AVAL
@@ -232,7 +232,7 @@ new_aval_03 <- function(.self) {
 
 #' New aval 04
 #' @param .self `data.frame` Input data set
-#' @type row_compute
+#' @type row
 #' @depends .self AVAL
 #' @depends .self AVALC
 #' @outputs AVAL
@@ -253,7 +253,7 @@ new_aval_04 <- function(.self) {
 
 #' New visitnum 01
 #' @param .self `data.frame` Input data set
-#' @type row_compute
+#' @type row
 #' @depends .self VISITNUM
 #' @outputs VISITNUM
 #' @returns `.self`
@@ -273,7 +273,7 @@ new_visitnum_01 <- function(.self) {
 
 #' New visitnum 02
 #' @param .self `data.frame` Input data set
-#' @type row_compute
+#' @type row
 #' @depends .self VISITNUM
 #' @outputs VISITNUM
 #' @returns `.self`
@@ -293,7 +293,7 @@ new_visitnum_02 <- function(.self) {
 
 #' Aval grp 01
 #' @param .self `data.frame` Input data set
-#' @type col_compute
+#' @type derivation
 #' @depends .self AVAL
 #' @outputs AVAL_GRP
 #' @returns `.self`
@@ -308,7 +308,7 @@ aval_grp_01 <- function(.self) {
 
 #' Aval grp 02
 #' @param .self `data.frame` Input data set
-#' @type col_compute
+#' @type derivation
 #' @depends .self AVAL_GRP
 #' @outputs AVAL_GRP2
 #' @returns `.self`
@@ -323,7 +323,7 @@ aval_grp_02 <-   function(.self) {
 
 #' Copy rows 01
 #' @param .self `data.frame` Input data set
-#' @type col_compute
+#' @type derivation
 #' @returns `.self`
 copy_rows_01 <-   function(.self) {
   .self <- rbind(.self, .self[1:10,])
@@ -332,7 +332,7 @@ copy_rows_01 <-   function(.self) {
 
 #' New lbtest 07
 #' @param .self `data.frame` Input data set
-#' @type row_compute
+#' @type row
 #' @depends .self LBTEST
 #' @outputs LBTEST
 #' @returns `.self`

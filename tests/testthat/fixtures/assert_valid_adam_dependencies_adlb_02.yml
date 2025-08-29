@@ -4,9 +4,12 @@ table_metadata:
 init:
   base_domains:
   - LB
-  filter_domain: NA
-  filter_global: NA
-  filter_depend_cols: NA
+  filter_domain: 
+   - LB: NA
+  filter_global:
+  - NA
+  filter_depend_cols:
+  - NA
 
 column_metadata:
   - column: STUDYID

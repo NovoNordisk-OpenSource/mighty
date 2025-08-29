@@ -22,7 +22,7 @@ assert_outputs_identical <- function(x) {
   # in yml and in code components
 
   x_sub <- x[
-    type_from_code %in% c("col_compute", "col_supp"),
+    type_from_code %in% c("predecessor", "derivation"),
     .(code_id, outputs, outputs_from_code, parameters)
   ]
 

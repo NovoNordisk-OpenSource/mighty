@@ -1,0 +1,9 @@
+#' @title param_1_new_1_val
+#' @description Test function that assigns a new variable with name and fixed value from two parameters.
+#' @param value `character/numeric` The value or name of existing variable that the new variable will be assigned to
+#' @param new_variable `character` Name of the new variable
+#' @type derivation
+#' @outputs {{new_variable}}
+
+ADLB <- ADLB |>
+  dplyr::mutate({{new_variable}} = {{value}})

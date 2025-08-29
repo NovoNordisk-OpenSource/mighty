@@ -1,6 +1,6 @@
 #' @title age_redefined_02
 #' @description A description 
-#' @type col_compute
+#' @type derivation
 #' @depends core AGE
 #' @outputs AGE
 #' @returns `ADLB`

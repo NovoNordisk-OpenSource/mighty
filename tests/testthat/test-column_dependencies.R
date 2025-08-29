@@ -480,3 +480,4 @@ test_that("External predecessor dependencies are handled correctly in filter and
   # expect_setequal(names(ADLB),  c("USUBJID", "STUDYID", "VISITNUM", "LBSTRESN", "LBSTRESU"))
   # expect_equal(nrow(ADLB), 1790)
 })
+

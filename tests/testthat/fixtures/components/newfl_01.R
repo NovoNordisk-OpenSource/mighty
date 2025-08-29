@@ -1,6 +1,6 @@
 #' @title Newfl 01
 #' @description A description 
-#' @type col_compute
+#' @type derivation
 #' @depends ADSL DTHFL
 #' @depends ADSL PLANNED_ARM
 #' @depends ADSL AGE_DIFF1

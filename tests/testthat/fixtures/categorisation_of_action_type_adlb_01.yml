@@ -4,9 +4,12 @@ table_metadata:
 init:
   base_domains:
     - lb
-  filter_domain: NA
-  filter_global: NA
-  filter_depend_cols: NA
+  filter_domain:
+    - lb: NA
+  filter_global:
+  - NA
+  filter_depend_cols:
+  - NA
 
 column_metadata:
   - column: USUBJID
@@ -42,4 +45,5 @@ column_metadata:
     code_id: {path_base}/fixtures/components/avalfl_01.R
 
 row_actions:
-  - code_id: {path_base}/fixtures/components/new_lbtest_01.R
+  - id: new_microcytes
+    code_id: {path_base}/fixtures/components/new_lbtest_01.R

@@ -1,6 +1,6 @@
 #' @title New visitnum 02
 #' @description A description 
-#' @type row_compute
+#' @type row
 #' @depends ADLB VISITNUM
 #' @outputs VISITNUM
 #' @returns `ADLB`

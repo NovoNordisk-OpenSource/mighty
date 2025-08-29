@@ -1,0 +1,11 @@
+#' @title lbtest 07
+#' @description A description
+#' @param variable `character` The topic code value the new rows will be based on
+#' @type row
+#' @depends ADLB LBTEST
+#' @outputs LBTEST
+
+new_lbtest <- ADLB |>
+  dplyr::filter(LBTEST == "{{variable}}") |>
+  dplyr::mutate(LBTEST = paste0("{{variable}}", "_new"))
+ADLB <- rbind(ADLB, new_lbtest)

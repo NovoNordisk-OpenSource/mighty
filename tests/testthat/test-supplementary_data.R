@@ -36,10 +36,10 @@ test_that("Supplementary data action is placed after filter_domain when no suppl
   # Check program order
   expect_section_order("Read data sets", "Initialize ADSL", programs[["1_ADSL.R"]])
   expect_section_order("Initialize ADSL",
-                       paste0("ADSL-EFFICACY-SAFETY",
-                              path_comp, "supp_dm_01.R"), programs[["1_ADSL.R"]])
+                       "ADSL-EFFICACY-SAFETY-",
+                       programs[["1_ADSL.R"]])
   expect_section_order("Filter ADSL",
-                       paste0("ADSL-EFFICACY-SAFETY",path_comp, "supp_dm_01.R"),
+                       "ADSL-EFFICACY-SAFETY-",
                        programs[["1_ADSL.R"]])
   expect_section_order("Filter ADSL", "ADSL-PLANNED_ARM", programs[["1_ADSL.R"]])
 
@@ -88,9 +88,9 @@ test_that("Supplementary data action is placed before filter_domain when supplem
   # Check program order
   expect_section_order("Read data sets", "Initialize ADSL", programs[["1_ADSL.R"]])
   expect_section_order("Initialize ADSL",
-                       paste0("ADSL-EFFICACY-SAFETY",
-                              path_comp, "supp_dm_01.R"), programs[["1_ADSL.R"]])
-  expect_section_order(paste0("ADSL-EFFICACY-SAFETY",path_comp, "supp_dm_01.R"),
+                       "ADSL-EFFICACY-SAFETY-",
+                       programs[["1_ADSL.R"]])
+  expect_section_order("ADSL-EFFICACY-SAFETY-",
                        "Filter ADSL",
                        programs[["1_ADSL.R"]])
   expect_section_order("Filter ADSL", "ADSL-PLANNED_ARM", programs[["1_ADSL.R"]])
@@ -142,9 +142,9 @@ test_that("Supplementary data action is placed before filter_domain when supplem
   expect_section_order("Read data sets", "Initialize ADSL", programs[["1_ADSL.R"]])
 
   expect_section_order("Initialize ADSL",
-                       paste0("ADSL-EFFICACY-SAFETY",
-                              path_comp, "supp_dm_01.R"), programs[["1_ADSL.R"]])
-  expect_section_order(paste0("ADSL-EFFICACY-SAFETY",path_comp, "supp_dm_01.R"),
+                       "ADSL-EFFICACY-SAFETY-",
+                       programs[["1_ADSL.R"]])
+  expect_section_order("ADSL-EFFICACY-SAFETY-",
                        "Filter ADSL",
                        programs[["1_ADSL.R"]])
   expect_section_order("Filter ADSL", "ADSL-PLANNED_ARM", programs[["1_ADSL.R"]])
@@ -196,9 +196,9 @@ test_that("Supplementary data action is placed before filter_domain when supplem
   # Check program order
   expect_section_order("Read data sets", "Initialize ADAE", programs[["1_ADAE.R"]])
   expect_section_order("Initialize ADAE",
-                       paste0("ADAE-AETRTEM", path_comp, "supp_ae_01.R"),
+                       "ADAE-AETRTEM-",
                        programs[["1_ADAE.R"]])
-  expect_section_order(paste0("ADAE-AETRTEM", path_comp, "supp_ae_01.R"),
+  expect_section_order("ADAE-AETRTEM-",
                        "Filter ADAE",
                        programs[["1_ADAE.R"]])
 
@@ -243,21 +243,19 @@ test_that("Col_compute and parent col_compute is placed before filter_domain whe
 
   # EXPECT ------------------------------------------------------------------
 
-  path_comp <- paste0("-", test_path(), "/fixtures/components/")
-
   # Check program order
   expect_section_order("Read data sets", "Initialize ADAE", programs[["1_ADAE.R"]])
   expect_section_order("Initialize ADAE",
-                       paste0("ADAE-AESEV_GRP", path_comp, "aesev_grp_01.R"),
+                       "ADAE-AESEV_GRP-",
                        programs[["1_ADAE.R"]])
-  expect_section_order(paste0("ADAE-AESEV_GRP", path_comp, "aesev_grp_01.R"),
-                       paste0("AEBODSYS_GRP", path_comp, "aebodsys_grp_01.R"),
+  expect_section_order("ADAE-AESEV_GRP-",
+                       "AEBODSYS_GRP-",
                        programs[["1_ADAE.R"]])
-  expect_section_order(paste0("AEBODSYS_GRP", path_comp, "aebodsys_grp_01.R"),
+  expect_section_order("AEBODSYS_GRP-",
                        "Filter ADAE",
                        programs[["1_ADAE.R"]])
   expect_section_order("Filter ADAE",
-                       "ADAE-AGE-_col_echo",
+                       "ADAE-AGE-",
                        programs[["1_ADAE.R"]])
 
   # Check ADAE

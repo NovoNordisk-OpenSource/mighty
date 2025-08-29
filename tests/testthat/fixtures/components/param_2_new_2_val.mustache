@@ -1,0 +1,11 @@
+#' @title param_2_new_2_val
+#' @description Test function that creates a two new columns with fixed values. Names are specified by two parameters.
+#' @param new_variable1 `character` Name of new variable 1
+#' @param new_variable2 `character` Name of new variable 2
+#' @type derivation
+#' @outputs {{new_variable1}}
+#' @outputs {{new_variable2}}
+
+ADLB <- ADLB |>
+  dplyr::mutate({{new_variable1}} = "A",
+                {{new_variable2}} = "B")

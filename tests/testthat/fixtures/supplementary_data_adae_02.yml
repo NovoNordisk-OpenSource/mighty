@@ -5,8 +5,9 @@ init:
   base_domains:
     - ae
   filter_domain:
-    ae: 'AEBODSYS_GRP == "MILD DISORDER"'
+    - ae: 'AEBODSYS_GRP == "MILD DISORDER"'
   filter_global:
+  - NA
   filter_depend_cols:
     - AEBODSYS_GRP
 

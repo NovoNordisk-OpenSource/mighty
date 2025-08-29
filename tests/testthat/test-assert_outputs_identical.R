@@ -5,12 +5,13 @@ test_that("Error is thrown when not all outputs in code component are referenced
 table_metadata:
   table: ADSL
 init:
-  base_domains:
-    - DM
+  base_domains: ['DM']
   filter_domain:
-    - DM: NA
-  filter_global: NA
-  filter_depend_cols:
+  - DM: NA
+  filter_global: 
+    - NA
+  filter_depend_cols: 
+    - NA
 column_metadata:
   - column: USUBJID
   - column: A
@@ -37,10 +38,9 @@ ADSL <- ADSL |>
   trial_path <- withr::local_tempdir()
 
   path_ui_data <- file.path(trial_path, "ui_yml.yml")
-  yaml::read_yaml(
-    text = whisker::whisker.render(yml, data = list(ady_custom = tmp_file))
-  ) |>
-    yaml::write_yaml(path_ui_data)
+  whisker::whisker.render(yml, data = list(ady_custom = tmp_file)) |>
+  writeLines(path_ui_data)
+  
   path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
   output_path <- trial_path
   # ACT & ASSERT ------------------------------------------------------------

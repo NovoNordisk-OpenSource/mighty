@@ -1,6 +1,6 @@
 #' @title Race x country 01
 #' @description A description
-#' @type col_compute
+#' @type derivation
 #' @depends ADSL RACE
 #' @depends ADSL COUNTRY
 #' @outputs RACE_COUNTRY

@@ -5,7 +5,7 @@ init:
   base_domains:
     - lb
   filter_domain:
-    lb: '!is.na(LBSTRESN)'
+    - lb: '!is.na(LBSTRESN)'
   filter_global:
     - '!is.na(SEX)'
     - 'LBSTRESU == "fL"'

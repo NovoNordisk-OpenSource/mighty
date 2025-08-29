@@ -1,5 +1,5 @@
 testthat::test_that("SDTM test data is available", {
-  # SETUP -------------------------------------------------------------------  
+  # SETUP -------------------------------------------------------------------
   output_path <- withr::local_tempdir()
 
   # ACT ---------------------------------------------------------------------
@@ -17,9 +17,9 @@ testthat::test_that("SDTM test data is available", {
 })
 
 testthat::test_that("ADaM test data is available", {
-  # SETUP -------------------------------------------------------------------  
+  # SETUP -------------------------------------------------------------------
   output_path <- withr::local_tempdir()
-  
+
   # ACT ---------------------------------------------------------------------
   setup_testdata(testdata = "pharmaverse", test_data_path = output_path, sdtm_domains = c(), adam_domains = c("adsl", "adae", "adlb"))
   cnt <- connector::connect(config=file.path(output_path, "_connector.yml"))
@@ -54,10 +54,10 @@ testthat::test_that("Non-existing SDTM domains cannot be prepared", {
   output_path <- withr::local_tempdir()
 
   # EXPECT ------------------------------------------------------------------
-  expect_message(setup_testdata(testdata = "pharmaverse", 
-                                test_data_path = output_path, 
+  expect_message(setup_testdata(testdata = "pharmaverse",
+                                test_data_path = output_path,
                                 sdtm_domains = c("no_domain")),
-                 paste0("Error writing dataset: 'no_domain' is not an ", 
+                 paste0("Error writing dataset: 'no_domain' is not an ",
                         "exported object from 'namespace:pharmaversesdtm'\n",
                         "Please ensure the dataset no_domain exists in ",
                         "pharmaversesdtm."))
@@ -68,10 +68,10 @@ testthat::test_that("Non-existing ADaM domains cannot be prepared", {
   output_path <- withr::local_tempdir()
 
   # EXPECT ------------------------------------------------------------------
-  expect_message(setup_testdata(testdata = "pharmaverse", 
-                                test_data_path = output_path, 
+  expect_message(setup_testdata(testdata = "pharmaverse",
+                                test_data_path = output_path,
                                 adam_domains = c("no_domain")),
-                 paste0("Error writing dataset: 'no_domain' is not an ", 
+                 paste0("Error writing dataset: 'no_domain' is not an ",
                         "exported object from 'namespace:pharmaverseadam'\n",
                         "Please ensure the dataset no_domain exists in ",
                         "pharmaverseadam."))
@@ -82,8 +82,8 @@ testthat::test_that("Non-existing testdata cannot be prepared", {
   output_path <- withr::local_tempdir()
 
   # EXPECT ------------------------------------------------------------------
-  expect_error(setup_testdata(testdata = "non_existing_test_data", 
-                                test_data_path = output_path, 
+  expect_error(setup_testdata(testdata = "non_existing_test_data",
+                                test_data_path = output_path,
                                 adam_domains = c("no_domain")),
                  paste0("'arg' should be \"pharmaverse\""))
 })

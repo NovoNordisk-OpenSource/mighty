@@ -1,10 +1,14 @@
-render_components <- function(code_component_ids) {
+render_components <- function(actions) {
+
+  code_component_ids <- actions[!is.na(code_id),]
+
   rendered_components <- list()
   for (i in seq_len(nrow(code_component_ids))) {
+    node_id <- code_component_ids[i, node_id]
     code_id <- code_component_ids[i, code_id]
     params <- code_component_ids$parameters[i] |> unlist(recursive = FALSE)
     if(!is.list(params) && is.na(params))params <- list()
-    rendered_components[[code_id]] <- mighty.standards::get_rendered_component(
+    rendered_components[[node_id]] <- mighty.standards::get_rendered_component(
       component = code_id,
       params = params
     )
@@ -21,7 +25,7 @@ get_component_metadata <- function(rendered_components) {
     list(
       depend_cols = i$depends,
       outputs = i$outputs,
-      type = ifelse(i$type == "derivation", "col_compute", i$type)
+      type = i$type
     )
   })
 }

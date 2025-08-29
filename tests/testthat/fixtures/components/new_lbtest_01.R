@@ -1,6 +1,6 @@
 #' @title New lbtest 01
-#' @description A description 
-#' @type row_compute
+#' @description A description
+#' @type row
 #' @depends ADLB LBTEST
 #' @depends sv VISITNUM
 #' @depends sv USUBJID

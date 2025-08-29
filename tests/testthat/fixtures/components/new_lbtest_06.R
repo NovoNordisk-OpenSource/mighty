@@ -1,6 +1,6 @@
 #' @title lbtest 06
 #' @description A description 
-#' @type row_compute
+#' @type row
 #' @depends ADLB LBTEST
 #' @depends ADLB AVAL
 #' @depends ADLB DOMAIN

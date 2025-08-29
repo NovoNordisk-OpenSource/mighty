@@ -1,6 +1,6 @@
 #' @title New lbtest 02
 #' @description A description 
-#' @type row_compute
+#' @type row
 #' @depends ADLB LBTEST
 #' @depends ADLB AVALC
 #' @outputs LBTEST

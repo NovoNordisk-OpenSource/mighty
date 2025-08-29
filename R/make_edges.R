@@ -31,7 +31,7 @@ make_edges <- function(nodes, primary_domain = "ADSL") {
   column_edges_2 <- remove_child_filter_edges(column_edges, nodes)
 
   # Combine all edges and clean them up
-  all_edges <- combine_and_clean_edges(column_edges_2, row_edges)
+  all_edges <- combine_and_clean_edges(column_edges_2[,c("parent_node", "node_id")], row_edges)
 
   return(all_edges)
 }
@@ -59,11 +59,34 @@ create_column_dependency_edges <- function(nodes) {
     by.y = c("child_column", "child_column_domain", "child_column_domain_type"),
     suffixes = c("", "_parent")
   ) |>
-    setnames(c("consumes_variable", "consumes_variable_domain", "consumes_variable_domain_type","node_id", "parent_node")) |>
-    data.table::setcolorder(c("parent_node", "node_id", "consumes_variable")) |>
-    data.table::setkey(node_id)
+    dplyr::select(node_id, node_id_parent) |>
+    unique() |>
+    setnames(c("node_id", "parent_node"))
 
-  return(edges)
+  # Create synthetic edges from preprocess actions to column actions with no dependencies
+  node_id_no_dep <- lapply(seq_len(nrow(nodes2)), function(i) {
+    if(nrow(nodes2$depend_cols[[i]]) == 0) {nodes2$node_id[[i]]}
+    }) |> unlist()
+  if (length(node_id_no_dep) > 0) {
+    actions_no_dep <- nodes2[nodes2$node_id %in% node_id_no_dep,]
+    pre_actions <- nodes2[nodes2$type %in% c("init_domain", "filter_domain"),]
+    edges_actions_no_dep <- data.table::merge.data.table(
+      actions_no_dep[,.(node_id, domain)],
+      pre_actions[,.(node_id, domain)],
+      by = "domain",
+      suffixes = c("","_parent"),
+      allow.cartesian = TRUE)  |>
+      dplyr::select(node_id, node_id_parent) |>
+      unique() |>
+      setnames(c("node_id", "parent_node"))
+
+    # Combine edges
+    edges_combined <- rbind(edges, edges_actions_no_dep)
+  } else {
+    edges_combined <- edges
+  }
+
+  return(edges_combined)
 }
 
 #' @title Expand parent columns for each node
@@ -109,17 +132,14 @@ expand_child_columns <- function(nodes) {
 #'   exist
 create_row_dependency_edges <- function(nodes) {
 
-  # Check if there are any row operations and exit early if not
-  has_row_operations <- nodes[type == "row_compute"] |> nrow() > 0
-  if (!has_row_operations) {
-    return(NULL)
-  }
+  # Early exit if there are no row operations
+  if (!any(nodes$type == "row_compute")) return(NULL)
 
   # Row dependencies come from 2 sources:
   #  1) depend_rows in any actions
   #  2) depend_cols in row actions that originates from init_domain or filter_domain
 
-  # 1) Extract row dependencies from depend_rows
+  # Extract row dependencies from depend_rows and handle the absence of dependencies
   new_row_edges1 <-
     if (any(!is.na(nodes$depend_rows))) {
       nodes[!is.na(depend_rows), unlist(depend_rows), by = .(node_id, domain)] |>
@@ -132,32 +152,24 @@ create_row_dependency_edges <- function(nodes) {
 
   # 2) Extract dependencies to row actions from init_domain and filter_domain
 
-  # Get row action dependencies
-  parents_expanded <- expand_parent_columns(nodes[type == "row_compute",])
+  # Get row actions dependencies and outputs of init_domain and filter_domain actions
+  row_actions_parents <- expand_parent_columns(nodes[type == "row_compute"])
+  config_actions_children <- expand_child_columns(nodes[type %in% c("init_domain", "filter_domain")])
 
-  # Get outputs of init_domain and filter_domain actions
-  children_expanded <- expand_child_columns(nodes[type %in% c("init_domain","filter_domain")])
+  # Identify edges through a merge
+  new_row_edges2 <- merge(config_actions_children[, .(node_id, child_column, child_column_domain)],
+                          row_actions_parents[, .(node_id, parent_column, parent_column_domain)],
+                          by.x = c("child_column", "child_column_domain"),
+                          by.y = c("parent_column", "parent_column_domain"),
+                          suffixes = c("_parent", ""))
 
-  # Join to identify edges
-  new_row_edges2 <- data.table::merge.data.table(
-    parents_expanded[,.(node_id, parent_column, parent_column_domain)],
-    children_expanded[,.(node_id, child_column, child_column_domain)],
-    by.x = c("parent_column", "parent_column_domain"),
-    by.y = c("child_column", "child_column_domain"),
-    suffixes = c("", "_parent")
-  ) |>
-    setnames(c("consumes_variable", "domain","node_id", "parent_node")) |>
-    data.table::setcolorder(c("node_id", "domain", "parent_node")) |>
-    data.table::setkey(node_id)
-  new_row_edges2[, consumes_variable := NULL]
+  # Set column names and order
+  setnames(new_row_edges2, c("child_column", "domain", "parent_node", "node_id"))
+  setcolorder(new_row_edges2, c("node_id", "domain", "parent_node"))
+  new_row_edges2[, child_column := NULL]  # Remove redundant column
 
-  # Match code_ids to node_ids to create proper edges
-  row_edges <- nodes[, .(code_id, node_id, domain)] |>
-    merge(rbind(new_row_edges1, new_row_edges2),
-          by.x = c("code_id", "domain"),
-          by.y = c("parent_node", "domain"),
-          suffixes = c("_parent", "")) |>
-    data.table::setnames(old = "node_id_parent", "parent_node")
+  # Combine new edges and ensure uniqueness
+  row_edges <- unique(rbind(new_row_edges1, new_row_edges2))
 
   return(row_edges)
 }
@@ -222,7 +234,7 @@ combine_and_clean_edges <-  function(column_edges, row_edges) {
   filtered_edges <- all_edges[node_id != parent_node]
 
   # Only return unique edges
-  unique_edges <- filtered_edges[, .SD[1], by = .(parent_node, node_id)][, .(parent_node, node_id)]
+  unique_edges <- unique(filtered_edges[,c("parent_node", "node_id")])
 
   return(unique_edges)
 }

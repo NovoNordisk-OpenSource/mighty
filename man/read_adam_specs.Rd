@@ -4,12 +4,27 @@
 \alias{read_adam_specs}
 \title{Read ADaM Domain Specifications from YAML Files}
 \usage{
-read_adam_specs(paths)
+read_adam_specs(
+  paths,
+  validate = TRUE,
+  schema_name = "domain_schema",
+  verbose = TRUE,
+  use_yq = TRUE
+)
 }
 \arguments{
 \item{paths}{Character vector of file paths to YAML files containing ADaM
 domain specifications. Each file should contain a complete domain definition
 following the expected YAML schema.}
+
+\item{validate}{Logical indicating whether to validate YAML files against schema
+before processing (default: TRUE)}
+
+\item{schema_name}{Name of schema to use for validation (default: "adam_domain")}
+
+\item{verbose}{Show detailed validation messages (default: TRUE)}
+
+\item{use_yq}{Use yq for YAML parsing during validation (default: TRUE)}
 }
 \value{
 A named list where each element represents an ADaM domain specification.
@@ -19,7 +34,7 @@ and code references}
 \item{domain}{Character string specifying the domain name (e.g., "ADSL", "ADLB")}
 \item{keys}{Character vector of primary key columns for the domain}
 \item{init}{List containing initialization settings including base_domains,
-filter specifications,
+filter specifications}
 }
 \description{
 Reads and processes ADaM domain specifications from one or more YAML files,

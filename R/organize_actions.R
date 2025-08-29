@@ -13,7 +13,8 @@ organize_actions <- function(actions, edges){
   # Sort actions according to execution order, aiming to:
   #  - execute primary domain actions as early as possible
   #  - minimize the number of switches between domains
-  actions_sorted <- sort_actions(edges, actions[actions$type != "col_copy",],
+  actions_sorted <- sort_actions(edges[, .(parent_node, node_id)],
+                                 actions[actions$type != "col_copy",],
                                  primary_domain = "ADSL")
 
   # Group actions in ADaM programs and within each group refine the action order

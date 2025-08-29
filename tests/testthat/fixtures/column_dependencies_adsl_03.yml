@@ -8,14 +8,15 @@ init:
   filter_domain:
     - dm: 'is.na(DTHFL)'
     - dm_vaccine: NA
-  filter_global: NA
+  filter_global:
+  - NA
   filter_depend_cols:
     - DTHFL
 
 column_metadata:
   - column: USUBJID
 
-  - columnm: ARM
+  - column: ARM
 
   - column: PLANNED_ARM
     source: ARM
