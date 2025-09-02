@@ -9,7 +9,7 @@
 #'     \item{data_type}{Character string. The type of data connector to use (e.g., "sdtm", "adam").}
 #'     \item{keep_vars}{Character string. Comma-separated list of variable names to select when is_self_domain is FALSE. Ignored when is_self_domain is TRUE.}
 #'   }
-#'   
+#'
 #'   Example:
 #'   \preformatted{
 #'   domains <- list(
@@ -28,7 +28,6 @@
 #'   )
 #'   }
 
-# Read data sets ------------------------------------------------
 cnt <- connector::connect(config = '{{path_trial}}/_connector.yml')
 {{#domains}}
   {{#is_self_domain}}

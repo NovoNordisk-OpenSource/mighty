@@ -308,7 +308,7 @@ add_node_id <- function(nodes) {
 
   # Combine components to create node ID
   nodes$node_id <- lapply(seq_len(nrow(nodes)), function(i) {
-    domain <- toupper(nodes$domain[[i]])
+    domain <- nodes$domain[[i]]
     if (!is.na(nodes$id[[i]])) {
       paste0(domain, "-", nodes$id[[i]])
     } else {

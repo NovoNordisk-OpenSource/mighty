@@ -1,6 +1,6 @@
 table_metadata:
-  table: ADLB
-  
+  table: adlb
+
 init:
   base_domains:
     - lb
@@ -11,7 +11,7 @@ init:
     - 'LBSTRESU == "fL"'
   filter_depend_cols:
     - LBSTRESN
-    - ADSL.SEX
+    - adsl.SEX
     - LBSTRESU
 
 column_metadata:
@@ -26,6 +26,6 @@ column_metadata:
   - column: LBSTRESU
 
   - column: AGE
-    source: ADSL.AGE
+    source: adsl.AGE
 
 

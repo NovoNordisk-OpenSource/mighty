@@ -28,6 +28,7 @@ render_code <- function(
   actions_ <- copy(actions)
   for (i in seq_len(nrow(actions_))) {
     action_i <- actions_[i]
+    no_line_break <- i==1
 
     params <- define_params(
       code_id = action_i$code_id,
@@ -43,8 +44,8 @@ render_code <- function(
     )
 
     code_i <- paste0(
-      gen_node_header(action_i$node_id),
-      mighty.standards::get_rendered_component(component = 
+      gen_node_header(action_i$node_id, no_line_break),
+      mighty.standards::get_rendered_component(component =
         action_i$code_id |> format_internal_code_id(),
         params = params
       )$code |>
@@ -68,7 +69,7 @@ define_params <- function(
   init_metadata,
   domain_keys
 ) {
-  
+
   switch(
     code_id,
     "_read_data.mustache" = params_read_data_code(
@@ -103,7 +104,7 @@ define_params <- function(
       domain_keys = domain_keys
     ),
     "_write_data.mustache" = params_write_domain_code(.self = .self),
-    # Default case for col_compute/row_compute 
+    # Default case for col_compute/row_compute
     format_col_compute_params(action_parameters = action_parameters)
   )
 }
@@ -121,12 +122,18 @@ format_col_compute_params <- function(action_parameters) {
 }
 
 
-gen_node_header <- function(node_id) {
-  paste0(
-    "\n# ",
-    node_id,
-    "---------------------\n"
-  )
+gen_node_header <- function(title, no_line_break) {
+  n_dash <- 80 - (nchar(title) + 3)
+  if (n_dash > 0) {
+    
+    title_line <- paste0(" ", paste0(rep("-", n_dash), collapse = ""))
+  } else {
+    title_line <- "----"
+  }
+
+  return(paste0(ifelse(no_line_break, "# ", "\n# "),
+                title,
+                title_line, "\n"))
 }
 
 
@@ -138,7 +145,7 @@ format_internal_code_id <- function(code_id) {
   if(!startsWith(code_id, "_")){
     return(code_id)
   }
-  file.path("components", code_id) |> 
+  file.path("components", code_id) |>
       system.file(package = "mighty")
 }
 

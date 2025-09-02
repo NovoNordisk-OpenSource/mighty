@@ -31,17 +31,15 @@ test_that("Supplementary data action is placed after filter_domain when no suppl
 
   # EXPECT ------------------------------------------------------------------
 
-  path_comp <- paste0("-", test_path(), "/fixtures/components/")
-
   # Check program order
-  expect_section_order("Read data sets", "Initialize ADSL", programs[["1_ADSL.R"]])
-  expect_section_order("Initialize ADSL",
-                       "ADSL-EFFICACY-SAFETY-",
+  expect_section_order("ADSL-1-read_data", "ADSL-init_domain", programs[["1_ADSL.R"]])
+  expect_section_order("ADSL-init_domain",
+                       "ADSL-EFFICACY-SAFETY",
                        programs[["1_ADSL.R"]])
-  expect_section_order("Filter ADSL",
-                       "ADSL-EFFICACY-SAFETY-",
+  expect_section_order("ADSL-filter_domain",
+                       "ADSL-EFFICACY-SAFETY",
                        programs[["1_ADSL.R"]])
-  expect_section_order("Filter ADSL", "ADSL-PLANNED_ARM", programs[["1_ADSL.R"]])
+  expect_section_order("ADSL-filter_domain", "ADSL-PLANNED_ARM", programs[["1_ADSL.R"]])
 
   # Check ADSL
   x[[1]] |> source()
@@ -83,17 +81,15 @@ test_that("Supplementary data action is placed before filter_domain when supplem
 
   # EXPECT ------------------------------------------------------------------
 
-  path_comp <- paste0("-", test_path(), "/fixtures/components/")
-
   # Check program order
-  expect_section_order("Read data sets", "Initialize ADSL", programs[["1_ADSL.R"]])
-  expect_section_order("Initialize ADSL",
-                       "ADSL-EFFICACY-SAFETY-",
+  expect_section_order("ADSL-1-read_data", "ADSL-init_domain", programs[["1_ADSL.R"]])
+  expect_section_order("ADSL-init_domain",
+                       "ADSL-EFFICACY-SAFETY",
                        programs[["1_ADSL.R"]])
-  expect_section_order("ADSL-EFFICACY-SAFETY-",
-                       "Filter ADSL",
+  expect_section_order("ADSL-EFFICACY-SAFETY",
+                       "ADSL-filter_domain",
                        programs[["1_ADSL.R"]])
-  expect_section_order("Filter ADSL", "ADSL-PLANNED_ARM", programs[["1_ADSL.R"]])
+  expect_section_order("ADSL-filter_domain", "ADSL-PLANNED_ARM", programs[["1_ADSL.R"]])
 
   # Check ADSL
   x[[1]] |> source()
@@ -136,18 +132,16 @@ test_that("Supplementary data action is placed before filter_domain when supplem
 
   # EXPECT ------------------------------------------------------------------
 
-  path_comp <- paste0("-", test_path(), "/fixtures/components/")
-
   # Check program order
-  expect_section_order("Read data sets", "Initialize ADSL", programs[["1_ADSL.R"]])
+  expect_section_order("ADSL-1-read_data", "ADSL-init_domain", programs[["1_ADSL.R"]])
 
-  expect_section_order("Initialize ADSL",
-                       "ADSL-EFFICACY-SAFETY-",
+  expect_section_order("ADSL-init_domain",
+                       "ADSL-EFFICACY-SAFETY",
                        programs[["1_ADSL.R"]])
-  expect_section_order("ADSL-EFFICACY-SAFETY-",
-                       "Filter ADSL",
+  expect_section_order("ADSL-EFFICACY-SAFETY",
+                       "ADSL-filter_domain",
                        programs[["1_ADSL.R"]])
-  expect_section_order("Filter ADSL", "ADSL-PLANNED_ARM", programs[["1_ADSL.R"]])
+  expect_section_order("ADSL-filter_domain", "ADSL-PLANNED_ARM", programs[["1_ADSL.R"]])
 
   # Check ADSL
   x[[1]] |> source()
@@ -191,15 +185,13 @@ test_that("Supplementary data action is placed before filter_domain when supplem
 
   # EXPECT ------------------------------------------------------------------
 
-  path_comp <- paste0("-", test_path(), "/fixtures/components/")
-
   # Check program order
-  expect_section_order("Read data sets", "Initialize ADAE", programs[["1_ADAE.R"]])
-  expect_section_order("Initialize ADAE",
-                       "ADAE-AETRTEM-",
+  expect_section_order("ADAE-1-read_data", "ADAE-init_domain", programs[["1_ADAE.R"]])
+  expect_section_order("ADAE-init_domain",
+                       "ADAE-AETRTEM",
                        programs[["1_ADAE.R"]])
-  expect_section_order("ADAE-AETRTEM-",
-                       "Filter ADAE",
+  expect_section_order("ADAE-AETRTEM",
+                       "ADAE-filter_domain",
                        programs[["1_ADAE.R"]])
 
   # Check ADSL
@@ -244,18 +236,18 @@ test_that("Col_compute and parent col_compute is placed before filter_domain whe
   # EXPECT ------------------------------------------------------------------
 
   # Check program order
-  expect_section_order("Read data sets", "Initialize ADAE", programs[["1_ADAE.R"]])
-  expect_section_order("Initialize ADAE",
-                       "ADAE-AESEV_GRP-",
+  expect_section_order("ADAE-1-read_data", "ADAE-init_domain", programs[["1_ADAE.R"]])
+  expect_section_order("ADAE-init_domain",
+                       "ADAE-AESEV_GRP",
                        programs[["1_ADAE.R"]])
-  expect_section_order("ADAE-AESEV_GRP-",
-                       "AEBODSYS_GRP-",
+  expect_section_order("ADAE-AESEV_GRP",
+                       "ADAE-AEBODSYS_GRP",
                        programs[["1_ADAE.R"]])
-  expect_section_order("AEBODSYS_GRP-",
-                       "Filter ADAE",
+  expect_section_order("ADAE-AEBODSYS_GRP",
+                       "ADAE-filter_domain",
                        programs[["1_ADAE.R"]])
-  expect_section_order("Filter ADAE",
-                       "ADAE-AGE-",
+  expect_section_order("ADAE-filter_domain",
+                       "ADAE-AGE",
                        programs[["1_ADAE.R"]])
 
   # Check ADAE

@@ -16,8 +16,6 @@
 #' @param has_keep_columns Logical. Whether to select only specific columns from the final dataset.
 #' @param keep_columns Character string or NULL. Comma-separated list of column names to retain in the final dataset. Only used when `has_keep_columns` is `TRUE`.
 
-# Filter {{self}} ----------------------
-
 {{#joins}}
 {{self}} <- {{self}} |>
   dplyr::left_join({{table}} |> dplyr::select({{cols}}),
