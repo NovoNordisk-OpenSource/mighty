@@ -27,7 +27,9 @@
     "table_metadata": {
       "type": "object",
       "description": "Basic table information",
-      "required": ["table"],
+      "required": [
+        "table"
+      ],
       "additionalProperties": false,
       "properties": {
         "table": {
@@ -67,8 +69,12 @@
             "patternProperties": {
               "^[a-zA-Z_][a-zA-Z0-9_]*$": {
                 "oneOf": [
-                  {"type": "string"},
-                  {"type": "null"}
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
                 ]
               }
             }
@@ -104,7 +110,9 @@
     },
     "column_item": {
       "type": "object",
-      "required": ["column"],
+      "required": [
+        "column"
+      ],
       "additionalProperties": false,
       "properties": {
         "column": {
@@ -140,7 +148,10 @@
     },
     "row_action_item": {
       "type": "object",
-      "required": ["id", "code_id"],
+      "required": [
+        "id",
+        "code_id"
+      ],
       "additionalProperties": false,
       "properties": {
         "id": {
@@ -167,7 +178,7 @@
         "description": "Parameter key-value pair",
         "minProperties": 1,
         "additionalProperties": {
-          "type": "string",
+          "type": ["string","number", "boolean", "integer"],
           "description": "Parameter value"
         }
       }

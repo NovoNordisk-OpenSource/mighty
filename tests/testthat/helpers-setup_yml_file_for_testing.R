@@ -37,9 +37,12 @@ setup_yml_file_for_testing <- function(config_files, test_env) {
 }
 
 
-# Helper function to create temporary YAML files for testing
-create_temp_yaml <- function(content) {
-  tmp_file <- tempfile(fileext = ".yml")
-  writeLines(content, tmp_file)
-  return(tmp_file)
+# Helper function to create temporary YAML files with fixed name
+create_temp_yaml <- function(content,
+                             name = "temp_test_file.yml",
+                             .local_envir = parent.frame()) {
+  dir <- withr::local_tempdir(.local_envir = .local_envir)
+  path <- file.path(dir, name)
+  writeLines(content, path)
+  path
 }

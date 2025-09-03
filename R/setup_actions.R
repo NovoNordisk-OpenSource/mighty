@@ -58,7 +58,6 @@ setup_actions <- function(
     get_component_metadata() |>
     consolidate_metadata(actions_base) |>
     add_keys_to_depend_cols(domain_keys, ui_init) |>
-    assert_valid_outputs() |>
     assert_valid_depend_cols(ui_yml, domain_keys, check_cross_domain_adam_dependencies)
 
   return(list(

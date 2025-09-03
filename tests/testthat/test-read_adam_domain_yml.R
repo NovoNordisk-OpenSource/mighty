@@ -48,7 +48,7 @@ column_metadata:
   writeLines(ui_path)
   
   
-    read_adam_specs(ui_path) |> expect_error(regexp = "Missing required field 'table_metadata'")
+    read_adam_specs(ui_path) |> expect_snapshot_error()
 })
 
 

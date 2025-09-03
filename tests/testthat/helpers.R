@@ -47,7 +47,7 @@ expect_section_order <- function(start_section, end_section, section_list) {
     )
   )
 
-  testthat::expect_true(
+testthat::expect_true(
     length(end_idx) < 2,
     info = paste0(
       "The section ",

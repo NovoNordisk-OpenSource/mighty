@@ -18,7 +18,7 @@ generate_adam_code <- function(
 ) {
 
   # Read data from UI containing explicit user input
-  ui_yml <- read_adam_specs(path_ui_data, validate = FALSE)
+  ui_yml <- read_adam_specs(path_ui_data, validate = TRUE)
   ui_init <- purrr::list_transpose(ui_yml)[["init"]]
   trial_metadata <- yaml::read_yaml(path_trial_metadata) |>
     assert_valid_trial_config()

@@ -99,7 +99,7 @@ column_metadata:
     depend_rows:
       - new_protein
 
-  - columns: AVAL_GRP
+  - column: AVAL_GRP
     code_id: {path_base}/fixtures/components/aval_grp_01.R
 
 row_actions:
