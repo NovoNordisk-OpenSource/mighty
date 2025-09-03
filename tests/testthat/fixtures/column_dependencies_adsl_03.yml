@@ -16,6 +16,8 @@ init:
 column_metadata:
   - column: USUBJID
 
+  - column: STUDYID
+
   - column: ARM
 
   - column: PLANNED_ARM

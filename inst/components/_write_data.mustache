@@ -1,13 +1,21 @@
 #' @title Write data
 #' @description Template description here
 #' @type derivation
-#' @param self_upper Character string. The uppercase name of the dataset, used for section headers and comments in the generated code.
 #' @param self Character string. The name of the dataset object to be written to disk as a parquet file.
-#' @param keep_cols Character vector or NULL. If provided, specifies the column names to select from the dataset before writing. If NULL, the entire dataset is written without column selection.
+#' @param has_row_order Boolean indicating if sorting of rows is required.
+#' @param row_order_vars Character vector or NULL. Specifies the columns on which to sort the rows in the dataset before writing.
+#' @param has_keep_vars Boolean indicating if column selection is required
+#' @param keep_vars Character vector or NULL. Specifies the columns to keep and the order of appearance.
 
-{{#keep_var}}
-cnt$adam$write_cnt({{self}} |> dplyr::select({{keep_var}}), "{{self}}.parquet", overwrite = TRUE)
-{{/keep_var}}
-{{^keep_var}}
+{{#has_row_order}}
+# Sort rows by primary key
+{{self}} <- {{self}} |> dplyr::arrange({{row_order_vars}})
+
+{{/has_row_order}}
+{{#has_keep_vars}}
+# Sort columns
+{{self}} <- {{self}} |> dplyr::select({{keep_vars}})
+
+{{/has_keep_vars}}
+# Save ADaM table
 cnt$adam$write_cnt({{self}}, "{{self}}.parquet", overwrite = TRUE)
-{{/keep_var}}

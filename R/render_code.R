@@ -25,10 +25,18 @@ render_code <- function(
   ui_data,
   path_trial
 ) {
+
+  actions_program_summary <- actions |>
+    dplyr::group_by(domain) |>
+    dplyr::summarize(last_program = max(program_id))
+  final_programs_lkp <- actions_program_summary$last_program
+  names(final_programs_lkp) <- actions_program_summary$domain
+
   actions_ <- copy(actions)
   for (i in seq_len(nrow(actions_))) {
     action_i <- actions_[i]
     no_line_break <- i==1
+    is_final_pgm <- action_i$program_id == final_programs_lkp[[action_i$domain]]
 
     params <- define_params(
       code_id = action_i$code_id,
@@ -39,8 +47,9 @@ render_code <- function(
       action_parameters = action_i$parameters,
       node_id = action_i$node_id,
       path_trial = path_trial,
-      init_metadata = ui_data[[action_i$domain]]$init,
-      domain_keys = domain_keys
+      domain_ui_data = ui_data[[action_i$domain]],
+      domain_keys = domain_keys,
+      is_final_pgm = is_final_pgm
     )
 
     code_i <- paste0(
@@ -66,9 +75,12 @@ define_params <- function(
   action_parameters,
   node_id,
   path_trial,
-  init_metadata,
-  domain_keys
+  domain_ui_data,
+  domain_keys,
+  is_final_pgm
 ) {
+
+  init_metadata <- domain_ui_data$init
 
   switch(
     code_id,
@@ -103,7 +115,11 @@ define_params <- function(
       outputs = output_cols,
       domain_keys = domain_keys
     ),
-    "_write_data.mustache" = params_write_domain_code(.self = .self),
+    "_write_data.mustache" = params_write_domain_code(.self = .self,
+                                                      is_final_pgm = is_final_pgm,
+                                                      domain_keys = domain_keys,
+                                                      domain_ui_data = domain_ui_data
+    ),
     # Default case for col_compute/row_compute
     format_col_compute_params(action_parameters = action_parameters)
   )
@@ -125,7 +141,7 @@ format_col_compute_params <- function(action_parameters) {
 gen_node_header <- function(title, no_line_break) {
   n_dash <- 80 - (nchar(title) + 3)
   if (n_dash > 0) {
-    
+
     title_line <- paste0(" ", paste0(rep("-", n_dash), collapse = ""))
   } else {
     title_line <- "----"

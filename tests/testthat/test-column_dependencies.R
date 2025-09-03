@@ -30,7 +30,7 @@ test_that("No filters", {
   # EXPECT -------------------------------------------------------------------
 
   # Check outputs of read_data
-  expected_outputs <- c("dm.USUBJID", "dm.ARM", "dm_vaccine.USUBJID", "dm_vaccine.ARM")
+  expected_outputs <- c("dm.STUDYID", "dm.USUBJID", "dm.ARM", "dm_vaccine.STUDYID", "dm_vaccine.USUBJID", "dm_vaccine.ARM")
   expect_setequal(actual$program_sequence$outputs[[1]],
                expected_outputs)
 
@@ -44,7 +44,7 @@ test_that("No filters", {
 
   # Check generated ADSL
   x[[1]] |> source()
-  expect_setequal(names(ADSL),  c("ARM", "ARM_GRP1", "PLANNED_ARM", "USUBJID"))
+  expect_setequal(names(ADSL),  c("ARM", "ARM_GRP1", "PLANNED_ARM", "USUBJID", "STUDYID"))
   expect_equal(nrow(ADSL), 308)
 })
 
@@ -190,8 +190,8 @@ test_that("No global filters", {
   # EXPECT -------------------------------------------------------------------
 
   # Check external dependencies
-  expected_ext_dep <- c("dm.USUBJID", "dm.DTHFL", "dm.ARM",
-                        "dm_vaccine.USUBJID", "dm_vaccine.DTHFL", "dm_vaccine.ARM")
+  expected_ext_dep <- c("dm.STUDYID", "dm.USUBJID", "dm.DTHFL", "dm.ARM",
+                        "dm_vaccine.STUDYID", "dm_vaccine.USUBJID", "dm_vaccine.DTHFL", "dm_vaccine.ARM")
   expect_setequal(actual$program_sequence$outputs[[1]],
                   expected_ext_dep)
 
@@ -206,7 +206,7 @@ test_that("No global filters", {
 
   # Check generated ADSL
   x[[1]] |> source()
-  expect_setequal(names(ADSL),  c("ARM", "ARM_GRP1", "PLANNED_ARM", "USUBJID", "DTHFL"))
+  expect_setequal(names(ADSL),  c("ARM", "ARM_GRP1", "PLANNED_ARM", "USUBJID", "DTHFL", "STUDYID"))
   expect_equal(nrow(ADSL), 305)
 })
 
@@ -243,8 +243,8 @@ test_that("No filters and no derivations", {
   # EXPECT -------------------------------------------------------------------
 
   # Check external dependencies
-  expected_ext_dep <- c("dm.USUBJID", "dm.ARM",
-                        "dm_vaccine.USUBJID", "dm_vaccine.ARM")
+  expected_ext_dep <- c("dm.STUDYID","dm.USUBJID", "dm.ARM",
+                        "dm_vaccine.STUDYID", "dm_vaccine.USUBJID", "dm_vaccine.ARM")
   expect_setequal(actual$program_sequence$outputs[[1]],
                   expected_ext_dep)
 
@@ -257,7 +257,7 @@ test_that("No filters and no derivations", {
 
   # Check generated ADSL
   x[[1]] |> source()
-  expect_setequal(names(ADSL),  c("ARM", "PLANNED_ARM", "USUBJID"))
+  expect_setequal(names(ADSL),  c("ARM", "PLANNED_ARM", "USUBJID", "STUDYID"))
   expect_equal(nrow(ADSL), 308)
 })
 

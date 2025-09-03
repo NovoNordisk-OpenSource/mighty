@@ -1,6 +1,6 @@
 table_metadata:
   table: ADSL
-  
+
 init:
   base_domains:
     - dm
@@ -18,9 +18,9 @@ init:
 column_metadata:
   - column: USUBJID
 
-  - column: DOMAIN
-
   - column: STUDYID
+
+  - column: DOMAIN
 
   - column: ARM
 

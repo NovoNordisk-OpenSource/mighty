@@ -215,3 +215,4 @@ test_that("Complex test with multiple domains and column/row operations", {
 
 })
 
+
