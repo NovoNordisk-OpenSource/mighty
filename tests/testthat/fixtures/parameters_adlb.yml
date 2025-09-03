@@ -14,6 +14,10 @@ init:
 column_metadata:
   - column: USUBJID
 
+  - column: STUDYID
+
+  - column: LBSEQ
+
   - column: LBTEST
 
   - column: LBSTRESN

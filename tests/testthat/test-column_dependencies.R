@@ -400,7 +400,7 @@ test_that("Global filter and domain filter incl. adsl dependencies (lower case)"
   # EXPECT -------------------------------------------------------------------
 
   # Check external dependencies
-  expected_ext_dep <- c("lb.STUDYID", "lb.USUBJID", "lb.VISITNUM", "lb.LBSTRESN",
+  expected_ext_dep <- c("lb.STUDYID", "lb.USUBJID", "lb.LBSEQ", "lb.VISITNUM", "lb.LBSTRESN",
                         "lb.LBSTRESU", "adsl.STUDYID", "adsl.USUBJID", "adsl.SEX")
   expect_setequal(actual$program_sequence$outputs[[1]],
                   expected_ext_dep)
@@ -414,7 +414,7 @@ test_that("Global filter and domain filter incl. adsl dependencies (lower case)"
 
   # Check generated ADLB
   x[[1]] |> source()
-  expect_setequal(names(adlb),  c("USUBJID", "STUDYID", "VISITNUM", "LBSTRESN", "LBSTRESU"))
+  expect_setequal(names(adlb),  c("USUBJID", "STUDYID", "LBSEQ", "VISITNUM", "LBSTRESN", "LBSTRESU"))
   expect_equal(nrow(adlb), 1790)
 })
 
@@ -452,7 +452,7 @@ test_that("External predecessor dependencies are handled correctly in filter and
   # EXPECT -------------------------------------------------------------------
 
   # Check external dependencies
-  expected_ext_dep <- c("lb.STUDYID", "lb.USUBJID", "lb.VISITNUM", "lb.LBSTRESN",
+  expected_ext_dep <- c("lb.STUDYID", "lb.USUBJID", "lb.LBSEQ", "lb.VISITNUM", "lb.LBSTRESN",
                         "lb.LBSTRESU", "adsl.STUDYID", "adsl.USUBJID", "adsl.SEX",
                         "adsl.AGE")
   expect_setequal(actual$program_sequence$outputs[[1]],
@@ -469,7 +469,7 @@ test_that("External predecessor dependencies are handled correctly in filter and
 
   # Check generated ADLB
   x[[1]] |> source()
-  expect_setequal(names(adlb),  c("USUBJID", "STUDYID", "VISITNUM", "LBSTRESN", "LBSTRESU", "AGE"))
+  expect_setequal(names(adlb),  c("USUBJID", "STUDYID", "LBSEQ", "VISITNUM", "LBSTRESN", "LBSTRESU", "AGE"))
   expect_equal(nrow(adlb), 1790)
 })
 

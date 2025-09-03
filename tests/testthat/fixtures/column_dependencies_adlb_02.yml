@@ -1,6 +1,6 @@
 table_metadata:
   table: adlb
-  
+
 init:
   base_domains:
     - lb
@@ -18,6 +18,8 @@ column_metadata:
   - column: USUBJID
 
   - column: STUDYID
+
+  - column: LBSEQ
 
   - column: VISITNUM
 

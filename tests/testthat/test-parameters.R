@@ -51,6 +51,8 @@ test_that("Complex test with multiple domains and column/row operations", {
     names(ADLB),
     c(
       "USUBJID",
+      "STUDYID",
+      "LBSEQ",
       "LBTEST",
       "LBSTRESN",
       "LBSTNRHI",
