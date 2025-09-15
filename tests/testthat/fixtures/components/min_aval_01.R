@@ -6,6 +6,7 @@
 #' @depends ADLB AVAL
 #' @outputs MIN_AVAL
 #' @returns `ADSL`
+#' @code
 min_aval_01 <-   function(ADSL, ADLB) {
   # Extract the minimum AVAL value for each SUBJID
   ADSL <- ADSL |>

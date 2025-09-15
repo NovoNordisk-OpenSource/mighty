@@ -4,6 +4,7 @@
 #' @depends ADLB LBTEST
 #' @outputs LBTEST
 #' @returns `ADLB`
+#' @code
 new_lbtest_08 <- function(ADLB, params = list(test_val = "Phosphate")) {
   if (!is.null("Specific Gravity")) {
     new_lbtest <- ADLB |>

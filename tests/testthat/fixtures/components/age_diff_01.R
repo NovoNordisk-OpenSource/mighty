@@ -5,6 +5,7 @@
 #' @depends ADSL AGE2
 #' @outputs AGE_DIFF1
 #' @returns `ADSL`
+#' @code
 age_diff_01 <-   function(ADSL) {
   ADSL <- ADSL |>
     dplyr::mutate(AGE_DIFF1 = AGE-AGE2)

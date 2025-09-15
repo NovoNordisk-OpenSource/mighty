@@ -4,6 +4,7 @@
 #' @depends ADSL AGE2
 #' @outputs AGE_GRP1
 #' @returns `ADSL`
+#' @code
 age_group_01 <-   function(ADSL) {
   ADSL <- ADSL |>
     dplyr::mutate(AGE_GRP1 = cut(

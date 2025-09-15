@@ -14,6 +14,7 @@
 #' @outputs EFFICACY
 #' @outputs SAFETY
 #' @returns `ADSL`
+#' @code
 supp_dm_01 <- function(ADSL, suppdm, suppdm_vaccine) {
   # Collect supplementary data
   data_supp <- rbind(suppdm, suppdm_vaccine) |>

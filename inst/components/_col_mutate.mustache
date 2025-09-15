@@ -4,5 +4,5 @@
 #' @param self Character string. The name of the dataset being modified with the new mutated column.
 #' @param rename_var_upper Character string. The name of the new column to be created in the dataset through the mutation operation.
 #' @param source_var_upper Character string. The name of the existing column whose values will be used to populate the new mutated column.
-
+#' @code
 {{self}} <- {{self}} |> dplyr::mutate({{rename_var_upper}} = {{source_var_upper}})

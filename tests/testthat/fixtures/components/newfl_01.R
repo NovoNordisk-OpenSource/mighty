@@ -7,6 +7,7 @@
 #' @outputs NEWFL01
 #' @outputs NEWREA01
 #' @returns `ADSL`
+#' @code
 newfl_01 <-   function(ADSL) {
   # Extract the minimum AVAL value for each SUBJID
   ADSL <- ADSL |> dplyr::mutate(

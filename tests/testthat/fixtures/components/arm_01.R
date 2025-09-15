@@ -5,6 +5,7 @@
 #' @depends ADSL USUBJID
 #' @outputs NEW_ARM
 #' @returns `ADSL`
+#' @code
 arm_01 <-   function(ADSL) {
   ADSL <- ADSL |>
     dplyr::mutate(NEW_ARM = ifelse(

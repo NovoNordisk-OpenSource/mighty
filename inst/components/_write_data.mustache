@@ -6,7 +6,7 @@
 #' @param row_order_vars Character vector or NULL. Specifies the columns on which to sort the rows in the dataset before writing.
 #' @param has_keep_vars Boolean indicating if column selection is required
 #' @param keep_vars Character vector or NULL. Specifies the columns to keep and the order of appearance.
-
+#' @code
 {{#has_row_order}}
 # Sort rows by primary key
 {{self}} <- {{self}} |> dplyr::arrange({{row_order_vars}})

@@ -10,6 +10,7 @@
 #' @depends suppae QVAL
 #' @outputs AETRTEM
 #' @returns `ADAE`
+#' @code
 supp_ae_01 <- function(ADAE, suppae) {
 
   # Collect supplementary data

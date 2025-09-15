@@ -35,6 +35,7 @@ column_metadata:
 #' @type derivation
 #' @depends ADSL {{depends_var}}
 #' @outputs {{output_var}}
+#' @code
 {{output_var}} <- {{output_var}} |> 
   dplyr::mutate(U2={{depends_var}})
 }

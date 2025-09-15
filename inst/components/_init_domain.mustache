@@ -6,7 +6,7 @@
 #' @param keep_columns Character vector. Column names to select and retain in the final dataset after row binding and processing.
 #' @param source_domain_rbind Character string. R expression for combining source datasets using `rbind()` or similar row-binding functions.
 #' @param src_mutations List of lists. Each element contains mutation specifications for source domains, where each sub-list has a `domain` element specifying the dataset name to be modified with a source identifier column. For example: `list(list(domain = "dm"), list(domain = "dm_vaccine"))`.
-
+#' @code
 {{#src_mutations}}
 {{domain}} <- {{domain}} |>
   dplyr::mutate(SRC_ = "{{domain}}")

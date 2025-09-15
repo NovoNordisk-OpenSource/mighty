@@ -7,6 +7,7 @@
 #' @depends sv VISITDY
 #' @outputs LBTEST
 #' @returns `ADLB`
+#' @code
 new_lbtest_01 <-   function(ADLB) {
 
   new_lbtest <- ADLB |>

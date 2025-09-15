@@ -5,6 +5,7 @@
 #' @depends ADAE AESEV_GRP
 #' @outputs AEBODSYS_GRP
 #' @returns `ADAE`
+#' @code
 aebodsys_grp_01 <-   function(ADAE) {
   ADAE <- ADAE |>
     dplyr::mutate(AEBODSYS_GRP = ifelse(

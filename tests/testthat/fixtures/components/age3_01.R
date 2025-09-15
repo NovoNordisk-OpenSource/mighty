@@ -4,6 +4,7 @@
 #' @depends ADLB AGE
 #' @outputs AGE3
 #' @returns `ADLB`
+#' @code
 age3_01 <- function(ADLB) {
   ADLB <- ADLB |>
     dplyr::mutate(AGE3 = AGE - 1)

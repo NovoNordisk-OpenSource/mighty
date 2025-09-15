@@ -15,7 +15,7 @@
 #' @param global_filter Character vector or NULL. One or more filter expressions to apply globally to the dataset. Multiple expressions are applied sequentially.
 #' @param has_keep_columns Logical. Whether to select only specific columns from the final dataset.
 #' @param keep_columns Character string or NULL. Comma-separated list of column names to retain in the final dataset. Only used when `has_keep_columns` is `TRUE`.
-
+#' @code
 {{#joins}}
 {{self}} <- {{self}} |>
   dplyr::left_join({{table}} |> dplyr::select({{cols}}),

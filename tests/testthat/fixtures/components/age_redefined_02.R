@@ -4,6 +4,7 @@
 #' @depends core AGE
 #' @outputs AGE
 #' @returns `ADLB`
+#' @code
 age_redefined_02 <- function(ADLB) {
   ADLB <- ADLB |>
     dplyr::mutate(AGE = AGE + 1)

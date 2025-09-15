@@ -4,6 +4,7 @@
 #' @depends ADSL ARM_GRP1
 #' @outputs ARM_CAT1
 #' @returns `ADSL`
+#' @code
 arm_category_01 <-   function(ADSL) {
   ADSL <- ADSL |>
     dplyr::mutate(ARM_CAT1 = ifelse(

@@ -9,7 +9,7 @@
 #' @param needs_rename Logical. Whether the added variable needs to be renamed after the join operation. If `TRUE`, a rename operation will be included in the generated code.
 #' @param output_var Character string. The desired name for the output variable after the join and potential rename operation.
 #' @param var_to_add Character string. The name of the variable being added from the join dataset, before any renaming.
-
+#' @code
 {{self}} <- {{self}} |>
     dplyr::left_join({{join_dataset}} |> dplyr::select({{select_expr}}),
 by = c({{{by_vars_str}}})){{#needs_rename}} |>

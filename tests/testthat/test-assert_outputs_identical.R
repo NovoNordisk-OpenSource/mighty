@@ -29,6 +29,7 @@ column_metadata:
 #' @depends ADSL USUBJID
 #' @outputs A
 #' @outputs B
+#' @code 
 ADSL <- ADSL |> 
   dplyr::mutate(A=USUBJID) |> 
   dplyr::mutate(B=USUBJID)

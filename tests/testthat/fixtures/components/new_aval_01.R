@@ -4,6 +4,7 @@
 #' @depends ADLB AVAL
 #' @outputs AVAL
 #' @returns `ADLB`
+#' @code
 new_aval_01 <- function(ADLB) {
 
   new_aval <- ADLB |>

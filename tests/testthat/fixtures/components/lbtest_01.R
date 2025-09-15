@@ -11,6 +11,7 @@
 #' @depends ADSL PLANNED_ARM
 #' @outputs LBTEST
 #' @returns `ADLB`
+#' @code
 lbtest_01 <-   function(ADLB, lb, ADSL) {
 
   # join with adsl, only derive lbtest if adsl.planned_arm != "" and

@@ -8,6 +8,7 @@
 #' @depends ADLB LBTEST
 #' @outputs NEWFL02
 #' @returns `ADSL`
+#' @code
 newfl_02 <-   function(ADSL, ADLB) {
   subids <- ADLB |>
     dplyr::filter(LBTEST == "Polychromasia") |>

@@ -4,6 +4,7 @@
 #' @depends ADSL PLANNED_ARM
 #' @outputs ARM_GRP1
 #' @returns `ADSL`
+#' @code
 arm_group_01 <-   function(ADSL) {
   ADSL <- ADSL |>
     dplyr::mutate(ARM_GRP1 = ifelse(

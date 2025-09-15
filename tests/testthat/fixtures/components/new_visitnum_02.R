@@ -4,6 +4,7 @@
 #' @depends ADLB VISITNUM
 #' @outputs VISITNUM
 #' @returns `ADLB`
+#' @code
 new_visitnum_02 <- function(ADLB) {
 
   new_visitnum <- ADLB |>

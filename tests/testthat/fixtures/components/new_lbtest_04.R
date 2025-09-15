@@ -4,6 +4,7 @@
 #' @depends ADLB LBTEST
 #' @outputs LBTEST
 #' @returns `ADLB`
+#' @code
 new_lbtest_04 <- function(ADLB) {
 
   new_lbtest <- ADLB |>

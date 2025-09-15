@@ -5,6 +5,7 @@
 #' @outputs LBTEST3
 #' @outputs LBTEST3_FLG
 #' @returns `ADLB`
+#' @code
 lbtest_03 <- function(ADLB) {
   ADLB <- ADLB |>
     dplyr::mutate(

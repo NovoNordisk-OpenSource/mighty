@@ -4,6 +4,6 @@
 #' @param new_variable `character` Name of the new variable
 #' @type derivation
 #' @outputs {{new_variable}}
-
+#' @code
 ADLB <- ADLB |>
   dplyr::mutate({{new_variable}} = {{value}})

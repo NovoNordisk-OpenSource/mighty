@@ -4,6 +4,7 @@
 #' @depends ADLB LBTEST
 #' @outputs LBTEST
 #' @returns `ADLB`
+#' @code
 new_lbtest_09 <- function(ADLB) {
   if (!is.null("Phosphate")) {
     new_lbtest <- ADLB |>

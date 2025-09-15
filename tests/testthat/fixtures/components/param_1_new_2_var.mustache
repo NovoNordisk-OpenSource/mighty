@@ -7,6 +7,6 @@
 #' @depends ADLB {{in_variable1}}
 #' @depends ADLB {{in_variable2}}
 #' @outputs {{new_variable}}
-
+#' @code
 ADLB <- ADLB |>
   dplyr::mutate({{new_variable}} = {{in_variable1}} + {{in_variable2}})

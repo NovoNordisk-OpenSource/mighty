@@ -4,7 +4,7 @@
 #' @type row
 #' @depends ADLB LBTEST
 #' @outputs LBTEST
-
+#' @code
 new_lbtest <- ADLB |>
   dplyr::filter(LBTEST == "{{variable}}") |>
   dplyr::mutate(LBTEST = paste0("{{variable}}", "_new"))

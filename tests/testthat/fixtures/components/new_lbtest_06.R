@@ -6,6 +6,7 @@
 #' @depends ADLB DOMAIN
 #' @outputs LBTEST
 #' @returns `ADLB`
+#' @code
 new_lbtest_06 <- function(ADLB) {
 
   new_lbtest1 <- ADLB |>

@@ -5,6 +5,7 @@
 #' @depends ADSL ACTARM
 #' @outputs ARM_MATCH
 #' @returns `ADSL`
+#' @code
 arm_match_01 <- function(ADSL) {
   ADSL <- ADSL |>
     dplyr::mutate(

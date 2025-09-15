@@ -5,6 +5,7 @@
 #' @depends ADLB DOMAIN
 #' @outputs AVAL
 #' @returns `ADLB`
+#' @code
 new_aval_03 <- function(ADLB) {
 
   new_aval <- ADLB |>

@@ -12,6 +12,7 @@
 #' @depends ADSL USUBJID
 #' @outputs ACTARM
 #' @returns `ADSL`
+#' @code
 act_arm_01 <- function(ADSL, dm, dm_vaccine) {
   ADSL <- ADSL |>
     dplyr::left_join(

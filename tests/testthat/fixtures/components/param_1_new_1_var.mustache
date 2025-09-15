@@ -5,6 +5,6 @@
 #' @depends ADLB {{old_variable}}
 #' @type derivation
 #' @outputs {{new_variable}}
-
+#' @code
 ADLB <- ADLB |>
   dplyr::mutate({{new_variable}} = {{old_variable}})

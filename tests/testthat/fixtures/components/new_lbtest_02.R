@@ -6,6 +6,7 @@
 #' @outputs LBTEST
 #' @outputs AVALC
 #' @returns `ADLB`
+#' @code
 new_lbtest_02 <- function(ADLB) {
 
   new_lbtest <- ADLB |>
