@@ -1,7 +1,7 @@
 #' Prepare Test Data for Unit Tests
 #'
 #' The `setup_testdata` function prepares test data required for unit testing. 
-#' Currently it extracts \code{pharmaversesdtm} and \code{pharmaversesdtm} 
+#' Currently it extracts \code{pharmaversesdtm} and \code{pharmaverseadam} 
 #' datasets and sets up the test environment by storing
 #' the relevant domains as data set files (\code{.parquet}) in a temporary directory.
 #' Under \code{test_data_path}, a folder \code{data} is created, and in here the folders
@@ -26,8 +26,13 @@
 #'
 #' @seealso [testthat::setup()], [withr::local_tempdir()]
 #' @export
-setup_testdata <- function(testdata = c("pharmaverse"), test_data_path, sdtm_domains = c("dm", "suppdm", "dm_vaccine", "ae", "lb", "sv"), adam_domains = c()) {
-
+setup_testdata <- function(testdata = c("pharmaverse"), 
+                           test_data_path, 
+                           sdtm_domains = c("dm", "suppdm", "dm_vaccine", "ae", "lb", "sv"), 
+                           adam_domains = c(),
+                           remove_cols = NULL,
+                           env = parent.frame()
+                          ) {
   testdata <- match.arg(testdata)
   # TODO: Should we only allow a set of SDTM domains to be available (in case sdtmpharmaverse gets extended?)
   # Currently: allow any
@@ -58,6 +63,9 @@ setup_testdata <- function(testdata = c("pharmaverse"), test_data_path, sdtm_dom
       function(x) {
         tryCatch({
           dataset <- eval(parse(text = paste0("pharmaversesdtm::", x)))
+          if (!is.null(remove_cols)) {
+              dataset <- dataset %>% dplyr::select(-all_of(remove_cols[domain==x]$columns))
+          }
           arrow::write_parquet(
             dataset,
             file.path(sdtm_testdata_path, paste0(x, ".parquet"))
@@ -77,6 +85,9 @@ setup_testdata <- function(testdata = c("pharmaverse"), test_data_path, sdtm_dom
       function(x) {
         tryCatch({
           dataset <- eval(parse(text = paste0("pharmaverseadam::", x)))
+          if (!is.null(remove_cols)) {
+              dataset <- dataset %>% dplyr::select(-all_of(remove_cols[domain==x]$columns))
+          }
           arrow::write_parquet(
             dataset,
             file.path(adam_testdata_path, paste0(x, ".parquet"))
@@ -104,7 +115,7 @@ setup_testdata <- function(testdata = c("pharmaverse"), test_data_path, sdtm_dom
       data_path,
       test_path("fixtures", "data")
     )
-    withr::defer_parent(
+    withr::defer(envir = env,
       unlink(test_path("fixtures", "data"), recursive = TRUE, force = TRUE)
     )
     return(test_data_path)

@@ -14,7 +14,8 @@ generate_adam_code <- function(
   standards_lib = NULL,
   path_trial_metadata,
   path_trial,
-  check_cross_domain_adam_dependencies = TRUE
+  check_cross_domain_adam_dependencies = TRUE,
+  data_context = NULL
 ) {
 
   # Read data from UI containing explicit user input
@@ -44,21 +45,30 @@ generate_adam_code <- function(
   actions_04_org <- organize_actions(actions_03_filter, edges)
   actions_05_read <- add_read_data_actions(actions_04_org, ui_init)
   actions_06_write <- add_write_data_actions(actions_05_read)
-
+  actions_07_check <- add_check_executable_status(actions_06_write, ui_yml, data_context)
   # Create programs
-  actions_07_code <- render_code(
+  actions_08_code <- render_code(
     actions = actions_06_write,
     domain_keys = domain_keys,
     ui_data = ui_yml,
     path_trial = path_trial
   )
-
+  actions_08_available_data <- render_code(
+     actions = actions_07_check$actions,
+     domain_keys = domain_keys,
+     ui_data = ui_yml,
+     path_trial = path_trial,
+     available_data = actions_07_check$available_columns
+  )
   return(
     list(
-      programs = compile_into_programs(actions_07_code),
-      program_sequence = actions_07_code,
+      programs = compile_into_programs(actions_08_code),
+      program_sequence = actions_08_code,
+      executable_programs = compile_into_programs(actions_08_available_data),
+      executable_program_sequence = actions_07_check$actions,
       edges = edges,
-      data_model = actions_configuration
+      actions = actions_configuration$actions,
+      rendered_components = actions_configuration$code_components_rendered
     )
   )
 }

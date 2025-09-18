@@ -26,10 +26,11 @@ Imports:
     styler,
     roxygen2,
     whisker,
+    R6,
     jsonvalidate
 Suggests: 
     knitr,
-    mighty.standards,
+    mighty.component,
     rmarkdown,
     admiral,
     withr,

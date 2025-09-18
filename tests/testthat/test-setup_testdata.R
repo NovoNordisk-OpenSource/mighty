@@ -88,3 +88,25 @@ testthat::test_that("Non-existing testdata cannot be prepared", {
                  paste0("'arg' should be \"pharmaverse\""))
 })
 
+testthat::test_that("Removing variables when setting up test data", {
+  # SETUP -------------------------------------------------------------------
+  output_path <- withr::local_tempdir()
+
+  # EXPECT ------------------------------------------------------------------
+  setup_testdata(
+    testdata = "pharmaverse",
+    test_data_path = output_path,
+    sdtm_domains = c("dm", "dm_vaccine"),
+    remove_cols = data.table(domain = c("dm", "dm_vaccine"),
+                             columns = c("SEX", "AGE"))
+  )
+  cnt <- connector::connect(file.path(output_path, "_connector.yml"))
+  dm <- cnt$sdtm$tbl_cnt("dm.parquet")
+  dc <- data_context$new(cnt)
+  expect_false(dc$has_variables("dm", "SEX"))
+  expect_true(dc$has_variables("dm", "AGE"))
+  expect_false(dc$has_variables("dm_vaccine", "AGE"))
+  expect_true(dc$has_variables("dm_vaccine", "SEX"))
+  expect_true(dc$has_variables("dm", "USUBJID"))
+  expect_length(dm, 24)
+})

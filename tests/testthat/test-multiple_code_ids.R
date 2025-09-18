@@ -1,5 +1,5 @@
 test_that("Multiple columns using same code_id, but diff parameters errors out", {
-  skip(message = "This check has not been re-implimented after switching to mighty.standards")
+  skip(message = "This check has not been re-implimented after switching to mighty.component")
   # SETUP
   path_ui_data <- testthat::test_path(
     "fixtures",

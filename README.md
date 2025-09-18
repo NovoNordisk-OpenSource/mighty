@@ -104,7 +104,7 @@ adhere to a few simple rules. See \[\] for more details
 As mighty matures, more of these functions will be pre-defined and ready
 for use, so nothing more would need to be done by the user. For more
 information, please refer to
-[`mighty.standards`](https://github.com/NN-OpenSource/mighty.standards).
+[`mighty.component`](https://github.com/NN-OpenSource/mighty.component).
 
 See \[\] section for more details on the ADaM Specification data model.
 

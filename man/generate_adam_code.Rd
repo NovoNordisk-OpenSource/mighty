@@ -9,7 +9,8 @@ generate_adam_code(
   standards_lib = NULL,
   path_trial_metadata,
   path_trial,
-  check_cross_domain_adam_dependencies = TRUE
+  check_cross_domain_adam_dependencies = TRUE,
+  data_context = NULL
 )
 }
 \arguments{

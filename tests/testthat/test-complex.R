@@ -31,7 +31,7 @@ test_that("Complex test with multiple domains and column/row operations", {
 
   # EXPECT ------------------------------------------------------------------
 
-  actual$data_model$actions |>
+  actual$actions |>
     names() |>
     expect_setequal(
       c(
@@ -214,5 +214,3 @@ test_that("Complex test with multiple domains and column/row operations", {
     expect_snapshot_value(style = "json2", variant = "adsl_2")
 
 })
-
-

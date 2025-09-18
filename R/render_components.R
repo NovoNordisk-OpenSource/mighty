@@ -8,7 +8,7 @@ render_components <- function(actions) {
     code_id <- code_component_ids[i, code_id]
     params <- code_component_ids$parameters[i] |> unlist(recursive = FALSE)
     if(!is.list(params) && is.na(params))params <- list()
-    rendered_components[[node_id]] <- mighty.standards::get_rendered_component(
+    rendered_components[[node_id]] <- mighty.component::get_rendered_component(
       component = code_id,
       params = params
     )

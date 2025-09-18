@@ -5,7 +5,7 @@
 #'
 #' @details For each action in the input table, this function:
 #'   1. Calls define_params() to determine the correct parameters based on the code_id
-#'   2. Renders the code component using the mighty.standards library
+#'   2. Renders the code component using the mighty.component library
 #'   3. Adds a node header and stores the generated code back in the actions table
 #'
 #' @param actions Data table containing action definitions with columns including
@@ -23,7 +23,8 @@ render_code <- function(
   actions,
   domain_keys,
   ui_data,
-  path_trial
+  path_trial,
+  available_data = NULL
 ) {
 
   actions_program_summary <- actions |>
@@ -33,15 +34,23 @@ render_code <- function(
   names(final_programs_lkp) <- actions_program_summary$domain
 
   actions_ <- copy(actions)
+
   for (i in seq_len(nrow(actions_))) {
     action_i <- actions_[i]
-    no_line_break <- i==1
+    action_has_comment <- !is.null(action_i$lineage) && nchar(action_i$lineage) > 0
+    no_line_break <- i==1 && !action_has_comment
     is_final_pgm <- action_i$program_id == final_programs_lkp[[action_i$domain]]
-
+    # In case the call is based on actions that are modified due to missing 
+    # data, there may be situations where no outputs can be created. In this
+    # case, use the removed_outputs to generate code instead
+    # TODO: Assess if a similar approach is needed for depend_columns
+    output_cols = action_i$outputs[[1]]
+    if (length(action_i$outputs[[1]]) == 0 && !is.null(action_i$removed_outputs) )
+      output_cols <- action_i$removed_outputs[[1]]
     params <- define_params(
       code_id = action_i$code_id,
       .self = action_i$domain,
-      output_cols = action_i$outputs[[1]],
+      output_cols = output_cols,
       depend_domains = action_i$depend_cols[[1]]$domain,
       depend_columns = action_i$depend_cols[[1]]$column_name,
       action_parameters = action_i$parameters,
@@ -49,18 +58,21 @@ render_code <- function(
       path_trial = path_trial,
       domain_ui_data = ui_data[[action_i$domain]],
       domain_keys = domain_keys,
-      is_final_pgm = is_final_pgm
+      is_final_pgm = is_final_pgm,
+      available_data = available_data
     )
 
-    code_i <- paste0(
-      gen_node_header(action_i$node_id, no_line_break),
-      mighty.standards::get_rendered_component(component =
+    code <- mighty.component::get_rendered_component(component =
         action_i$code_id |> format_internal_code_id(),
         params = params
       )$code |>
         paste0(collapse = "\n")
+    code_i <- paste0(
+      gen_node_header(action_i$node_id, no_line_break),
+      ifelse(action_has_comment, add_hash(action_i$lineage), ""),
+      ifelse(action_has_comment, "\n", ""),
+      ifelse(action_has_comment && !action_i$can_execute, add_hash(code), code)
     )
-
     actions_[i, code := code_i]
   }
   actions_
@@ -77,7 +89,8 @@ define_params <- function(
   path_trial,
   domain_ui_data,
   domain_keys,
-  is_final_pgm
+  is_final_pgm,
+  available_data
 ) {
 
   init_metadata <- domain_ui_data$init
@@ -118,7 +131,8 @@ define_params <- function(
     "_write_data.mustache" = params_write_domain_code(.self = .self,
                                                       is_final_pgm = is_final_pgm,
                                                       domain_keys = domain_keys,
-                                                      domain_ui_data = domain_ui_data
+                                                      domain_ui_data = domain_ui_data,
+                                                      available_data = available_data
     ),
     # Default case for col_compute/row_compute
     format_col_compute_params(action_parameters = action_parameters)
@@ -152,6 +166,13 @@ gen_node_header <- function(title, no_line_break) {
                 title_line, "\n"))
 }
 
+add_hash <- function(text) {
+  # Add # at the beginning
+  result <- paste0("# ", text)
+  # Replace \n with \n#
+  result <- gsub("\n", "\n# ", result)
+  return(result)
+}
 
 #' @noRd
 #' Needed for mustache components stored in mighty. These code ids need to be transformed into

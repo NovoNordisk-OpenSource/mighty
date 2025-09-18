@@ -4,7 +4,7 @@
 \alias{render_code}
 \title{Render Code for Actions}
 \usage{
-render_code(actions, domain_keys, ui_data, path_trial)
+render_code(actions, domain_keys, ui_data, path_trial, available_data = NULL)
 }
 \arguments{
 \item{actions}{Data table containing action definitions with columns including
@@ -32,7 +32,7 @@ corresponding code components.
 For each action in the input table, this function:
 \enumerate{
 \item Calls define_params() to determine the correct parameters based on the code_id
-\item Renders the code component using the mighty.standards library
+\item Renders the code component using the mighty.component library
 \item Adds a node header and stores the generated code back in the actions table
 }
 }

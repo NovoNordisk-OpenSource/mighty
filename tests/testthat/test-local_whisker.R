@@ -36,7 +36,7 @@ column_metadata:
 #' @depends ADSL {{depends_var}}
 #' @outputs {{output_var}}
 #' @code
-{{output_var}} <- {{output_var}} |> 
+{{output_var}} <- {{output_var}} |>
   dplyr::mutate(U2={{depends_var}})
 }
  " |>
@@ -46,7 +46,7 @@ column_metadata:
   path_ui_data <- file.path(trial_path, "ui_yml.yml")
   whisker::whisker.render(yml, data = list(ady_custom = tmp_file)) |>
   writeLines(path_ui_data)
-  
+
   path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
   output_path <- trial_path
   # ACT ------------------------------------------------------------
@@ -57,10 +57,11 @@ column_metadata:
     path_trial = trial_path,check_cross_domain_adam_dependencies = FALSE
   )
 
-
 # ASSERT -----------------------------------------------------------------
-# 
-  actual$program_sequence[outputs=="A",code] |> strsplit("\n") |> _[[1]][4:5] |> expect_snapshot()
+#
+  actual$program_sequence[outputs=="A",code] |> strsplit("\n") |>
+    _[[1]][3:4] |>
+    expect_snapshot()
 
 
 })

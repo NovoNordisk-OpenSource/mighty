@@ -25,7 +25,7 @@ test_that(
       check_cross_domain_adam_dependencies = FALSE
     ) |> expect_no_error()
 
-    actual$data_model$actions |>
+    actual$actions |>
       names() |>
       sort() |>
       expect_equal(c("code_id", "depend_cols", "depend_rows", "domain", "node_id", "outputs", "parameters", "type"))
@@ -60,7 +60,7 @@ test_that(
       check_cross_domain_adam_dependencies = TRUE
     ) |> expect_no_error()
 
-    actual$data_model$actions |>
+    actual$actions |>
       names() |>
       sort() |>
       expect_equal(c("code_id", "depend_cols", "depend_rows", "domain", "node_id", "outputs", "parameters", "type"))
@@ -132,7 +132,7 @@ test_that(
       check_cross_domain_adam_dependencies = FALSE
     ) |> expect_no_error()
 
-    actual$data_model$actions |>
+    actual$actions |>
       names() |>
       sort() |>
       expect_equal(c("code_id", "depend_cols", "depend_rows", "domain", "node_id", "outputs", "parameters", "type"))
@@ -346,7 +346,7 @@ test_that(
       path_trial = path_trial,
       check_cross_domain_adam_dependencies = FALSE
     ) |> expect_no_error()
-    actual$data_model$actions |>
+    actual$actions |>
       names() |>
       sort() |>
       expect_equal(c("code_id", "depend_cols", "depend_rows", "domain", "node_id", "outputs", "parameters", "type"))
@@ -417,7 +417,7 @@ test_that(
       check_cross_domain_adam_dependencies = FALSE
     ) |> expect_no_error()
 
-    actual$data_model$actions |>
+    actual$actions |>
       names() |>
       sort() |>
       expect_equal(c("code_id", "depend_cols", "depend_rows", "domain", "node_id", "outputs", "parameters", "type"))
@@ -493,7 +493,7 @@ test_that(
       check_cross_domain_adam_dependencies = FALSE
     ) |> expect_no_error()
 
-    actual$data_model$actions |>
+    actual$actions |>
       names() |>
       sort() |>
       expect_equal(c("code_id", "depend_cols", "depend_rows", "domain", "node_id", "outputs", "parameters", "type"))
