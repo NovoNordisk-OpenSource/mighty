@@ -1,8 +1,8 @@
 ---
-title: "Trial Level etadata"
+title: "Trial Level Metadata"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{trial_metadata}
+  %\VignetteIndexEntry{Trial Level Metadata}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

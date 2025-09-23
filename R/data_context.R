@@ -45,7 +45,6 @@
 #' 
 #' # Access tables (read-only)
 #' all_tables <- dc$tables
-#' } 
 #'
 #' @export
 data_context <-  R6::R6Class(
@@ -157,21 +156,21 @@ data_context <-  R6::R6Class(
     
     #' @description
     #' Check if a variable exists in a specific table
-    #' 
+    #'
     #' @param table_name Character string specifying the table name
-    #' @param variable_name Character string specifying the variable name
+    #' @param variable_names Character vector specifying the variable names
     #' @param datasource Character string specifying the datasource name.
     #'   Default is "sdtm".
-    #' 
+    #'
     #' @return Logical value indicating whether the variable exists
-    #' 
+    #'
     #' @examples
     #' \dontrun{
     #' # Check if AGE exists in DM table
     #' has_age <- dc$has_variables("dm", "AGE", "sdtm")
-    #' 
+    #'
     #' # Check multiple variables
-    #' variables_exist <- dc$has_variables("dm", c("AGE", "SEX", "RACE"), "sdtm"))
+    #' variables_exist <- dc$has_variables("dm", c("AGE", "SEX", "RACE"), "sdtm")
     #' }
     has_variables = function(table_name, variable_names, datasource = "sdtm") {
       dc_has_variables(table_name, variable_names, datasource, private)

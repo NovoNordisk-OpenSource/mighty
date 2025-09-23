@@ -27,6 +27,30 @@ dc$init_tables("sdtm")
 }
 
 \examples{
+\dontrun{
+# Initialize with connector
+dc <- data_context$new(connector = my_connector)
+
+# Get available datasources
+datasources <- dc$get_datasource_names()
+
+# Get table names from SDTM
+sdtm_tables <- dc$get_table_names("sdtm")
+
+# Check if variable exists
+has_age <- dc$has_variable("dm", "AGE", "sdtm")
+
+# Get variable information
+age_type <- dc$get_variable_type("dm", "AGE", "sdtm")
+age_label <- dc$get_variable_label("dm", "AGE", "sdtm")
+
+# Print summary
+dc$print_summary()
+}
+
+# Access tables (read-only)
+all_tables <- dc$tables
+
 
 ## ------------------------------------------------
 ## Method `data_context$new`
@@ -100,7 +124,7 @@ sapply(dm_vars, class)
 has_age <- dc$has_variables("dm", "AGE", "sdtm")
 
 # Check multiple variables
-variables_exist <- dc$has_variables("dm", c("AGE", "SEX", "RACE"), "sdtm"))
+variables_exist <- dc$has_variables("dm", c("AGE", "SEX", "RACE"), "sdtm")
 }
 
 ## ------------------------------------------------
@@ -355,10 +379,10 @@ Check if a variable exists in a specific table
 \describe{
 \item{\code{table_name}}{Character string specifying the table name}
 
+\item{\code{variable_names}}{Character vector specifying the variable names}
+
 \item{\code{datasource}}{Character string specifying the datasource name.
 Default is "sdtm".}
-
-\item{\code{variable_name}}{Character string specifying the variable name}
 }
 \if{html}{\out{</div>}}
 }
@@ -372,7 +396,7 @@ Logical value indicating whether the variable exists
 has_age <- dc$has_variables("dm", "AGE", "sdtm")
 
 # Check multiple variables
-variables_exist <- dc$has_variables("dm", c("AGE", "SEX", "RACE"), "sdtm"))
+variables_exist <- dc$has_variables("dm", c("AGE", "SEX", "RACE"), "sdtm")
 }
 }
 \if{html}{\out{</div>}}

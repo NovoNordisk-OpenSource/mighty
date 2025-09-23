@@ -78,13 +78,46 @@ The package follows a structured pipeline for ADaM code generation:
 - Located in `inst/yaml_*/` directories for different versions
 - Must include: table_metadata, init, column_metadata sections
 
-## Schema Validation
+## Schema Validation and YAML Processing
 
-The package uses JSON Schema validation for YAML files:
-- Schema definition: `inst/schemas/domain_schema.json`
-- Validation functions in `R/schema.R`
-- Supports both yq tool and native R validation
-- Validation is enabled by default but can be disabled
+### Schema Definition
+- **Schema file**: `inst/schemas/domain_schema.json`
+- **Schema version**: JSON Schema Draft 2020-12
+- **Structure**: YAML specifications use object/map formats for improved developer experience:
+  - `column_metadata`: Object where column names are keys mapping to metadata properties
+  - `row_actions`: Object where row action IDs are keys mapping to action definitions
+- **Error reporting**: Comprehensive path formatting with offending property identification
+
+### Validation Pipeline
+- **Core functions**:
+  - `R/validate_yaml.R` - Main validation orchestration
+  - `R/validate_schema.R` - JSON Schema validation with enhanced error formatting
+  - `R/validate_business_logic.R` - Domain-specific business rules
+- **Parsing support**: Both yq tool and native R YAML parsing
+- **Default behavior**: Validation enabled by default, can be disabled via parameters
+- **Error handling**: Template-based error messages with enhanced path resolution and context
+
+### YAML Processing Flow
+1. **Input parsing**: YAML files parsed with automatic structure validation
+2. **Schema validation**: JSON Schema validation against domain specifications
+3. **Business rules**: Domain-specific validation (duplicates, dependencies, parameters)
+4. **Internal conversion**: Transform YAML structure to internal data model with field mapping:
+   - `source` → `depend_cols`
+   - Column names become object keys rather than `column` properties
+   - Row action IDs become object keys rather than `id` properties
+5. **Bidirectional support**: Export capabilities via `write_adam_specs()` and `write_adam_domain_yml()`
+
+### Business Logic Validation
+- **Rule system**: Auto-registered validation functions with standardized naming
+- **Rule categories**:
+  - `stop_on_error`: Critical validation failures that halt processing
+  - `collect_errors`: Non-critical issues collected and reported together
+- **Current rules**:
+  - Parameter validation without code_id references
+  - Column name uniqueness checking
+  - Row action ID uniqueness checking
+  - Dependency validation for row references
+  - Mutual exclusion of `source` and `code_id` fields
 
 ## Code Components
 
@@ -111,3 +144,85 @@ When modifying YAML validation:
 2. Validate against existing YAML fixtures in `tests/testthat/fixtures/`
 3. Update schema validation functions in `R/schema.R` if needed
 4. Run schema-related tests: `testthat::test_file("tests/testthat/test-schema.R")`
+
+
+## Git
+When making PR messages, follow the following format:
+
+```md
+## Summary
+(Summary of made changes with explanation of what and why)
+
+## Changes Made
+- Change 1
+- ...
+
+## Testing
+- [Summary of testing done to ensure new feature QC'd]
+- ...
+
+
+```
+
+When making an issue, follow the following templates:
+
+1. Feature:
+
+```md
+## Feature Request
+
+### Description
+[Provide a clear and concise description of the feature you are requesting. What problem does it aim to solve?]
+
+### Proposed Solution
+[Outline a proposed solution or approach for implementing the feature. How do you envision the feature working?]
+
+### Use Case
+[Describe a specific use case or scenario where this feature would be beneficial or necessary.]
+
+### Additional Context
+[Add any additional context, information, or examples that support or clarify the feature request.]
+
+### Impact
+[Explain the potential impact of this feature on the package and its users. How would it improve the package or benefit the user community?]
+
+### Related Issues
+[Are there any related issues or pull requests that are relevant to this feature request?]
+```
+
+
+When writing a bug issue, follow this template:
+
+```md
+## Bug Report
+
+### Description
+[Provide a clear and concise description of the bug. What behavior did you observe that you believe to be a bug?]
+
+### Reproducible Example
+[Include a minimal, complete, and verifiable example that demonstrates the bug. This could be a code snippet, dataset, or specific steps to reproduce the issue.]
+
+### Expected Behavior
+[Describe what you expected to happen when you encountered the bug.]
+
+### Actual Behavior
+[Explain what actually happened when you encountered the bug.]
+
+### Environment
+- R Version: [e.g., 4.5.1]
+- Package Version: [e.g., 1.2.3]
+- Operating System: [e.g., Windows 10, macOS 11.1]
+
+### Additional Context
+[Add any additional context, information, or examples that can help in understanding and reproducing the bug.]
+
+### Impact
+[Explain the impact or consequences of this bug. How does it affect the package's functionality or the user experience?]
+
+### Related Issues
+[Are there any related issues, pull requests, or discussions that are relevant to this bug report?]
+```
+
+
+## Writing style
+When writing prose, minimize computer science jargon - speak plainly. Avoid superlatives, hyperbole, and over-the-top descriptions  
