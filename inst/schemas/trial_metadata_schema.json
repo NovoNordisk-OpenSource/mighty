@@ -1,0 +1,95 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Trial/Project Primary Keys Configuration",
+  "description": "Schema for YAML config listing SDTM, ADaM, and metadata primary keys per domain",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "trial_id",
+    "project_id",
+    "complete_id",
+    "instance",
+    "primary_keys_sdtm",
+    "primary_keys_adam",
+    "primary_keys_md"
+  ],
+  "properties": {
+    "trial_id": {
+      "type": "string",
+      "description": "4-digit trial identifier",
+      "pattern": "^\\d{4}$"
+    },
+    "project_id": {
+      "type": "string",
+      "description": "4-digit project identifier, optionally followed by letters (e.g., 1234 or 1234mad)",
+      "pattern": "^\\d{4}[A-Za-z]*$"
+    },
+    "complete_id": {
+      "type": "string",
+      "description": "Composite id, typically trial_id-project_id (e.g., 0001-1234 or 0001-1234mad)",
+      "pattern": "^\\d{4}-\\d{4}[A-Za-z]*$"
+    },
+    "instance": {
+      "type": "string",
+      "description": "Configuration instance (e.g., current, draft)",
+      "minLength": 1
+    },
+    "primary_keys_sdtm": {
+      "$ref": "#/$defs/domainKeysMapSDTM"
+    },
+    "primary_keys_adam": {
+      "$ref": "#/$defs/domainKeysMapADaM"
+    },
+    "primary_keys_md": {
+      "$ref": "#/$defs/domainKeysMapMD"
+    }
+  },
+  "$defs": {
+    "keyVarsArray": {
+      "type": "array",
+      "description": "Primary key variables for this domain",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "pattern": "^[A-Z][A-Z0-9_]*$",
+        "description": "Variable name (e.g., USUBJID, STUDYID, DERIVED_ID)"
+      }
+    },
+    "domainKeysMapSDTM": {
+      "type": "object",
+      "description": "Map of SDTM domain name to ordered list of variables forming the primary key",
+      "minProperties": 1,
+      "propertyNames": {
+        "anyOf": [
+          { "pattern": "^[A-Za-z]{2}$" },
+          { "pattern": "^[Ss][Uu][Pp][Pp][A-Za-z]{2}$" },
+          { "pattern": "^(?:RELREC|relrec)$" }
+        ],
+        "description": "SDTM domain names must be a two-letter domain (e.g., DM or dm), SUPPxx (e.g., SUPPAE or suppae), or RELREC/relrec"
+      },
+      "additionalProperties": { "$ref": "#/$defs/keyVarsArray" }
+    },
+    "domainKeysMapADaM": {
+      "type": "object",
+      "description": "Map of ADaM dataset name to ordered list of variables forming the primary key",
+      "minProperties": 1,
+      "propertyNames": {
+        "pattern": "^[Aa][Dd][A-Za-z0-9]{2,6}$",
+        "description": "ADaM dataset names must start with AD/ad and be 4–8 characters total (e.g., ADSL/adsl, ADLB/adlb, ADAE/adae, ADTTE/adtte)"
+      },
+      "additionalProperties": { "$ref": "#/$defs/keyVarsArray" }
+    },
+    "domainKeysMapMD": {
+      "type": "object",
+      "description": "Map of metadata dataset name to ordered list of variables forming the primary key",
+      "minProperties": 1,
+      "propertyNames": {
+        "pattern": "^[Mm][Dd][A-Za-z0-9]{2,28}$",
+        "description": "Metadata dataset names must start with MD/md and be 4–30 characters total, letters/digits"
+      },
+      "additionalProperties": { "$ref": "#/$defs/keyVarsArray" }
+    }
+  }
+}

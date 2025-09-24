@@ -1,5 +1,5 @@
-table_metadata:
-  table: ADSL
+table:
+  name: ADSL
 
 init:
   base_domains:
@@ -13,17 +13,17 @@ init:
   filter_depend_cols:
     - DTHFL
 
-column_metadata:
-  - column: USUBJID
+column_action:
+  USUBJID:
 
-  - column: STUDYID
+  STUDYID:
 
-  - column: ARM
+  ARM:
 
-  - column: PLANNED_ARM
+  PLANNED_ARM:
     source: ARM
 
-  - column: DTHFL
+  DTHFL:
 
-  - column: ARM_GRP1
+  ARM_GRP1:
     code_id: {path_base}/fixtures/components/arm_group_01.R

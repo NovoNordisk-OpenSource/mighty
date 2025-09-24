@@ -11,7 +11,6 @@ validate_business_logic <-  function(yaml_data, yaml_file, ruleset_name = NULL) 
   if (length(rules$stop_on_error) == 0 && length(rules$collect_errors) == 0) {
     return(invisible(NULL))
   }
-
   # Create context for rules
   context <- list(
     yaml_file = yaml_file,
@@ -87,19 +86,18 @@ validate_business_logic <-  function(yaml_data, yaml_file, ruleset_name = NULL) 
 get_business_rules <- function(ruleset_name) {
   # Registry of rules by schema
   rule_registry <- list(
-    adam_domain = list(
-      stop_on_error = list(
-        "val_source_and_code_id_notboth_populated" = val_source_and_code_id_notboth_populated
-      ),
-      collect_errors = list(
-        "val_no_params_when_missing_code_id" = val_no_params_when_missing_code_id,
-        "val_no_duplicate_columns" = val_no_duplicate_columns,
-        "val_no_duplicate_row_ids" = val_no_duplicate_row_ids,
-        "val_depend_rows" = val_depend_rows
-      )
+  adam_domain = list(
+    stop_on_error = register_rules(
+      val_source_and_code_id_notboth_populated
+    ),
+    collect_errors = register_rules(
+      val_no_params_when_missing_code_id,
+      val_no_duplicate_columns,
+      val_no_duplicate_row_ids,
+      val_depend_rows
     )
   )
-
+)
   rule_registry[[ruleset_name]] %||%
     list(stop_on_error = list(), collect_errors = list())
 }
@@ -113,4 +111,13 @@ handle_business_logic_errors <- function(all_errors, yaml_file) {
     "x" = "Validation failed for {basename(yaml_file)} with the following error(s): ",
     error_messages
   ), class = "validation_error")
+}
+
+# Auto-names the rules based on their function name so dev dosen't have to manually type out each name
+register_rules <- function(...) {
+  fns <- list(...)
+  calls <- as.list(match.call(expand.dots = FALSE)$...)
+  nms <- vapply(calls, function(x) paste(deparse(x), collapse = " "), character(1))
+  names(fns) <- nms
+  fns
 }

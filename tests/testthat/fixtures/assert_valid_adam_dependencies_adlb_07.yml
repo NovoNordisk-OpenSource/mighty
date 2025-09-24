@@ -1,5 +1,5 @@
-table_metadata:
-  table: adlb
+table:
+  name: adlb
 
 init:
   base_domains:
@@ -11,22 +11,22 @@ init:
   filter_depend_cols:
   - NA
 
-column_metadata:
-  - column: STUDYID
+column_action:
+  STUDYID:
 
-  - column: USUBJID
+  USUBJID:
 
-  - column: VISITNUM
+  VISITNUM:
 
-  - column: VISITNUM2
+  VISITNUM2:
     source: VISITNUM
 
-  - column: LBTEST2
+  LBTEST2:
     code_id: {path_base}/fixtures/components/lbtest_02.R
 
-  - column: LBTEST3
+  LBTEST3:
     code_id: {path_base}/fixtures/components/lbtest_03.R
 
-  - column: LBTEST3_FLG
+  LBTEST3_FLG:
     code_id: {path_base}/fixtures/components/lbtest_03.R
 

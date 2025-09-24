@@ -1,5 +1,5 @@
-table_metadata:
-  table: ADLB
+table:
+  name: ADLB
 
 init:
   base_domains:
@@ -11,39 +11,39 @@ init:
   filter_depend_cols:
   - NA
 
-column_metadata:
-  - column: USUBJID
+column_action:
+  USUBJID:
 
-  - column: STUDYID
+  STUDYID:
 
-  - column: LBSEQ
+  LBSEQ:
 
-  - column: LBSTRESN
+  LBSTRESN:
 
-  - column: PLANNED_ARM
+  PLANNED_ARM:
     source: ADSL.PLANNED_ARM
 
-  - column: ARM
+  ARM:
     source: ADSL.PLANNED_ARM
 
-  - column: AVAL
+  AVAL:
     source: LBSTRESN
 
-  - column: AVAL_GRP
+  AVAL_GRP:
     code_id: {path_base}/fixtures/components/aval_grp_01.R
 
-  - column: AVAL2
+  AVAL2:
     source: AVAL
 
-  - column: LBTEST
+  LBTEST:
     code_id: {path_base}/fixtures/components/lbtest_01.R
 
-  - column: AVALFL
+  AVALFL:
     code_id: {path_base}/fixtures/components/avalfl_01.R
 
-  - column: AVALREA
+  AVALREA:
     code_id: {path_base}/fixtures/components/avalfl_01.R
 
-row_actions:
-  - id: new_microcytes
+row_action:
+  new_microcytes:
     code_id: {path_base}/fixtures/components/new_lbtest_01.R

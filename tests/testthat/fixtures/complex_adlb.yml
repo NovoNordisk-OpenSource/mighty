@@ -1,5 +1,5 @@
-table_metadata:
-  table: ADLB
+table:
+  name: ADLB
 
 init:
   base_domains:
@@ -11,107 +11,107 @@ init:
   filter_depend_cols:
     - ADSL.SEX
 
-column_metadata:
-  - column: USUBJID
+column_action:
+  USUBJID:
 
-  - column: VISITNUM
+  VISITNUM:
 
-  - column: ARM
+  ARM:
     source: ADSL.PLANNED_ARM
 
-  - column: RACE_COUNTRY
+  RACE_COUNTRY:
     source: ADSL.RACE_COUNTRY
 
-  - column: AVAL
+  AVAL:
     source: LBSTRESN
 
-  - column: AVALC
+  AVALC:
     source: LBSTRESC
 
-  - column: STUDYID
+  STUDYID:
 
-  - column: LBSEQ
+  LBSEQ:
 
-  - column: LBSTRESN
+  LBSTRESN:
 
-  - column: LBSTRESC
+  LBSTRESC:
 
-  - column: DOMAIN
+  DOMAIN:
 
-  - column: LBTEST
+  LBTEST:
     code_id: {path_base}/fixtures/components/lbtest_01.R
     depend_rows:
       - new_aval_01
 
-  - column: AVAL_GRP
+  AVAL_GRP:
     code_id: {path_base}/fixtures/components/aval_grp_01.R
     depend_rows:
       - new_microcytes
 
-  - column: AVAL_GRP2
+  AVAL_GRP2:
     code_id: {path_base}/fixtures/components/aval_grp_02.R
     depend_rows:
       - new_microcytes
 
-row_actions:
-  - id: new_microcytes
+row_action:
+  new_microcytes:
     code_id: {path_base}/fixtures/components/new_lbtest_01.R
 
-  - id: new_macrocytes
+  new_macrocytes:
     code_id: {path_base}/fixtures/components/new_lbtest_02.R
 
-  - id: new_microcytes2
+  new_microcytes2:
     code_id: {path_base}/fixtures/components/new_lbtest_03.R
     depend_rows:
         - new_microcytes
 
-  - id: new_macrocytes2
+  new_macrocytes2:
     code_id: {path_base}/fixtures/components/new_lbtest_04.R
     depend_rows:
       - new_macrocytes
 
-  - id: new_microcytes2_macrocytes2
+  new_microcytes2_macrocytes2:
     code_id: {path_base}/fixtures/components/new_lbtest_05.R
     depend_rows:
       - new_microcytes
       - new_macrocytes
 
-  - id: new_microcytes34
+  new_microcytes34:
     code_id: {path_base}/fixtures/components/new_lbtest_06.R
     depend_rows:
       - new_microcytes2
 
-  - id: new_aval_01
+  new_aval_01:
     code_id: {path_base}/fixtures/components/new_aval_01.R
 
-  - id: new_aval_02
+  new_aval_02:
     code_id: {path_base}/fixtures/components/new_aval_02.R
     depend_rows:
       - new_aval_01
 
-  - id: new_aval_03
+  new_aval_03:
     code_id: {path_base}/fixtures/components/new_aval_03.R
 
-  - id: new_aval_04
+  new_aval_04:
     code_id: {path_base}/fixtures/components/new_aval_04.R
 
-  - id: new_visitnum_01
+  new_visitnum_01:
     code_id: {path_base}/fixtures/components/new_visitnum_01.R
 
-  - id: new_visitnum_02
+  new_visitnum_02:
     code_id: {path_base}/fixtures/components/new_visitnum_02.R
     depend_rows:
       - new_visitnum_01
 
-  - id: new_protein
+  new_protein:
     code_id: {path_base}/fixtures/components/new_lbtest07.mustache
     parameters:
       - variable: Protein
 
-  - id: new_specific_gravity
+  new_specific_gravity:
     code_id: {path_base}/fixtures/components/new_lbtest07.mustache
     parameters:
       - variable: Specific Gravity
 
-  - id: new_phosphate
+  new_phosphate:
     code_id: {path_base}/fixtures/components/new_lbtest_09.R

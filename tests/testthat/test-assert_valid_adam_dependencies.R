@@ -159,19 +159,13 @@ test_that(
 
     # ACT -------------------------------------------------------------------
 
-    error_msg <- generate_adam_code(
+    generate_adam_code(
       path_ui_data = path_ui_data_rendered,
       standards_lib = standards_lib,
       path_trial_metadata = path_trial_metadata,
       path_trial = path_trial,
       check_cross_domain_adam_dependencies = FALSE
-    ) |> expect_error()
-
-    # EXPECT -------------------------------------------------------------------
-
-    error_msg_clean <- gsub("\\s+", " ", gsub("\\n", "", error_msg$message))
-    expect_true(grepl(".*ADLB spec: ADLB.VISITNUMto execute: ADLB.VISITNUM2",
-                      error_msg_clean))
+    )  |> expect_snapshot_error()
   }
 )
 
@@ -201,13 +195,7 @@ test_that(
       path_trial_metadata = path_trial_metadata,
       path_trial = path_trial,
       check_cross_domain_adam_dependencies = TRUE
-    ) |> expect_error()
-
-    # EXPECT -------------------------------------------------------------------
-
-    error_msg_clean <- gsub("\\s+", " ", gsub("\\n", "", error_msg$message))
-    expect_true(grepl(".*ADaM spec: ADLB.VISITNUMto execute: ADLB.VISITNUM2",
-                      error_msg_clean))
+    ) |> expect_snapshot_error()
   }
 )
 

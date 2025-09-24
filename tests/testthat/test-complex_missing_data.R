@@ -34,7 +34,6 @@ test_that("Complex test with multiple domains and column/row operations and miss
     check_cross_domain_adam_dependencies = TRUE,
     data_context = data_context$new(cnt)
   )
-
   # EXPECT ------------------------------------------------------------------
 
   # Filter cannot be applied to program 2 (ADLB) because ADSL is missing

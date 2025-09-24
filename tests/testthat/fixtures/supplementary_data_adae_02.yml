@@ -1,5 +1,5 @@
-table_metadata:
-  table: ADAE
+table:
+  name: ADAE
 
 init:
   base_domains:
@@ -11,23 +11,23 @@ init:
   filter_depend_cols:
     - AEBODSYS_GRP
 
-column_metadata:
+column_action:
 
-  - column: STUDYID
+  STUDYID:
 
-  - column: USUBJID
+  USUBJID:
 
-  - column: AESEV
+  AESEV:
 
-  - column: AEBODSYS
+  AEBODSYS:
 
-  - column: AGE
+  AGE:
     source: adsl.AGE
 
-  - column: AESEV_GRP
+  AESEV_GRP:
     code_id: {path_base}/fixtures/components/aesev_grp_01.R
 
-  - column: AEBODSYS_GRP
+  AEBODSYS_GRP:
     code_id: {path_base}/fixtures/components/aebodsys_grp_01.R
 
 

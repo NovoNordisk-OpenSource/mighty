@@ -2,8 +2,8 @@ test_that("Error is thrown when not all outputs in code component are referenced
   # ARRANGE -----------------------------------------------------------------
 
   yml <- "
-table_metadata:
-  table: ADSL
+table:
+  name: ADSL
 init:
   base_domains: ['DM']
   filter_domain:
@@ -12,9 +12,9 @@ init:
     - NA
   filter_depend_cols: 
     - NA
-column_metadata:
-  - column: USUBJID
-  - column: A
+column_action:
+  USUBJID:
+  A:
     code_id: {{ady_custom}}
     
 "

@@ -2,8 +2,8 @@ test_that("Depends parameters replaced with actual user-supplied values", {
   # ARRANGE -----------------------------------------------------------------
 
   yml <- "
-table_metadata:
-  table: ADSL
+table:
+  name: ADSL
 init:
   base_domains:
     - DM
@@ -14,9 +14,9 @@ init:
   filter_depend_cols:
     - NA
 
-column_metadata:
-  - column: USUBJID
-  - column: A
+column_action:
+  USUBJID: 
+  A: 
     code_id: {{ady_custom}}
     parameters:
       - depends_var: 'USUBJID'
@@ -38,7 +38,6 @@ column_metadata:
 #' @code
 {{output_var}} <- {{output_var}} |>
   dplyr::mutate(U2={{depends_var}})
-}
  " |>
     writeLines(con = tmp_file)
   trial_path <- withr::local_tempdir()
@@ -54,7 +53,8 @@ column_metadata:
   actual <- generate_adam_code(
     path_ui_data = path_ui_data,
     path_trial_metadata = path_trial_metadata,
-    path_trial = trial_path,check_cross_domain_adam_dependencies = FALSE
+    path_trial = trial_path,
+    check_cross_domain_adam_dependencies = FALSE
   )
 
 # ASSERT -----------------------------------------------------------------
@@ -63,6 +63,8 @@ column_metadata:
     _[[1]][3:4] |>
     expect_snapshot()
 
-
+  actual_code <- actual$program_sequence[outputs == "A", code] |>
+    strsplit("\n") |>
+    _[[1]][3:4] 
+    expect_snapshot(actual_code)
 })
-

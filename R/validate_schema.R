@@ -43,7 +43,7 @@ handle_validation_errors <- function(is_valid, yaml_file, verbose) {
   errors <- attr(is_valid, "errors")
 
   error_info <- format_errors(errors, yaml_file)
-
+  
   if (is.null(error_info$messages)) {
     cli::cli_abort(c(
       "x" = error_info$header,
@@ -66,6 +66,7 @@ handle_validation_errors <- function(is_valid, yaml_file, verbose) {
 #' @noRd
 format_validation_error <- function(error_row) {
   # Keep the excellent path formatting
+  
   path <- format_error_path(error_row$instancePath, error_row)
 
   # Use template-based formatting
@@ -81,12 +82,12 @@ format_validation_error <- function(error_row) {
 format_error_message <- function(error_row) {
   keyword <- error_row$keyword
   params <- extract_error_params(error_row)
-  
+
   enhanced_messages <- list(
     required = "Required field '{params$missingProperty}' is missing. Please add this field.",
     additionalProperties = "Unexpected field '{params$additionalProperty}' found. Remove this field or check for typos.",
     type = "Expected type '{params$type}' but got {typeof(error_row$data)}. Please check the data type.",
-    pattern = "Value doesn't match required pattern '{params$pattern}'. Check the format requirements.",
+    pattern = "String does not match required pattern defined by the schema. Check schema",
     minItems = "Array must have at least {params$limit} items. Currently has {length(error_row$data)} items.",
     minLength = "String must be at least {params$limit} characters long. Current length: {nchar(as.character(error_row$data))}.",
     oneOf = "Value matches multiple schemas or none at all. Please check the allowed formats."
@@ -130,12 +131,15 @@ extract_error_params <- function(error_row) {
 #' @return Enhanced, human-readable path
 #' @noRd
 format_error_path <- function(path, error_row = NULL) {
-  if (is.na(path) || path == "") return("Root level")
-  
-  enhanced_path <- enhance_path_readability(path, error_row)
-  glue::glue("Error location: {enhanced_path} | Error message")
-}
+  base <- if (is.na(path) || path == "") "Root level" else enhance_path_readability(path, error_row)
+  # Append offending property when AJV provides it
+  offender <- extract_offending_member(error_row)
+  if (!is.null(offender)) {
+    base <- paste0(base, " -> ", offender)
+  }
 
+  glue::glue("Error location: {base} | Error message")
+}
 #' Format validation errors with header and messages (simplified)
 #' @noRd
 format_errors <- function(errors, yaml_file) {
@@ -166,9 +170,11 @@ format_errors <- function(errors, yaml_file) {
 
 #' @noRd
 enhance_path_readability <- function(path, error_row = NULL) {
+  
   if (grepl("/\\d+(?:/|$)", path)) {
     return(enhance_array_indices(path, error_row))
   }
+
   clean_path_formatting(path)
 }
 
@@ -181,6 +187,7 @@ enhance_array_indices <- function(path, error_row) {
 
   if (match_data[1] != -1) {
     for (i in length(match_data):1) {
+      
       match_start <- match_data[i]
       match_length <- attr(match_data, "match.length")[i]
       segment <- substr(path, match_start, match_start + match_length - 1)
@@ -244,7 +251,40 @@ clean_path_formatting <- function(path) {
   gsub("/", " → ", clean)
 }
 
+#' Extract offending member name (property) from AJV error params
+#' @param error_row Single error row
+#' @return The offending member/property name or NULL
+#' @noRd
+extract_offending_member <-  function(error_row) {
+  if (is.null(error_row)) return(NULL)
 
+  params <- extract_error_params(error_row)
+
+  # Try common AJV params that carry the interesting name
+  candidates <- c(
+    params$propertyName,
+    params$additionalProperty,
+    params$missingProperty
+  )
+
+  for (val in candidates) {
+    if (!is.null(val) && !is.na(val) && nzchar(as.character(val))) {
+      return(as.character(val))
+    }
+  }
+
+  # Fallback: sometimes wrappers may propagate these at top-level columns
+  for (nm in c("propertyName", "additionalProperty", "missingProperty")) {
+    if (nm %in% names(error_row)) {
+      val <- error_row[[nm]]
+      if (!is.null(val) && !is.na(val) && nzchar(as.character(val))) {
+        return(as.character(val))
+      }
+    }
+  }
+
+  NULL
+}
 
 #' @noRd
 `%||%` <- function(x, y) if (is.null(x)) y else x

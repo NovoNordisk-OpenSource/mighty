@@ -48,9 +48,9 @@ structure.
 
 Each YAML file should contain:
 \itemize{
-\item \strong{table_metadata}: Domain name, keys, and other table-level information
-\item \strong{column_metadata}: Column definitions with dependencies, outputs, and types
-\item \strong{row_actions}: Optional row-level operations and transformations
+\item \strong{table}: Domain name, keys, and other table-level information
+\item \strong{column_action}: Column definitions with dependencies, outputs, and types
+\item \strong{row_action}: Optional row-level operations and transformations
 \item \strong{init}: Domain initialization settings including core domains and filters
 }
 }

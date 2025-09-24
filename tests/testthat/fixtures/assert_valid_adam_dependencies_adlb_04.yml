@@ -1,5 +1,5 @@
-table_metadata:
-  table: adlb
+table:
+  name: adlb
 
 init:
   base_domains:
@@ -11,11 +11,11 @@ init:
   filter_depend_cols:
   - NA
 
-column_metadata:
-  - column: USUBJID
+column_action:
+  USUBJID:
 
-  - column: VISITNUM2
+  VISITNUM2:
     source: VISITNUM
 
-  - column: AGE
+  AGE:
     source: adsl.AGE

@@ -1,5 +1,5 @@
-table_metadata:
-  table: ADVS
+table:
+  name: ADVS
 
 init:
   base_domains:
@@ -11,7 +11,7 @@ init:
   filter_depend_cols:
     - ADSL.SEX
 
-column_metadata:
-  - column: STUDYID
+column_action:
+  STUDYID:
 
-  - column: USUBJID
+  USUBJID:

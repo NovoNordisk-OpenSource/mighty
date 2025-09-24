@@ -1,5 +1,5 @@
-table_metadata:
-  table: ADLB
+table:
+  name: ADLB
 
 init:
   base_domains:
@@ -11,70 +11,70 @@ init:
   filter_depend_cols:
     - LBTEST
 
-column_metadata:
-  - column: USUBJID
+column_action:
+  USUBJID:
 
-  - column: STUDYID
+  STUDYID:
 
-  - column: LBSEQ
+  LBSEQ:
 
-  - column: LBTEST
+  LBTEST:
 
-  - column: LBSTRESN
+  LBSTRESN:
 
-  - column: LBSTNRLO
+  LBSTNRLO:
 
-  - column: LBSTNRHI
+  LBSTNRHI:
 
-  - column: PARAM_VAR1
+  PARAM_VAR1:
     code_id: {path_base}/fixtures/components/param_var1_val.mustache
     parameters:
       - value: "ABC"
 
-  - column: VAR2
+  VAR2:
     code_id: {path_base}/fixtures/components/param_1_new_1_val.mustache
     parameters:
       - new_variable: VAR2
       - value: 99
 
-  - column: LBSTRESN_COPY
+  LBSTRESN_COPY:
     code_id: {path_base}/fixtures/components/param_1_new_1_var.mustache
     parameters:
       - old_variable: LBSTRESN
       - new_variable: LBSTRESN_COPY
 
-  - column: LBSTNRLO_COPY
+  LBSTNRLO_COPY:
     code_id: {path_base}/fixtures/components/param_1_new_1_var.mustache
     parameters:
       - old_variable: LBSTNRLO
       - new_variable: LBSTNRLO_COPY
 
-  - column: PARAM_VAR2
+  PARAM_VAR2:
     code_id: {path_base}/fixtures/components/param_var2_2_var.mustache
     parameters:
       - in_variable1: LBSTNRLO
       - in_variable2: LBSTNRHI
 
-  - column: VAR3
+  VAR3:
     code_id: {path_base}/fixtures/components/param_1_new_2_var.mustache
     parameters:
       - in_variable1: LBSTNRLO
       - in_variable2: LBSTNRHI
       - new_variable: VAR3
 
-  - column: VAR4
+  VAR4:
     code_id: {path_base}/fixtures/components/param_2_new_2_val.mustache
     parameters:
       - new_variable1: VAR4
       - new_variable2: VAR5
 
-  - column: VAR5
+  VAR5:
     code_id: {path_base}/fixtures/components/param_2_new_2_val.mustache
     parameters:
       - new_variable1: VAR4
       - new_variable2: VAR5
 
-  - column: VAR6
+  VAR6:
     code_id: {path_base}/fixtures/components/param_2_new_2_var.mustache
     parameters:
       - in_variable1: LBSTNRLO
@@ -82,7 +82,7 @@ column_metadata:
       - new_variable1: VAR6
       - new_variable2: VAR7
 
-  - column: VAR7
+  VAR7:
     code_id: {path_base}/fixtures/components/param_2_new_2_var.mustache
     parameters:
       - in_variable1: LBSTNRLO
@@ -90,7 +90,7 @@ column_metadata:
       - new_variable1: VAR6
       - new_variable2: VAR7
 
-  - column: LBSTRESN_CROP
+  LBSTRESN_CROP:
     code_id: {path_base}/fixtures/components/param_lbstresn_crop.mustache
     parameters:
       - LBSTRESN_MINVAL: 38.0
@@ -98,21 +98,21 @@ column_metadata:
       - new_protein
       - new_specific_gravity
 
-  - column: AVAL
+  AVAL:
     source: LBSTRESN
     depend_rows:
       - new_protein
 
-  - column: AVAL_GRP
+  AVAL_GRP:
     code_id: {path_base}/fixtures/components/aval_grp_01.R
 
-row_actions:
-  - id: new_protein
+row_action:
+  new_protein:
     code_id: {path_base}/fixtures/components/new_lbtest07.mustache
     parameters:
       - variable: Protein
 
-  - id: new_specific_gravity
+  new_specific_gravity:
     code_id: {path_base}/fixtures/components/new_lbtest07.mustache
     parameters:
       - variable: Specific Gravity

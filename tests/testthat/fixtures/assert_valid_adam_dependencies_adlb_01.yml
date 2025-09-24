@@ -1,5 +1,5 @@
-table_metadata:
-  table: adlb
+table:
+  name: adlb
 
 init:
   base_domains:
@@ -11,12 +11,12 @@ init:
   filter_depend_cols: 
    - NA
 
-column_metadata:
-  - column: STUDYID
+column_action:
+  STUDYID:
 
-  - column: USUBJID
+  USUBJID:
 
-  - column: VISITNUM
+  VISITNUM:
 
-  - column: VISITNUM2
+  VISITNUM2:
     source: VISITNUM

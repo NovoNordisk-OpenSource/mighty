@@ -1,5 +1,5 @@
-table_metadata:
-  table: ADAE
+table:
+  name: ADAE
 
 init:
   base_domains:
@@ -14,22 +14,22 @@ init:
     - adsl.SEX
     - AETRTEM
 
-column_metadata:
+column_action:
 
-  - column: STUDYID
+  STUDYID:
 
-  - column: USUBJID
+  USUBJID:
 
-  - column: AESEQ
+  AESEQ:
 
-  - column: AESOC
+  AESOC:
 
-  - column: AEBODSYS
+  AEBODSYS:
 
-  - column: AGE
+  AGE:
     source: adsl.AGE
 
-  - column: AETRTEM
+  AETRTEM:
     code_id: {path_base}/fixtures/components/supp_ae_01.R
 
 

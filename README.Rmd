@@ -54,8 +54,8 @@ To illustrate mighty's declarative paradigm, consider the following example
 where we define and derive the variable COMPLSFL for the ADSL domain. This
 column indicates whether the subject's end-of-study status is "COMPLETED."
 ```yml
-table_metadata:
-  table: ADSL
+table:
+  name: ADSL
 
 init:
   base_domains:
@@ -65,14 +65,12 @@ init:
   filter_global: NA
   filter_depend_cols: NA
 
-column_metadata:
-  - column: USUBJID
+column_action:
+  USUBJID:
     source: USUBJID
-
-  - column: EOSSTT
+  EOSSTT:
     source: EOSSTT
-
-  - column: COMPLSFL
+  COMPLSFL:
     code_id: der_complsfl
 ```
 
@@ -86,7 +84,7 @@ In this example `der_comflsfl` is a standard component. We can see this is the c
 Custom components need to be specified with a path to their location:
 
 ```yml
-  - column: COMPLSFL
+  COMPLSFL:
     code_id: path/to/custom/component/der_complsfl.R
 ```
 

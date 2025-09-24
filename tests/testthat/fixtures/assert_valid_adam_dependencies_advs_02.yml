@@ -1,5 +1,5 @@
-table_metadata:
-  table: ADVS
+table:
+  name: ADVS
 
 init:
   base_domains:
@@ -11,10 +11,10 @@ init:
   filter_depend_cols:
   - NA
 
-column_metadata:
-  - column: STUDYID
+column_action:
+  STUDYID:
 
-  - column: USUBJID
+  USUBJID:
 
-  - column: VISITNUM2
+  VISITNUM2:
     source: VISITNUM

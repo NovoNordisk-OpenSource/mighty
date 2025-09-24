@@ -1,5 +1,5 @@
-table_metadata:
-  table: ADSL
+table:
+  name: ADSL
   
 init:
   base_domains:
@@ -17,25 +17,25 @@ init:
     - DOMAIN
     - EFFICACY
 
-column_metadata:
-  - column: STUDYID
+column_action:
+  STUDYID:
 
-  - column: USUBJID
+  USUBJID:
 
-  - column: AGEU
+  AGEU:
 
-  - column: DOMAIN
+  DOMAIN:
 
-  - column: ARM
+  ARM:
 
-  - column: PLANNED_ARM
+  PLANNED_ARM:
     source: ARM
 
-  - column: ARM_GRP1
+  ARM_GRP1:
     code_id: {path_base}/fixtures/components/arm_group_01.R
 
-  - column: EFFICACY
+  EFFICACY:
     code_id: {path_base}/fixtures/components/supp_dm_01.R
 
-  - column: SAFETY
+  SAFETY:
     code_id: {path_base}/fixtures/components/supp_dm_01.R

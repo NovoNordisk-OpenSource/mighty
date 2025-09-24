@@ -72,13 +72,11 @@ init:
   filter_depend_cols: NA
 
 column_metadata:
-  - column: USUBJID
+  USUBJID:
     source: USUBJID
-
-  - column: EOSSTT
+  EOSSTT:
     source: EOSSTT
-
-  - column: COMPLSFL
+  COMPLSFL:
     code_id: der_complsfl
 ```
 
@@ -94,7 +92,7 @@ name of the component.
 Custom components need to be specified with a path to their location:
 
 ``` yml
-  - column: COMPLSFL
+  COMPLSFL:
     code_id: path/to/custom/component/der_complsfl.R
 ```
 

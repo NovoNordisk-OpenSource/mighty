@@ -5,3 +5,10 @@
     Output
       [1] "A <- A |>"                   "  dplyr::mutate(U2=USUBJID)"
 
+---
+
+    Code
+      actual_code
+    Output
+      [1] "A <- A |>"                   "  dplyr::mutate(U2=USUBJID)"
+

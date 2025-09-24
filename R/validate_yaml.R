@@ -68,6 +68,7 @@ convert_yaml_to_json_with_yq <- function(yaml_file) {
     ))
   })
   
+  
   exit_code <- attr(yq_result, "status")
   
   if (!is.null(exit_code) && exit_code != 0) {

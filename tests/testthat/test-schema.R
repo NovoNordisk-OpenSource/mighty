@@ -24,8 +24,8 @@ test_that("Dummy metadata passes yaml validation checks", {
   # SETUP ----------------------------------------------------------------------
 
   yaml_content <- "
-table_metadata:
-  table: ADLB
+table:
+  name: ADLB
 init:
   base_domains:
     - LB
@@ -35,8 +35,10 @@ init:
     - 'SAFFL == \"Y\"'
   filter_depend_cols:
     - SAFFL
-column_metadata:
-  - column: STUDYID
+column_action:
+  STUDYID:
+  AVAL:
+    code_id: '2'
 "
   yaml_file <- create_temp_yaml(yaml_content)
 
@@ -45,17 +47,15 @@ column_metadata:
   yaml_file |>
     validate_yaml("domain_schema", use_yq = TRUE) |>
     expect_message("v YAML file 'temp_test_file.yml' is valid!")
-
-
 })
 
 
-test_that("Extra fields in table_metadata fail yaml validation checks", {
+test_that("Extra fields in table fail yaml validation checks", {
   # SETUP ----------------------------------------------------------------------
 
   yaml_content <- "
-table_metadata:
-  table: ADLB
+table:
+  name: ADLB
   forbidden_extra_field: 'this should not exist'
   another_forbidden: 'neither should this'
 init:
@@ -67,20 +67,20 @@ init:
     - 'SAFFL == \"Y\"'
   filter_depend_cols:
     - SAFFL
-column_metadata:
-  - column: STUDYID
+column_action:
+  STUDYID:
 "
   yaml_file <- create_temp_yaml(yaml_content)
 
   # ACT / ASSERT ---------------------------------------------------------------
   validate_yaml(yaml_file, "domain_schema", use_yq = TRUE) |>
     expect_error(
-      "Error location: table_metadata | Error message: Property 'forbidden_extra_field' is not allowed"
+      "Error location: table | Error message: Property 'forbidden_extra_field' is not allowed"
     )
 
   validate_yaml(yaml_file, "domain_schema", use_yq = TRUE) |>
     expect_error(
-      "Error location: table_metadata | Error message: Property 'another_forbidden' is not allowed"
+      "Error location: table | Error message: Property 'another_forbidden' is not allowed"
     )
 
 
@@ -91,7 +91,7 @@ test_that("Missing field AND invalid field fails yaml validation checks", {
   # SETUP ----------------------------------------------------------------------
 
   yaml_content <- "
-table_metadata:
+table:
   forbidden_field: ADLB
 init:
   base_domains:
@@ -102,7 +102,7 @@ init:
     - 'SAFFL == \"Y\"'
   filter_depend_cols:
     - SAFFL
-column_metadata:
+column_action:
   - column: STUDYID
 "
   yaml_file <- create_temp_yaml(yaml_content)
@@ -111,12 +111,12 @@ column_metadata:
 
   validate_yaml(yaml_file, "domain_schema", use_yq = TRUE) |>
     expect_error(
-      "Error location: table_metadata | Error message: Missing required field 'table'"
+      "Error location: table | Error message: Missing required field 'name'"
     )
 
   validate_yaml(yaml_file, "domain_schema", use_yq = TRUE) |>
     expect_error(
-      "Error location: table_metadata | Error message: Property 'forbidden_field' is not allowed"
+      "Error location: table | Error message: Property 'forbidden_field' is not allowed"
     )
 
 
@@ -127,8 +127,8 @@ test_that("Extra field in init fails yaml validation checks", {
   # SETUP ----------------------------------------------------------------------
 
   yaml_content <- "
-table_metadata:
-  table: ADLB
+table:
+  name: ADLB
 init:
   base_domains:
     - LB
@@ -139,7 +139,7 @@ init:
   filter_depend_cols:
     - SAFFL
   forbidden_extra_field: 'this should not exist'
-column_metadata:
+column_action:
   - column: STUDYID
 "
   yaml_file <- create_temp_yaml(yaml_content)
@@ -159,8 +159,8 @@ test_that("Missing field in init fails yaml validation checks", {
   # SETUP ----------------------------------------------------------------------
 
   yaml_content <- "
-table_metadata:
-  table: ADLB
+table:
+  name: ADLB
 init:
   base_domains:
     - LB
@@ -168,7 +168,7 @@ init:
     - LB: NA
   filter_global:
     - 'SAFFL == \"Y\"'
-column_metadata:
+column_action:
   - column: STUDYID
 "
   yaml_file <- create_temp_yaml(yaml_content)
@@ -188,8 +188,8 @@ test_that("Invalid properties in column_metadata fail yaml validation checks", {
   # SETUP ----------------------------------------------------------------------
 
   yaml_content <- "
-table_metadata:
-  table: ADLB
+table:
+  name: ADLB
 init:
   base_domains:
     - LB
@@ -199,23 +199,15 @@ init:
     - 'SAFFL == \"Y\"'
   filter_depend_cols:
     - SAFFL
-column_metadata:
-  - column: STUDYID
-    invalid_property: ABC
-  - col: USUBJID
-  - VISITNUM
-  - code_id: fnc1
-  - source: VISITNUM
-  - parameters:
-       - parm1: A
-  - column:
-  - column: 123
-  - column: 'VAR2'
+column_action:
+  STUDYID:
+    - col
+  AVAL:
+    code_iid: 'A'
 "
   yaml_file <- create_temp_yaml(yaml_content)
 
   # ACT / ASSERT ---------------------------------------------------------------
-
   validate_yaml(yaml_file, "domain_schema", use_yq = TRUE) |>
     expect_snapshot_error()
 
@@ -226,8 +218,8 @@ test_that("Invalid parameter specifications for column fail yaml validation chec
   # SETUP ----------------------------------------------------------------------
 
   yaml_content <- "
-table_metadata:
-  table: ADLB
+table:
+  name: ADLB
 init:
   base_domains:
     - LB
@@ -237,8 +229,8 @@ init:
     - 'SAFFL == \"Y\"'
   filter_depend_cols:
     - SAFFL
-column_metadata:
-  - column: VAR1
+column_action:
+  VAR1:
     code_id: fnc1
     parameters:
       - parm1
@@ -251,20 +243,18 @@ column_metadata:
 
   validate_yaml(yaml_file, "domain_schema", use_yq = TRUE) |>
     expect_error(
-      "Error location: column_metadata → item 1 → parameters → item 1 | Error message: Expected type 'object', must be object"
+      "Error location: column_metadata → VAR1 → parameters → item 1 | Error message: Expected type 'object' but got character"
     )
 
   validate_yaml(yaml_file, "domain_schema", use_yq = TRUE) |>
     expect_error(
-      "Error location: column_metadata → item 1 → parameters → item 2 | Error message: Expected type 'object', must be object"
+      "Error location: column_metadata → VAR1 → parameters → item 2 | Error message: Expected type 'object' but got character"
     )
 
   validate_yaml(yaml_file, "domain_schema", use_yq = TRUE) |>
     expect_error(
-      "Error location: column_metadata → item 1 → parameters → item 3 | Error message: Expected type 'object', must be object"
+      "Error location: column_metadata → VAR1 → parameters → item 3 | Error message: Expected type 'object' but got character"
     )
-
-
 })
 
 
@@ -272,8 +262,8 @@ test_that("Missing parameter specifications for column fail yaml validation chec
   # SETUP ----------------------------------------------------------------------
 
   yaml_content <- "
-table_metadata:
-  table: ADLB
+table:
+  name: ADLB
 init:
   base_domains:
     - LB
@@ -283,8 +273,8 @@ init:
     - 'SAFFL == \"Y\"'
   filter_depend_cols:
     - SAFFL
-column_metadata:
-  - column: VAR1
+column_action:
+  VAR1:
     code_id: fnc1
     parameters:
 "
@@ -294,10 +284,8 @@ column_metadata:
 
   validate_yaml(yaml_file, "domain_schema", use_yq = TRUE) |>
     expect_error(
-      "Error location: column_metadata → item 1 → parameters | Error message: Expected type 'array', must be array"
+      "Error location: column_metadata → VAR1 → parameters | Error message: Expected type 'array' but got logical"
     )
-
-
 })
 
 
@@ -305,8 +293,8 @@ test_that("Too many specifications for column fail yaml validation checks", {
   # SETUP ----------------------------------------------------------------------
 
   yaml_content <- "
-table_metadata:
-  table: ADLB
+table:
+  name: ADLB
 init:
   base_domains:
     - LB
@@ -316,11 +304,11 @@ init:
     - 'SAFFL == \"Y\"'
   filter_depend_cols:
     - SAFFL
-column_metadata:
-  - column: VAR1
+column_action:
+  VAR1:
     code_id: fnc1
     source: VAR0
-  - column: VAR2
+  VAR2:
     code_id: fnc1
     source: VAR0
   
@@ -341,8 +329,8 @@ test_that("Columns parameters with no code_id fail yaml validation checks", {
   # SETUP ----------------------------------------------------------------------
 
   yaml_content <- "
-table_metadata:
-  table: ADLB
+table:
+  name: ADLB
 init:
   base_domains:
     - LB
@@ -352,14 +340,14 @@ init:
     - 'SAFFL == \"Y\"'
   filter_depend_cols:
     - SAFFL
-column_metadata:
-  - column: VAR1
+column_action:
+  VAR1:
     parameters:
       - parm1: A
-  - column: VAR2
+  VAR2:
     parameters:
       - parm1: A
-  - column: VAR3
+  VAR3:
 "
   yaml_file <- create_temp_yaml(yaml_content)
 
@@ -377,8 +365,8 @@ test_that("Empty column_metadata fail yaml validation checks", {
   # SETUP ----------------------------------------------------------------------
 
   yaml_content <- "
-table_metadata:
-  table: ADLB
+table:
+  name: ADLB
 init:
   base_domains:
     - LB
@@ -388,7 +376,7 @@ init:
     - 'SAFFL == \"Y\"'
   filter_depend_cols:
     - SAFFL
-column_metadata:
+column_action:
 "
   yaml_file <- create_temp_yaml(yaml_content)
 
@@ -396,10 +384,8 @@ column_metadata:
 
   validate_yaml(yaml_file, "domain_schema", use_yq = TRUE) |>
     expect_error(
-      "Error location: column_metadata | Error message: Expected type 'array', must be array"
+      "Error location: column_action | Error message: Expected type 'array', must be array"
     )
-
-
 })
 
 
@@ -407,8 +393,8 @@ test_that("Invalid root property fail yaml validation checks", {
   # SETUP ----------------------------------------------------------------------
 
   yaml_content <- "
-table_metadata:
-  table: ADLB
+table:
+  name: ADLB
 init:
   base_domains:
     - LB
@@ -419,28 +405,27 @@ init:
   filter_depend_cols:
     - SAFFL
 column_metadata_wrong:
-  - column: STUDYID
+  STUDYID:
 "
   yaml_file <- create_temp_yaml(yaml_content)
 
   # ACT / ASSERT ---------------------------------------------------------------
 
   validate_yaml(yaml_file, "domain_schema", use_yq = TRUE) |>
-    expect_error("Required field 'column_metadata' is missing. Please add this field")
+    expect_error("Required field 'column_action' is missing. Please add this field")
 
   validate_yaml(yaml_file, "domain_schema", use_yq = TRUE) |>
     expect_error("Unexpected field 'column_metadata_wrong' found")
 
-
 })
 
 
-test_that("Empty row_actions fail yaml validation checks", {
+test_that("Empty row_action fail yaml validation checks", {
   # SETUP ----------------------------------------------------------------------
 
   yaml_content <- "
-table_metadata:
-  table: ADLB
+table:
+  name: ADLB
 init:
   base_domains:
     - LB
@@ -450,9 +435,9 @@ init:
     - 'SAFFL == \"Y\"'
   filter_depend_cols:
     - SAFFL
-column_metadata:
-  - column: STUDYID
-row_actions:
+column_action:
+  STUDYID:
+row_action:
 "
   yaml_file <- create_temp_yaml(yaml_content)
 
@@ -460,19 +445,17 @@ row_actions:
 
   validate_yaml(yaml_file, "domain_schema", use_yq = TRUE) |>
     expect_error(
-      "Error location: row_actions | Error message: Expected type 'array', must be array"
+      "Error location: row_action | Error message: Expected type 'array', must be array"
     )
-
-
 })
 
 
-test_that("Invalid properties in row_actions fail yaml validation checks", {
+test_that("Invalid properties in row_action fail yaml validation checks", {
   # SETUP ----------------------------------------------------------------------
 
   yaml_content <- "
-table_metadata:
-  table: ADLB
+table:
+  name: ADLB
 init:
   base_domains:
     - LB
@@ -482,28 +465,25 @@ init:
     - 'SAFFL == \"Y\"'
   filter_depend_cols:
     - SAFFL
-column_metadata:
-  - column: STUDYID
-row_actions:
-  - id: A
-  - id2: X
-    code_id: fnc1
+column_action:
+  STUDYID:
+row_action:
+  A:
+  X:
+    code_idd: fnc1
 "
   yaml_file <- create_temp_yaml(yaml_content)
 
   # ACT / ASSERT ---------------------------------------------------------------
-
   validate_yaml(yaml_file, "domain_schema", use_yq = TRUE) |>
     expect_error(
-      "Error location: row_actions → A | Error message: Required field 'code_id' is missing"
+      "row_action → X -> code_id | Error message: Required field 'code_id' is missing"
     )
 
   validate_yaml(yaml_file, "domain_schema", use_yq = TRUE) |>
     expect_error(
-      "Error location: row_actions → item 2 | Error message: Unexpected field 'id2' found"
+      "row_action → A | Error message: Expected type 'object' but got list"
     )
-
-
 })
 
 
@@ -511,8 +491,8 @@ test_that("Missing parameter specifications for row fail yaml validation checks"
   # SETUP ----------------------------------------------------------------------
 
   yaml_content <- "
-table_metadata:
-  table: ADLB
+table:
+  name: ADLB
 init:
   base_domains:
     - LB
@@ -522,10 +502,10 @@ init:
     - 'SAFFL == \"Y\"'
   filter_depend_cols:
     - SAFFL
-column_metadata:
-  - column: STUDYID
-row_actions:
-  - id: X
+column_action:
+  STUDYID:
+row_action:
+  X:
     code_id: fnc1
     parameters:
 "
@@ -535,10 +515,8 @@ row_actions:
 
   validate_yaml(yaml_file, "domain_schema", use_yq = TRUE) |>
     expect_error(
-      "Error location: row_actions → item 1 → parameters | Error message: Expected type 'array', must be array"
+      "row_action → X → parameters | Error message: Expected type 'array' but got logical"
     )
-
-
 })
 
 
@@ -546,8 +524,8 @@ test_that("Invalid parameter specifications for row fail yaml validation checks"
   # SETUP ----------------------------------------------------------------------
 
   yaml_content <- "
-table_metadata:
-  table: ADLB
+table:
+  name: ADLB
 init:
   base_domains:
     - LB
@@ -557,10 +535,10 @@ init:
     - 'SAFFL == \"Y\"'
   filter_depend_cols:
     - SAFFL
-column_metadata:
-  - column: STUDYID
-row_actions:
-  - id: X
+column_action:
+  STUDYID:
+row_action:
+  X: 
     code_id: fnc1
     parameters:
       - parm1:
@@ -578,12 +556,12 @@ row_actions:
 })
 
 
-test_that("Missing row fields fail yaml validation checks", {
+test_that("Missing/invalid row fields fail yaml validation checks", {
   # SETUP ----------------------------------------------------------------------
 
   yaml_content <- "
-table_metadata:
-  table: ADLB
+table:
+  name: ADLB
 init:
   base_domains:
     - LB
@@ -593,10 +571,13 @@ init:
     - 'SAFFL == \"Y\"'
   filter_depend_cols:
     - SAFFL
-column_metadata:
-  - column: STUDYID
-row_actions:
-  - id2: X
+column_action:
+  STUDYID:
+row_action:
+  X:
+    codee: 'A'
+  Y:
+    - code_id: 'b'
 "
   yaml_file <- create_temp_yaml(yaml_content)
 
@@ -612,8 +593,8 @@ test_that("Duplicate columns fail validation", {
   # SETUP ----------------------------------------------------------------------
 
   yaml_content <- "
-table_metadata:
-  table: ADLB
+table:
+  name: ADLB
 init:
   base_domains:
     - LB
@@ -623,29 +604,26 @@ init:
     - 'SAFFL == \"Y\"'
   filter_depend_cols:
     - SAFFL
-column_metadata:
-  - column: VAR1
-  - column: VAR1
-  - column: VAR3
+column_action:
+  VAR1:
+  VAR1:
+  VAR3:
 "
   yaml_file <- create_temp_yaml(yaml_content)
 
   # ACT / ASSERT ---------------------------------------------------------------
   
   validate_yaml(yaml_file, "domain_schema", use_yq = TRUE) |>
-    expect_error("The following columns are defined multiple times")
-  validate_yaml(yaml_file, "domain_schema", use_yq = TRUE) |>
-    expect_error("VAR1")
+    expect_error("Duplicate map key: 'VAR1'")
 
 })
 
 
 test_that("Duplicate row id's fail validation", {
   # SETUP ----------------------------------------------------------------------
-
   yaml_content <- "
-table_metadata:
-  table: ADLB
+table:
+  name: ADLB
 init:
   base_domains:
     - LB
@@ -655,35 +633,31 @@ init:
     - 'SAFFL == \"Y\"'
   filter_depend_cols:
     - SAFFL
-column_metadata:
-  - column: VAR1
-row_actions:
-  - id: row_action_1
+column_action:
+  VAR1:
+row_action:
+  row_action_1:
     code_id: row_action_99
-  - id: row_action_1
+  row_action_1:
     code_id: row_action_00
-  - id: row_action_2
+  row_action_2:
     code_id: row_action_00
 "
   yaml_file <- create_temp_yaml(yaml_content)
 
   # ACT / ASSERT ---------------------------------------------------------------
-  
+
   validate_yaml(yaml_file, "domain_schema", use_yq = TRUE) |>
-    expect_error("The following row id\\(s\\) are defined multiple times")
-  validate_yaml(yaml_file, "domain_schema", use_yq = TRUE) |>
-    expect_error("row_action_1")
+    expect_error("Duplicate map key: 'row_action_1'")
 
 })
-
-
 
 test_that("Multiple business logic validations fail", {
   # SETUP ----------------------------------------------------------------------
 
   yaml_content <- "
-table_metadata:
-  table: ADLB
+table:
+  name: ADLB
 init:
   base_domains:
     - LB
@@ -693,12 +667,14 @@ init:
     - 'SAFFL == \"Y\"'
   filter_depend_cols:
     - SAFFL
-column_metadata:
-  - column: VAR1
+column_action:
+  VAR1:
     parameters:
      - param1: 5
-  - column: VAR1
-  - column: VAR3
+  VAR2:
+    depend_rows:
+      - A
+  VAR3:
 "
   yaml_file <- create_temp_yaml(yaml_content)
 
@@ -714,8 +690,8 @@ test_that("row_depends with missing row_action definition caught", {
   # SETUP ----------------------------------------------------------------------
 
   yaml_content <- "
-table_metadata:
-  table: ADLB
+table:
+  name: ADLB
 init:
   base_domains:
     - LB
@@ -725,17 +701,17 @@ init:
     - 'SAFFL == \"Y\"'
   filter_depend_cols:
     - SAFFL
-column_metadata:
-  - column: VAR1
+column_action:
+  VAR1:
     depend_rows: 
     - row_action_1
-  - column: VAR2
+  VAR2:
     depend_rows: 
     - row_action_99
-row_actions:
-  - id: row_action_99
+row_action:
+  row_action_99:
     code_id: row_action_99
-  - id: row_action_00
+  row_action_00:
     code_id: row_action_00
 "
   yaml_file <- create_temp_yaml(yaml_content)

@@ -1,38 +1,38 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "ADaM Specifications Schema",
   "description": "Schema for validating ADaM domain specifications YAML files",
   "type": "object",
   "required": [
-    "table_metadata",
+    "table",
     "init",
-    "column_metadata"
+    "column_action"
   ],
   "additionalProperties": false,
   "properties": {
-    "table_metadata": {
-      "$ref": "#/definitions/table_metadata"
+    "table": {
+      "$ref": "#/$defs/table"
     },
     "init": {
-      "$ref": "#/definitions/init"
+      "$ref": "#/$defs/init"
     },
-    "column_metadata": {
-      "$ref": "#/definitions/column_metadata"
+    "column_action": {
+      "$ref": "#/$defs/column_action"
     },
-    "row_actions": {
-      "$ref": "#/definitions/row_actions"
+    "row_action": {
+      "$ref": "#/$defs/row_action"
     }
   },
-  "definitions": {
-    "table_metadata": {
+  "$defs": {
+    "table": {
       "type": "object",
       "description": "Basic table information",
       "required": [
-        "table"
+        "name"
       ],
       "additionalProperties": false,
       "properties": {
-        "table": {
+        "name": {
           "type": "string",
           "description": "Name of the table (e.g., ADLB, ADSL)",
           "minLength": 1
@@ -100,26 +100,27 @@
         }
       }
     },
-    "column_metadata": {
-      "type": "array",
-      "description": "Metadata for each column",
-      "minItems": 1,
-      "items": {
-        "$ref": "#/definitions/column_item"
+    "column_action": {
+      "type": [
+        "object"
+      ],
+      "description": "Map of column name to metadata",
+      "minProperties": 1,
+      "additionalProperties": false,
+      "patternProperties": {
+        "^[A-Za-z_][A-Za-z0-9_]*$": {
+          "$ref": "#/$defs/column_props"
+        }
       }
     },
-    "column_item": {
-      "type": "object",
-      "required": [
-        "column"
+    "column_props": {
+      "type": [
+        "object",
+        "null"
       ],
+      "description": "Metadata for a single column",
       "additionalProperties": false,
       "properties": {
-        "column": {
-          "type": "string",
-          "description": "Column name",
-          "minLength": 1
-        },
         "source": {
           "type": "string",
           "description": "Source column (e.g., ADSL.AGE)",
@@ -131,42 +132,42 @@
           "minLength": 1
         },
         "parameters": {
-          "$ref": "#/definitions/parameters_array"
+          "$ref": "#/$defs/parameters_array"
         },
         "depend_rows": {
-          "$ref": "#/definitions/depend_rows_array"
+          "$ref": "#/$defs/depend_rows_array"
         }
       }
     },
-    "row_actions": {
-      "type": "array",
-      "description": "Array of row-level actions to be performed",
-      "minItems": 1,
-      "items": {
-        "$ref": "#/definitions/row_action_item"
+    "row_action": {
+      "type": "object",
+      "description": "Map of row action id -> row action item",
+      "minProperties": 1,
+      "additionalProperties": false,
+      "patternProperties": {
+        "^[A-Za-z_][A-Za-z0-9_]*$": {
+          "$ref": "#/$defs/row_action_item"
+        }
       }
     },
     "row_action_item": {
-      "type": "object",
+      "type": ["object"],
       "required": [
-        "id",
         "code_id"
       ],
       "additionalProperties": false,
       "properties": {
         "id": {
-          "type": "string",
-          "description": "Unique identifier for the row action. Usually the code_id and the passed parameters"
+          "type": "string"
         },
         "code_id": {
-          "type": "string",
-          "description": "The standard component name or the path to the custom component"
+          "type": "string"
         },
         "depend_rows": {
-          "$ref": "#/definitions/depend_rows_array"
+          "$ref": "#/$defs/depend_rows_array"
         },
         "parameters": {
-          "$ref": "#/definitions/parameters_array"
+          "$ref": "#/$defs/parameters_array"
         }
       }
     },
@@ -178,7 +179,12 @@
         "description": "Parameter key-value pair",
         "minProperties": 1,
         "additionalProperties": {
-          "type": ["string","number", "boolean", "integer"],
+          "type": [
+            "string",
+            "number",
+            "boolean",
+            "integer"
+          ],
           "description": "Parameter value"
         }
       }

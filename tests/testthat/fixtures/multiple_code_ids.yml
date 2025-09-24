@@ -1,5 +1,5 @@
-table_metadata:
-  table: ADLB
+table:
+  name: ADLB
   
 init:
   base_domains:
@@ -11,33 +11,33 @@ init:
   filter_depend_cols:
     - ADSL.SEX
 
-column_metadata:
-  - column: USUBJID
+column_action:
+  USUBJID:
     source: core.USUBJID
 
-  - column: A
+  A:
     code_id: fn_AB
     parameters:
       - param_1: "1"
       - param_2: "2"
 
-  - column: B
+  B:
     code_id: fn_AB
     parameters:
       - param_1: "x"
       - param_2: "y"
 
-  - column: C
+  C:
     code_id: fn_C
     parameters:
       - param_1: "hello"
 
 
-row_actions:
-  - code_id: fn_D
+row_action:
+  fn_D:
     parameters:
       - param_1: "hello"
 
-  - code_id: fn_E
+  fn_E:
     parameters:
     - param_1: "hello_2"

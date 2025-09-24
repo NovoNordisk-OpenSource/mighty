@@ -1,5 +1,5 @@
-table_metadata:
-  table: ADSL
+table:
+  name: ADSL
 
 init:
   base_domains:
@@ -13,10 +13,10 @@ init:
   filter_depend_cols:
   - NA
 
-column_metadata:
-  - column: USUBJID
+column_action:
+  USUBJID:
 
-  - column: AGE
+  AGE:
 
-  - column: AGE_INVALID
+  AGE_INVALID:
     code_id: {path_base}/fixtures/components/age_redefined_02.R

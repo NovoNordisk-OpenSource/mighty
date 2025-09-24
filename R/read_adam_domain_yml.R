@@ -11,9 +11,9 @@
 #' structure.
 #'
 #' Each YAML file should contain:
-#' - **table_metadata**: Domain name, keys, and other table-level information
-#' - **column_metadata**: Column definitions with dependencies, outputs, and types
-#' - **row_actions**: Optional row-level operations and transformations
+#' - **table**: Domain name, keys, and other table-level information
+#' - **column_action**: Column definitions with dependencies, outputs, and types
+#' - **row_action**: Optional row-level operations and transformations
 #' - **init**: Domain initialization settings including core domains and filters
 #'
 #' @param paths Character vector of file paths to YAML files containing ADaM
@@ -33,12 +33,13 @@
 #'   \item{keys}{Character vector of primary key columns for the domain}
 #'   \item{init}{List containing initialization settings including base_domains,
 #'     filter specifications}
-read_adam_specs <-  function(paths,
-                           validate = TRUE,
-                           schema_name = "domain_schema",
-                           verbose = TRUE,
-                           use_yq = TRUE) {
-
+read_adam_specs <- function(
+  paths,
+  validate = TRUE,
+  schema_name = "domain_schema",
+  verbose = TRUE,
+  use_yq = TRUE
+) {
   # Check file existence first
   missing_files <- paths[!file.exists(paths)]
   if (length(missing_files) > 0) {
@@ -49,12 +50,14 @@ read_adam_specs <-  function(paths,
   }
 
   # Process files with integrated validation
-  out <-  lapply(paths, function(path) {
-    read_adam_domain_yml(path,
-                        validate = validate,
-                        schema_name = schema_name,
-                        verbose = verbose,
-                        use_yq = use_yq)
+  out <- lapply(paths, function(path) {
+    read_adam_domain_yml(
+      path,
+      validate = validate,
+      schema_name = schema_name,
+      verbose = verbose,
+      use_yq = use_yq
+    )
   }) |>
     unlist(recursive = FALSE)
 
@@ -71,12 +74,13 @@ read_adam_specs <-  function(paths,
 #' @param use_yq Use yq for YAML parsing during validation (default: TRUE)
 #'
 #' @return A named list containing the processed domain specification
-read_adam_domain_yml <-  function(yml,
-                                 validate = TRUE,
-                                 schema_name = "adam_domain",
-                                 verbose = TRUE,
-                                 use_yq = TRUE) {
-
+read_adam_domain_yml <- function(
+  yml,
+  validate = TRUE,
+  schema_name = "adam_domain",
+  verbose = TRUE,
+  use_yq = TRUE
+) {
   if (!file.exists(yml)) {
     stop("ADaM Specification file '", yml, "' does not exist.")
   }
@@ -90,7 +94,12 @@ read_adam_domain_yml <-  function(yml,
     }
 
     # Use validation function that returns parsed data
-    x <- validate_yaml(yml, schema_name = schema_name, verbose = FALSE, use_yq = use_yq)
+    x <- validate_yaml(
+      yml,
+      schema_name = schema_name,
+      verbose = FALSE,
+      use_yq = use_yq
+    )
 
     if (verbose) {
       cli::cli_alert_success("✓ {.file {basename(yml)}} validated and loaded")
@@ -106,24 +115,37 @@ read_adam_domain_yml <-  function(yml,
     x <- yaml::read_yaml(yml)
   }
 
-  # Name elements in the list
-  names(x$column_metadata) <- lapply(x$column_metadata, function(i) {
-    i$column
-  })
-
-  if (!is.null(x$row_actions)) {
-    tmp <- c(x$column_metadata, x$row_actions)
-  } else {
-    tmp <- x$column_metadata
-  }
-
   # Restructure to match internal data model
-  out <- lapply(tmp, function(i) {
-    # rename the element "source" to "depend_col"
-    i$depend_cols <- i$source
-    i$outputs <- i$column
-    i$source <- i$column <- NULL
+  rows <- restructure_row_actions(x[["row_action"]])
+  columns <- restructure_column_metadata(x[["column_action"]])
+  
+  out <- c(columns, rows)
 
+  return_list <- list(
+    columns = out,
+    domain = x$table$name,
+    keys = x$table$keys,
+    init = x$init
+  ) |>
+    convert_to_NA_character()
+
+  return(setNames(list(return_list), return_list$domain))
+}
+
+convert_to_NA_character <- function(x) {
+  # Check if x is a list
+  if (is.list(x)) {
+    return(lapply(x, convert_to_NA_character))
+  }
+  if (is.character(x) && any(x == "NA")) {
+    x[x == "NA"] <- NA_character_
+  }
+  return(x)
+}
+
+restructure_row_actions <- function(row_action) {
+  purrr::imap(row_action, function(i, nm) {
+    i$id <- nm
     # if elements don't exist, add them with a value of NA
     names_i <- names(i)
     if (!"depend_rows" %in% names_i) {
@@ -133,31 +155,25 @@ read_adam_domain_yml <-  function(yml,
       i$parameters <- "NA"
     }
     return(i)
-  })
-
-  return_list <- list(
-    columns = out,
-    domain = x$table_metadata$table,
-    keys = x$table_metadata$keys,
-    init = x$init
-  ) |>
-    convert_to_NA_character()
-
-  return(setNames(list(return_list), return_list$domain))
+  }) |> unname()
 }
-
-# Keep your existing helper function unchanged
-convert_to_NA_character <-  function(x) {
-  # Check if x is a list
-  if (is.list(x)) {
-    # Apply recursively
-    return(lapply(x, convert_to_NA_character))
-  }
-
-  if (is.character(x) && any(x == "NA")) {
-    x[x == "NA"] <- NA_character_
-  }
-
-  # Return the possibly modified x
-  return(x)
+restructure_column_metadata <- function(column_metadata) {
+  purrr::imap(
+    column_metadata,
+    function(i, nm) {
+      # rename the elements
+      i$depend_cols <- i$source
+      i$outputs <- nm
+      i$source <- NULL
+      # if elements don't exist, add them with a value of NA
+      names_i <- names(i)
+      if (!"depend_rows" %in% names_i) {
+        i$depend_rows <- "NA"
+      }
+      if (!"parameters" %in% names_i) {
+        i$parameters <- "NA"
+      }
+      return(i)
+    }
+  )
 }

@@ -5,8 +5,8 @@ test_that("No source data makes all actions non-executable", {
   trial_path <- withr::local_tempdir()
 
   yml <- "
-table_metadata:
-  table: ADSL
+table:
+  name: ADSL
 init:
   base_domains:
     - DM
@@ -16,11 +16,11 @@ init:
     - NA
   filter_depend_cols:
     - NA
-column_metadata:
-  - column: USUBJID
-  - column: SEX
-  - column: AGE
-  - column: AGEU
+column_action:
+  USUBJID:
+  SEX:
+  AGE:
+  AGEU:
 
 "
   ui_data <- create_temp_yaml(yml)
@@ -55,8 +55,8 @@ test_that("Available source data makes all actions executable", {
   trial_path <- withr::local_tempdir()
 
   yml <- "
-table_metadata:
-  table: ADSL
+table:
+  name: ADSL
 init:
   base_domains:
     - dm
@@ -66,12 +66,13 @@ init:
     - NA
   filter_depend_cols:
     - NA
-column_metadata:
-  - column: STUDYID
-  - column: USUBJID
-  - column: SEX
-  - column: AGE
-  - column: AGEU
+column_action:
+  STUDYID:
+  USUBJID:
+  SEX:
+  AGE:
+  AGEU:
+
 
 "
   ui_data <- create_temp_yaml(yml)
@@ -116,8 +117,8 @@ test_that(
   trial_path <- withr::local_tempdir()
 
   yml <- "
-table_metadata:
-  table: ADSL
+table:
+  name: ADSL
 init:
   base_domains:
     - dm
@@ -127,12 +128,13 @@ init:
     - NA
   filter_depend_cols:
     - SEX
-column_metadata:
-  - column: STUDYID
-  - column: USUBJID
-  - column: SEX
-  - column: AGE
-  - column: AGEU
+column_action:
+  STUDYID:
+  USUBJID:
+  SEX:
+  AGE:
+  AGEU:
+
 
 "
   # Setup test data with dm domain but remove dm.SEX and dm.AGEU
@@ -185,8 +187,8 @@ test_that(
   trial_path <- withr::local_tempdir()
 
   yml <- "
-table_metadata:
-  table: ADSL
+table:
+  name: ADSL
 init:
   base_domains:
     - dm
@@ -196,12 +198,12 @@ init:
     - NA
   filter_depend_cols:
     - SEX
-column_metadata:
-  - column: STUDYID
-  - column: USUBJID
-  - column: SEX
-  - column: AGE
-  - column: AGEU
+column_action:
+  STUDYID:
+  USUBJID:
+  SEX:
+  AGE:
+  AGEU:
 
 "
 
@@ -249,8 +251,8 @@ test_that("Missing variables in source data makes filter action non-executable -
 
   trial_path <- withr::local_tempdir()
   yml <- "
-table_metadata:
-  table: ADLB
+table:
+  name: ADLB
 init:
   base_domains:
     - lb
@@ -261,15 +263,15 @@ init:
   filter_depend_cols:
     - adsl.SEX
     - LBTESTCD
-column_metadata:
-  - column: STUDYID
-  - column: USUBJID
-  - column: LBSEQ
-  - column: SEX
+column_action:
+  STUDYID:
+  USUBJID:
+  LBSEQ:
+  SEX:
     source: adsl.SEX
-  - column: VISITNUM
-  - column: LBTEST
-  - column: LBTESTCD
+  VISITNUM:
+  LBTEST:
+  LBTESTCD:
 
 "
   # Setup test data with lb and adsl domains but remove lb.LBTESTCD and adsl.SEX
@@ -325,8 +327,8 @@ test_that("Missing variable in source data makes actions executable but deactiva
   trial_path <- withr::local_tempdir()
 
   yml <- "
-table_metadata:
-  table: ADSL
+table:
+  name: ADSL
 init:
   base_domains:
     - dm
@@ -336,12 +338,12 @@ init:
     - NA
   filter_depend_cols:
     - NA
-column_metadata:
-  - column: STUDYID
-  - column: USUBJID
-  - column: SEX
-  - column: AGE
-  - column: AGEU
+column_action:
+  STUDYID:
+  USUBJID:
+  SEX:
+  AGE:
+  AGEU:
 
 "
 
@@ -400,8 +402,8 @@ test_that("Missing domain in source data makes actions non-executable", {
   trial_path <- withr::local_tempdir()
 
   yml <- "
-table_metadata:
-  table: ADSL
+table:
+  name: ADSL
 init:
   base_domains:
     - dm
@@ -413,12 +415,13 @@ init:
     - NA
   filter_depend_cols:
     - NA
-column_metadata:
-  - column: STUDYID
-  - column: USUBJID
-  - column: SEX
-  - column: AGE
-  - column: AGEU
+column_action:
+  STUDYID:
+  USUBJID:
+  SEX:
+  AGE:
+  AGEU:
+
 
 "
 
@@ -460,8 +463,8 @@ test_that("Missing base domain does not allow execution based on available data 
   trial_path <- withr::local_tempdir()
 
   yml <- "
-table_metadata:
-  table: ADSL
+table:
+  name: ADSL
 init:
   base_domains:
     - dm
@@ -475,12 +478,13 @@ init:
     - NA
   filter_depend_cols:
     - NA
-column_metadata:
-  - column: STUDYID
-  - column: USUBJID
-  - column: SEX
-  - column: AGE
-  - column: AGEU
+column_action:
+  STUDYID:
+  USUBJID:
+  SEX:
+  AGE:
+  AGEU:
+
 
 "
 
@@ -522,8 +526,8 @@ test_that("Missing columns in one base domain are disregarded in other base doma
     trial_path <- withr::local_tempdir()
 
   yml <- "
-table_metadata:
-  table: ADSL
+table:
+  name: ADSL
 init:
   base_domains:
     - dm
@@ -537,12 +541,13 @@ init:
     - NA
   filter_depend_cols:
     - NA
-column_metadata:
-  - column: STUDYID
-  - column: USUBJID
-  - column: SEX
-  - column: AGE
-  - column: AGEU
+column_action:
+  STUDYID:
+  USUBJID:
+  SEX:
+  AGE:
+  AGEU:
+
 
 "
 
@@ -612,8 +617,8 @@ test_that(
   trial_path <- withr::local_tempdir()
 
   yml <- "
-table_metadata:
-  table: ADLB
+table:
+  name: ADLB
 init:
   base_domains:
     - lb
@@ -623,13 +628,13 @@ init:
     - '!is.na(SEX)'
   filter_depend_cols:
     - adsl.SEX
-column_metadata:
-  - column: STUDYID
-  - column: USUBJID
-  - column: SEX
+column_action:
+  STUDYID:
+  USUBJID:
+  SEX:
     source: adsl.SEX
-  - column: LBSTRESN
-  - column: LBSEQ
+  LBSTRESN:
+  LBSEQ:
 
 "
 

@@ -44,6 +44,7 @@ params_write_domain_code <- function(.self,
   )
 }
 
+
 fix_comma <- function(str) {
   lines <- strsplit(str, "\n")[[1]]
   non_commented <- which(!startsWith(trimws(lines), "#") & trimws(lines) != "")

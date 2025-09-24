@@ -1,5 +1,5 @@
-table_metadata:
-  table: ADSL
+table:
+  name: ADSL
 
 init:
   base_domains:
@@ -16,74 +16,74 @@ init:
     - DOMAIN
     - AGEU
 
-column_metadata:
-  - column: USUBJID
+column_action:
+  USUBJID:
 
-  - column: DOMAIN
+  DOMAIN:
 
-  - column: AGEU
+  AGEU:
 
-  - column: PLANNED_ARM
+  PLANNED_ARM:
     source: ARM
 
-  - column: SEX
+  SEX:
 
-  - column: ARM_GRP1
+  ARM_GRP1:
     code_id: {path_base}/fixtures/components/arm_group_01.R
 
-  - column: ARM_CAT1
+  ARM_CAT1:
     code_id: {path_base}/fixtures/components/arm_category_01.R
 
-  - column: ARM_MATCH
+  ARM_MATCH:
     code_id: {path_base}/fixtures/components/arm_match_01.R
 
-  - column: AGE2
+  AGE2:
     code_id: {path_base}/fixtures/components/age_crop_01.R
 
-  - column: AGE_DIFF1
+  AGE_DIFF1:
     code_id: {path_base}/fixtures/components/age_diff_01.R
 
-  - column: AGE_DIFF2
+  AGE_DIFF2:
     code_id: {path_base}/fixtures/components/age_diff_02.R
 
-  - column: RACE_COUNTRY
+  RACE_COUNTRY:
     code_id: {path_base}/fixtures/components/race_x_country_01.R
 
-  - column: NEW_ARM
+  NEW_ARM:
     code_id: {path_base}/fixtures/components/arm_01.R
 
-  - column: MIN_AVAL
+  MIN_AVAL:
     code_id: {path_base}/fixtures/components/min_aval_01.R
 
-  - column: ARM
+  ARM:
 
-  - column: DTHFL
+  DTHFL:
 
-  - column: AGE
+  AGE:
 
-  - column: NEWFL01
+  NEWFL01:
     code_id: {path_base}/fixtures/components/newfl_01.R
 
-  - column: NEWREA01
+  NEWREA01:
     code_id: {path_base}/fixtures/components/newfl_01.R
 
-  - column: NEWFL02
+  NEWFL02:
     code_id: {path_base}/fixtures/components/newfl_02.R
 
-  - column: NEWFL03
+  NEWFL03:
     code_id: {path_base}/fixtures/components/newfl_03.R
 
-  - column: NEWREA03
+  NEWREA03:
     code_id: {path_base}/fixtures/components/newfl_03.R
 
-  - column: STUDYID
+  STUDYID:
 
-  - column: ACTARM
+  ACTARM:
 
-  - column: COUNTRY
+  COUNTRY:
 
-  - column: RACE
+  RACE:
 
-  - column: AGE_GRP1
+  AGE_GRP1:
     code_id: {path_base}/fixtures/components/age_group_01.R
 

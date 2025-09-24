@@ -76,7 +76,7 @@ The package follows a structured pipeline for ADaM code generation:
 ### YAML Specifications
 - Domain specifications follow standardized schema
 - Located in `inst/yaml_*/` directories for different versions
-- Must include: table_metadata, init, column_metadata sections
+- Must include: table_metadata, init, column_action sections
 
 ## Schema Validation and YAML Processing
 
@@ -84,8 +84,8 @@ The package follows a structured pipeline for ADaM code generation:
 - **Schema file**: `inst/schemas/domain_schema.json`
 - **Schema version**: JSON Schema Draft 2020-12
 - **Structure**: YAML specifications use object/map formats for improved developer experience:
-  - `column_metadata`: Object where column names are keys mapping to metadata properties
-  - `row_actions`: Object where row action IDs are keys mapping to action definitions
+  - `column_action`: Object where column names are keys mapping to metadata properties
+  - `row_action`: Object where row action IDs are keys mapping to action definitions
 - **Error reporting**: Comprehensive path formatting with offending property identification
 
 ### Validation Pipeline
@@ -226,3 +226,9 @@ When writing a bug issue, follow this template:
 
 ## Writing style
 When writing prose, minimize computer science jargon - speak plainly. Avoid superlatives, hyperbole, and over-the-top descriptions  
+
+
+## Misc
+
+- Do not make changes to files in the `man/`, as these files are generated from the code base
+- Ignore files in `inst/`, except for the following directories: `inst/schemas`, `inst/components`

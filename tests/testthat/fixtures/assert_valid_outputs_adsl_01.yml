@@ -1,5 +1,5 @@
-table_metadata:
-  table: ADSL
+table:
+  name: ADSL
 
 init:
   base_domains:
@@ -13,12 +13,12 @@ init:
   filter_depend_cols:
   - NA
 
-column_metadata:
-  - column: USUBJID
+column_action:
+  USUBJID:
 
-  - column: ARM
+  ARM:
 
-  - column: ACTARM
+  ACTARM:
 
-  - column: ARM
+  ARM:
     source: ACTARM

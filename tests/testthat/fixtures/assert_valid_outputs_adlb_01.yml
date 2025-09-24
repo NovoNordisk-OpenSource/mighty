@@ -1,5 +1,5 @@
-table_metadata:
-  table: ADLB
+table:
+  name: ADLB
 
 init:
   base_domains:
@@ -11,13 +11,13 @@ init:
   filter_depend_cols:
   - NA
 
-column_metadata:
-  - column: USUBJID
+column_action:
+  USUBJID:
 
-  - column: LBSTRESN
+  LBSTRESN:
 
-  - column: AVAL
+  AVAL:
     source: LBSTRESN
 
-  - column: AVALFL
+  AVALFL:
     code_id: {path_base}/fixtures/components/avalfl_01.R

@@ -1,5 +1,5 @@
-table_metadata:
-  table: ADLB
+table:
+  name: ADLB
 
 init:
   base_domains:
@@ -14,18 +14,18 @@ init:
     - ADSL.SEX
     - LBSTRESU
 
-column_metadata:
+column_action:
  # - column: USUBJID
 
-  - column: STUDYID
+  STUDYID:
 
-  - column: VISITNUM
+  VISITNUM:
 
-  - column: LBSTRESN
+  LBSTRESN:
 
-  - column: LBSTRESU
+  LBSTRESU:
 
-  - column: AGE
+  AGE:
     source: ADSL.AGE
 
 

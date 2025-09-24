@@ -37,8 +37,8 @@ init:
   base_domains:
     - DM
 
-column_metadata:
-  - column: USUBJID
+column_action:
+  USUBJID:
     source: core.USUBJID
 "
 
@@ -55,8 +55,8 @@ column_metadata:
 
 test_that("read_adam_specs errors on invalid filter specifications", {
   yml_invalid_filter <-  "
-table_metadata:
-  table: ADSL
+table:
+  name: ADSL
 
 init:
   base_domains:
@@ -68,8 +68,8 @@ init:
   filter_depend_cols:
     - NA
 
-column_metadata:
-  - column: USUBJID
+column_action:
+  USUBJID:
 "
 
   trial_path <- withr::local_tempdir()
