@@ -2,10 +2,23 @@
 % Please edit documentation in R/add_check_executable_status.R
 \name{find_missing_dependencies}
 \alias{find_missing_dependencies}
-\title{Find missing dependencies by comparing depend_cols with available columns}
+\title{Find Missing Dependencies}
 \usage{
 find_missing_dependencies(depend_cols, available_cols)
 }
+\arguments{
+\item{depend_cols}{Data frame with columns "column_name", "domain", and
+"domain_type" representing required dependency columns.}
+
+\item{available_cols}{Data frame with columns "column_name", "domain", and
+"domain_type" representing available columns.}
+}
+\value{
+List containing a data frame of missing dependencies with columns ordered as
+"domain_type", "domain", "column_name", or NA if no dependencies are missing
+or input is invalid.
+}
 \description{
-Find missing dependencies by comparing depend_cols with available columns
+Identifies dependency columns that are required but not available by comparing
+domain type, domain, and column name combinations.
 }

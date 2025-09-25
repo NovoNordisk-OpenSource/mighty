@@ -1,3 +1,34 @@
+#' Add Filter Domain Actions
+#'
+#' @description
+#' Creates and adds filter_domain actions to the existing actions data table
+#' based on UI initialization data and domain filtering requirements.
+#'
+#' @details
+#' This function processes domains that require filtering by:
+#' 1. Identifying domains with filter dependencies from UI initialization data
+#' 2. Extracting external domain dependencies and validating their keys
+#' 3. Creating comprehensive dependency lists including required join keys
+#' 4. Generating filter_domain actions with appropriate inputs and outputs
+#' 5. Handling both column copies and computed columns as filter outputs
+#'
+#' The function ensures that all external domain keys are available and creates
+#' proper dependency chains for filtering operations across multiple domains.
+#'
+#' Throws error if external domains referenced in filter dependencies are not found
+#' in the domain_keys lookup table.
+#'
+#' @param actions Data table containing existing action definitions with columns
+#'   including node_id, type, domain, outputs, and depend_cols.
+#' @param ui_init List containing UI initialization data with filter dependencies
+#'   and domain filter specifications for each domain.
+#' @param domain_keys Named list mapping domain names (uppercase) to their
+#'   respective key columns required for joining operations.
+#'
+#' @return
+#' Data table combining the original actions with newly created filter_domain
+#' actions, maintaining the same structure and column definitions.
+#'
 add_filter_domain_actions <- function(actions, ui_init, domain_keys) {
 
   # Filter dependencies
@@ -69,8 +100,8 @@ add_filter_domain_actions <- function(actions, ui_init, domain_keys) {
 
     # 2) Get all outputs of col_computes that are dependencies to the filter
     col_computes <- actions[actions$type == "col_compute", c("node_id", "outputs")] |>
-      tidyr::unnest(cols = outputs) |>
-      dplyr::filter(outputs %in% filter_depends_cols[[d]])
+      tidyr::unnest("outputs") |>
+      dplyr::filter(.data$outputs %in% filter_depends_cols[[d]])
     col_computes_all <-
       c(col_computes$node_id,
         get_all_parents(col_computes$node_id, actions))

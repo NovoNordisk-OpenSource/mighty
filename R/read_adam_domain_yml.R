@@ -102,7 +102,7 @@ read_adam_domain_yml <- function(
     )
 
     if (verbose) {
-      cli::cli_alert_success("✓ {.file {basename(yml)}} validated and loaded")
+      cli::cli_alert_success("{.file {basename(yml)}} validated and loaded")
     }
   } else {
     # Just read without validation

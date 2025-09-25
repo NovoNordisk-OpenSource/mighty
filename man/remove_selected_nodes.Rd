@@ -2,10 +2,20 @@
 % Please edit documentation in R/sort_actions.R
 \name{remove_selected_nodes}
 \alias{remove_selected_nodes}
-\title{Remove selected nodes from adjacency matrix}
+\title{Remove Selected Nodes from Adjacency Matrix}
 \usage{
 remove_selected_nodes(adj_matrix, selected_nodes)
 }
+\arguments{
+\item{adj_matrix}{Adjacency matrix with named rows and columns.}
+
+\item{selected_nodes}{Character vector of node names to remove from the matrix.}
+}
+\value{
+Adjacency matrix with selected nodes removed, maintaining original structure
+for remaining nodes.
+}
 \description{
-Remove selected nodes from adjacency matrix
+Removes specified nodes from an adjacency matrix by eliminating their
+corresponding rows and columns.
 }

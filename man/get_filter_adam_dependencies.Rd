@@ -22,8 +22,3 @@ This function extracts filter dependency columns from the provided UI YAML
 and enriches them with additional columns for joining any external filter dependencies.
 It identifies and returns the dependencies that are specific to ADaM data domains.
 }
-\examples{
-# Example usage:
-result <- get_filter_adam_dependencies(ui_yaml_example, domain_keys_example)
-
-}

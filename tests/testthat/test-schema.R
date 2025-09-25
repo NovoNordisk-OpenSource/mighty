@@ -243,17 +243,17 @@ column_action:
 
   validate_yaml(yaml_file, "domain_schema", use_yq = TRUE) |>
     expect_error(
-      "Error location: column_metadata → VAR1 → parameters → item 1 | Error message: Expected type 'object' but got character"
+      "Error location: column_metadata -> VAR1 -> parameters -> item 1 | Error message: Expected type 'object' but got character"
     )
 
   validate_yaml(yaml_file, "domain_schema", use_yq = TRUE) |>
     expect_error(
-      "Error location: column_metadata → VAR1 → parameters → item 2 | Error message: Expected type 'object' but got character"
+      "Error location: column_metadata -> VAR1 -> parameters -> item 2 | Error message: Expected type 'object' but got character"
     )
 
   validate_yaml(yaml_file, "domain_schema", use_yq = TRUE) |>
     expect_error(
-      "Error location: column_metadata → VAR1 → parameters → item 3 | Error message: Expected type 'object' but got character"
+      "Error location: column_metadata -> VAR1 -> parameters -> item 3 | Error message: Expected type 'object' but got character"
     )
 })
 
@@ -284,7 +284,7 @@ column_action:
 
   validate_yaml(yaml_file, "domain_schema", use_yq = TRUE) |>
     expect_error(
-      "Error location: column_metadata → VAR1 → parameters | Error message: Expected type 'array' but got logical"
+      "Error location: column_metadata -> VAR1 -> parameters | Error message: Expected type 'array' but got logical"
     )
 })
 
@@ -311,7 +311,7 @@ column_action:
   VAR2:
     code_id: fnc1
     source: VAR0
-  
+
 "
   yaml_file <- create_temp_yaml(yaml_content)
 
@@ -477,12 +477,12 @@ row_action:
   # ACT / ASSERT ---------------------------------------------------------------
   validate_yaml(yaml_file, "domain_schema", use_yq = TRUE) |>
     expect_error(
-      "row_action → X -> code_id | Error message: Required field 'code_id' is missing"
+      "row_action -> X -> code_id | Error message: Required field 'code_id' is missing"
     )
 
   validate_yaml(yaml_file, "domain_schema", use_yq = TRUE) |>
     expect_error(
-      "row_action → A | Error message: Expected type 'object' but got list"
+      "row_action -> A | Error message: Expected type 'object' but got list"
     )
 })
 
@@ -515,7 +515,7 @@ row_action:
 
   validate_yaml(yaml_file, "domain_schema", use_yq = TRUE) |>
     expect_error(
-      "row_action → X → parameters | Error message: Expected type 'array' but got logical"
+      "row_action -> X -> parameters | Error message: Expected type 'array' but got logical"
     )
 })
 
@@ -538,7 +538,7 @@ init:
 column_action:
   STUDYID:
 row_action:
-  X: 
+  X:
     code_id: fnc1
     parameters:
       - parm1:
@@ -612,7 +612,7 @@ column_action:
   yaml_file <- create_temp_yaml(yaml_content)
 
   # ACT / ASSERT ---------------------------------------------------------------
-  
+
   validate_yaml(yaml_file, "domain_schema", use_yq = TRUE) |>
     expect_error("Duplicate map key: 'VAR1'")
 
@@ -703,10 +703,10 @@ init:
     - SAFFL
 column_action:
   VAR1:
-    depend_rows: 
+    depend_rows:
     - row_action_1
   VAR2:
-    depend_rows: 
+    depend_rows:
     - row_action_99
 row_action:
   row_action_99:
@@ -717,11 +717,10 @@ row_action:
   yaml_file <- create_temp_yaml(yaml_content)
 
   # ACT / ASSERT ---------------------------------------------------------------
-  
+
   validate_yaml(yaml_file, "domain_schema", use_yq = TRUE) |>
     expect_error("The following row actions are not defined, but are listed as row dependencies for either a column or another row action")
   validate_yaml(yaml_file, "domain_schema", use_yq = TRUE) |>
     expect_error("row_action_1")
 
 })
-

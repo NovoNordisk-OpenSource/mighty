@@ -23,22 +23,29 @@ consolidate_metadata <- function(code_component_metadata, ui_data) {
     # Merge UI data with code metadata
     ui_data_updated <- merge_ui_with_metadata(ui_data, code_id_data)
   } else {
-    ui_data_updated <- ui_data[, type_from_code := NA_character_]
+    ui_data_updated <- ui_data[, "type_from_code" := NA_character_]
   }
 
   # Assign action types to predecessor action types
   ui_data_updated[["type"]] <- purrr::pmap(
-    ui_data_updated[, .(code_id, type_from_code, depend_cols, outputs, domain)],
+    ui_data_updated[, list(
+      code_id = get("code_id"),
+      type_from_code = get("type_from_code"),
+      depend_cols = get("depend_cols"),
+      outputs = get("outputs"),
+      domain = get("domain")
+    )],
     pred_type
   ) |>
     unlist()
-  ui_data_updated[,type_from_code := NULL]
+  ui_data_updated[, "type_from_code" := NULL]
+
 
   # Assign internal code_id for predecessor action types
-  ui_data_updated[ui_data_updated$type == "col_echo", code_id := "_col_echo.mustache"]
+  ui_data_updated[ui_data_updated$type == "col_echo", "code_id" := "_col_echo.mustache"]
   ui_data_updated[
     ui_data_updated$type == "col_mutate",
-    code_id := "_col_mutate.mustache"
+    "code_id" := "_col_mutate.mustache"
   ]
 
   # Process dependent columns
@@ -110,7 +117,6 @@ has_code_id_references <- function(ui_data) {
 #' terminology by converting "derivation" type to "compute".
 #'
 #' @param code_component_metadata List of metadata for code components, indexed by code_id
-#' @param ui_data Data table containing UI data with code_id references
 #'
 #' @return Data table with formatted metadata for active code IDs, or NULL if no metadata found
 extract_code_component_metadata <- function(code_component_metadata) {
@@ -201,20 +207,30 @@ process_depend_cols <- function(data) {
   return(data)
 }
 
-
-#' Process column dependencies
+#' Process Column Dependencies
+#'
 #' @description
 #' Transforms column dependencies into a structured data table with domain information.
+#'
 #' @details
 #' Processes a list of column dependencies, handling both domain-prefixed
 #' elements (containing dots) and elements without domain prefixes. Creates a data table
-#' with column names, domains, and domain types.
+#' with column names, domains, and domain types. Special handling is provided for:
+#' - col_copy actions that depend on themselves
+#' - col_compute actions with no dependencies
+#' - Pre-structured data.frame inputs
 #'
-#' @param depend_cols List of column dependencies to process
-#' @param domain Current domain value to use for elements without domain prefixes
-#' @param outputs list of outputs from action
+#' @param type Character string specifying the action type (e.g., "col_copy", "col_compute").
+#' @param depend_cols List of column dependencies to process, can be a list of strings
+#'   or a data.frame with existing structure.
+#' @param domain Character string specifying the current domain value to use for
+#'   elements without domain prefixes.
+#' @param outputs List of outputs from the action, used for col_copy self-dependencies.
 #'
-#' @return Data table with processed dependencies, containing column_name, domain, and domain_type
+#' @return
+#' Data table with processed dependencies containing columns: column_name, domain,
+#' and domain_type. Returns empty data table if no valid dependencies are found.
+#'
 process_column_dependencies <- function(type, depend_cols, domain, outputs) {
   # col_copy actions have dependencies on themselves
   if (type == "col_copy") {

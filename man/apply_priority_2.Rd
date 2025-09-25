@@ -2,7 +2,7 @@
 % Please edit documentation in R/sort_actions.R
 \name{apply_priority_2}
 \alias{apply_priority_2}
-\title{Apply Priority 2: Complex domain dependency logic}
+\title{Apply Priority 2: Complex Domain Dependency Logic}
 \usage{
 apply_priority_2(
   candidate_nodes,
@@ -13,6 +13,26 @@ apply_priority_2(
   domains_upstr_dep_prim_dom
 )
 }
+\arguments{
+\item{candidate_nodes}{Vector of candidate node identifiers.}
+
+\item{adj_matrix}{Adjacency matrix representing node dependencies.}
+
+\item{lkp_dom}{Named vector mapping node identifiers to their domains.}
+
+\item{primary_domain}{Character string specifying the primary domain.}
+
+\item{domains_upstr_dep}{Vector of domains with upstream dependencies.}
+
+\item{domains_upstr_dep_prim_dom}{Vector of domains with upstream dependencies
+on the primary domain.}
+}
+\value{
+Selected node identifier from candidates with covered dependencies, or NULL
+if no candidates have satisfied dependencies. Uses sub-priorities when
+multiple candidates are available.
+}
 \description{
-Apply Priority 2: Complex domain dependency logic
+Selects candidate nodes based on domain dependency coverage, prioritizing
+nodes from domains whose upstream dependencies have been satisfied.
 }

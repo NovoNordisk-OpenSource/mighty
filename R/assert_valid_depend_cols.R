@@ -1,19 +1,66 @@
 #' Validate Dependency Columns
 #'
-#' This function checks if all specified dependency columns for each action
-#' in a given dataset are present in the corresponding outputs. If any dependency
-#' columns are missing, it generates an error message indicating the missing columns
-#' and the actions they are required for.
+#' This function validates that all specified dependency columns for each action
+#' in a dataset are present in the corresponding outputs. It performs comprehensive
+#' dependency checking both within and across ADaM domains, including filter
+#' dependencies and action dependencies.
 #'
-#' @param x A data.frame containing action metadata, including columns for
-#'   'type', 'domain', 'depend_cols', and 'outputs'.
-#' @param ui_yml A list containing UI configuration, which includes the
-#'   initialization parameters needed for filtering dependency columns.
-#' @param check_cross_domain_adam_dependencies
+#' @param actions A data.frame containing action metadata with required columns:
+#'   \describe{
+#'     \item{type}{Character. Action type (e.g., "col_*" for column actions)}
+#'     \item{domain}{Character. ADaM domain identifier}
+#'     \item{depend_cols}{List. Column dependencies for each action}
+#'     \item{outputs}{List. Expected output columns for each action}
+#'   }
+#' @param ui_yml A list containing UI configuration with initialization parameters
+#'   used for filtering and extracting dependency columns across domains.
+#' @param domain_keys Character vector of domain key identifiers used to extract
+#'   filter dependencies and establish cross-domain relationships.
+#' @param check_cross_domain_adam_dependencies Logical. If `TRUE`, performs
+#'   cross-domain dependency validation. If `FALSE`, only validates dependencies
+#'   within each individual ADaM domain.
 #'
-#' @return An invisible copy of the input data.frame if all dependencies are valid.
+#' @return Invisibly returns the input `actions` data.frame unchanged if all
+#'   dependency validations pass.
 #'
-#' @throws Error if any dependency columns are missing in the outputs for any domain.
+#' @details
+#' The function performs the following validation steps:
+#' \enumerate{
+#'   \item Extracts ADaM column dependencies from UI filters, including implied
+#'         join keys for external dependencies
+#'   \item Splits actions by domain for domain-specific processing
+#'   \item Combines dependencies from two sources: filters on the domain and
+#'         actions within the domain
+#'   \item Extracts outputs from column actions (identified by "col" prefix)
+#'   \item Validates dependencies either within domains only or across all domains
+#'         based on the `check_cross_domain_adam_dependencies` parameter
+#' }
+#'
+#' @section Error Handling:
+#' The function stops execution with an informative error message if any
+#' dependency columns are missing from the outputs for any domain. Error
+#' messages indicate which columns are missing and which actions require them.
+#'
+#' @examples
+#' \dontrun{
+#' # Example actions data.frame
+#' actions <- data.frame(
+#'   type = c("col_derive", "col_merge"),
+#'   domain = c("ADSL", "ADAE"),
+#'   depend_cols = list(c("USUBJID"), c("USUBJID", "AEDECOD")),
+#'   outputs = list(c("USUBJID", "AGE"), c("USUBJID", "AEDECOD", "AESEV"))
+#' )
+#'
+#' # Validate dependencies within domains only
+#' assert_valid_depend_cols(actions, ui_yml, domain_keys,
+#'                         check_cross_domain_adam_dependencies = FALSE)
+#' }
+#'
+#' @seealso
+#' [get_filter_adam_dependencies()] for extracting filter dependencies,
+#' [get_all_adam_dependencies()] for combining dependency sources,
+#' [check_adam_dependencies_cross_domain()] for cross-domain validation,
+#' [check_adam_dependencies_within_domain()] for within-domain validation
 #'
 assert_valid_depend_cols <- function(actions, ui_yml, domain_keys, check_cross_domain_adam_dependencies) {
 
@@ -91,11 +138,6 @@ get_outputs  <- function(x) {
 #'
 #' @return A named list of filter dependency columns enriched with keys for
 #' external dependencies, specifically for the ADaM data domain.
-#'
-#' @examples
-#' # Example usage:
-#' result <- get_filter_adam_dependencies(ui_yaml_example, domain_keys_example)
-#'
 get_filter_adam_dependencies <- function(ui_yml, domain_keys) {
   # Transpose the initialization section from the UI YAML to extract filter dependency columns
   ui_init <- purrr::list_transpose(ui_yml)[["init"]]
@@ -137,21 +179,25 @@ get_filter_adam_dependencies <- function(ui_yml, domain_keys) {
 }
 
 #' Get All ADaM Dependencies for a Domain
-#' @description Identifies all ADaM column dependencies for a specific domain
-#' from both filter conditions and action dependencies.
 #'
-#' @details Combines two sources of dependencies: 1. ADSL column
-#' dependencies used in domain filters 2. Column dependencies from actions
-#' within the domain
+#' @description
+#' Identifies all ADaM column dependencies for a specific domain from both
+#' filter conditions and action dependencies.
+#'
+#' @details
+#' Combines two sources of dependencies:
+#' 1. ADSL column dependencies used in domain filters
+#' 2. Column dependencies from actions within the domain
 #'
 #' The result is a unique set of all column dependencies needed for the domain.
 #'
 #' @param x Data frame or list containing domain information with 'domain' and
-#'   'depend_cols' elements
-#' @param adsl_filter_dep_by_domain List mapping domain names to their ADSL
-#'   filter dependencies
+#'   'depend_cols' elements.
+#' @param filter_dep List mapping domain names to their ADSL filter dependencies.
 #'
-#' @returns A character vector of unique column dependencies for the domain
+#' @return
+#' Character vector of unique column dependencies for the domain, with NAs removed.
+#'
 get_all_adam_dependencies <- function(x, filter_dep) {
   # Extract column dependencies in filter
   filter_depend_cols <- filter_dep[[x$domain[[1]]]]
@@ -196,24 +242,27 @@ get_adam_dependencies_from_actions <- function(domain_table, depend_col) {
 }
 
 #' Check for External ADaM Dependencies
-#' @description Checks if all external ADaM dependencies are present in the
-#' outputs.
 #'
-#' @details Verifies that all ADaM column dependencies across domains are
-#' included in the outputs. If any dependencies are missing, it generates a
-#' detailed error message showing which columns are missing and which actions or
-#' filters require those columns.
+#' @description
+#' Validates that all required ADaM column dependencies across domains are
+#' available in the outputs, stopping with a detailed error if any are missing.
 #'
-#' @param x Data frame containing dependency information
-#' @param adam_dep_by_domain List mapping domain names to their ADaM
-#'   dependencies
-#' @param outputs Character vector of available outputs
-#' @param domains Character vector of domain names
-#' @param adsl_filter_dep_by_domain List mapping domain names to their ADSL
-#'   filter dependencies
+#' @param actions Data frame containing action dependency information.
+#' @param adam_dep_by_domain List mapping domain names to their ADaM dependencies.
+#' @param outputs Character vector of available output columns.
+#' @param filter_dep_by_domain List mapping domain names to their filter dependencies.
 #'
-#' @returns Nothing if all dependencies are present; stops with an error message
-#'   if dependencies are missing
+#' @return
+#' Invisible NULL if all dependencies are satisfied. Stops execution with a
+#' detailed error message listing missing columns and affected actions/filters
+#' if dependencies are not met.
+#'
+#' @details
+#' The function identifies missing ADaM dependencies by comparing required
+#' columns against available outputs. When dependencies are missing, it
+#' generates an informative error showing which columns are needed and
+#' which specific actions or domain filters require them.
+#'
 check_adam_dependencies_cross_domain <- function(actions,
                                                  adam_dep_by_domain,
                                                  outputs,
@@ -262,23 +311,29 @@ check_adam_dependencies_cross_domain <- function(actions,
 }
 
 #' Check for Missing Internal Parent Columns in ADaM Domain
-#' @description Checks if all required internal parent columns within a specific
-#' ADaM domain are present.
 #'
-#' @details Examines a specific domain to ensure that all required
-#' parent columns within that domain are available in the outputs. If any
-#' required parent columns are missing, it generates a detailed error message
-#' showing which columns are missing and which actions require those columns.
+#' @description
+#' Validates that all required parent columns within a specific ADaM domain
+#' are available, returning an error message if any are missing.
 #'
-#' @param nm Character string representing the domain name to check
-#' @param adam_dep_by_domain List mapping domain names to their ADaM
-#'   dependencies
-#' @param outputs Character vector of available outputs
-#' @param x_by_domain List of data frames split by domain containing dependency
-#'   information
+#' @param domain Character string representing the domain name to check.
+#' @param adam_dep_by_domain List mapping domain names to their ADaM dependencies.
+#' @param outputs Character vector of available output columns.
+#' @param actions_by_domain List of data frames split by domain containing
+#'   action dependency information.
+#' @param filter_dep_by_domain List mapping domain names to their filter dependencies.
 #'
-#' @returns Error message as a string if any dependencies are missing, otherwise
-#'   NULL
+#' @return
+#' Invisible NULL if all dependencies are satisfied, or a character string
+#' containing a detailed error message listing missing columns and affected
+#' actions/filters within the domain.
+#'
+#' @details
+#' The function focuses on internal dependencies within a single domain,
+#' identifying missing parent columns that are required by actions or filters
+#' in the same domain. Returns formatted error messages for integration into
+#' larger validation workflows.
+#'
 check_adam_dependencies_within_domain <- function(domain,
                                                   adam_dep_by_domain,
                                                   outputs,

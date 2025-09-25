@@ -2,10 +2,25 @@
 % Please edit documentation in R/add_check_executable_status.R
 \name{prefix_with_domain}
 \alias{prefix_with_domain}
-\title{Prefix output columns with \code{domain} name}
+\title{Prefix Output Columns with Domain Name}
 \usage{
 prefix_with_domain(column, domain)
 }
+\arguments{
+\item{column}{Character vector of column names to potentially prefix.}
+
+\item{domain}{Character string specifying the domain name to use as prefix.}
+}
+\value{
+Character vector with domain-prefixed column names in the format
+"domain.column_name" for columns that didn't already contain dots.
+}
 \description{
-Prefix output columns with \code{domain} name
+Adds domain prefix to column names that don't already contain a dot separator,
+creating standardized dot-separated column specifications.
+}
+\details{
+Checks each column name for the presence of a dot separator. If no dot is
+found, prefixes the column with the specified domain name. Columns already
+containing dots are returned unchanged.
 }

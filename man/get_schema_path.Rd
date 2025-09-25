@@ -2,10 +2,16 @@
 % Please edit documentation in R/validate_yaml.R
 \name{get_schema_path}
 \alias{get_schema_path}
-\title{Get schema path from schema name}
+\title{Get Schema Path from Schema Name}
 \usage{
 get_schema_path(schema_name)
 }
+\arguments{
+\item{schema_name}{Character string specifying the schema name (without .json extension).}
+}
+\value{
+Character string containing the full path to the schema file.
+}
 \description{
-Get schema path from schema name
+Retrieves the full file path to a JSON schema file by name with validation.
 }

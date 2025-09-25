@@ -1,6 +1,13 @@
 ---
 title: "mighty"
-format: html
+vignette: >
+  %\VignetteIndexEntry{mighty}
+  %\VignetteEngine{quarto::html}
+  %\VignetteEncoding{UTF-8}
+knitr:
+  opts_chunk:
+    collapse: true
+    comment: '#>'
 ---
 
 # Getting started

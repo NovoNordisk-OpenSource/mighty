@@ -2,19 +2,24 @@
 % Please edit documentation in R/update_ui_data.R
 \name{process_column_dependencies}
 \alias{process_column_dependencies}
-\title{Process column dependencies}
+\title{Process Column Dependencies}
 \usage{
 process_column_dependencies(type, depend_cols, domain, outputs)
 }
 \arguments{
-\item{depend_cols}{List of column dependencies to process}
+\item{type}{Character string specifying the action type (e.g., "col_copy", "col_compute").}
 
-\item{domain}{Current domain value to use for elements without domain prefixes}
+\item{depend_cols}{List of column dependencies to process, can be a list of strings
+or a data.frame with existing structure.}
 
-\item{outputs}{list of outputs from action}
+\item{domain}{Character string specifying the current domain value to use for
+elements without domain prefixes.}
+
+\item{outputs}{List of outputs from the action, used for col_copy self-dependencies.}
 }
 \value{
-Data table with processed dependencies, containing column_name, domain, and domain_type
+Data table with processed dependencies containing columns: column_name, domain,
+and domain_type. Returns empty data table if no valid dependencies are found.
 }
 \description{
 Transforms column dependencies into a structured data table with domain information.
@@ -22,5 +27,10 @@ Transforms column dependencies into a structured data table with domain informat
 \details{
 Processes a list of column dependencies, handling both domain-prefixed
 elements (containing dots) and elements without domain prefixes. Creates a data table
-with column names, domains, and domain types.
+with column names, domains, and domain types. Special handling is provided for:
+\itemize{
+\item col_copy actions that depend on themselves
+\item col_compute actions with no dependencies
+\item Pre-structured data.frame inputs
+}
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/sort_actions.R
 \name{apply_priority_2_subpriorities}
 \alias{apply_priority_2_subpriorities}
-\title{Apply Priority 2 sub-priorities for covered candidates}
+\title{Apply Priority 2 Sub-priorities for Covered Candidates}
 \usage{
 apply_priority_2_subpriorities(
   candidate_nodes_upstr_dep_cov,
@@ -13,6 +13,27 @@ apply_priority_2_subpriorities(
   domains_upstr_dep_prim_dom
 )
 }
+\arguments{
+\item{candidate_nodes_upstr_dep_cov}{Vector of candidate nodes with covered
+upstream dependencies.}
+
+\item{adj_matrix}{Adjacency matrix representing node dependencies.}
+
+\item{lkp_dom}{Named vector mapping node identifiers to their domains.}
+
+\item{primary_domain}{Character string specifying the primary domain.}
+
+\item{domains_upstr_dep}{Vector of domains with upstream dependencies.}
+
+\item{domains_upstr_dep_prim_dom}{Vector of domains with upstream dependencies
+on the primary domain.}
+}
+\value{
+Selected node identifier based on sub-priority rules (2a-2d), with sorting
+as tiebreaker.
+}
 \description{
-Apply Priority 2 sub-priorities for covered candidates
+Applies hierarchical sub-priorities to select from candidates with covered
+dependencies: primary domain nodes, nodes with downstream dependencies to
+primary domain, nodes with covered upstream dependencies, then sorted fallback.
 }

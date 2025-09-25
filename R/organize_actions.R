@@ -1,13 +1,115 @@
-#' Title
+#' Organize Actions into Executable ADaM Programs
 #'
-#' @param ordered_nodes
-#' @param actions
-#' @param edges
+#' This function orchestrates the complete workflow for organizing action nodes
+#' into optimally grouped ADaM programs. It sorts actions by execution dependencies,
+#' groups them by domain while respecting dependencies, and produces a final
+#' execution plan with program assignments and within-program rankings.
 #'
-#' @return
-#' @export
+#' @param actions A data.frame or data.table containing action definitions with
+#'   required columns:
+#'   \describe{
+#'     \item{node_id}{Character. Unique identifier for each action node}
+#'     \item{domain}{Character. ADaM domain name (e.g., "ADSL", "ADAE")}
+#'     \item{type}{Character. Action type specification (e.g., "init", "col_derive", "row_filter")}
+#'   }
+#'   Additional columns are preserved and included in the output.
+#' @param edges A data.frame or data.table defining dependencies between actions
+#'   with required columns:
+#'   \describe{
+#'     \item{parent_node}{Character. Parent action that must execute first}
+#'     \item{node_id}{Character. Child action that depends on the parent}
+#'   }
+#'   Additional columns are ignored in processing but preserved in intermediate steps.
+#'
+#' @return A data.frame containing the organized actions with execution plan:
+#'   \describe{
+#'     \item{node_id}{Character. Original action identifier}
+#'     \item{program_id}{Integer. Program group assignment (1, 2, 3, ...)}
+#'     \item{rank}{Integer. Execution order within each program (1, 2, 3, ...)}
+#'     \item{...}{All original columns from the `actions` input are preserved}
+#'   }
+#'   Actions are ordered by `program_id` then `rank` for direct execution.
+#'
+#' @details
+#' The organization process follows these sequential steps:
+#'
+#' \subsection{1. Dependency Sorting}{
+#' Uses [sort_actions()] to create a topologically sorted execution order that:
+#' \itemize{
+#'   \item Prioritizes ADSL (primary domain) actions early in the sequence
+#'   \item Minimizes domain switching to improve program locality
+#'   \item Excludes "col_copy" actions from the sorting process
+#'   \item Ensures all dependencies are satisfied in the final order
+#' }
+#' }
+#'
+#' \subsection{2. Domain Grouping}{
+#' Uses [group_actions()] to organize the sorted actions into programs by:
+#' \itemize{
+#'   \item Grouping adjacent actions from the same domain
+#'   \item Maintaining dependency order within and across programs
+#'   \item Assigning unique program identifiers to each group
+#'   \item Preserving action metadata and relationships
+#' }
+#' }
+#'
+#' \subsection{3. Rank Assignment}{
+#' Assigns execution ranks within each program to:
+#' \itemize{
+#'   \item Show the precise order of actions within each program
+#'   \item Enable clear lineage tracking in generated code
+#'   \item Support program-level execution planning
+#' }
+#' }
+#'
+#' @section Output Structure:
+#' The returned data.frame is ready for program generation, with actions
+#' organized into logical execution units. Each program contains actions
+#' from a single domain, and programs are ordered to respect cross-domain
+#' dependencies.
+#'
+#' @section Column Copy Handling:
+#' Actions with `type == "col_copy"` are excluded from the dependency sorting
+#' but may be included in the final grouping if present in the original actions.
+#' This prevents copy operations from affecting the core dependency resolution.
 #'
 #' @examples
+#' \dontrun{
+#' # Example actions and dependencies
+#' actions <-  data.frame(
+#'   node_id = c("init_adsl", "derive_age", "init_adae", "derive_aesev"),
+#'   domain = c("ADSL", "ADSL", "ADAE", "ADAE"),
+#'   type = c("init", "col_derive", "init", "col_derive"),
+#'   code = c("adsl <- dm", "adsl$AGE <- ...", "adae <- ae", "adae$AESEV <- ...")
+#' )
+#'
+#' edges <- data.frame(
+#'   parent_node = c("init_adsl", "init_adsl", "init_adae"),
+#'   node_id = c("derive_age", "init_adae", "derive_aesev")
+#' )
+#'
+#' # Organize into executable programs
+#' organized <- organize_actions(actions, edges)
+#'
+#' # View program structure
+#' organized[, c("program_id", "rank", "node_id", "domain")]
+#' #   program_id rank     node_id domain
+#' #            1    1   init_adsl   ADSL
+#' #            1    2  derive_age   ADSL
+#' #            2    1   init_adae   ADAE
+#' #            2    2 derive_aesev   ADAE
+#'
+#' # Generate programs by group
+#' split(organized, organized$program_id)
+#' }
+#'
+#' @seealso
+#' [sort_actions()] for dependency-based action sorting,
+#' [group_actions()] for domain-based program grouping,
+#' [traverse_and_group_actions()] for the core grouping algorithm,
+#' [make_edges()] for creating dependency relationships
+#'
+#' @export
 organize_actions <- function(actions, edges){
 
   # Sort actions according to execution order, aiming to:

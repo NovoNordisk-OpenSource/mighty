@@ -66,6 +66,7 @@ write_adam_specs <-  function(adam_specs, output_dir = ".") {
 #'
 #' # Write to specific directory
 #' output_path <- write_adam_domain_yml(adae_spec, "specs/ADAE.yml")
+#'}
 #'
 write_adam_domain_yml <- function(spec, output_path) {
   # Convert internal structure back to YAML structure

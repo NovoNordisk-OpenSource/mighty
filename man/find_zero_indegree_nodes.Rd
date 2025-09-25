@@ -2,10 +2,18 @@
 % Please edit documentation in R/sort_actions.R
 \name{find_zero_indegree_nodes}
 \alias{find_zero_indegree_nodes}
-\title{Find nodes with zero in-degree (no incoming edges)}
+\title{Find Nodes with Zero In-Degree (No Incoming Edges)}
 \usage{
 find_zero_indegree_nodes(adj_matrix)
 }
+\arguments{
+\item{adj_matrix}{Adjacency matrix where rows represent source nodes and
+columns represent target nodes.}
+}
+\value{
+Character vector of node names that have zero in-degree (no dependencies).
+}
 \description{
-Find nodes with zero in-degree (no incoming edges)
+Identifies nodes in an adjacency matrix that have no incoming dependencies
+by finding columns with zero sum.
 }

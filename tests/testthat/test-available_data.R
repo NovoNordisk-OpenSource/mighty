@@ -13,13 +13,13 @@ test_that("data_context provides metadata from sdtm.dm testdata", {
   expect_equal(names(dc$get_table_names()), c("sdtm.dm"))
   expect_equal(dc$get_table_names()[[1]], "dm")
 
-  dm_columns <- c("STUDYID", "DOMAIN", "USUBJID", "SUBJID", 
-               "RFSTDTC", "RFENDTC", "RFXSTDTC", "RFXENDTC", "RFICDTC", "RFPENDTC", 
+  dm_columns <- c("STUDYID", "DOMAIN", "USUBJID", "SUBJID",
+               "RFSTDTC", "RFENDTC", "RFXSTDTC", "RFXENDTC", "RFICDTC", "RFPENDTC",
                "DTHDTC", "DTHFL", "SITEID",
-               "AGE", "AGEU", "SEX", "RACE", "ETHNIC", 
+               "AGE", "AGEU", "SEX", "RACE", "ETHNIC",
                "ARMCD", "ARM", "ACTARMCD", "ACTARM", "COUNTRY", "DMDTC", "DMDY")
   expect_true(all(names(dc$get_table_variables(table_name = "dm")) %in% dm_columns))
-  expect_false(dc$has_variables(table_name = "dm", variable_name = "TOPICCD"))  
+  expect_false(dc$has_variables(table_name = "dm", variable_name = "TOPICCD"))
   # Test variable from non-existing data set
   expect_false(dc$has_variables(table_name = "dm_vaccine", variable_name = "USUBJID"))
 
@@ -30,7 +30,7 @@ test_that("data_context provides metadata from sdtm and adam", {
   output_path <- withr::local_tempdir()
   setup_testdata(testdata = "pharmaverse", adam_domains = c("adsl"), test_data_path = output_path)
   # replicate DM.SV dataset to METADATA.MDVISIT to be able to query metadata
-  file.copy(file.path(output_path, "data", "sdtm", "sv.parquet"), 
+  file.copy(file.path(output_path, "data", "sdtm", "sv.parquet"),
             file.path(output_path, "data", "metadata", "mdvisit.parquet"))
 
   cnt <- connector::connect(file.path(output_path, "_connector.yml"))
@@ -77,7 +77,7 @@ test_that("data_context provide column metadata", {
 
   expect_equal(dc$get_variable_type("adsl", "USUBJID", "adam"), "character")
   expect_equal(dc$get_variable_type("adsl", "AGE", "adam"), "numeric")
-  
+
   expect_equal(dc$get_variable_label("dm", "USUBJID"), "Unique Subject Identifier")
   expect_equal(dc$get_variable_label("adsl", "USUBJID", "adam"), dc$get_variable_label("dm", "USUBJID"))
 })

@@ -2,10 +2,21 @@
 % Please edit documentation in R/add_check_executable_status.R
 \name{update_available_columns_for_action}
 \alias{update_available_columns_for_action}
-\title{Update available columns after action execution}
+\title{Update Available Columns After Action Execution}
 \usage{
 update_available_columns_for_action(action, available_cols)
 }
+\arguments{
+\item{action}{Action object containing execution status, outputs, domain, and code_id.}
+
+\item{available_cols}{Data frame with columns "column_name", "domain", and
+"domain_type" representing currently available columns.}
+}
+\value{
+Updated data frame of available columns including new outputs if the action
+can execute, otherwise returns the original available_cols unchanged.
+}
 \description{
-Update available columns after action execution
+Updates the available columns list by adding output columns from an executed
+action, with special handling for data reading operations.
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/setup_actions.R
 \name{setup_actions}
 \alias{setup_actions}
-\title{Setup actions for ADaM Code Generation}
+\title{Setup Actions for ADaM Code Generation}
 \usage{
 setup_actions(
   ui_yml,
@@ -12,40 +12,54 @@ setup_actions(
 )
 }
 \arguments{
-\item{ui_yml}{List containing UI YAML specifications for ADaM domains,
-typically read from YAML files containing column metadata and domain
-configurations}
+\item{ui_yml}{List. UI YAML specifications for ADaM domains, typically
+containing column metadata and domain configurations.}
 
-\item{domain_keys}{}
+\item{standards_lib}{Standards library object for code component resolution.}
 
-\item{code_component_source_pkgs}{Optional character vector of package names
-containing code components to be loaded into the consolidated environment}
+\item{check_cross_domain_adam_dependencies}{Logical. Whether to validate
+cross-domain dependencies in ADaM specifications.}
 
-\item{code_component_source_files}{Optional character vector of file paths to
-R source files containing code components}
+\item{domain_keys}{Character vector. Domain key variables for dependency
+validation and metadata enrichment.}
 }
 \value{
-A list containing two elements:
-\item{nodes}{Data.table containing processed node definitions with columns
-for node_id, domain, type, dependencies, outputs, and other metadata}
+Named list with two elements:
+\describe{
+\item{code_components_rendered}{Rendered code components ready for generation}
+\item{actions}{Data.table with processed action definitions including
+node_id, domain, dependencies, and validated metadata}
+}
 }
 \description{
-Prepares the initial action components by processing UI YAML
-data and creating a consolidated environment for code components.
+Prepares initial action components by processing UI YAML specifications
+and creating a consolidated environment for code generation.
 }
 \details{
-This function performs the initial setup for ADaM code generation
-by: 1. Converting UI YAML specifications to a data.table format 2. Creating a
-consolidated environment containing code components from packages and source
-files 3. Parsing code component metadata and merging it with UI data 4.
-Adding unique node identifiers and validating outputs
-
-The function serves as a preprocessing step that transforms user
-specifications and code components into a standardized internal format that
-can be used by downstream functions.
+Processing pipeline:
+\enumerate{
+\item Converts UI YAML to tabular format via \code{\link[=convert_yml_to_data_table]{convert_yml_to_data_table()}}
+\item Extracts base actions and renders code components
+\item Consolidates metadata and adds domain keys
+\item Validates dependencies and cross-domain references
 }
-\seealso{
-\code{\link{convert_yml_to_data_table}} for YAML to data.table
-conversion
-\code{\link{update_ui_data}} for UI data enrichment
+
+The function transforms user specifications into standardized internal
+format for downstream code generation functions.
+}
+\examples{
+\dontrun{
+# Setup actions from YAML specifications
+result <-  setup_actions(
+  ui_yml = read_yaml("adam_specs.yml"),
+  standards_lib = standards_lib,
+  check_cross_domain_adam_dependencies = TRUE,
+  domain_keys = c("USUBJID", "PARAMCD")
+)
+
+# Access processed actions
+actions_table <- result$actions
+rendered_components <- result$code_components_rendered
+}
+
 }

@@ -1,24 +1,35 @@
 #' Render Code for Actions
-#' @description Processes a data table of actions to generate executable code
-#'   for each action by determining appropriate parameters and rendering the
-#'   corresponding code components.
 #'
-#' @details For each action in the input table, this function:
-#'   1. Calls define_params() to determine the correct parameters based on the code_id
-#'   2. Renders the code component using the mighty.component library
-#'   3. Adds a node header and stores the generated code back in the actions table
+#' @description
+#' Processes a data table of actions to generate executable code for each action
+#' by determining appropriate parameters and rendering the corresponding code
+#' components.
+#'
+#' @details
+#' For each action in the input table, this function:
+#' 1. Calls define_params() to determine the correct parameters based on the code_id
+#' 2. Renders the code component using the mighty.componenst library
+#' 3. Adds a node header and stores the generated code back in the actions table
+#' 4. Handles special cases for actions with missing data or execution issues
+#' 5. Comments out code for actions that cannot execute due to missing dependencies
 #'
 #' @param actions Data table containing action definitions with columns including
-#'   code_id, domain, outputs, depend_cols, parameters, and node_id
+#'   code_id, domain, outputs, depend_cols, parameters, node_id, lineage, and
+#'   can_execute.
 #' @param domain_keys Named list mapping domain names to their respective key
-#'   columns
+#'   columns for data operations.
 #' @param ui_data List containing domain-specific UI data including initialization
-#'   metadata
+#'   metadata and configuration parameters.
 #' @param path_trial Character string specifying the output path where
-#'   generated programs and data should be stored
+#'   generated programs and data should be stored.
+#' @param available_data Optional parameter containing information about
+#'   available data sources, defaults to NULL.
 #'
-#' @returns The input actions data table with an additional 'code' column
-#'   containing the generated code for each action
+#' @return
+#' The input actions data table with an additional 'code' column containing
+#' the generated code for each action, properly formatted with headers and
+#' comments as needed.
+#'
 render_code <- function(
   actions,
   domain_keys,
@@ -40,7 +51,7 @@ render_code <- function(
     action_has_comment <- !is.null(action_i$lineage) && nchar(action_i$lineage) > 0
     no_line_break <- i==1 && !action_has_comment
     is_final_pgm <- action_i$program_id == final_programs_lkp[[action_i$domain]]
-    # In case the call is based on actions that are modified due to missing 
+    # In case the call is based on actions that are modified due to missing
     # data, there may be situations where no outputs can be created. In this
     # case, use the removed_outputs to generate code instead
     # TODO: Assess if a similar approach is needed for depend_columns
@@ -78,6 +89,79 @@ render_code <- function(
   actions_
 }
 
+
+#' Define Parameters for Code Generation Templates
+#'
+#' @description
+#' A dispatcher function that generates appropriate parameters for different
+#' Mustache code generation templates based on the specified code identifier.
+#' This function serves as a central hub for parameter preparation across
+#' various data processing operations.
+#'
+#' @param code_id Character string specifying the template identifier.
+#'   Supported values include:
+#'   \itemize{
+#'     \item `"_read_data.mustache"` - Parameters for data reading operations
+#'     \item `"_init_domain.mustache"` - Parameters for domain initialization
+#'     \item `"_filter_domain.mustache"` - Parameters for domain filtering
+#'     \item `"_col_mutate.mustache"` - Parameters for column mutation
+#'     \item `"_col_echo.mustache"` - Parameters for column echoing
+#'     \item `"_write_data.mustache"` - Parameters for data writing operations
+#'   }
+#'   Any other value defaults to column compute parameter formatting.
+#'
+#' @param .self The current ADaM domain.
+#'
+#' @param output_cols Character vector of output column names.
+#'
+#' @param depend_domains Character vector of domain names that the current
+#'   operation depends on.
+#'
+#' @param depend_columns Character vector of column names that the current
+#'   operation depends on.
+#'
+#' @param action_parameters List or object containing parameters specific to
+#'   the action being performed. Used for compute operations when no specific
+#'   template match is found.
+#'
+#' @param node_id Identifier for the current processing node.
+#'
+#' @param path_trial Character string specifying the file path to the trial
+#'   data directory.
+#'
+#' @param domain_ui_data List containing UI-related domain metadata, including
+#'   initialization metadata accessed via `domain_ui_data$init`.
+#'
+#' @param domain_keys Character vector or list specifying the key columns
+#'   that uniquely identify records within the domain.
+#'
+#' @param is_final_pgm Logical value indicating whether this is the final
+#'   program in the processing pipeline. Used for write operations.
+#'
+#' @param available_data Object or list containing information about currently
+#'   available data sources and their status.
+#'
+#' @return
+#' Returns a list or object containing the formatted parameters appropriate
+#' for the specified template. The structure and content depend on the
+#' `code_id` value:
+#' \itemize{
+#'   \item For recognized template IDs: Structured parameter list specific to that template
+#'   \item For unrecognized IDs: Formatted column compute parameters
+#' }
+#'
+#' @details
+#' This function acts as a parameter factory, routing different code generation
+#' scenarios to their appropriate parameter formatting functions. Each template
+#' type requires different parameter structures and this function ensures the
+#' correct parameters are generated for each use case.
+#'
+#' The function uses a switch statement to dispatch to specialized parameter
+#' generation functions based on the template identifier. This design allows
+#' for easy extension of new template types while maintaining a consistent
+#' interface.
+#'
+#'
 define_params <- function(
   code_id,
   .self,
@@ -174,10 +258,20 @@ add_hash <- function(text) {
   return(result)
 }
 
-#' @noRd
-#' Needed for mustache components stored in mighty. These code ids need to be transformed into
-#' a relative path to where the components are located so that get_rendered_component will
-#'  know where to source the files from
+#' Format Internal Code ID for Mustache Components
+#'
+#' @description
+#' Transforms internal code IDs (prefixed with "_") into relative paths for
+#' mustache components stored in the mighty package, enabling proper file
+#' sourcing by get_rendered_component.
+#'
+#' @param code_id Character string representing the code ID. Internal components
+#'   should be prefixed with "_".
+#'
+#' @return
+#' Character string containing the full system path to the component file for
+#' internal code IDs, or the original code_id for external components.
+#'
 format_internal_code_id <- function(code_id) {
   if(!startsWith(code_id, "_")){
     return(code_id)
@@ -194,8 +288,9 @@ compile_into_programs <- function(actions) {
   program_names <- paste0(seq_along(program_names), "_", program_names)
 
   programs <- program_blocs |>
-    lapply(collapse_code) |>
-    setNames(program_names)
+    lapply(collapse_code)
+  names(programs) <- program_names
+  return(programs)
 }
 
 collapse_code <- function(program_i) {

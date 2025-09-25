@@ -13,27 +13,29 @@ check_adam_dependencies_within_domain(
 )
 }
 \arguments{
-\item{adam_dep_by_domain}{List mapping domain names to their ADaM
-dependencies}
+\item{domain}{Character string representing the domain name to check.}
 
-\item{outputs}{Character vector of available outputs}
+\item{adam_dep_by_domain}{List mapping domain names to their ADaM dependencies.}
 
-\item{nm}{Character string representing the domain name to check}
+\item{outputs}{Character vector of available output columns.}
 
-\item{x_by_domain}{List of data frames split by domain containing dependency
-information}
+\item{actions_by_domain}{List of data frames split by domain containing
+action dependency information.}
+
+\item{filter_dep_by_domain}{List mapping domain names to their filter dependencies.}
 }
 \value{
-Error message as a string if any dependencies are missing, otherwise
-NULL
+Invisible NULL if all dependencies are satisfied, or a character string
+containing a detailed error message listing missing columns and affected
+actions/filters within the domain.
 }
 \description{
-Checks if all required internal parent columns within a specific
-ADaM domain are present.
+Validates that all required parent columns within a specific ADaM domain
+are available, returning an error message if any are missing.
 }
 \details{
-Examines a specific domain to ensure that all required
-parent columns within that domain are available in the outputs. If any
-required parent columns are missing, it generates a detailed error message
-showing which columns are missing and which actions require those columns.
+The function focuses on internal dependencies within a single domain,
+identifying missing parent columns that are required by actions or filters
+in the same domain. Returns formatted error messages for integration into
+larger validation workflows.
 }

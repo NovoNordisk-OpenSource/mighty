@@ -43,7 +43,7 @@ handle_validation_errors <- function(is_valid, yaml_file, verbose) {
   errors <- attr(is_valid, "errors")
 
   error_info <- format_errors(errors, yaml_file)
-  
+
   if (is.null(error_info$messages)) {
     cli::cli_abort(c(
       "x" = error_info$header,
@@ -66,12 +66,12 @@ handle_validation_errors <- function(is_valid, yaml_file, verbose) {
 #' @noRd
 format_validation_error <- function(error_row) {
   # Keep the excellent path formatting
-  
+
   path <- format_error_path(error_row$instancePath, error_row)
 
   # Use template-based formatting
   message <- format_error_message(error_row)
-  
+
   glue::glue("{path}: {message}")
 }
 
@@ -92,9 +92,9 @@ format_error_message <- function(error_row) {
     minLength = "String must be at least {params$limit} characters long. Current length: {nchar(as.character(error_row$data))}.",
     oneOf = "Value matches multiple schemas or none at all. Please check the allowed formats."
   )
-  
+
   template <- enhanced_messages[[keyword]] %||% error_row$message
-  
+
   # Handle missing parameters gracefully
   tryCatch({
     glue::glue(template)
@@ -112,9 +112,9 @@ extract_error_params <- function(error_row) {
   if (!"params" %in% names(error_row) || is.null(error_row$params)) {
     return(list())
   }
-  
+
   params <- error_row$params
-  
+
   # Handle both data.frame and list params
   if (is.data.frame(params)) {
     as.list(params[1, , drop = FALSE])
@@ -131,6 +131,7 @@ extract_error_params <- function(error_row) {
 #' @return Enhanced, human-readable path
 #' @noRd
 format_error_path <- function(path, error_row = NULL) {
+
   base <- if (is.na(path) || path == "") "Root level" else enhance_path_readability(path, error_row)
   # Append offending property when AJV provides it
   offender <- extract_offending_member(error_row)
@@ -170,7 +171,7 @@ format_errors <- function(errors, yaml_file) {
 
 #' @noRd
 enhance_path_readability <- function(path, error_row = NULL) {
-  
+
   if (grepl("/\\d+(?:/|$)", path)) {
     return(enhance_array_indices(path, error_row))
   }
@@ -187,7 +188,7 @@ enhance_array_indices <- function(path, error_row) {
 
   if (match_data[1] != -1) {
     for (i in length(match_data):1) {
-      
+
       match_start <- match_data[i]
       match_length <- attr(match_data, "match.length")[i]
       segment <- substr(path, match_start, match_start + match_length - 1)
@@ -248,7 +249,7 @@ find_array_element_identifier <- function(error_row, array_name, array_index) {
 #' @noRd
 clean_path_formatting <- function(path) {
   clean <- sub("^/", "", path)
-  gsub("/", " → ", clean)
+  gsub("/", " -> ", clean)
 }
 
 #' Extract offending member name (property) from AJV error params

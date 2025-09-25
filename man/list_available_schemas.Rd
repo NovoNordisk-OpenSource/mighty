@@ -2,10 +2,14 @@
 % Please edit documentation in R/validate_yaml.R
 \name{list_available_schemas}
 \alias{list_available_schemas}
-\title{List available schemas}
+\title{List Available Schemas}
 \usage{
 list_available_schemas()
 }
+\value{
+Character vector of schema names (without .json extension), or empty vector
+if no schemas are found.
+}
 \description{
-List available schemas
+Returns a vector of available schema names from the package's schemas directory.
 }

@@ -1,3 +1,23 @@
+#' Classify Data Domain Names by Type
+#'
+#' @description
+#' Classifies domain names into categories (SDTM, ADaM, metadata, core, self)
+#' based on clinical data naming conventions.
+#'
+#' @param vector Character vector of domain names to classify.
+#'
+#' @return
+#' Character vector with classifications:
+#' \itemize{
+#'   \item `"sdtm"` - 2-char domains, "relrec", "dm_*", "supp*"
+#'   \item `"adam"` - Names starting with "ad"
+#'   \item `"md"` - Names starting with "md"
+#'   \item `"core"` - Exactly "core"
+#'   \item `"self"` - Other names without dots
+#' }
+#'
+#' @details
+#' Throws error for unrecognized domain names.
 classify_data_domains <- function(vector) {
   result <- character(length(vector))
   result[!grepl("\\.", vector, ignore.case = TRUE)] <- "self"

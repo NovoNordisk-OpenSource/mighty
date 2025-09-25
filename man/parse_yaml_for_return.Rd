@@ -2,10 +2,16 @@
 % Please edit documentation in R/validate_yaml.R
 \name{parse_yaml_for_return}
 \alias{parse_yaml_for_return}
-\title{Parse YAML file for return value}
+\title{Parse YAML File for Return Value}
 \usage{
 parse_yaml_for_return(yaml_file)
 }
+\arguments{
+\item{yaml_file}{Path to the YAML file to parse.}
+}
+\value{
+Parsed YAML content as an R object (list, vector, etc.).
+}
 \description{
-Parse YAML file for return value
+Reads and parses a YAML file into an R object with error handling.
 }

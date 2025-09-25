@@ -12,29 +12,26 @@ check_adam_dependencies_cross_domain(
 )
 }
 \arguments{
-\item{adam_dep_by_domain}{List mapping domain names to their ADaM
-dependencies}
+\item{actions}{Data frame containing action dependency information.}
 
-\item{outputs}{Character vector of available outputs}
+\item{adam_dep_by_domain}{List mapping domain names to their ADaM dependencies.}
 
-\item{x}{Data frame containing dependency information}
+\item{outputs}{Character vector of available output columns.}
 
-\item{domains}{Character vector of domain names}
-
-\item{adsl_filter_dep_by_domain}{List mapping domain names to their ADSL
-filter dependencies}
+\item{filter_dep_by_domain}{List mapping domain names to their filter dependencies.}
 }
 \value{
-Nothing if all dependencies are present; stops with an error message
-if dependencies are missing
+Invisible NULL if all dependencies are satisfied. Stops execution with a
+detailed error message listing missing columns and affected actions/filters
+if dependencies are not met.
 }
 \description{
-Checks if all external ADaM dependencies are present in the
-outputs.
+Validates that all required ADaM column dependencies across domains are
+available in the outputs, stopping with a detailed error if any are missing.
 }
 \details{
-Verifies that all ADaM column dependencies across domains are
-included in the outputs. If any dependencies are missing, it generates a
-detailed error message showing which columns are missing and which actions or
-filters require those columns.
+The function identifies missing ADaM dependencies by comparing required
+columns against available outputs. When dependencies are missing, it
+generates an informative error showing which columns are needed and
+which specific actions or domain filters require them.
 }

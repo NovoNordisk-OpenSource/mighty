@@ -20,3 +20,13 @@ Character string of the output file path.
 \description{
 Writes a single ADaM domain specification to a YAML file.
 }
+\examples{
+\dontrun{
+# Write single domain spec
+output_path <- write_adam_domain_yml(adsl_spec, "ADSL.yml")
+
+# Write to specific directory
+output_path <- write_adam_domain_yml(adae_spec, "specs/ADAE.yml")
+}
+
+}

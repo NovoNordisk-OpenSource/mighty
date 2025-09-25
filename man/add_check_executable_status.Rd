@@ -2,20 +2,37 @@
 % Please edit documentation in R/add_check_executable_status.R
 \name{add_check_executable_status}
 \alias{add_check_executable_status}
-\title{Checks each actions executable state based on available data}
+\title{Check Executable Status of Actions Based on Available Data}
 \usage{
 add_check_executable_status(actions, ui_data, data_context)
 }
 \arguments{
-\item{actions}{A data.table containing information on dependencies, output columns, actions etc.
-\code{can_execute}, \code{missing_dependencies}, and \code{lineage}}
+\item{actions}{A data.table containing action information including
+dependencies, output columns, and action specifications.}
 
-\item{data_context}{An R6 object of class \link{data_context} that contains
-information on available data in a given \code{connector} object}
+\item{ui_data}{UI configuration data used during action processing.}
+
+\item{data_context}{An R6 object of class \link{data_context} containing
+information on available data in a given connector object. If NULL,
+default execution status is applied.}
 }
 \value{
-A data.table containing action data with the additional columns
+A list with two elements:
+\itemize{
+\item \code{actions} - Enhanced data.table with additional columns:
+\code{can_execute}, \code{missing_dependencies}, \code{removed_outputs},
+\code{removed_depend_cols}, and \code{lineage}
+\item \code{available_columns} - Updated available columns after processing
+all actions, or NULL if data_context is NULL
+}
 }
 \description{
-Checks each actions executable state based on available data
+Evaluates each action's ability to execute by checking data dependencies
+and updates the actions table with execution status information.
+}
+\details{
+The function processes actions sequentially, updating available data
+after each action to reflect the cumulative effect on data availability.
+Actions that cannot execute due to missing dependencies are flagged
+accordingly.
 }

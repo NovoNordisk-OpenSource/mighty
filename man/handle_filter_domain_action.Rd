@@ -6,6 +6,30 @@
 \usage{
 handle_filter_domain_action(action, processed_actions, available_cols, ui_data)
 }
+\arguments{
+\item{action}{Action object containing filter domain specifications.}
+
+\item{processed_actions}{Data table of previously processed actions.}
+
+\item{available_cols}{Data frame of currently available columns.}
+
+\item{ui_data}{List containing UI specifications including filter dependencies.}
+}
+\value{
+Modified action object with updated execution status, dependencies, outputs,
+and lineage information.
+}
 \description{
-Handler for _filter_domain.mustache
+Processes filter domain actions by checking dependencies against available
+columns and handling cases where filtering columns are missing from source data.
+}
+\details{
+This handler manages two scenarios:
+\itemize{
+\item Domain-specific filters (columns without dot separation)
+\item Global filters (columns with domain prefixes)
+}
+
+The function determines if a filter can execute based on whether the required
+filtering columns are available in the processed data.
 }

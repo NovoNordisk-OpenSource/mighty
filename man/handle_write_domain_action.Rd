@@ -2,10 +2,37 @@
 % Please edit documentation in R/add_check_executable_status.R
 \name{handle_write_domain_action}
 \alias{handle_write_domain_action}
-\title{Handler for _write_domain.mustache action}
+\title{Handler for _write_domain.mustache Action}
 \usage{
 handle_write_domain_action(action, processed_actions, available_cols, ui_data)
 }
+\arguments{
+\item{action}{Action object containing write domain specifications.}
+
+\item{processed_actions}{Data table of previously processed actions, used
+to find the corresponding init_domain action.}
+
+\item{available_cols}{Data frame of currently available columns (unused
+in this handler).}
+
+\item{ui_data}{List containing UI specifications (unused in this handler).}
+}
+\value{
+Modified action object with updated execution status, dependencies, outputs,
+and lineage information reflecting any columns that cannot be written due
+to missing source data.
+}
 \description{
-Handler for _write_domain.mustache action
+Processes write domain actions by checking dependencies against the
+corresponding init_domain action and adjusting outputs based on any
+columns that were removed due to missing source data.
+}
+\details{
+This handler manages the final data writing step by:
+\itemize{
+\item Checking if the corresponding init_domain action had missing outputs
+\item Inheriting execution status from the init_domain action
+\item Adjusting dependencies and outputs to exclude any unavailable columns
+\item Ensuring consistency between initialization and writing phases
+}
 }

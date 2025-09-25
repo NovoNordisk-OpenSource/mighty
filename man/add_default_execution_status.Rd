@@ -2,10 +2,17 @@
 % Please edit documentation in R/add_check_executable_status.R
 \name{add_default_execution_status}
 \alias{add_default_execution_status}
-\title{Add default execution status when no data context is provided}
+\title{Add Default Execution Status to Actions}
 \usage{
 add_default_execution_status(actions)
 }
+\arguments{
+\item{actions}{A data.table containing action information.}
+}
+\value{
+A copy of the input data.table with added columns describing execution status.
+\code{missing_dependency} (NA), \code{lineage} (""), and \code{removed_outputs} ("").
+}
 \description{
-Add default execution status when no data context is provided
+Sets default execution status for all actions when no data context is available.
 }

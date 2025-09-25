@@ -2,10 +2,19 @@
 % Please edit documentation in R/sort_actions.R
 \name{find_remaining_upstream_dependencies}
 \alias{find_remaining_upstream_dependencies}
-\title{Find domains that still have remaining upstream dependencies}
+\title{Find Domains That Still Have Remaining Upstream Dependencies}
 \usage{
 find_remaining_upstream_dependencies(adj_matrix, lkp_dom)
 }
+\arguments{
+\item{adj_matrix}{Adjacency matrix representing dependencies between actions.}
+
+\item{lkp_dom}{Named vector mapping action names to their corresponding domains.}
+}
+\value{
+Character vector of domain names that still have upstream dependencies.
+}
 \description{
-Find domains that still have remaining upstream dependencies
+Identifies domains that have unresolved upstream dependencies by analyzing
+a domain-level adjacency matrix derived from action dependencies.
 }

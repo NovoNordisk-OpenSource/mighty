@@ -1,11 +1,24 @@
-add_read_data_actions <- function(actions, ui_init) {
+#' Add Read Data Actions
+#'
+#' @description
+#' Creates and adds read_data actions to the existing actions data table for
+#' loading required input data dependencies at the beginning of each program.
+#'
+#' @param actions Data table containing existing action definitions with columns
+#'   including program_id, domain, depend_cols, and outputs.
+#'
+#' @return
+#' Data table combining original actions with new read_data actions, sorted by
+#' program_id and rank to ensure proper execution order.
+#'
+add_read_data_actions <- function(actions) {
 
   actions_by_pgm <- split(actions, by = "program_id")
 
   # Extract actions from initial ADaM programs
   min_pgm <- actions |>
-    dplyr::group_by(domain) |>
-    dplyr::summarise(program_id = min(program_id))
+    dplyr::group_by(.data$domain) |>
+    dplyr::summarise(program_id = min(.data$program_id))
   init_pgm <- min_pgm$program_id
   names(init_pgm) <- min_pgm$domain
 
@@ -18,14 +31,14 @@ add_read_data_actions <- function(actions, ui_init) {
       dep_cols <- x$depend_cols |>
         rbindlist() |>
         unique() |>
-        dplyr::filter(domain != dom)
+        dplyr::filter(.data$domain != dom)
     } else {
       dep_cols0 <- x$depend_cols |>
         rbindlist() |>
         unique()
       outputs0 <- x$outputs |> unlist()
       dep_cols <- dep_cols0 |>
-        dplyr::filter(!(column_name %in% outputs0 & domain == dom))
+        dplyr::filter(!(.data$column_name %in% outputs0 & .data$domain == dom))
     }
 
     # Create read_data actions
@@ -47,9 +60,6 @@ add_read_data_actions <- function(actions, ui_init) {
 
   # Add read_data actions to existing set of actions
   rbind(actions, read_data_actions) |>
-    dplyr::arrange(program_id, rank)
+    dplyr::arrange(.data$program_id, .data$rank)
 
 }
-
-
-

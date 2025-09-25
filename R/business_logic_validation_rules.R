@@ -8,7 +8,7 @@
 #' @return List with 'valid' (logical) and 'errors' (character vector)
 #' @noRd
 val_no_params_when_missing_code_id <- function(yaml_data, context = list()) {
-  
+
   inx <- vapply(
     yaml_data$column_action,
     function(i) !is.null(i$parameters) && is.null(i$code_id),
@@ -24,7 +24,7 @@ val_no_params_when_missing_code_id <- function(yaml_data, context = list()) {
     valid = FALSE,
     errors = c(
       glue::glue("The following columns have parameters but no code_id:"),
-      paste0("  • ", problems)
+      paste0("  - ", unlist(problems))
     )
   )
 }
@@ -50,7 +50,7 @@ val_no_duplicate_columns <- function(yaml_data, context = list()) {
     valid = FALSE,
     errors = c(
       glue::glue("The following columns are defined multiple times:"),
-      paste0("  • ", column_duplicates)
+      paste0("  - ", column_duplicates)
     )
   )
 }
@@ -65,7 +65,7 @@ val_no_duplicate_columns <- function(yaml_data, context = list()) {
 #' @return List with 'valid' (logical) and 'errors' (character vector)
 #' @noRd
 val_no_duplicate_row_ids <- function(yaml_data, context = list()) {
-  
+
   row_ids <- names(yaml_data$row_action)
   row_duplicates <- row_ids[duplicated(row_ids)]
 
@@ -77,7 +77,7 @@ val_no_duplicate_row_ids <- function(yaml_data, context = list()) {
     valid = FALSE,
     errors = c(
       glue::glue("The following row id(s) are defined multiple times:"),
-      paste0("  • ", row_duplicates)
+      paste0("  - ", row_duplicates)
     )
   )
 }
@@ -92,7 +92,7 @@ val_no_duplicate_row_ids <- function(yaml_data, context = list()) {
 #' @return List with 'valid' (logical) and 'errors' (character vector)
 #' @noRd
 val_depend_rows <-  function(yaml_data, context = list()) {
-  
+
   a <- lapply(yaml_data$column_action, `[[`, "depend_rows") |> unlist()
   b <-  lapply(yaml_data$row_action, `[[`, "depend_rows") |> unlist()
   all_row_depends <- c(a, b)
@@ -110,7 +110,7 @@ val_depend_rows <-  function(yaml_data, context = list()) {
     valid = FALSE,
     errors = c(
       "The following row actions are not defined, but are listed as row dependencies for either a column or another row action: ",
-      paste0("  • ", missing_row_actions)
+      paste0("  - ", missing_row_actions)
     )
   )
 }
@@ -128,7 +128,7 @@ val_source_and_code_id_notboth_populated <- function(
   yaml_data,
   context = list()
 ) {
- 
+
   inx <- vapply(
     yaml_data$column_action,
     function(i) !is.null(i$code_id) && !is.null(i$source),
@@ -145,8 +145,8 @@ val_source_and_code_id_notboth_populated <- function(
   list(
     valid = FALSE,
     errors = c(
-      "The following columns have both `source` and `code_id` field populated:",
-      paste0("  • ", problem_columns)
+      "The following columns have both `source` and `code_id` field populated: ",
+      paste0("  - ", problem_columns)
     )
   )
 }

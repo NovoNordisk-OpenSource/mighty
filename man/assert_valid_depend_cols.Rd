@@ -12,20 +12,73 @@ assert_valid_depend_cols(
 )
 }
 \arguments{
-\item{ui_yml}{A list containing UI configuration, which includes the
-initialization parameters needed for filtering dependency columns.}
+\item{actions}{A data.frame containing action metadata with required columns:
+\describe{
+\item{type}{Character. Action type (e.g., "col_*" for column actions)}
+\item{domain}{Character. ADaM domain identifier}
+\item{depend_cols}{List. Column dependencies for each action}
+\item{outputs}{List. Expected output columns for each action}
+}}
 
-\item{check_cross_domain_adam_dependencies}{}
+\item{ui_yml}{A list containing UI configuration with initialization parameters
+used for filtering and extracting dependency columns across domains.}
 
-\item{x}{A data.frame containing action metadata, including columns for
-'type', 'domain', 'depend_cols', and 'outputs'.}
+\item{domain_keys}{Character vector of domain key identifiers used to extract
+filter dependencies and establish cross-domain relationships.}
+
+\item{check_cross_domain_adam_dependencies}{Logical. If \code{TRUE}, performs
+cross-domain dependency validation. If \code{FALSE}, only validates dependencies
+within each individual ADaM domain.}
 }
 \value{
-An invisible copy of the input data.frame if all dependencies are valid.
+Invisibly returns the input \code{actions} data.frame unchanged if all
+dependency validations pass.
 }
 \description{
-This function checks if all specified dependency columns for each action
-in a given dataset are present in the corresponding outputs. If any dependency
-columns are missing, it generates an error message indicating the missing columns
-and the actions they are required for.
+This function validates that all specified dependency columns for each action
+in a dataset are present in the corresponding outputs. It performs comprehensive
+dependency checking both within and across ADaM domains, including filter
+dependencies and action dependencies.
+}
+\details{
+The function performs the following validation steps:
+\enumerate{
+\item Extracts ADaM column dependencies from UI filters, including implied
+join keys for external dependencies
+\item Splits actions by domain for domain-specific processing
+\item Combines dependencies from two sources: filters on the domain and
+actions within the domain
+\item Extracts outputs from column actions (identified by "col" prefix)
+\item Validates dependencies either within domains only or across all domains
+based on the \code{check_cross_domain_adam_dependencies} parameter
+}
+}
+\section{Error Handling}{
+
+The function stops execution with an informative error message if any
+dependency columns are missing from the outputs for any domain. Error
+messages indicate which columns are missing and which actions require them.
+}
+
+\examples{
+\dontrun{
+# Example actions data.frame
+actions <- data.frame(
+  type = c("col_derive", "col_merge"),
+  domain = c("ADSL", "ADAE"),
+  depend_cols = list(c("USUBJID"), c("USUBJID", "AEDECOD")),
+  outputs = list(c("USUBJID", "AGE"), c("USUBJID", "AEDECOD", "AESEV"))
+)
+
+# Validate dependencies within domains only
+assert_valid_depend_cols(actions, ui_yml, domain_keys,
+                        check_cross_domain_adam_dependencies = FALSE)
+}
+
+}
+\seealso{
+\code{\link[=get_filter_adam_dependencies]{get_filter_adam_dependencies()}} for extracting filter dependencies,
+\code{\link[=get_all_adam_dependencies]{get_all_adam_dependencies()}} for combining dependency sources,
+\code{\link[=check_adam_dependencies_cross_domain]{check_adam_dependencies_cross_domain()}} for cross-domain validation,
+\code{\link[=check_adam_dependencies_within_domain]{check_adam_dependencies_within_domain()}} for within-domain validation
 }

@@ -284,7 +284,7 @@ test_that("Invalid variable names in primary keys fail validation", {
 
   yaml_content <- "
 trial_id: '0001'
-project_id: '1234'  
+project_id: '1234'
 complete_id: '0001-1234'
 instance: 'current'
 primary_keys_sdtm:
@@ -305,13 +305,13 @@ primary_keys_md:
   # ACT / ASSERT ---------------------------------------------------------------
 
   validate_yaml(yaml_file, "trial_metadata_schema", use_yq = TRUE) |>
-    expect_error("Error location: primary_keys_sdtm → EX → item 2 | Error message: String does not match pattern")
+    expect_error("Error location: primary_keys_sdtm -> EX -> item 2 | Error message: String does not match pattern")
 
   validate_yaml(yaml_file, "trial_metadata_schema", use_yq = TRUE) |>
-    expect_error("Error location: primary_keys_sdtm → EX → item 3 | Error message: String does not match pattern")
+    expect_error("Error location: primary_keys_sdtm -> EX -> item 3 | Error message: String does not match pattern")
 
   validate_yaml(yaml_file, "trial_metadata_schema", use_yq = TRUE) |>
-    expect_error("Error location: primary_keys_sdtm → EX → item 4 | Error message: String is too short")
+    expect_error("Error location: primary_keys_sdtm -> EX -> item 4 | Error message: String is too short")
 })
 
 
@@ -337,7 +337,7 @@ primary_keys_md:
   # ACT / ASSERT ---------------------------------------------------------------
 
   validate_yaml(yaml_file, "trial_metadata_schema", use_yq = TRUE) |>
-    expect_error("Error location: primary_keys_sdtm → EX | Error message: Expected type 'array', must be array")
+    expect_error("Error location: primary_keys_sdtm -> EX | Error message: Expected type 'array', must be array")
 })
 
 
@@ -366,7 +366,7 @@ primary_keys_md:
   # ACT / ASSERT ---------------------------------------------------------------
 
   validate_yaml(yaml_file, "trial_metadata_schema", use_yq = TRUE) |>
-    expect_error("Error location: primary_keys_sdtm → EX | Error message: Array items are not unique")
+    expect_error("Error location: primary_keys_sdtm -> EX | Error message: Array items are not unique")
 })
 
 
@@ -493,6 +493,6 @@ primary_keys_md:
   # ACT / ASSERT ---------------------------------------------------------------
 
   yaml_file |>
-    validate_yaml("trial_metadata_schema", use_yq = TRUE) |> 
+    validate_yaml("trial_metadata_schema", use_yq = TRUE) |>
     expect_error(class = "validation_error")
 })

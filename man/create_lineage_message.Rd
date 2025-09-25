@@ -2,7 +2,7 @@
 % Please edit documentation in R/add_check_executable_status.R
 \name{create_lineage_message}
 \alias{create_lineage_message}
-\title{Create lineage message for missing dependencies}
+\title{Create Lineage Message for Missing Dependencies}
 \usage{
 create_lineage_message(
   message,
@@ -11,6 +11,21 @@ create_lineage_message(
   report_missing_outputs = FALSE
 )
 }
+\arguments{
+\item{message}{Base error message to display.}
+
+\item{action}{Action object containing execution status and dependency information.}
+
+\item{dependencies}{Optional vector of missing dependencies to override action's dependencies.}
+
+\item{report_missing_outputs}{Logical, whether to include missing output columns
+in the message (default FALSE).}
+}
+\value{
+Character string containing the formatted lineage message, or empty string
+if action can execute.
+}
 \description{
-Create lineage message for missing dependencies
+Generates a formatted error message for actions that cannot execute due to
+missing dependencies.
 }

@@ -13,16 +13,52 @@ The \code{data_context} class is designed to work with \code{connector} objects 
 provide access to different datasources (e.g., SDTM, ADaM). It automatically
 discovers available tables and their variable structures, storing them as
 \code{table_metadata} objects for efficient querying.
+
+Key features include:
+\itemize{
+\item Automatic table discovery from connector datasources
+\item Variable type and label inspection without data loading
+\item Cross-datasource table and variable querying
+\item Read-only access to table metadata for safe exploration
 }
-\section{Usage}{
+
+The class supports both immediate initialization with a connector or
+deferred initialization for flexible setup workflows.
+}
+\section{Initialization Patterns}{
 
 
-\if{html}{\out{<div class="sourceCode r">}}\preformatted{# Create with connector
-dc <-  data_context$new(connector = my_connector)
+\strong{Direct initialization:}
 
-# Create empty and initialize later
-dc <- data_context$new()
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{dc <- data_context$new(connector = my_connector)
+}\if{html}{\out{</div>}}
+
+\strong{Deferred initialization:}
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{dc <- data_context$new()
 dc$init_tables("sdtm")
+}\if{html}{\out{</div>}}
+}
+
+\section{Common Workflows}{
+
+
+\strong{Explore available data:}
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{# Discover datasources and tables
+datasources <- dc$get_datasource_names()
+tables <- dc$get_table_names(c("sdtm", "adam"))
+
+# Inspect table structure
+dm_vars <- dc$get_table_variables("dm", "sdtm")
+}\if{html}{\out{</div>}}
+
+\strong{Variable validation:}
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{# Check variable existence and properties
+has_age <- dc$has_variables("dm", "AGE", "sdtm")
+age_type <- dc$get_variable_type("dm", "AGE", "sdtm")
+age_label <- dc$get_variable_label("dm", "AGE", "sdtm")
 }\if{html}{\out{</div>}}
 }
 
@@ -31,25 +67,21 @@ dc$init_tables("sdtm")
 # Initialize with connector
 dc <- data_context$new(connector = my_connector)
 
-# Get available datasources
+# Explore available data
 datasources <- dc$get_datasource_names()
-
-# Get table names from SDTM
 sdtm_tables <- dc$get_table_names("sdtm")
 
-# Check if variable exists
-has_age <- dc$has_variable("dm", "AGE", "sdtm")
-
-# Get variable information
+# Variable inspection
+has_age <- dc$has_variables("dm", "AGE", "sdtm")
 age_type <- dc$get_variable_type("dm", "AGE", "sdtm")
 age_label <- dc$get_variable_label("dm", "AGE", "sdtm")
 
-# Print summary
-dc$print_summary()
-}
+# Get overview
+dc$print()
 
-# Access tables (read-only)
+# Access metadata (read-only)
 all_tables <- dc$tables
+}
 
 
 ## ------------------------------------------------
@@ -137,7 +169,7 @@ age_type <- dc$get_variable_type("dm", "AGE", "sdtm")
 print(age_type)  # e.g., "numeric"
 
 # Check types for multiple variables
-var_types <- sapply(c("AGE", "SEX", "USUBJID"), 
+var_types <- sapply(c("AGE", "SEX", "USUBJID"),
                    function(var) dc$get_variable_type("dm", var, "sdtm"))
 }
 
@@ -151,9 +183,9 @@ age_label <- dc$get_variable_label("dm", "AGE", "sdtm")
 print(age_label)  # e.g., "Age"
 
 # Get labels for multiple variables
-var_labels <- sapply(c("AGE", "SEX", "RACE"), 
+var_labels <- sapply(c("AGE", "SEX", "RACE"),
                     function(var) dc$get_variable_label("dm", var, "sdtm"))
-}   
+}
 
 ## ------------------------------------------------
 ## Method `data_context$print`
@@ -371,7 +403,7 @@ sapply(dm_vars, class)
 \subsection{Method \code{has_variables()}}{
 Check if a variable exists in a specific table
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{data_context$has_variables(table_name, variable_names, datasource = "sdtm")}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{data_context$has_variables(table_name, variable_name, datasource = "sdtm")}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -379,7 +411,7 @@ Check if a variable exists in a specific table
 \describe{
 \item{\code{table_name}}{Character string specifying the table name}
 
-\item{\code{variable_names}}{Character vector specifying the variable names}
+\item{\code{variable_name}}{Character vector specifying the variable names}
 
 \item{\code{datasource}}{Character string specifying the datasource name.
 Default is "sdtm".}
@@ -436,7 +468,7 @@ age_type <- dc$get_variable_type("dm", "AGE", "sdtm")
 print(age_type)  # e.g., "numeric"
 
 # Check types for multiple variables
-var_types <- sapply(c("AGE", "SEX", "USUBJID"), 
+var_types <- sapply(c("AGE", "SEX", "USUBJID"),
                    function(var) dc$get_variable_type("dm", var, "sdtm"))
 }
 }
@@ -478,9 +510,9 @@ age_label <- dc$get_variable_label("dm", "AGE", "sdtm")
 print(age_label)  # e.g., "Age"
 
 # Get labels for multiple variables
-var_labels <- sapply(c("AGE", "SEX", "RACE"), 
+var_labels <- sapply(c("AGE", "SEX", "RACE"),
                     function(var) dc$get_variable_label("dm", var, "sdtm"))
-}   
+}
 }
 \if{html}{\out{</div>}}
 

@@ -64,7 +64,7 @@ setup_testdata <- function(testdata = c("pharmaverse"),
         tryCatch({
           dataset <- eval(parse(text = paste0("pharmaversesdtm::", x)))
           if (!is.null(remove_cols)) {
-              dataset <- dataset %>% dplyr::select(-all_of(remove_cols[domain==x]$columns))
+              dataset <- dataset |> dplyr::select(-all_of(remove_cols[domain==x]$columns))
           }
           arrow::write_parquet(
             dataset,
@@ -86,7 +86,7 @@ setup_testdata <- function(testdata = c("pharmaverse"),
         tryCatch({
           dataset <- eval(parse(text = paste0("pharmaverseadam::", x)))
           if (!is.null(remove_cols)) {
-              dataset <- dataset %>% dplyr::select(-all_of(remove_cols[domain==x]$columns))
+              dataset <- dataset |> dplyr::select(-all_of(remove_cols[domain==x]$columns))
           }
           arrow::write_parquet(
             dataset,

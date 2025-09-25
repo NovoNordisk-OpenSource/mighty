@@ -2,14 +2,19 @@
 % Please edit documentation in R/collate_primary_keys.R
 \name{collate_primary_keys}
 \alias{collate_primary_keys}
-\title{Collate primary keys}
+\title{Collate Primary Keys}
 \usage{
 collate_primary_keys(trial_metadata_keys)
 }
+\arguments{
+\item{trial_metadata_keys}{List containing primary key information with
+elements \code{primary_keys_sdtm}, \code{primary_keys_adam}, and \code{primary_keys_md}.}
+}
 \value{
-a list where each element is a named vector conaing the priarmy keys
-for that domain
+A list where each element is a named vector containing the primary keys
+for that domain, combining all three data sources.
 }
 \description{
-Collects the primary key information produces a single list
+Combines primary key information from SDTM, ADaM, and metadata sources
+into a single consolidated list.
 }

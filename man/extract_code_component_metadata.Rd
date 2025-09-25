@@ -8,8 +8,6 @@ extract_code_component_metadata(code_component_metadata)
 }
 \arguments{
 \item{code_component_metadata}{List of metadata for code components, indexed by code_id}
-
-\item{ui_data}{Data table containing UI data with code_id references}
 }
 \value{
 Data table with formatted metadata for active code IDs, or NULL if no metadata found

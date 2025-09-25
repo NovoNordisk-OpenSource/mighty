@@ -1,10 +1,31 @@
-#' Checks each actions executable state based on available data
-#' @param data_context An R6 object of class \link{data_context} that contains 
-#' information on available data in a given \code{connector} object
+#' Check Executable Status of Actions Based on Available Data
 #'
-#' @returns A data.table containing action data with the additional columns
-#' @param actions A data.table containing information on dependencies, output columns, actions etc.
-#' \code{can_execute}, \code{missing_dependencies}, and \code{lineage} 
+#' @description
+#' Evaluates each action's ability to execute by checking data dependencies
+#' and updates the actions table with execution status information.
+#'
+#' @param actions A data.table containing action information including
+#'   dependencies, output columns, and action specifications.
+#' @param ui_data UI configuration data used during action processing.
+#' @param data_context An R6 object of class \link{data_context} containing
+#'   information on available data in a given connector object. If NULL,
+#'   default execution status is applied.
+#'
+#' @return
+#' A list with two elements:
+#' \itemize{
+#'   \item `actions` - Enhanced data.table with additional columns:
+#'     `can_execute`, `missing_dependencies`, `removed_outputs`,
+#'     `removed_depend_cols`, and `lineage`
+#'   \item `available_columns` - Updated available columns after processing
+#'     all actions, or NULL if data_context is NULL
+#' }
+#'
+#' @details
+#' The function processes actions sequentially, updating available data
+#' after each action to reflect the cumulative effect on data availability.
+#' Actions that cannot execute due to missing dependencies are flagged
+#' accordingly.
 #'
 add_check_executable_status <-  function(actions, ui_data, data_context) {
   if (is.null(data_context)) {
@@ -14,18 +35,18 @@ add_check_executable_status <-  function(actions, ui_data, data_context) {
   available_cols <- determine_available_columns(data_context)
 
   # initialise actions - will be a copy of actions with modified columns
-  # * depend_cols, 
-  # * outputs, 
-  # added columns 
-  # + can_execute, 
-  # + missing_dependency, 
-  # + removed_outputs, 
+  # * depend_cols,
+  # * outputs,
+  # added columns
+  # + can_execute,
+  # + missing_dependency,
+  # + removed_outputs,
   # + lineage
   actions_execute <- data.table()
 
   for (action_id in seq_len(nrow(actions))) {
     action <- actions[action_id]
-    updated_action  <- process_action(action, actions_execute, available_cols, ui_data)    
+    updated_action  <- process_action(action, actions_execute, available_cols, ui_data)
     actions_execute <- rbind(actions_execute, updated_action)
 
     available_cols <- update_available_columns_for_action(updated_action, available_cols)
@@ -36,7 +57,7 @@ add_check_executable_status <-  function(actions, ui_data, data_context) {
   }
 
   validate_removed_depend_cols <- function(x) {
-    (length(x) == 1 && is.na(x)) || 
+    (length(x) == 1 && is.na(x)) ||
     (is.data.frame(x) && nrow(x) > 0)
   }
 
@@ -53,7 +74,32 @@ add_check_executable_status <-  function(actions, ui_data, data_context) {
   return(list(actions = actions_execute, available_columns = available_cols))
 }
 
-#' Process a single action based on its type
+#' Process a Single Action Based on Its Type
+#'
+#' @description
+#' Routes actions to appropriate handlers based on their code_id, using a
+#' switch statement to determine the correct processing function.
+#'
+#' @details
+#' This function serves as a dispatcher that:
+#' - Identifies the action type from the code_id field
+#' - Routes to specialized handlers for known action types
+#' - Falls back to generic handler for unrecognized action types
+#' - Maintains consistent interface across all handler functions
+#'
+#' @param action Action object containing specifications to be processed,
+#'   must include a code_id field for handler selection.
+#' @param processed_actions Data table of previously processed actions,
+#'   passed to handlers for dependency checking.
+#' @param available_cols Data frame of currently available columns for
+#'   validation and dependency resolution.
+#' @param ui_data Optional list containing UI specifications, defaults to
+#'   NULL if not provided.
+#'
+#' @return
+#' Modified action object returned from the appropriate handler function
+#' with updated execution status, dependencies, outputs, and lineage.
+#'
 process_action <- function(action, processed_actions, available_cols, ui_data = NULL) {
   handler <- switch(action$code_id,
     "_read_data.mustache" = handle_read_data_action,
@@ -66,7 +112,31 @@ process_action <- function(action, processed_actions, available_cols, ui_data = 
   handler(action, processed_actions, available_cols, ui_data)
 }
 
-#' Handler for _read_data.mustache actions
+#' Handler for _read_data.mustache Actions
+#'
+#' @description
+#' Processes read data actions by validating expected outputs against available
+#' source data columns and determining which columns can be successfully read.
+#'
+#' @details
+#' This handler manages the initial data reading step by:
+#' - Comparing expected output columns with available source data
+#' - Identifying missing columns that cannot be read from source
+#' - Setting execution status based on whether any valid outputs remain
+#' - Creating detailed lineage messages about missing data impacts
+#'
+#' @param action Action object containing read data specifications with expected
+#'   output columns.
+#' @param processed_actions Data table of previously processed actions (unused
+#'   in this handler).
+#' @param available_cols Data frame of columns available in the source data
+#'   for validation.
+#' @param ui_data List containing UI specifications (unused in this handler).
+#'
+#' @return
+#' Modified action object with updated execution status, valid outputs, removed
+#' outputs, and lineage information detailing any missing source data columns.
+#'
 handle_read_data_action <- function(action, processed_actions, available_cols, ui_data) {
   expected_outputs <- parse_output_columns(action$outputs[[1]])
   missing_in_data <- find_missing_columns(expected_outputs, available_cols)
@@ -100,7 +170,29 @@ handle_read_data_action <- function(action, processed_actions, available_cols, u
   action
 }
 
-#' Handler for _init_domain.mustache actions
+#' Handler for _init_domain.mustache Actions
+#'
+#' @description
+#' Processes init domain actions by checking dependencies against read_data
+#' outputs and adjusting available columns based on missing source data.
+#'
+#' @details
+#' This handler specifically manages the initialization of domain processing by:
+#' - Checking if the corresponding read_data action had missing outputs
+#' - Adjusting dependencies and outputs based on available source columns
+#' - Determining if the action can execute with remaining valid outputs
+#'
+#' @param action Action object containing init domain specifications.
+#' @param processed_actions Data table of previously processed actions, used
+#'   to find the corresponding read_data action.
+#' @param available_cols Data frame of currently available columns (unused
+#'   in this handler).
+#' @param ui_data List containing UI specifications (unused in this handler).
+#'
+#' @return
+#' Modified action object with updated execution status, dependencies, outputs,
+#' and lineage information reflecting any columns missing from source data.
+#'
 handle_init_domain_action <- function(action, processed_actions, available_cols, ui_data) {
   # Initialise defaults
   can_execute <- TRUE
@@ -115,8 +207,8 @@ handle_init_domain_action <- function(action, processed_actions, available_cols,
   if (length(rda_removed_outputs) > 1 || !is.na(rda_removed_outputs)) {
     removed_cols <- parse_output_columns(rda_removed_outputs)
     # If outputs from rda were removed, adjust depend_cols
-    depend_cols <- dplyr::anti_join(action$depend_cols[[1]], 
-      removed_cols, 
+    depend_cols <- dplyr::anti_join(action$depend_cols[[1]],
+      removed_cols,
       by = c("column_name", "domain", "domain_type"))
     removed_depend_cols <- find_missing_dependencies(
       action$depend_cols[[1]], depend_cols)
@@ -143,15 +235,37 @@ handle_init_domain_action <- function(action, processed_actions, available_cols,
 }
 
 #' Handler for _filter_domain.mustache
+#'
+#' @description
+#' Processes filter domain actions by checking dependencies against available
+#' columns and handling cases where filtering columns are missing from source data.
+#'
+#' @details
+#' This handler manages two scenarios:
+#' - Domain-specific filters (columns without dot separation)
+#' - Global filters (columns with domain prefixes)
+#'
+#' The function determines if a filter can execute based on whether the required
+#' filtering columns are available in the processed data.
+#'
+#' @param action Action object containing filter domain specifications.
+#' @param processed_actions Data table of previously processed actions.
+#' @param available_cols Data frame of currently available columns.
+#' @param ui_data List containing UI specifications including filter dependencies.
+#'
+#' @return
+#' Modified action object with updated execution status, dependencies, outputs,
+#' and lineage information.
+#'
 handle_filter_domain_action <- function(action, processed_actions, available_cols, ui_data) {
-  # Filter domain action relies on the `outputs` of read_data action. If 
-  # outputs are removed in the read_data action, and filter is depending of 
-  # these, filter should not be executable. 
-  # `outputs` will be adjusted, since the `render_code` will use this column 
+  # Filter domain action relies on the `outputs` of read_data action. If
+  # outputs are removed in the read_data action, and filter is depending of
+  # these, filter should not be executable.
+  # `outputs` will be adjusted, since the `render_code` will use this column
   # for the keep variables, thus ensuring a filter can execute if missing data
   # is not used in the filter.
-  #  
-  # adjusted to reflect the available data. 
+  #
+  # adjusted to reflect the available data.
   # Two scenarios must be handled:
   # * domain specific filters
   # * global filters
@@ -166,12 +280,12 @@ handle_filter_domain_action <- function(action, processed_actions, available_col
   rda <- processed_actions[program_id == action$program_id & code_id == "_read_data.mustache"][1]
   rda_removed_outputs <- rda$removed_outputs[[1]]
 
-  # Executable status should depend on the filtering condition: 
-  # If yaml spec contains a filter on a variable that is removed, filter cannot 
+  # Executable status should depend on the filtering condition:
+  # If yaml spec contains a filter on a variable that is removed, filter cannot
   # execute but else it should be possible
   filtering_columns <- ui_data[[action$domain]]$init$filter_depend_cols
-  # Filtering specifications are either depending on the base domains 
-  # (listed without dot-separation) or other domains (in which domain 
+  # Filtering specifications are either depending on the base domains
+  # (listed without dot-separation) or other domains (in which domain
   # is prefixed with a dot)
   is_base_domain_filter <- !grepl("\\.", filtering_columns)
   filtering_columns_base <- filtering_columns[is_base_domain_filter]
@@ -180,7 +294,7 @@ handle_filter_domain_action <- function(action, processed_actions, available_col
 
   # Removed outputs in init domain also needs to be considered as removed columns
   ida <- processed_actions[
-    program_id == action$program_id & 
+    program_id == action$program_id &
     code_id    == "_init_domain.mustache"][1]
   ida_removed <- ida$removed_outputs[[1]]
   if (length(ida_removed) > 1 || !is.na(ida_removed)) {
@@ -204,8 +318,8 @@ handle_filter_domain_action <- function(action, processed_actions, available_col
 
   can_execute <- length(invalid_filters) == 0
   depend_cols <- dplyr::anti_join(
-    action$depend_cols[[1]], 
-    removed_cols, 
+    action$depend_cols[[1]],
+    removed_cols,
     by = c("column_name", "domain", "domain_type")
   )
 
@@ -236,13 +350,38 @@ handle_filter_domain_action <- function(action, processed_actions, available_col
   action$lineage <- lineage
 
   action
-  }
+}
 
-#' Handler for _write_domain.mustache action
+#' Handler for _write_domain.mustache Action
+#'
+#' @description
+#' Processes write domain actions by checking dependencies against the
+#' corresponding init_domain action and adjusting outputs based on any
+#' columns that were removed due to missing source data.
+#'
+#' @details
+#' This handler manages the final data writing step by:
+#' - Checking if the corresponding init_domain action had missing outputs
+#' - Inheriting execution status from the init_domain action
+#' - Adjusting dependencies and outputs to exclude any unavailable columns
+#' - Ensuring consistency between initialization and writing phases
+#'
+#' @param action Action object containing write domain specifications.
+#' @param processed_actions Data table of previously processed actions, used
+#'   to find the corresponding init_domain action.
+#' @param available_cols Data frame of currently available columns (unused
+#'   in this handler).
+#' @param ui_data List containing UI specifications (unused in this handler).
+#'
+#' @return
+#' Modified action object with updated execution status, dependencies, outputs,
+#' and lineage information reflecting any columns that cannot be written due
+#' to missing source data.
+#'
 handle_write_domain_action <- function(action, processed_actions, available_cols, ui_data) {
-  # Action may be impacted by previous init_domain action if columns are 
+  # Action may be impacted by previous init_domain action if columns are
   # removed due to missing data.
-  # If this is the case, 
+  # If this is the case,
   # * can_execute is set to the init_domain_action$can_execute
   # * if can_execute is true, outputs must be adjusted to remove any
   #   missing columns as identified in init_domain action.
@@ -262,8 +401,8 @@ handle_write_domain_action <- function(action, processed_actions, available_cols
     removed_cols <- parse_output_columns(ida_removed_outputs, default_prefix = ida$domain)
     # If outputs from rda were removed, adjust depend_cols
     depend_cols <- dplyr::anti_join(
-      action$depend_cols[[1]], 
-      removed_cols, 
+      action$depend_cols[[1]],
+      removed_cols,
       by = c("column_name", "domain", "domain_type"))
     removed_depend_cols <- find_missing_dependencies(action$depend_cols[[1]], depend_cols)
     removed_outputs <- unique(removed_cols$column_name)
@@ -285,10 +424,30 @@ handle_write_domain_action <- function(action, processed_actions, available_cols
   action$lineage <- create_lineage_message("Cannot write data:", action)
 
   action
-  }
+}
 
-#' Handler for generic actions (default case)
-# handle_generic_action <- function(action, next_action, actions, available_cols, action_id) {
+#' Handler for Generic Actions (Default Case)
+#'
+#' @description
+#' Processes generic actions by checking if all required dependencies are
+#' available and determining execution status accordingly.
+#'
+#' @details
+#' This is the default handler for actions that don't require special processing.
+#' It validates dependencies against available columns and sets execution status
+#' based on whether all required columns are present.
+#'
+#' @param action Action object containing generic action specifications.
+#' @param processed_actions Data table of previously processed actions (unused
+#'   in generic handler).
+#' @param available_cols Data frame of currently available columns for dependency
+#'   checking.
+#' @param ui_data List containing UI specifications (unused in generic handler).
+#'
+#' @return
+#' Modified action object with updated execution status, dependencies, outputs,
+#' and lineage information indicating any missing dependencies.
+#'
 handle_generic_action <- function(action, processed_actions, available_cols, ui_data) {
   can_execute <- TRUE
   missing_dependencies <- NA
@@ -321,7 +480,26 @@ handle_generic_action <- function(action, processed_actions, available_cols, ui_
 # HELPER FUNCTIONS FOR COLUMN OPERATIONS
 # ============================================================================
 
-#' Parse output columns from dot-separated format
+#' Parse Output Columns from Dot-Separated Format
+#'
+#' @description
+#' Converts dot-separated column specifications into a structured data table
+#' with domain, domain type, and column name information.
+#'
+#' @details
+#' Handles column specifications in the format "domain.column_name" by splitting
+#' on the dot separator and classifying domains. If no domain prefix is present,
+#' uses the default_prefix parameter.
+#'
+#' @param outputs Character vector of column specifications, potentially in
+#'   dot-separated format (e.g., "ADSL.USUBJID").
+#' @param default_prefix Character string to use as domain prefix when columns
+#'   don't contain explicit domain specification.
+#'
+#' @return
+#' Data table with columns: domain_type, domain, and column_name. Returns
+#' empty data table if outputs is NULL, empty, or contains only NA values.
+#'
 parse_output_columns <- function(outputs, default_prefix = "") {
   if (is.null(outputs) || length(outputs) == 0 || (length(outputs) == 1 && is.na(outputs))) {
     return(data.table(domain_type = character(), domain = character(), column_name = character()))
@@ -337,7 +515,24 @@ parse_output_columns <- function(outputs, default_prefix = "") {
   )
 }
 
-#' Prefix output columns with `domain` name
+#' Prefix Output Columns with Domain Name
+#'
+#' @description
+#' Adds domain prefix to column names that don't already contain a dot separator,
+#' creating standardized dot-separated column specifications.
+#'
+#' @details
+#' Checks each column name for the presence of a dot separator. If no dot is
+#' found, prefixes the column with the specified domain name. Columns already
+#' containing dots are returned unchanged.
+#'
+#' @param column Character vector of column names to potentially prefix.
+#' @param domain Character string specifying the domain name to use as prefix.
+#'
+#' @return
+#' Character vector with domain-prefixed column names in the format
+#' "domain.column_name" for columns that didn't already contain dots.
+#'
 prefix_with_domain <- function(column, domain) {
   ifelse (grepl(".", column, fixed = TRUE),
     column,
@@ -345,20 +540,48 @@ prefix_with_domain <- function(column, domain) {
   )
 }
 
-#' Find columns that are missing from available columns
+#' Find Columns That Are Missing from Available Columns
+#'
+#' @description
+#' Identifies columns that are needed but not present in the available columns
+#' by comparing domain and column name combinations.
+#'
+#' @param needed_outputs Data frame with columns "column_name" and "domain"
+#'   representing required columns.
+#' @param available_cols Data frame with columns "column_name" and "domain"
+#'   representing available columns.
+#'
+#' @return
+#' Data frame containing the missing columns with "column_name" and "domain" columns.
+#'
 find_missing_columns <- function(needed_outputs, available_cols) {
-  needed_outputs %>% 
+  needed_outputs |>
     dplyr::anti_join(available_cols, by = c("column_name", "domain"))
 }
 
-#' Find missing dependencies by comparing depend_cols with available columns
+#' Find Missing Dependencies
+#'
+#' @description
+#' Identifies dependency columns that are required but not available by comparing
+#' domain type, domain, and column name combinations.
+#'
+#' @param depend_cols Data frame with columns "column_name", "domain", and
+#'   "domain_type" representing required dependency columns.
+#' @param available_cols Data frame with columns "column_name", "domain", and
+#'   "domain_type" representing available columns.
+#'
+#' @return
+#' List containing a data frame of missing dependencies with columns ordered as
+#' "domain_type", "domain", "column_name", or NA if no dependencies are missing
+#' or input is invalid.
+#'
 find_missing_dependencies <-  function(depend_cols, available_cols) {
   if (!is.data.table(depend_cols)) {
     return(NA)
   }
-  
-  missing_dependencies <- depend_cols %>% 
-    dplyr::anti_join(available_cols, by = c("column_name", "domain", "domain_type")) %>%
+
+  missing_dependencies <- depend_cols |>
+    dplyr::anti_join(available_cols, by = c("column_name", "domain", "domain_type")) |>
     # ensure re-ordering of columns such that they can be reported by domain_type, domain, column_name
     dplyr::select(domain_type, domain, column_name)
   if (nrow(missing_dependencies) > 0) {
@@ -373,7 +596,20 @@ find_missing_dependencies <-  function(depend_cols, available_cols) {
 # FUNCTIONS FOR UPDATING AVAILABLE COLUMNS
 # ============================================================================
 
-#' Update available columns after action execution
+#' Update Available Columns After Action Execution
+#'
+#' @description
+#' Updates the available columns list by adding output columns from an executed
+#' action, with special handling for data reading operations.
+#'
+#' @param action Action object containing execution status, outputs, domain, and code_id.
+#' @param available_cols Data frame with columns "column_name", "domain", and
+#'   "domain_type" representing currently available columns.
+#'
+#' @return
+#' Updated data frame of available columns including new outputs if the action
+#' can execute, otherwise returns the original available_cols unchanged.
+#'
 update_available_columns_for_action <- function(action, available_cols) {
   # Handle case where outputs is NA or NULL
   if (action$code_id == "_read_data.mustache" || is.null(action$outputs[[1]]) || (length(action$outputs[[1]]) == 1 && is.na(action$outputs[[1]]))) {
@@ -385,16 +621,31 @@ update_available_columns_for_action <- function(action, available_cols) {
       domain = action$domain,
       domain_type = classify_data_domains(action$domain))
     return(unique(rbind(available_cols, output_cols)))
-  } 
+  }
   return(available_cols)
-  
+
 }
 
 # ============================================================================
 # UTILITY FUNCTIONS
 # ============================================================================
 
-#' Create lineage message for missing dependencies
+#' Create Lineage Message for Missing Dependencies
+#'
+#' @description
+#' Generates a formatted error message for actions that cannot execute due to
+#' missing dependencies.
+#'
+#' @param message Base error message to display.
+#' @param action Action object containing execution status and dependency information.
+#' @param dependencies Optional vector of missing dependencies to override action's dependencies.
+#' @param report_missing_outputs Logical, whether to include missing output columns
+#'   in the message (default FALSE).
+#'
+#' @return
+#' Character string containing the formatted lineage message, or empty string
+#' if action can execute.
+#'
 create_lineage_message <- function(message, action, dependencies = NULL, report_missing_outputs = FALSE) {
   if (!action$can_execute) {
     if (is.null(dependencies)) {
@@ -403,11 +654,11 @@ create_lineage_message <- function(message, action, dependencies = NULL, report_
     else {
       c <- collapse_missing_dependencies(dependencies)
     }
-    missing_outputs <- 
+    missing_outputs <-
       ifelse(
         report_missing_outputs,
         paste(
-          "The following columns cannot be created: ", 
+          "The following columns cannot be created: ",
           collapse_missing_dependencies(parse_output_columns(action$removed_outputs[[1]], action$domain)),
           sep = "\n"
         ),
@@ -423,7 +674,17 @@ collapse_missing_dependencies <- function(removed_data) {
         1, paste, collapse = "."), collapse = ", ")
 }
 
-#' Add default execution status when no data context is provided
+#' Add Default Execution Status to Actions
+#'
+#' @description
+#' Sets default execution status for all actions when no data context is available.
+#'
+#' @param actions A data.table containing action information.
+#'
+#' @return
+#' A copy of the input data.table with added columns describing execution status.
+#' `missing_dependency` (NA), `lineage` (""), and `removed_outputs` ("").
+#'
 add_default_execution_status <- function(actions) {
   actions_execute <- copy(actions)
   actions_execute$can_execute <- TRUE
@@ -446,7 +707,7 @@ determine_available_columns <- function(data_context) {
     for (domain in data_context$get_tables(domain_type)) {
       for (column_name in names(domain$variables)) {
         available_cols <- rbind(
-          available_cols, 
+          available_cols,
           data.frame(
             column_name = column_name,
             domain = domain$name,

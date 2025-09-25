@@ -2,13 +2,100 @@
 % Please edit documentation in R/group_nodes.R
 \name{group_actions}
 \alias{group_actions}
-\title{Group nodes based on domain}
+\title{Group Actions by Domain for Program Generation}
 \usage{
 group_actions(ordered_nodes, vertices, edges)
 }
 \arguments{
-\item{edges}{}
+\item{ordered_nodes}{Character vector of node identifiers in dependency-resolved
+execution order. This should be a topologically sorted sequence where all
+dependencies of each node appear before the node itself.}
+
+\item{vertices}{A data.table containing node metadata with required columns:
+\describe{
+\item{node_id}{Character. Unique identifier for each action node}
+\item{domain}{Character. ADaM domain name (e.g., "ADSL", "ADAE").
+Missing values are treated as SDTM inputs}
+\item{type}{Character. Action type specification}
+}}
+
+\item{edges}{A data.table defining dependencies between nodes with columns:
+\describe{
+\item{node_id}{Character. Source node identifier}
+\item{depends_on}{Character. Target node that this node depends on}
+}}
+}
+\value{
+A data.table containing the grouped actions with columns:
+\describe{
+\item{node_id}{Character. Original node identifier}
+\item{domain}{Character. ADaM domain name}
+\item{node_group}{Integer. Sequential group number assigned during traversal}
+\item{node_level}{Integer. Hierarchical level within the dependency tree}
+\item{program_id}{Integer. Final program identifier grouping adjacent same-domain nodes}
+\item{rank}{Integer. Execution order within the overall sequence}
+\item{type}{Character. Action type from the vertices table}
+}
 }
 \description{
-Group nodes based on domain
+This function groups ordered action nodes by their ADaM domain to create
+logical program units. It processes a dependency-ordered sequence of nodes
+and groups adjacent nodes from the same domain into individual programs,
+while respecting cross-domain dependencies.
+}
+\details{
+The grouping algorithm works as follows:
+\enumerate{
+\item Assigns execution ranks to nodes based on the provided order
+\item Handles missing domain values by assigning them to "sdtm"
+\item Iteratively traverses the dependency tree, assigning group numbers
+\item Groups adjacent nodes with the same domain into single programs
+\item Maintains dependency order while optimizing for domain locality
+}
+
+The function includes a safety limit of 1000 node groups to prevent infinite
+loops in case of circular dependencies or other edge cases.
+}
+\section{Algorithm Details}{
+
+The traversal process uses \code{\link[=traverse_and_group_actions]{traverse_and_group_actions()}} to:
+\itemize{
+\item Process nodes in dependency order
+\item Assign hierarchical group numbers
+\item Track remaining unprocessed nodes
+\item Build the final program structure
+}
+
+Adjacent nodes from the same domain are consolidated using \code{rleid()} to
+create contiguous program blocks that minimize cross-program dependencies.
+}
+
+\examples{
+\dontrun{
+# Example vertices and edges
+vertices <-  data.table(
+  node_id = c("init_adsl", "derive_age", "init_adae", "derive_aesev"),
+  domain = c("ADSL", "ADSL", "ADAE", "ADAE"),
+  type = c("init", "derive", "init", "derive")
+)
+
+edges <- data.table(
+  node_id = c("derive_age", "init_adae", "derive_aesev"),
+  depends_on = c("init_adsl", "init_adsl", "init_adae")
+)
+
+ordered_nodes <- c("init_adsl", "derive_age", "init_adae", "derive_aesev")
+
+# Group actions by domain
+grouped <- group_actions(ordered_nodes, vertices, edges)
+
+# View program groupings
+grouped[, .(nodes = paste(node_id, collapse = ", ")), by = program_id]
+}
+
+}
+\seealso{
+\code{\link[=traverse_and_group_actions]{traverse_and_group_actions()}} for the core traversal algorithm,
+\code{\link[=organize_actions]{organize_actions()}} for the broader action organization workflow,
+\code{\link[=make_edges]{make_edges()}} for creating dependency edges
 }

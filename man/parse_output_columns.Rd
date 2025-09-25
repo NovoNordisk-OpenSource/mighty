@@ -2,10 +2,27 @@
 % Please edit documentation in R/add_check_executable_status.R
 \name{parse_output_columns}
 \alias{parse_output_columns}
-\title{Parse output columns from dot-separated format}
+\title{Parse Output Columns from Dot-Separated Format}
 \usage{
 parse_output_columns(outputs, default_prefix = "")
 }
+\arguments{
+\item{outputs}{Character vector of column specifications, potentially in
+dot-separated format (e.g., "ADSL.USUBJID").}
+
+\item{default_prefix}{Character string to use as domain prefix when columns
+don't contain explicit domain specification.}
+}
+\value{
+Data table with columns: domain_type, domain, and column_name. Returns
+empty data table if outputs is NULL, empty, or contains only NA values.
+}
 \description{
-Parse output columns from dot-separated format
+Converts dot-separated column specifications into a structured data table
+with domain, domain type, and column name information.
+}
+\details{
+Handles column specifications in the format "domain.column_name" by splitting
+on the dot separator and classifying domains. If no domain prefix is present,
+uses the default_prefix parameter.
 }

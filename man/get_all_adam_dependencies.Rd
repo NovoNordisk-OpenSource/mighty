@@ -8,22 +8,23 @@ get_all_adam_dependencies(x, filter_dep)
 }
 \arguments{
 \item{x}{Data frame or list containing domain information with 'domain' and
-'depend_cols' elements}
+'depend_cols' elements.}
 
-\item{adsl_filter_dep_by_domain}{List mapping domain names to their ADSL
-filter dependencies}
+\item{filter_dep}{List mapping domain names to their ADSL filter dependencies.}
 }
 \value{
-A character vector of unique column dependencies for the domain
+Character vector of unique column dependencies for the domain, with NAs removed.
 }
 \description{
-Identifies all ADaM column dependencies for a specific domain
-from both filter conditions and action dependencies.
+Identifies all ADaM column dependencies for a specific domain from both
+filter conditions and action dependencies.
 }
 \details{
-Combines two sources of dependencies: 1. ADSL column
-dependencies used in domain filters 2. Column dependencies from actions
-within the domain
+Combines two sources of dependencies:
+\enumerate{
+\item ADSL column dependencies used in domain filters
+\item Column dependencies from actions within the domain
+}
 
 The result is a unique set of all column dependencies needed for the domain.
 }

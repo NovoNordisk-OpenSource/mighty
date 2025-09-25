@@ -2,10 +2,21 @@
 % Please edit documentation in R/add_check_executable_status.R
 \name{find_missing_columns}
 \alias{find_missing_columns}
-\title{Find columns that are missing from available columns}
+\title{Find Columns That Are Missing from Available Columns}
 \usage{
 find_missing_columns(needed_outputs, available_cols)
 }
+\arguments{
+\item{needed_outputs}{Data frame with columns "column_name" and "domain"
+representing required columns.}
+
+\item{available_cols}{Data frame with columns "column_name" and "domain"
+representing available columns.}
+}
+\value{
+Data frame containing the missing columns with "column_name" and "domain" columns.
+}
 \description{
-Find columns that are missing from available columns
+Identifies columns that are needed but not present in the available columns
+by comparing domain and column name combinations.
 }

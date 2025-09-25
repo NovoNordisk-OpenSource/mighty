@@ -2,10 +2,21 @@
 % Please edit documentation in R/validate_yaml.R
 \name{convert_yaml_to_json}
 \alias{convert_yaml_to_json}
-\title{Convert YAML file to JSON string using appropriate method}
+\title{Convert YAML File to JSON String}
 \usage{
 convert_yaml_to_json(yaml_file, use_yq = TRUE, verbose = TRUE)
 }
+\arguments{
+\item{yaml_file}{Path to the YAML file to convert.}
+
+\item{use_yq}{Logical, whether to prefer yq tool when available (default TRUE).}
+
+\item{verbose}{Logical, whether to display conversion method messages (default TRUE).}
+}
+\value{
+Character string containing the JSON representation of the YAML content.
+}
 \description{
-Convert YAML file to JSON string using appropriate method
+Converts a YAML file to JSON format using yq command-line tool or R's yaml
+package as fallback.
 }

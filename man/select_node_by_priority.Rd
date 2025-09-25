@@ -2,7 +2,7 @@
 % Please edit documentation in R/sort_actions.R
 \name{select_node_by_priority}
 \alias{select_node_by_priority}
-\title{Select node based on priority rules (exact replication of original logic)}
+\title{Select Node Based on Priority Rules}
 \usage{
 select_node_by_priority(
   candidate_nodes,
@@ -14,6 +14,42 @@ select_node_by_priority(
   domains_upstr_dep_prim_dom
 )
 }
+\arguments{
+\item{candidate_nodes}{Character vector of node IDs that are eligible for
+selection (typically nodes with no remaining dependencies).}
+
+\item{sorted_nodes}{Character vector of previously selected nodes in
+processing order.}
+
+\item{adj_matrix}{Adjacency matrix representing the dependency graph
+between nodes.}
+
+\item{lkp_dom}{Named vector mapping node IDs to their domain names.}
+
+\item{primary_domain}{Character string specifying the primary domain name
+for priority consideration.}
+
+\item{domains_upstr_dep}{Character vector of domains that have upstream
+dependencies on other domains.}
+
+\item{domains_upstr_dep_prim_dom}{Character vector of domains that have
+upstream dependencies specifically on the primary domain.}
+}
+\value{
+Character string containing the selected node ID based on the priority
+rules, guaranteed to return exactly one node from the candidate set.
+}
 \description{
-Select node based on priority rules (exact replication of original logic)
+Selects the next node to process from a set of candidate nodes using a
+hierarchical priority system to ensure optimal processing order.
+}
+\details{
+This function applies a three-tier priority system:
+\enumerate{
+\item \strong{Priority 1}: Prefer nodes in the same domain as the last selected node
+or nodes in the primary domain
+\item \strong{Priority 2}: Prefer nodes in domains where all upstream dependencies
+have been satisfied
+\item \strong{Priority 3}: Fall back to alphabetical ordering as a tie-breaker
+}
 }

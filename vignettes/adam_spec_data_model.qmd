@@ -1,7 +1,13 @@
 ---
 title: "ADaM Specification data model"
-format: html
-editor: visual
+vignette: >
+  %\VignetteIndexEntry{adam_spec_data_model}
+  %\VignetteEngine{quarto::html}
+  %\VignetteEncoding{UTF-8}
+knitr:
+  opts_chunk:
+    collapse: true
+    comment: '#>'
 ---
 
 # Overview
@@ -39,7 +45,7 @@ table_metadata:
 This section defines how to create the initial "base" ADaM table from your source SDTM domains.
 
 | Field | Description | Notes |
-|----|----|----|
+|------------------------|------------------------|------------------------|
 | `base_domains` | SDTM domain names to use | Case-sensitive, match your file names exactly, excluding file extension |
 | `filter_domain` | Domain-specific data filters | Use `NA` if no filter needed. Multiple filters joined via "&" |
 | `filter_global` | Data filters applied to all domains | Use `NA` if no filter needed. Multiple filters joined via "&" |
@@ -102,7 +108,7 @@ Column metadata section is denoted in the yaml file by the following top-level s
 Each column specification uses different fields depending on whether it's a predecessor column or derived column.
 
 | Field | Used For | Description |
-|----|----|----|
+|------------------------|------------------------|------------------------|
 | `column` | Both | Name of the column in the final dataset |
 | `source` | Predecessor | Source location (e.g., `USUBJID`, `ADSL.AGE`) |
 | `code_id` | Derived | Name of standard component or path to local component |

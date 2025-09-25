@@ -9,3 +9,7 @@
 ^pkgdown$
 ^doc$
 ^Meta$
+^\.pre-commit-config\.yaml$
+^\.pre-commit-hooks\.yaml$
+^\.github$
+^\.vscode$

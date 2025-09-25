@@ -2,7 +2,7 @@
 % Please edit documentation in R/group_nodes.R
 \name{traverse_and_group_actions}
 \alias{traverse_and_group_actions}
-\title{Title}
+\title{Traverse and Group Actions in Dependency Tree}
 \usage{
 traverse_and_group_actions(
   n_remaining,
@@ -15,8 +15,124 @@ traverse_and_group_actions(
 )
 }
 \arguments{
-\item{domain_i}{}
+\item{n_remaining}{A data.table of unprocessed nodes with required columns:
+\describe{
+\item{node_id}{Character. Unique identifier for each action node}
+\item{domain}{Character. ADaM domain name}
+\item{rank}{Integer. Original execution order ranking}
+\item{type}{Character. Action type (e.g., "col_\emph{", "row_}")}
+}}
+
+\item{n_stack}{A data.table accumulating processed nodes with columns:
+\describe{
+\item{domain}{Character. ADaM domain name}
+\item{node_id}{Character. Node identifier}
+\item{node_group}{Integer. Group number for this traversal}
+\item{node_level}{Integer. Hierarchical level in dependency tree}
+}}
+
+\item{edges}{A data.table defining parent-child relationships with columns:
+\describe{
+\item{node_id}{Character. Child node identifier}
+\item{parent_node}{Character. Parent node identifier}
+\item{domain}{Character. Domain name (enriched from vertices)}
+}}
+
+\item{node_group}{Integer. Current group number being assigned to nodes
+in this traversal iteration.}
+
+\item{node_id_i}{Character. Current node being processed. If \code{NA} (default),
+starts with the first node in \code{n_remaining}.}
+
+\item{domain_i}{Character. Current domain being processed. If \code{NA} (default),
+uses domain of the first node in \code{n_remaining}.}
+
+\item{node_level_i}{Integer. Current hierarchical level. If \code{NA} (default),
+starts at level 0 for root nodes.}
+}
+\value{
+A named list containing the updated state after traversal:
+\describe{
+\item{n_remaining}{Updated data.table with processed nodes removed}
+\item{n_stack}{Updated data.table with newly processed nodes added}
+\item{edges}{Original edges data.table (unchanged)}
+\item{node_group}{Original node_group number (unchanged)}
+}
 }
 \description{
-Title
+This function recursively traverses a dependency tree of action nodes within
+a single domain, grouping them into execution levels while respecting parent-child
+relationships. It processes nodes depth-first, ensuring all dependencies are
+satisfied before executing child nodes.
+}
+\details{
+The traversal algorithm follows these steps:
+\enumerate{
+\item Initialize with the first unprocessed node if no starting node specified
+\item Remove current node from remaining nodes and add to processed stack
+\item Identify child candidates within the same domain
+\item Filter children to only those with all parents already processed
+\item Recursively process each accepted child in priority order
+\item Return when no more children can be processed
+}
+}
+\section{Child Processing Priority}{
+
+When multiple children are available, they are processed in this order:
+\enumerate{
+\item Column actions (type starting with "col") before row actions
+\item Within the same action type, by original rank order
+}
+
+This ensures that column derivations are completed before row-level operations
+that may depend on them.
+}
+
+\section{Recursion Control}{
+
+The function uses depth-first recursion within a single domain and node group.
+It stops recursion when no child nodes have all their dependencies satisfied,
+allowing the parent \code{\link[=group_actions]{group_actions()}} function to start a new group if needed.
+}
+
+\examples{
+\dontrun{
+# Example setup
+n_remaining <-  data.table(
+  node_id = c("init_adsl", "derive_age", "derive_bmi"),
+  domain = c("ADSL", "ADSL", "ADSL"),
+  rank = 1:3,
+  type = c("init", "col_derive", "col_derive")
+)
+
+n_stack <- data.table(
+  domain = character(0),
+  node_id = character(0),
+  node_group = integer(0),
+  node_level = integer(0)
+)
+
+edges <- data.table(
+  node_id = c("derive_age", "derive_bmi"),
+  parent_node = c("init_adsl", "init_adsl"),
+  domain = c("ADSL", "ADSL")
+)
+
+# Traverse and group within domain
+result <- traverse_and_group_actions(
+  n_remaining = n_remaining,
+  n_stack = n_stack,
+  edges = edges,
+  node_group = 1
+)
+
+# Check processed nodes
+print(result$n_stack)
+}
+
+}
+\seealso{
+\code{\link[=group_actions]{group_actions()}} for the parent function that orchestrates multiple traversals,
+\code{\link[=make_edges]{make_edges()}} for creating the dependency edge structure,
+\code{\link[=organize_actions]{organize_actions()}} for the broader action organization workflow
 }

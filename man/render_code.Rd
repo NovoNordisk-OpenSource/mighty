@@ -8,31 +8,38 @@ render_code(actions, domain_keys, ui_data, path_trial, available_data = NULL)
 }
 \arguments{
 \item{actions}{Data table containing action definitions with columns including
-code_id, domain, outputs, depend_cols, parameters, and node_id}
+code_id, domain, outputs, depend_cols, parameters, node_id, lineage, and
+can_execute.}
 
 \item{domain_keys}{Named list mapping domain names to their respective key
-columns}
+columns for data operations.}
 
 \item{ui_data}{List containing domain-specific UI data including initialization
-metadata}
+metadata and configuration parameters.}
 
 \item{path_trial}{Character string specifying the output path where
-generated programs and data should be stored}
+generated programs and data should be stored.}
+
+\item{available_data}{Optional parameter containing information about
+available data sources, defaults to NULL.}
 }
 \value{
-The input actions data table with an additional 'code' column
-containing the generated code for each action
+The input actions data table with an additional 'code' column containing
+the generated code for each action, properly formatted with headers and
+comments as needed.
 }
 \description{
-Processes a data table of actions to generate executable code
-for each action by determining appropriate parameters and rendering the
-corresponding code components.
+Processes a data table of actions to generate executable code for each action
+by determining appropriate parameters and rendering the corresponding code
+components.
 }
 \details{
 For each action in the input table, this function:
 \enumerate{
 \item Calls define_params() to determine the correct parameters based on the code_id
-\item Renders the code component using the mighty.component library
+\item Renders the code component using the mighty.componenst library
 \item Adds a node header and stores the generated code back in the actions table
+\item Handles special cases for actions with missing data or execution issues
+\item Comments out code for actions that cannot execute due to missing dependencies
 }
 }

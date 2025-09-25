@@ -2,10 +2,24 @@
 % Please edit documentation in R/sort_actions.R
 \name{apply_priority_1}
 \alias{apply_priority_1}
-\title{Apply Priority 1: Select nodes from last selected node's domain}
+\title{Apply Priority 1: Select Nodes from Last Selected Node's Domain}
 \usage{
 apply_priority_1(candidate_nodes, sorted_nodes, lkp_dom, primary_domain)
 }
+\arguments{
+\item{candidate_nodes}{Vector of candidate node identifiers.}
+
+\item{sorted_nodes}{Vector of previously selected nodes in order.}
+
+\item{lkp_dom}{Named vector mapping node identifiers to their domains.}
+
+\item{primary_domain}{Character string specifying the primary domain.}
+}
+\value{
+The first candidate node from the target domain, or NULL if no candidates
+match the domain criteria.
+}
 \description{
-Apply Priority 1: Select nodes from last selected node's domain
+Selects the first candidate node that belongs to the same domain as the
+last selected node, or the primary domain if no nodes have been selected.
 }

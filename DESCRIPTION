@@ -13,20 +13,23 @@ Depends:
     R (>= 4.4.1)
 Imports: 
     checkmate,
-    combinat,
-    connector,
     data.table,
     dplyr,
     igraph,
     jsonvalidate,
-    labelled,
-    R6,
-    roxygen2,
     styler,
     tidyr,
-    tools,
-    whisker,
-    yaml
+    yaml,
+    RColorBrewer,
+    assertthat,
+    cli,
+    glue,
+    jsonlite,
+    purrr,
+    visNetwork,
+    zephyr,
+    rlang,
+    utils
 Suggests: 
     admiral,
     arrow,
@@ -38,7 +41,8 @@ Suggests:
     quarto,
     rmarkdown,
     testthat (>= 3.0.0),
-    withr
+    withr,
+    roxygen2
 VignetteBuilder: 
     knitr,
     quarto
