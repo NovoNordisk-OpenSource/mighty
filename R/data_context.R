@@ -21,7 +21,7 @@
 #'
 #' The class supports both immediate initialization with a connector or
 #' deferred initialization for flexible setup workflows.
-#'
+#' @importFrom R6 R6Class
 #' @section Initialization Patterns:
 #'
 #' **Direct initialization:**
@@ -77,7 +77,7 @@
 #' }
 #'
 #' @export
-data_context <-  R6::R6Class(
+data_context <- R6::R6Class(
   classname = "data_context",
   public = list(
     #' @description
@@ -136,7 +136,10 @@ data_context <-  R6::R6Class(
     #' # Get tables from multiple datasources
     #' all_tables <- dc$get_table_names(c("sdtm", "adam", "metadata"))
     #' }
-    get_table_names = function(datasources = c("sdtm"), prefix_datasource = FALSE) {
+    get_table_names = function(
+      datasources = c("sdtm"),
+      prefix_datasource = FALSE
+    ) {
       dc_get_table_names(datasources, prefix_datasource, private)
     },
 
@@ -226,7 +229,11 @@ data_context <-  R6::R6Class(
     #' var_types <- sapply(c("AGE", "SEX", "USUBJID"),
     #'                    function(var) dc$get_variable_type("dm", var, "sdtm"))
     #' }
-    get_variable_type = function(table_name, variable_name, datasource = "sdtm") {
+    get_variable_type = function(
+      table_name,
+      variable_name,
+      datasource = "sdtm"
+    ) {
       dc_get_variable_type(table_name, variable_name, datasource, private)
     },
 
@@ -251,7 +258,11 @@ data_context <-  R6::R6Class(
     #' var_labels <- sapply(c("AGE", "SEX", "RACE"),
     #'                     function(var) dc$get_variable_label("dm", var, "sdtm"))
     #' }
-    get_variable_label = function(table_name, variable_name, datasource = "sdtm") {
+    get_variable_label = function(
+      table_name,
+      variable_name,
+      datasource = "sdtm"
+    ) {
       dc_get_variable_label(table_name, variable_name, datasource, private)
     },
 
@@ -279,7 +290,6 @@ data_context <-  R6::R6Class(
     .tables = NULL,
     .cnt = NULL,
     .datasources = NULL
-
   )
 )
 
@@ -296,8 +306,7 @@ dc_initialize <- function(connector, private) {
 dc_init_tables <- function(datasourcename, private) {
   if (!is.null(datasourcename)) {
     private$.datasources <- c(datasourcename)
-  }
-  else {
+  } else {
     private$.datasources <- dc_get_datasource_names(private)
   }
   for (ds in private$.datasources) {
@@ -307,28 +316,37 @@ dc_init_tables <- function(datasourcename, private) {
         datasets <- tbl$list_content_cnt()
         if (length(datasets) == 0) {
           zephyr::msg_debug(paste0("No data in ", ds))
-        }
-        else {
+        } else {
           for (domain in datasets) {
             domain_name <- sub("\\.[^.]+$", "", domain)
             variables <- tbl$tbl_cnt(domain) |>
               utils::head(0) |>
               dplyr::collect()
-            table <- table_metadata$new(name=domain_name, datasource=ds, variables=variables)
+            table <- table_metadata$new(
+              name = domain_name,
+              datasource = ds,
+              variables = variables
+            )
             private$.tables[[paste0(ds, ".", domain_name)]] <- table
-            zephyr::msg_debug(paste0("Adding ", ds, ".", domain_name, " from ", domain))
+            zephyr::msg_debug(paste0(
+              "Adding ",
+              ds,
+              ".",
+              domain_name,
+              " from ",
+              domain
+            ))
           }
         }
       }
-    }
-    else {
+    } else {
       zephyr::msg_debug(paste0("No datasource '", ds, "'."))
     }
   }
 }
 
 #' @noRd
-dc_get_datasource_names <- function(private){
+dc_get_datasource_names <- function(private) {
   if (is.null(private$.cnt)) {
     return(character(0))
   }
@@ -336,13 +354,19 @@ dc_get_datasource_names <- function(private){
 }
 
 #' @noRd
-dc_get_table_names <- function(datasources = c("sdtm"), prefix_datasource = FALSE, private){
+dc_get_table_names <- function(
+  datasources = c("sdtm"),
+  prefix_datasource = FALSE,
+  private
+) {
   table_names <- list()
   for (table in private$.tables) {
     if (table$datasource %in% datasources) {
       table_names[paste0(table$datasource, ".", table$name)] <-
-        paste0(ifelse(prefix_datasource, paste0(table$datasource, "."), ""),
-      table$name)
+        paste0(
+          ifelse(prefix_datasource, paste0(table$datasource, "."), ""),
+          table$name
+        )
     }
   }
   table_names
@@ -360,29 +384,54 @@ dc_get_tables <- function(datasources = c("sdtm"), private) {
 }
 
 #' @noRd
-dc_get_table_variables <- function(table_name, datasource = "sdtm", private){
-  return(dc_get_tables(c(datasource), private)[[paste0(datasource, ".", table_name)]]$variables)
+dc_get_table_variables <- function(table_name, datasource = "sdtm", private) {
+  return(
+    dc_get_tables(c(datasource), private)[[paste0(
+      datasource,
+      ".",
+      table_name
+    )]]$variables
+  )
 }
 
 #' @noRd
-dc_has_variables <- function(table_name, variable_names, datasource = "sdtm", private) {
+dc_has_variables <- function(
+  table_name,
+  variable_names,
+  datasource = "sdtm",
+  private
+) {
   variables <- dc_get_table_variables(table_name, datasource, private)
   return(all(variable_names %in% names(variables)))
 }
 
 #' @noRd
-dc_get_variable_type <- function(table_name, variable_name, datasource = "sdtm", private){
+dc_get_variable_type <- function(
+  table_name,
+  variable_name,
+  datasource = "sdtm",
+  private
+) {
   if (dc_has_variables(table_name, variable_name, datasource, private)) {
-    variable <- dc_get_table_variables(table_name, datasource, private)[variable_name]
+    variable <- dc_get_table_variables(table_name, datasource, private)[
+      variable_name
+    ]
     return(class(variable[[1]]))
   }
   return(NULL)
 }
 
 #' @noRd
-dc_get_variable_label <- function(table_name, variable_name, datasource = "sdtm", private)
-{  if (dc_has_variables(table_name, variable_name, datasource, private)) {
-    variable <- dc_get_table_variables(table_name, datasource, private)[variable_name]
+dc_get_variable_label <- function(
+  table_name,
+  variable_name,
+  datasource = "sdtm",
+  private
+) {
+  if (dc_has_variables(table_name, variable_name, datasource, private)) {
+    variable <- dc_get_table_variables(table_name, datasource, private)[
+      variable_name
+    ]
     return(attr(variable[[1]], "label"))
   }
   return(NULL)
@@ -396,7 +445,10 @@ dc_print <- function(self, private) {
 
   for (table_name in names(private$.tables)) {
     table_meta <- private$.tables[[table_name]]
-    cat(sprintf("Table: %s (%d variables)\n",
-                table_name, ncol(table_meta$variables)))
+    cat(sprintf(
+      "Table: %s (%d variables)\n",
+      table_name,
+      ncol(table_meta$variables)
+    ))
   }
 }

@@ -10,11 +10,6 @@ knitr:
     comment: '#>'
 ---
 
-```{r}
-#| label: setup
-library(mighty)
-```
-
 # Types of nodes
 
 -   **col_copy**: These are absorbed by the domain_init node and do not exist as an independent node in our internal data model. Example:

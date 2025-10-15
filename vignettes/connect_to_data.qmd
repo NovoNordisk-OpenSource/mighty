@@ -10,10 +10,7 @@ knitr:
     comment: '#>'
 ---
 
-```{r}
-#| label: setup
-library(mighty)
-```
+
 
 Mighty in itself does not read any data, but the generated programs will be
 need to connect to a data source to be able to execute. Thus, the programs

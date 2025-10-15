@@ -10,7 +10,6 @@ Key capabilities:
 - Declarative YAML-based ADaM dataset specifications
 - Code component orchestration and compilation
 - Dependency tracking for columns and rows
-- Define.XML alignment and metadata synchronization
 - Automated ADaM program generation
 
 ## Development Commands
@@ -78,46 +77,6 @@ The package follows a structured pipeline for ADaM code generation:
 - Located in `inst/yaml_*/` directories for different versions
 - Must include: table_metadata, init, column_action sections
 
-## Schema Validation and YAML Processing
-
-### Schema Definition
-- **Schema file**: `inst/schemas/domain_schema.json`
-- **Schema version**: JSON Schema Draft 2020-12
-- **Structure**: YAML specifications use object/map formats for improved developer experience:
-  - `column_action`: Object where column names are keys mapping to metadata properties
-  - `row_action`: Object where row action IDs are keys mapping to action definitions
-- **Error reporting**: Comprehensive path formatting with offending property identification
-
-### Validation Pipeline
-- **Core functions**:
-  - `R/validate_yaml.R` - Main validation orchestration
-  - `R/validate_schema.R` - JSON Schema validation with enhanced error formatting
-  - `R/validate_business_logic.R` - Domain-specific business rules
-- **Parsing support**: Both yq tool and native R YAML parsing
-- **Default behavior**: Validation enabled by default, can be disabled via parameters
-- **Error handling**: Template-based error messages with enhanced path resolution and context
-
-### YAML Processing Flow
-1. **Input parsing**: YAML files parsed with automatic structure validation
-2. **Schema validation**: JSON Schema validation against domain specifications
-3. **Business rules**: Domain-specific validation (duplicates, dependencies, parameters)
-4. **Internal conversion**: Transform YAML structure to internal data model with field mapping:
-   - `source` → `depend_cols`
-   - Column names become object keys rather than `column` properties
-   - Row action IDs become object keys rather than `id` properties
-5. **Bidirectional support**: Export capabilities via `write_adam_specs()` and `write_adam_domain_yml()`
-
-### Business Logic Validation
-- **Rule system**: Auto-registered validation functions with standardized naming
-- **Rule categories**:
-  - `stop_on_error`: Critical validation failures that halt processing
-  - `collect_errors`: Non-critical issues collected and reported together
-- **Current rules**:
-  - Parameter validation without code_id references
-  - Column name uniqueness checking
-  - Row action ID uniqueness checking
-  - Dependency validation for row references
-  - Mutual exclusion of `source` and `code_id` fields
 
 ## Code Components
 
@@ -131,20 +90,9 @@ Code components are R functions that implement specific derivations or transform
 
 Key package dependencies:
 - **data.table**: Primary data manipulation framework
-- **yaml**: YAML file processing
-- **igraph**: Dependency graph management
 - **whisker**: Mustache template rendering
 - **checkmate**: Argument validation
 - **testthat**: Testing framework
-
-## Working with Schemas
-
-When modifying YAML validation:
-1. Update `inst/schemas/domain_schema.json` for schema changes
-2. Validate against existing YAML fixtures in `tests/testthat/fixtures/`
-3. Update schema validation functions in `R/schema.R` if needed
-4. Run schema-related tests: `testthat::test_file("tests/testthat/test-schema.R")`
-
 
 ## Git
 When making PR messages, follow the following format:
@@ -225,10 +173,9 @@ When writing a bug issue, follow this template:
 
 
 ## Writing style
-When writing prose, minimize computer science jargon - speak plainly. Avoid superlatives, hyperbole, and over-the-top descriptions  
+- When writing prose, minimize computer science jargon - speak plainly. Avoid superlatives, hyperbole, and over-the-top descriptions.
+- When writing prose, be concise
 
 
 ## Misc
-
 - Do not make changes to files in the `man/`, as these files are generated from the code base
-- Ignore files in `inst/`, except for the following directories: `inst/schemas`, `inst/components`

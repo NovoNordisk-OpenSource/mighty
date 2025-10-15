@@ -10,10 +10,7 @@ knitr:
     comment: '#>'
 ---
 
-```{r}
-#| label: setup
-library(mighty)
-```
+
 # Overview
 Defining an ADaM specification is something that will happen from very early in a project, where a project specification can be created. Based on this, a trial ADaM specification can be derived and prepared even before first patient first visit (FPFV). The ADaM specification is usually being work in progress throughout trial conduct, and implementations of certain rules may only be defined at a very high level. As a trial progresses, collected data in SDTM will evolve. Typically some domains will be well-defined very early, but others may be lacking out either because the setup is not finalised or data is not collected yet. There may be other reasons for SDTM changing during the lifetime of a trial, such as protocol ammendments or changes to SDTM version.
 
