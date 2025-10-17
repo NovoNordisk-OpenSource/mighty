@@ -1,5 +1,5 @@
 #' @title age2_01
-#' @description A description 
+#' @description A description
 #' @type derivation
 #' @depends core AGE
 #' @outputs AGE2
@@ -7,7 +7,6 @@
 #' @code
 age2_01 <- function(ADLB) {
   ADLB <- ADLB |>
-    dplyr::mutate(AGE2 = 10*AGE)
+    dplyr::mutate(AGE2 = 10 * AGE)
   return(ADLB)
 }
-

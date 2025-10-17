@@ -12,7 +12,6 @@
 #' @returns `ADAE`
 #' @code
 supp_ae_01 <- function(ADAE, suppae) {
-
   # Collect supplementary data
   supp_data <- suppae |>
     dplyr::select(USUBJID, IDVAR, IDVARVAL, QNAM, QVAL) |>

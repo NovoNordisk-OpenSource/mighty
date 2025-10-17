@@ -29,7 +29,8 @@ primary_keys_md:
   # ACT / ASSERT ---------------------------------------------------------------
 
   yaml_file |>
-    validate_yaml("trial_metadata_schema", use_yq = TRUE)  |> expect_no_error()
+    validate_yaml("trial_metadata_schema", use_yq = TRUE) |>
+    expect_no_error()
 })
 
 
@@ -86,7 +87,9 @@ primary_keys_md:
   # ACT / ASSERT ---------------------------------------------------------------
 
   validate_yaml(yaml_file, "trial_metadata_schema", use_yq = TRUE) |>
-    expect_error("Error location: trial_id | Error message: String does not match required pattern")
+    expect_error(
+      "Error location: trial_id | Error message: String does not match required pattern"
+    )
 })
 
 
@@ -113,7 +116,9 @@ primary_keys_md:
   # ACT / ASSERT ---------------------------------------------------------------
 
   validate_yaml(yaml_file, "trial_metadata_schema", use_yq = TRUE) |>
-    expect_error("Error location: project_id | Error message: String does not match required pattern defined by the following regular expression")
+    expect_error(
+      "Error location: project_id | Error message: String does not match required pattern defined by the following regular expression" # nolint: line_length_linter
+    )
 })
 
 
@@ -140,7 +145,9 @@ primary_keys_md:
   # ACT / ASSERT ---------------------------------------------------------------
 
   validate_yaml(yaml_file, "trial_metadata_schema", use_yq = TRUE) |>
-    expect_error("Error location: complete_id | Error message: String does not match required pattern defined by the following regular expression")
+    expect_error(
+      "Error location: complete_id | Error message: String does not match required pattern defined by the following regular expression" # nolint: line_length_linter
+    )
 })
 
 
@@ -167,7 +174,9 @@ primary_keys_md:
   # ACT / ASSERT ---------------------------------------------------------------
 
   validate_yaml(yaml_file, "trial_metadata_schema", use_yq = TRUE) |>
-    expect_error("Error location: instance | Error message: String does not match required pattern defined by the following regular expression")
+    expect_error(
+      "Error location: instance | Error message: String does not match required pattern defined by the following regular expression" # nolint: line_length_linter
+    )
 })
 
 
@@ -190,7 +199,6 @@ primary_keys_adam:
   # ACT / ASSERT ---------------------------------------------------------------
   validate_yaml(yaml_file, "trial_metadata_schema", use_yq = TRUE) |>
     expect_snapshot_error()
-
 })
 
 
@@ -218,7 +226,9 @@ primary_keys_md:
   # ACT / ASSERT ---------------------------------------------------------------
 
   validate_yaml(yaml_file, "trial_metadata_schema", use_yq = TRUE) |>
-    expect_error("Root level -> extra_field | Error message: Unexpected field 'extra_field' found")
+    expect_error(
+      "Root level -> extra_field | Error message: Unexpected field 'extra_field' found"
+    )
 })
 
 
@@ -243,7 +253,9 @@ primary_keys_md:
   # ACT / ASSERT ---------------------------------------------------------------
 
   validate_yaml(yaml_file, "trial_metadata_schema", use_yq = TRUE) |>
-    expect_error("Error location: primary_keys_sdtm | Error message: Expected type 'object', must be object")
+    expect_error(
+      "Error location: primary_keys_sdtm | Error message: Expected type 'object', must be object"
+    )
 })
 
 
@@ -272,10 +284,14 @@ primary_keys_md:
   # ACT / ASSERT ---------------------------------------------------------------
 
   validate_yaml(yaml_file, "trial_metadata_schema", use_yq = TRUE) |>
-    expect_error("Error location: primary_keys_sdtm | Error message: Property 'invalid_domain' is not allowed")
+    expect_error(
+      "Error location: primary_keys_sdtm | Error message: Property 'invalid_domain' is not allowed"
+    )
 
   validate_yaml(yaml_file, "trial_metadata_schema", use_yq = TRUE) |>
-    expect_error("Error location: primary_keys_sdtm | Error message: Property '123INVALID' is not allowed")
+    expect_error(
+      "Error location: primary_keys_sdtm | Error message: Property '123INVALID' is not allowed"
+    )
 })
 
 
@@ -305,13 +321,19 @@ primary_keys_md:
   # ACT / ASSERT ---------------------------------------------------------------
 
   validate_yaml(yaml_file, "trial_metadata_schema", use_yq = TRUE) |>
-    expect_error("Error location: primary_keys_sdtm -> EX -> item 2 | Error message: String does not match pattern")
+    expect_error(
+      "Error location: primary_keys_sdtm -> EX -> item 2 | Error message: String does not match pattern"
+    )
 
   validate_yaml(yaml_file, "trial_metadata_schema", use_yq = TRUE) |>
-    expect_error("Error location: primary_keys_sdtm -> EX -> item 3 | Error message: String does not match pattern")
+    expect_error(
+      "Error location: primary_keys_sdtm -> EX -> item 3 | Error message: String does not match pattern"
+    )
 
   validate_yaml(yaml_file, "trial_metadata_schema", use_yq = TRUE) |>
-    expect_error("Error location: primary_keys_sdtm -> EX -> item 4 | Error message: String is too short")
+    expect_error(
+      "Error location: primary_keys_sdtm -> EX -> item 4 | Error message: String is too short"
+    )
 })
 
 
@@ -337,7 +359,9 @@ primary_keys_md:
   # ACT / ASSERT ---------------------------------------------------------------
 
   validate_yaml(yaml_file, "trial_metadata_schema", use_yq = TRUE) |>
-    expect_error("Error location: primary_keys_sdtm -> EX | Error message: Expected type 'array', must be array")
+    expect_error(
+      "Error location: primary_keys_sdtm -> EX | Error message: Expected type 'array', must be array"
+    )
 })
 
 
@@ -366,7 +390,9 @@ primary_keys_md:
   # ACT / ASSERT ---------------------------------------------------------------
 
   validate_yaml(yaml_file, "trial_metadata_schema", use_yq = TRUE) |>
-    expect_error("Error location: primary_keys_sdtm -> EX | Error message: Array items are not unique")
+    expect_error(
+      "Error location: primary_keys_sdtm -> EX | Error message: Array items are not unique"
+    )
 })
 
 
@@ -392,7 +418,9 @@ primary_keys_md:
   # ACT / ASSERT ---------------------------------------------------------------
 
   validate_yaml(yaml_file, "trial_metadata_schema", use_yq = TRUE) |>
-    expect_error("Error location: primary_keys_sdtm | Error message: Object does not have enough properties")
+    expect_error(
+      "Error location: primary_keys_sdtm | Error message: Object does not have enough properties"
+    )
 })
 
 

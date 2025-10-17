@@ -1,14 +1,19 @@
 #' Setup YAML Configuration Files for Testing
 #'
-#' This function processes YAML configuration files for use in testing environments
-#' by creating temporary copies with path interpolation. It reads existing YAML files,
-#' processes them with glue templating (substituting `{path_base}` with the test path),
+#' This function processes YAML configuration files for use in testing
+#' environments
+#' by creating temporary copies with path interpolation. It reads existing
+#' YAML files,
+#' processes them with glue templating (substituting `{path_base}` with the
+#' test path),
 #' and creates temporary files that are automatically cleaned up when the test
 #' environment ends.
 #'
-#' @param config_files A character vector of file paths to YAML configuration files
+#' @param config_files A character vector of file paths to YAML configuration
+#'   files
 #'   that need to be processed for testing.
-#' @param test_env The testing environment object (typically from testthat) where
+#' @param test_env The testing environment object (typically from testthat)
+#'   where
 #'   the temporary files should be registered for automatic cleanup.
 #'
 #' @return A character vector of file paths to the created temporary YAML files.
@@ -33,14 +38,16 @@ setup_yml_file_for_testing <- function(config_files, test_env) {
     writeLines(as.character(processed_yaml), temp_file)
     result[[basename(config_file)]] <- temp_file
   }
-  return(result |> unlist(use.names = F))
+  return(result |> unlist(use.names = FALSE))
 }
 
 
 # Helper function to create temporary YAML files with fixed name
-create_temp_yaml <- function(content,
-                             name = "temp_test_file.yml",
-                             .local_envir = parent.frame()) {
+create_temp_yaml <- function(
+  content,
+  name = "temp_test_file.yml",
+  .local_envir = parent.frame()
+) {
   dir <- withr::local_tempdir(.local_envir = .local_envir)
   path <- file.path(dir, name)
   writeLines(content, path)

@@ -5,7 +5,7 @@
 #' @depends .self B
 #' @outputs C
 #' @returns `.self` with added treatment emergent analysis flag.
-fn_AB <- function(.self, params = list(param_1=NULL, param_2 = NULL)){
+fn_AB <- function(.self, params = list(param_1 = NULL, param_2 = NULL)) {
   print("hello world")
 }
 
@@ -18,6 +18,6 @@ fn_AB <- function(.self, params = list(param_1=NULL, param_2 = NULL)){
 #' @outputs C
 #' @outputs D
 #' @returns `.self` with added treatment emergent analysis flag.
-fn_B <- function(.self, params = list(param_1=NULL, param_2 = NULL)){
+fn_B <- function(.self, params = list(param_1 = NULL, param_2 = NULL)) {
   print("hello world")
 }

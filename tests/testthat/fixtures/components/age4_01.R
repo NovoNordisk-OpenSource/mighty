@@ -1,5 +1,5 @@
 #' @title age4_01
-#' @description A description 
+#' @description A description
 #' @type derivation
 #' @depends ADLB AGE2
 #' @outputs AGE4
@@ -10,4 +10,3 @@ age4_01 <- function(ADLB) {
     dplyr::mutate(AGE4 = AGE2 - 2)
   return(ADLB)
 }
-

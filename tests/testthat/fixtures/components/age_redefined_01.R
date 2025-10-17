@@ -1,5 +1,5 @@
 #' @title age_redefined_01
-#' @description A description 
+#' @description A description
 #' @type derivation
 #' @depends core AGE
 #' @depends core SEX

@@ -13,4 +13,5 @@
 ^\.pre-commit-hooks\.yaml$
 ^\.github$
 ^\.vscode$
+^\.lintr
 ^\.CLAUDE.md

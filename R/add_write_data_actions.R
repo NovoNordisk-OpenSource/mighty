@@ -26,13 +26,14 @@
 #' }
 #'
 add_write_data_actions <- function(actions) {
-
   # Split actions by program
-  actions_split <- split(actions[,c("domain", "program_id", "rank", "type", "outputs")], by = "program_id")
+  actions_split <- split(
+    actions[, c("domain", "program_id", "rank", "type", "outputs")],
+    by = "program_id"
+  )
 
   # Create a write_data for each program
   write_actions <- lapply(actions_split, function(x) {
-
     dom <- x$domain[[1]]
     pgm <- x$program_id[[1]]
 
@@ -57,7 +58,8 @@ add_write_data_actions <- function(actions) {
       parameters = list(NA),
       domain = dom
     )
-  }) |> rbindlist()
+  }) |>
+    rbindlist()
 
   # Update set of actions with write_data actions
   actions_updated <- rbind(actions, write_actions) |>

@@ -7,10 +7,12 @@
 #' @code
 aval_grp_01 <- function(ADLB) {
   ADLB <- ADLB |>
-    dplyr::mutate(AVAL_GRP = ifelse(
-      AVAL < 10, "low",
-      ifelse(AVAL < 100, "medium", "high")
-    ))
+    dplyr::mutate(
+      AVAL_GRP = ifelse(
+        AVAL < 10,
+        "low",
+        ifelse(AVAL < 100, "medium", "high")
+      )
+    )
   return(ADLB)
 }
-

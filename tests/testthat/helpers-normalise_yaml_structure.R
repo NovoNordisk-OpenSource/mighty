@@ -37,7 +37,7 @@
 #'     of array contents if order independence is required
 #' }
 #'
-normalise_yaml_structure <-  function(yaml_obj) {
+normalise_yaml_structure <- function(yaml_obj) {
   if (is.list(yaml_obj)) {
     # Recursively normalise all list elements
     yaml_obj <- lapply(yaml_obj, normalise_yaml_structure)

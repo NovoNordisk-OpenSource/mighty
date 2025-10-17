@@ -1,4 +1,4 @@
-# An error is triggered when within-domain ADaM specification is incomplete and when check_cross_domain_adam_dependencies is disabled
+# Incomplete within-domain ADaM spec fails when checks disabled
 
     
     
@@ -7,7 +7,7 @@
     to execute:
     	ADLB.VISITNUM2
 
-# An error is triggered when within-domain ADaM specification is incomplete and when check_cross_domain_adam_dependencies is enabled
+# Incomplete within-domain ADaM spec fails when checks enabled
 
     
     

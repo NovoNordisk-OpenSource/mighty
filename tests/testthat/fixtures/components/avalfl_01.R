@@ -6,7 +6,7 @@
 #' @outputs AVALREA
 #' @returns `ADLB`
 #' @code
-avalfl_01 <-   function(ADLB) {
+avalfl_01 <- function(ADLB) {
   ADLB <- ADLB |>
     dplyr::mutate(AVALFL = ifelse(is.na(AVAL), "Y", "N")) |>
     dplyr::mutate(AVALREA = ifelse(AVALFL == "Y", "Missing AVAL", ""))

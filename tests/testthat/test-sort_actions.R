@@ -1,5 +1,4 @@
 test_that("Basic linear graph is handled correctly", {
-
   # SETUP -------------------------------------------------------------------
   edges <- data.frame(from = c("A", "B", "C"), to = c("B", "C", "D"))
   nodes <- data.table::data.table(
@@ -26,18 +25,16 @@ test_that("Basic linear graph is handled correctly", {
   expect_true(all(c("B", "C") %in% result[2:3]))
 
   # Check topological order correctness
-  for (i in 1:nrow(edges)) {
+  for (i in seq_len(nrow(edges))) {
     from_idx <- which(result == edges$from[i])
     to_idx <- which(result == edges$to[i])
     # For each edge, the 'from' node should come before the 'to' node
     expect_true(from_idx < to_idx)
   }
-
 })
 
 
 test_that("Diamond-shaped graph is handled correctly", {
-
   # SETUP -------------------------------------------------------------------
 
   edges <- data.frame(
@@ -68,7 +65,7 @@ test_that("Diamond-shaped graph is handled correctly", {
   expect_true(all(c("B", "C") %in% result[2:3]))
 
   # Check topological order correctness
-  for (i in 1:nrow(edges)) {
+  for (i in seq_len(nrow(edges))) {
     from_idx <- which(result == edges$from[i])
     to_idx <- which(result == edges$to[i])
     # For each edge, the 'from' node should come before the 'to' node
@@ -78,7 +75,6 @@ test_that("Diamond-shaped graph is handled correctly", {
 
 
 test_that("Topology is changed based on primary domain", {
-
   # SETUP -------------------------------------------------------------------
 
   # Graph with multiple valid topological orderings
@@ -108,7 +104,7 @@ test_that("Topology is changed based on primary domain", {
   expect_equal(length(result2), 5)
 
   # Check that topological order is maintained in both results
-  for (i in 1:nrow(edges)) {
+  for (i in seq_len(nrow(edges))) {
     from_idx1 <- which(result1 == edges$from[i])
     to_idx1 <- which(result1 == edges$to[i])
 
@@ -151,17 +147,16 @@ test_that("Topology is changed based on primary domain", {
 
 
 test_that("Cycles are detected", {
-
   # SETUP -------------------------------------------------------------------
 
   # Create a graph with a cycle: A -> B -> C -> D -> B
   # This forms a cycle because B depends on A, C depends on B,
   # D depends on C, and B depends on D (creating a circular dependency)
-  edges <-  data.frame(
+  edges <- data.frame(
     from = c("A", "B", "C", "D"),
-    to = c("B", "C", "D", "B")  # D -> B creates the cycle
+    to = c("B", "C", "D", "B") # D -> B creates the cycle
   )
-  nodes <-  data.table::data.table(
+  nodes <- data.table::data.table(
     node_id = c("A", "B", "C", "D"),
     domain = c("ADSL", "ADAE", "ADCM", "ADLB")
   )
@@ -184,13 +179,12 @@ test_that("Cycles are detected", {
 
 
 test_that("Disconnected components afre handled correctly", {
-
   # SETUP -------------------------------------------------------------------
 
   # Create a graph with two disconnected components:
   # Component 1: A -> B -> C
   # Component 2: D -> E -> F
-  edges <-  data.frame(
+  edges <- data.frame(
     from = c("A", "B", "D", "E"),
     to = c("B", "C", "E", "F")
   )
@@ -220,14 +214,12 @@ test_that("Disconnected components afre handled correctly", {
   # D must come before E
   expect_true(which(result == "D") < which(result == "E"))
 
-    # E must come before F
+  # E must come before F
   expect_true(which(result == "E") < which(result == "F"))
-
 })
 
 
 test_that("Non-existent primary domain is handled correctly", {
-
   # SETUP -------------------------------------------------------------------
 
   edges <- data.frame(from = c("A", "B"), to = c("B", "C"))
@@ -248,12 +240,11 @@ test_that("Non-existent primary domain is handled correctly", {
 
 
 test_that("Isolated nodes are handled correctly", {
-
   # SETUP -------------------------------------------------------------------
 
   edges <- data.frame(from = c("A", "B"), to = c("B", "C"))
   nodes <- data.table::data.table(
-    node_id = c("A", "B", "C", "D", "E"),  # D and E are isolated
+    node_id = c("A", "B", "C", "D", "E"), # D and E are isolated
     domain = c("ADSL", "ADAE", "ADCM", "ADLB", "ADSL")
   )
 
@@ -270,5 +261,5 @@ test_that("Isolated nodes are handled correctly", {
   # graph E is isolated (no edges at all). Both should have weight 1 and be
   # prioritized, but their relative order depends on implementation details of
   # the adjacency matrix creation
-  expect_true("E" %in% result[1:2])  # E is in ADSL and isolated
+  expect_true("E" %in% result[1:2]) # E is in ADSL and isolated
 })

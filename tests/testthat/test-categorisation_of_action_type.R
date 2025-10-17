@@ -1,9 +1,14 @@
 test_that("Check that action types are classified correctly", {
-
   # SETUP -------------------------------------------------------------------
 
-  path_ui_data <- testthat::test_path("fixtures", "categorisation_of_action_type_adlb_01.yml")
-  path_ui_data_rendered <- setup_yml_file_for_testing(path_ui_data, environment())
+  path_ui_data <- testthat::test_path(
+    "fixtures",
+    "categorisation_of_action_type_adlb_01.yml"
+  )
+  path_ui_data_rendered <- setup_yml_file_for_testing(
+    path_ui_data,
+    environment()
+  )
   path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
   path_trial <- withr::local_tempdir()
 
@@ -38,11 +43,13 @@ test_that("Check that action types are classified correctly", {
   expect_equal(ps[ps$node_id == "ADLB-AVAL_GRP", ][["type"]], "col_compute")
   expect_equal(ps[ps$node_id == "ADLB-AVAL2", ][["type"]], "col_mutate")
   expect_equal(ps[ps$node_id == "ADLB-LBTEST", ][["type"]], "col_compute")
-  expect_equal(ps[ps$node_id == "ADLB-AVALFL-AVALREA", ][["type"]], "col_compute")
-  expect_equal(ps[ps$node_id == "ADLB-new_microcytes", ][["type"]], "row_compute")
+  expect_equal(
+    ps[ps$node_id == "ADLB-AVALFL-AVALREA", ][["type"]],
+    "col_compute"
+  )
+  expect_equal(
+    ps[ps$node_id == "ADLB-new_microcytes", ][["type"]],
+    "row_compute"
+  )
   expect_equal(ps[ps$node_id == "ADLB-1-write_data", ][["type"]], "write_data")
-
 })
-
-
-

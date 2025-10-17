@@ -1,4 +1,4 @@
-test_that("Error is thrown when not all outputs in code component are referenced in YML", {
+test_that("Error when code component outputs not referenced in YML", {
   # ARRANGE -----------------------------------------------------------------
 
   yml <- "
@@ -40,8 +40,8 @@ ADSL <- ADSL |>
 
   path_ui_data <- file.path(trial_path, "ui_yml.yml")
   whisker::whisker.render(yml, data = list(ady_custom = tmp_file)) |>
-  writeLines(path_ui_data)
-  
+    writeLines(path_ui_data)
+
   path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
   output_path <- trial_path
   # ACT & ASSERT ------------------------------------------------------------

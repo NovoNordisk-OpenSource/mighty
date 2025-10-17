@@ -11,8 +11,7 @@
 #' @depends ADSL PLANNED_ARM
 #' @outputs LBTEST
 #' @returns `.self`
-lbtest_01 <-   function(.self, lb, ADSL) {
-
+lbtest_01 <- function(.self, lb, ADSL) {
   # join with adsl, only derive lbtest if adsl.planned_arm != "" and
   # if aval is na them lbtest = "Invalid"
   .self <- .self |>
@@ -46,18 +45,17 @@ lbtest_01 <-   function(.self, lb, ADSL) {
 #' @depends sv VISITDY
 #' @outputs LBTEST
 #' @returns `.self`
-new_lbtest_01 <-   function(.self) {
-
+new_lbtest_01 <- function(.self) {
   new_lbtest <- .self |>
     dplyr::filter(LBTEST == "Microcytes") |>
     dplyr::mutate(LBTEST = "Microcytes (new)")
 
-  new_lbtest <-   new_lbtest |>
+  new_lbtest <- new_lbtest |>
     dplyr::left_join(sv, by = c("USUBJID", "VISITNUM")) |>
     dplyr::filter(VISITDY > 20) |>
     dplyr::select(-VISITDY)
 
-  .self <-   rbind(.self, new_lbtest)
+  .self <- rbind(.self, new_lbtest)
   return(.self)
 }
 
@@ -70,15 +68,15 @@ new_lbtest_01 <-   function(.self) {
 #' @outputs AVALC
 #' @returns `.self`
 new_lbtest_02 <- function(.self) {
-
   new_lbtest <- .self |>
-    dplyr::filter(LBTEST == "Macrocytes" &
-                    as.numeric(gsub("[N<]",   "", AVALC))>0.5 &
-                    !is.na(AVALC)) |>
-    dplyr::mutate(LBTEST = "Macrocytes (new)",
-                  AVALC = "")
+    dplyr::filter(
+      LBTEST == "Macrocytes" &
+        as.numeric(gsub("[N<]", "", AVALC)) > 0.5 &
+        !is.na(AVALC)
+    ) |>
+    dplyr::mutate(LBTEST = "Macrocytes (new)", AVALC = "")
 
-  .self <-   rbind(.self, new_lbtest)
+  .self <- rbind(.self, new_lbtest)
   return(.self)
 }
 
@@ -89,16 +87,15 @@ new_lbtest_02 <- function(.self) {
 #' @outputs LBTEST
 #' @returns `.self`
 new_lbtest_03 <- function(.self) {
-
   new_lbtest <- .self |>
     dplyr::filter(LBTEST == "Microcytes (new)") |>
     dplyr::mutate(LBTEST = "Microcytes (new 2)")
 
-  if(nrow(new_lbtest) == 0) {
+  if (nrow(new_lbtest) == 0) {
     stop("No rows to add.")
   }
 
-  .self <-   rbind(.self, new_lbtest)
+  .self <- rbind(.self, new_lbtest)
   return(.self)
 }
 
@@ -109,16 +106,15 @@ new_lbtest_03 <- function(.self) {
 #' @outputs LBTEST
 #' @returns `.self`
 new_lbtest_04 <- function(.self) {
-
   new_lbtest <- .self |>
     dplyr::filter(LBTEST == "Macrocytes (new)") |>
     dplyr::mutate(LBTEST = "Macrocytes (new 2)")
 
-  if(nrow(new_lbtest) == 0) {
+  if (nrow(new_lbtest) == 0) {
     stop("No rows to add.")
   }
 
-  .self <-   rbind(.self, new_lbtest)
+  .self <- rbind(.self, new_lbtest)
   return(.self)
 }
 
@@ -129,20 +125,19 @@ new_lbtest_04 <- function(.self) {
 #' @outputs LBTEST
 #' @returns `.self`
 new_lbtest_05 <- function(.self) {
-
   new_lbtest1 <- .self |>
     dplyr::filter(LBTEST == "Microcytes (new)") |>
     dplyr::mutate(LBTEST = "Microcytes (new 2)")
 
-  new_lbtest2 <-   .self |>
+  new_lbtest2 <- .self |>
     dplyr::filter(LBTEST == "Macrocytes (new)") |>
     dplyr::mutate(LBTEST = "Macrocytes (new 2)")
 
-  if(nrow(new_lbtest1) == 0 | nrow(new_lbtest2) == 0) {
+  if (nrow(new_lbtest1) == 0 || nrow(new_lbtest2) == 0) {
     stop("No rows to add.")
   }
 
-  .self <-   rbind(.self, new_lbtest1, new_lbtest2)
+  .self <- rbind(.self, new_lbtest1, new_lbtest2)
   return(.self)
 }
 
@@ -155,21 +150,19 @@ new_lbtest_05 <- function(.self) {
 #' @outputs LBTEST
 #' @returns `.self`
 new_lbtest_06 <- function(.self) {
-
   new_lbtest1 <- .self |>
-    dplyr::filter(LBTEST == "Microcytes (new)" & AVAL>1 & !is.na(DOMAIN)) |>
+    dplyr::filter(LBTEST == "Microcytes (new)" & AVAL > 1 & !is.na(DOMAIN)) |>
     dplyr::mutate(LBTEST = "Microcytes (new 3)")
 
-  new_lbtest2 <-   .self |>
-    dplyr::filter(LBTEST == "Microcytes (new 2)" & AVAL>1 & !is.na(DOMAIN)) |>
+  new_lbtest2 <- .self |>
+    dplyr::filter(LBTEST == "Microcytes (new 2)" & AVAL > 1 & !is.na(DOMAIN)) |>
     dplyr::mutate(LBTEST = "Microcytes (new 4)")
 
-
-  if(nrow(new_lbtest1) == 0 | nrow(new_lbtest2) == 0) {
+  if (nrow(new_lbtest1) == 0 || nrow(new_lbtest2) == 0) {
     stop("No rows to add.")
   }
 
-  .self <-   rbind(.self, new_lbtest1, new_lbtest2)
+  .self <- rbind(.self, new_lbtest1, new_lbtest2)
   return(.self)
 }
 
@@ -180,12 +173,11 @@ new_lbtest_06 <- function(.self) {
 #' @outputs AVAL
 #' @returns `.self`
 new_aval_01 <- function(.self) {
-
   new_aval <- .self |>
     dplyr::filter(AVAL == 1) |>
     dplyr::mutate(AVAL = 3.14)
 
-  .self <-   rbind(.self, new_aval)
+  .self <- rbind(.self, new_aval)
   return(.self)
 }
 
@@ -196,16 +188,15 @@ new_aval_01 <- function(.self) {
 #' @outputs AVAL
 #' @returns `.self`
 new_aval_02 <- function(.self) {
-
   new_aval <- .self |>
     dplyr::filter(AVAL == 3.14) |>
     dplyr::mutate(AVAL = 0)
 
-  if(nrow(new_aval) == 0) {
+  if (nrow(new_aval) == 0) {
     stop("No rows to add.")
   }
 
-  .self <-   rbind(.self, new_aval)
+  .self <- rbind(.self, new_aval)
   return(.self)
 }
 
@@ -217,16 +208,15 @@ new_aval_02 <- function(.self) {
 #' @outputs AVAL
 #' @returns `.self`
 new_aval_03 <- function(.self) {
-
   new_aval <- .self |>
     dplyr::filter(AVAL == 2 & DOMAIN == "LB") |>
     dplyr::mutate(AVAL = 0)
 
-  if(nrow(new_aval) == 0) {
+  if (nrow(new_aval) == 0) {
     stop("No rows to add.")
   }
 
-  .self <-   rbind(.self, new_aval)
+  .self <- rbind(.self, new_aval)
   return(.self)
 }
 
@@ -238,16 +228,15 @@ new_aval_03 <- function(.self) {
 #' @outputs AVAL
 #' @returns `.self`
 new_aval_04 <- function(.self) {
-
   new_aval <- .self |>
     dplyr::filter(AVAL > 1000 & !is.na(AVAL) & AVALC != "") |>
     dplyr::mutate(AVAL = 1000)
 
-  if(nrow(new_aval) == 0) {
+  if (nrow(new_aval) == 0) {
     stop("No rows to add.")
   }
 
-  .self <-   rbind(.self, new_aval)
+  .self <- rbind(.self, new_aval)
   return(.self)
 }
 
@@ -258,16 +247,15 @@ new_aval_04 <- function(.self) {
 #' @outputs VISITNUM
 #' @returns `.self`
 new_visitnum_01 <- function(.self) {
-
   new_visitnum <- .self |>
-    dplyr::filter(round(VISITNUM,2) == 1.3) |>
+    dplyr::filter(round(VISITNUM, 2) == 1.3) |>
     dplyr::mutate(VISITNUM = 1.4)
 
-  if(nrow(new_visitnum) == 0) {
+  if (nrow(new_visitnum) == 0) {
     stop("No rows to add.")
   }
 
-  .self <-   rbind(.self, new_visitnum)
+  .self <- rbind(.self, new_visitnum)
   return(.self)
 }
 
@@ -278,16 +266,15 @@ new_visitnum_01 <- function(.self) {
 #' @outputs VISITNUM
 #' @returns `.self`
 new_visitnum_02 <- function(.self) {
-
   new_visitnum <- .self |>
     dplyr::filter(VISITNUM == 1.4) |>
     dplyr::mutate(VISITNUM = 1.5)
 
-  if(nrow(new_visitnum) == 0) {
+  if (nrow(new_visitnum) == 0) {
     stop("No rows to add.")
   }
 
-  .self <-   rbind(.self, new_visitnum)
+  .self <- rbind(.self, new_visitnum)
   return(.self)
 }
 
@@ -299,10 +286,13 @@ new_visitnum_02 <- function(.self) {
 #' @returns `.self`
 aval_grp_01 <- function(.self) {
   .self <- .self |>
-    dplyr::mutate(AVAL_GRP = ifelse(
-      AVAL < 10, "low",
-      ifelse(AVAL < 100, "medium", "high")
-    ))
+    dplyr::mutate(
+      AVAL_GRP = ifelse(
+        AVAL < 10,
+        "low",
+        ifelse(AVAL < 100, "medium", "high")
+      )
+    )
   return(.self)
 }
 
@@ -312,10 +302,14 @@ aval_grp_01 <- function(.self) {
 #' @depends .self AVAL_GRP
 #' @outputs AVAL_GRP2
 #' @returns `.self`
-aval_grp_02 <-   function(.self) {
+aval_grp_02 <- function(.self) {
   .self <- .self |>
-    dplyr::mutate(AVAL_GRP2 = ifelse(
-      AVAL_GRP %in% c("low", "medium"), "low/medium", "high")
+    dplyr::mutate(
+      AVAL_GRP2 = ifelse(
+        AVAL_GRP %in% c("low", "medium"),
+        "low/medium",
+        "high"
+      )
     )
   return(.self)
 }
@@ -325,8 +319,8 @@ aval_grp_02 <-   function(.self) {
 #' @param .self `data.frame` Input data set
 #' @type derivation
 #' @returns `.self`
-copy_rows_01 <-   function(.self) {
-  .self <- rbind(.self, .self[1:10,])
+copy_rows_01 <- function(.self) {
+  .self <- rbind(.self, .self[1:10, ])
   return(.self)
 }
 

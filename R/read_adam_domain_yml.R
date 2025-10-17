@@ -118,7 +118,7 @@ read_adam_domain_yml <- function(
   # Restructure to match internal data model
   rows <- restructure_row_actions(x[["row_action"]])
   columns <- restructure_column_metadata(x[["column_action"]])
-  
+
   out <- c(columns, rows)
 
   return_list <- list(
@@ -155,7 +155,8 @@ restructure_row_actions <- function(row_action) {
       i$parameters <- "NA"
     }
     return(i)
-  }) |> unname()
+  }) |>
+    unname()
 }
 restructure_column_metadata <- function(column_metadata) {
   purrr::imap(

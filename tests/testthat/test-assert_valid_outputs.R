@@ -1,9 +1,11 @@
-test_that("Error is triggered for a col_compute action with invalid column name in UI data", {
-
+test_that("Error for col_compute action w/ invalid column name in UI data", {
   # SETUP -------------------------------------------------------------------
 
   path_ui_data <- test_path("fixtures", "assert_valid_outputs_adsl_03.yml")
-  path_ui_data_rendered <- setup_yml_file_for_testing(path_ui_data, environment())
+  path_ui_data_rendered <- setup_yml_file_for_testing(
+    path_ui_data,
+    environment()
+  )
   path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
   path_trial <- withr::local_tempdir()
 
@@ -29,17 +31,21 @@ test_that("Error is triggered for a col_compute action with invalid column name 
   # EXPECT --------------------------------------------------------------------
 
   error_msg_clean <- gsub("\\s+", " ", gsub("\\n", "", error_msg$message))
-  expect_true(grepl("Expected column outputs:\"AGE\" Actual column outputs:\"AGE_INVALID\" Missing from expected outputs:AGE",
-                    error_msg_clean))
+  expect_true(grepl(
+    "Expected column outputs:\"AGE\" Actual column outputs:\"AGE_INVALID\" Missing from expected outputs:AGE",
+    error_msg_clean
+  ))
 })
 
 
 test_that("Error is triggered for a col_compute with two outputs that only have one output specified in the UI data", {
-
   # SETUP -------------------------------------------------------------------
 
   path_ui_data <- test_path("fixtures", "assert_valid_outputs_adlb_01.yml")
-  path_ui_data_rendered <- setup_yml_file_for_testing(path_ui_data, environment())
+  path_ui_data_rendered <- setup_yml_file_for_testing(
+    path_ui_data,
+    environment()
+  )
   path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
   path_trial <- withr::local_tempdir()
 
@@ -47,7 +53,7 @@ test_that("Error is triggered for a col_compute with two outputs that only have 
     testdata = "pharmaverse",
     test_data_path = path_trial,
     sdtm_domains = c("lb")
-    )
+  )
   standards_lib <- "mighy.standards"
 
   # ACT -------------------------------------------------------------------
@@ -65,8 +71,8 @@ test_that("Error is triggered for a col_compute with two outputs that only have 
   # EXPECT --------------------------------------------------------------------
 
   error_msg_clean <- gsub("\\s+", " ", gsub("\\n", "", error_msg$message))
-  expect_true(grepl("Expected column outputs:\"AVALFL\",\"AVALREA\" Actual column outputs:\"AVALFL\" Missing from expected outputs:AVALREA",
-                    error_msg_clean))
-
+  expect_true(grepl(
+    "Expected column outputs:\"AVALFL\",\"AVALREA\" Actual column outputs:\"AVALFL\" Missing from expected outputs:AVALREA", # nolint: line_length_linter
+    error_msg_clean
+  ))
 })
-

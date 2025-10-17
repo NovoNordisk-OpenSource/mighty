@@ -1,6 +1,5 @@
 test_that("No source data makes all actions non-executable", {
-
- # SETUP -------------------------------------------------------------------
+  # SETUP -------------------------------------------------------------------
 
   trial_path <- withr::local_tempdir()
 
@@ -50,8 +49,7 @@ column_action:
 })
 
 test_that("Available source data makes all actions executable", {
-
- # SETUP -------------------------------------------------------------------
+  # SETUP -------------------------------------------------------------------
   trial_path <- withr::local_tempdir()
 
   yml <- "
@@ -110,10 +108,8 @@ column_action:
   expect_true(nrow(ADSL) > 0)
 })
 
-test_that(
-  "Missing variable in source data makes filter action non-executable", {
-
- # SETUP -------------------------------------------------------------------
+test_that("Missing variable in source data makes filter action non-executable", {
+  # SETUP -------------------------------------------------------------------
   trial_path <- withr::local_tempdir()
 
   yml <- "
@@ -138,9 +134,12 @@ column_action:
 
 "
   # Setup test data with dm domain but remove dm.SEX and dm.AGEU
-  pt <- prepare_test(trial_path, yml, c("dm"),
-                     remove_data = data.table(domain = c("dm"),
-                                              columns = c("SEX", "AGEU")))
+  pt <- prepare_test(
+    trial_path,
+    yml,
+    c("dm"),
+    remove_data = data.table(domain = c("dm"), columns = c("SEX", "AGEU"))
+  )
   ui_data <- create_temp_yaml(yml)
   cnt <- connector::connect(file.path(trial_path, "_connector.yml"))
 
@@ -158,12 +157,24 @@ column_action:
 
   # Expect filter cannot execute due to missing column SEX
   expect_false(actual$executable_program_sequence[3]$can_execute)
-  expect_setequal(actual$executable_program_sequence$removed_outputs[[1]], c("dm.SEX", "dm.AGEU"))
-  expect_setequal(actual$executable_program_sequence$removed_outputs[[2]], c("ADSL.SEX", "ADSL.AGEU"))
+  expect_setequal(
+    actual$executable_program_sequence$removed_outputs[[1]],
+    c("dm.SEX", "dm.AGEU")
+  )
+  expect_setequal(
+    actual$executable_program_sequence$removed_outputs[[2]],
+    c("ADSL.SEX", "ADSL.AGEU")
+  )
 
   expect_true(grepl("Filter cannot be applied", actual$executable_programs))
-  expect_true(grepl("#(.)+dplyr::filter(.)+na\\(SEX\\)", actual$executable_programs))
-  expect_false(grepl("\\n^#(.)+dplyr::filter(.)+na\\(SEX\\)", actual$executable_programs))
+  expect_true(grepl(
+    "#(.)+dplyr::filter(.)+na\\(SEX\\)",
+    actual$executable_programs
+  ))
+  expect_false(grepl(
+    "\\n^#(.)+dplyr::filter(.)+na\\(SEX\\)",
+    actual$executable_programs
+  ))
 
   # Check executable program can be run
   write_adam_programs(
@@ -179,10 +190,8 @@ column_action:
   expect_true(nrow(ADSL) > 0)
 })
 
-test_that(
-  "Missing variable in source data with no filter impact keeps filter executable", {
-
-# SETUP -------------------------------------------------------------------
+test_that("Missing variable in source data with no filter impact keeps filter executable", {
+  # SETUP -------------------------------------------------------------------
 
   trial_path <- withr::local_tempdir()
 
@@ -208,9 +217,12 @@ column_action:
 "
 
   # Setup test data with dm domain but remove dm.AGEU
-  pt <- prepare_test(trial_path, yml, c("dm"),
-                     remove_data = data.table(domain = c("dm"),
-                                              columns = c("AGEU")))
+  pt <- prepare_test(
+    trial_path,
+    yml,
+    c("dm"),
+    remove_data = data.table(domain = c("dm"), columns = c("AGEU"))
+  )
   ui_data <- create_temp_yaml(yml)
   cnt <- connector::connect(file.path(trial_path, "_connector.yml"))
 
@@ -228,8 +240,14 @@ column_action:
 
   # Expect filter is not impacted by missing column AGEU
   expect_true(actual$executable_program_sequence[3]$can_execute)
-  expect_identical(actual$executable_program_sequence[1]$removed_outputs, c("dm.AGEU"))
-  expect_identical(actual$executable_program_sequence[2]$removed_outputs, c("ADSL.AGEU"))
+  expect_identical(
+    actual$executable_program_sequence[1]$removed_outputs,
+    c("dm.AGEU")
+  )
+  expect_identical(
+    actual$executable_program_sequence[2]$removed_outputs,
+    c("ADSL.AGEU")
+  )
 
   # Check executable program can be run
   write_adam_programs(
@@ -246,8 +264,7 @@ column_action:
 })
 
 test_that("Missing variables in source data makes filter action non-executable - case with global and domain filter", {
-
- # SETUP -------------------------------------------------------------------
+  # SETUP -------------------------------------------------------------------
 
   trial_path <- withr::local_tempdir()
   yml <- "
@@ -275,9 +292,16 @@ column_action:
 
 "
   # Setup test data with lb and adsl domains but remove lb.LBTESTCD and adsl.SEX
-  pt <- prepare_test(trial_path, yml, c("lb"), c("adsl"),
-                     remove_data = data.table(domain = c("lb", "adsl"),
-                                              columns = c("LBTESTCD", "SEX")))
+  pt <- prepare_test(
+    trial_path,
+    yml,
+    c("lb"),
+    c("adsl"),
+    remove_data = data.table(
+      domain = c("lb", "adsl"),
+      columns = c("LBTESTCD", "SEX")
+    )
+  )
   ui_data <- create_temp_yaml(yml)
   cnt <- connector::connect(file.path(trial_path, "_connector.yml"))
 
@@ -295,8 +319,14 @@ column_action:
 
   # Expect filter cannot execute due to missing column SEX and AGEU
   expect_false(actual$executable_program_sequence[3]$can_execute)
-  expect_identical(actual$executable_program_sequence[1]$removed_outputs[[1]], c("lb.LBTESTCD", "adsl.SEX"))
-  expect_identical(actual$executable_program_sequence[2]$removed_outputs[[1]], c("ADLB.LBTESTCD", "ADLB.SEX"))
+  expect_identical(
+    actual$executable_program_sequence[1]$removed_outputs[[1]],
+    c("lb.LBTESTCD", "adsl.SEX")
+  )
+  expect_identical(
+    actual$executable_program_sequence[2]$removed_outputs[[1]],
+    c("ADLB.LBTESTCD", "ADLB.SEX")
+  )
 
   # Check executable program can be run
   write_adam_programs(
@@ -308,7 +338,10 @@ column_action:
   expect_no_error(x[[1]] |> source())
 
   # Check ADLB generated by executable program
-  expect_setequal(names(ADLB), c("STUDYID", "USUBJID", "LBSEQ", "VISITNUM", "LBTEST"))
+  expect_setequal(
+    names(ADLB),
+    c("STUDYID", "USUBJID", "LBSEQ", "VISITNUM", "LBTEST")
+  )
   expect_true(nrow(ADLB) > 0)
 
   # Check complete program cannot be run
@@ -321,8 +354,7 @@ column_action:
 })
 
 test_that("Missing variable in source data makes actions executable but deactivates a predecessor", {
-
- # SETUP -------------------------------------------------------------------
+  # SETUP -------------------------------------------------------------------
 
   trial_path <- withr::local_tempdir()
 
@@ -348,7 +380,12 @@ column_action:
 "
 
   # Setup test data with dm domain but remove dm.SEX
-  pt <- prepare_test(trial_path, yml, c("dm"), remove_data = data.table(domain = c("dm"), columns = c("SEX")))
+  pt <- prepare_test(
+    trial_path,
+    yml,
+    c("dm"),
+    remove_data = data.table(domain = c("dm"), columns = c("SEX"))
+  )
   ui_data <- create_temp_yaml(yml)
   cnt <- connector::connect(file.path(trial_path, "_connector.yml"))
 
@@ -372,13 +409,17 @@ column_action:
 
   # Expect a message regarding missing column SEX
   expect_true(length(actual$executable_program_sequence[1]$lineage) > 0)
-  expect_true(all(grepl("sdtm\\.dm\\.SEX", actual$executable_program_sequence[1]$lineage)))
+  expect_true(all(grepl(
+    "sdtm\\.dm\\.SEX",
+    actual$executable_program_sequence[1]$lineage
+  )))
 
   # Test programs are out commented
   expect_true(
-  grepl(
-    "# Code can be executed but the following columns are not found in source data:\\n# sdtm.dm.SEX",
-    actual$executable_programs)
+    grepl(
+      "# Code can be executed but the following columns are not found in source data:\\n# sdtm.dm.SEX",
+      actual$executable_programs
+    )
   )
 
   # Check executable program can be run
@@ -396,8 +437,7 @@ column_action:
 })
 
 test_that("Missing domain in source data makes actions non-executable", {
-
-# SETUP -------------------------------------------------------------------
+  # SETUP -------------------------------------------------------------------
 
   trial_path <- withr::local_tempdir()
 
@@ -446,17 +486,22 @@ column_action:
   expect_true(all(!actual$executable_program_sequence$can_execute))
 
   # Expect a message regarding missing dataset dm_vaccine
-  expect_true(grepl("sdtm\\.dm_vaccine", actual$executable_program_sequence[1]$lineage))
+  expect_true(grepl(
+    "sdtm\\.dm_vaccine",
+    actual$executable_program_sequence[1]$lineage
+  ))
 
   # Expect all program lines are blank or starts with #
   code_lines <- strsplit(actual$executable_programs[[1]], "\\n")
-  expect_true(all(sapply(code_lines[[1]], \(x) (x == "" || substr(x, 1, 1) == "#"))))
+  expect_true(all(sapply(code_lines[[1]], \(x) {
+    (x == "" || substr(x, 1, 1) == "#")
+  })))
 })
 
 test_that("Missing base domain does not allow execution based on available data in other base domains", {
   #yaml file with three base domains
   # NOTE: More or less identical with the test
-  # test_that("Missing domain in source data makes actions non-executable")
+  # "Missing domain in source data makes actions non-executable"
   # Differs since DM domain is not available. May be a use case, if the specs
   # are not taking casing into account
 
@@ -517,13 +562,15 @@ column_action:
 
   # Expect all program lines are blank or starts with #
   code_lines <- strsplit(actual$executable_programs[[1]], "\\n")
-  expect_true(all(sapply(code_lines[[1]], \(x) (x == "" || substr(x, 1, 1) == "#"))))
+  expect_true(all(sapply(code_lines[[1]], \(x) {
+    (x == "" || substr(x, 1, 1) == "#")
+  })))
 })
 
 test_that("Missing columns in one base domain are disregarded in other base domains", {
   #yaml file with three base domains
   # check that missing column affects other domains
-    trial_path <- withr::local_tempdir()
+  trial_path <- withr::local_tempdir()
 
   yml <- "
 table:
@@ -571,22 +618,32 @@ column_action:
   # Check removed outputs from read_data action
   expect_setequal(
     actual$executable_program_sequence[1]$removed_outputs[[1]],
-    c("dm.SEX", "dm.AGE", "dm.AGEU",
-      "sv.SEX", "sv.AGE", "sv.AGEU",
-      "dm_vaccine.SEX", "dm_vaccine.AGE", "dm_vaccine.AGEU")
+    c(
+      "dm.SEX",
+      "dm.AGE",
+      "dm.AGEU",
+      "sv.SEX",
+      "sv.AGE",
+      "sv.AGEU",
+      "dm_vaccine.SEX",
+      "dm_vaccine.AGE",
+      "dm_vaccine.AGEU"
     )
+  )
 
   # Check comments in executable program
   expect_true(
     grepl(
-      "# Code can be executed but the following columns are not found in source data:\\n# sdtm.sv.SEX, sdtm.sv.AGE, sdtm.sv.AGEU",
-      actual$executable_programs)
+      "# Code can be executed but the following columns are not found in source data:\\n# sdtm.sv.SEX, sdtm.sv.AGE, sdtm.sv.AGEU", # nolint: line_length_linter
+      actual$executable_programs
     )
+  )
   expect_true(
     grepl(
-      "\\n# This impacts the following data that will be ignored:\\n# sdtm.dm.SEX, sdtm.dm.AGE, sdtm.dm.AGEU, sdtm.sv.SEX, sdtm.sv.AGE, sdtm.sv.AGEU, sdtm.dm_vaccine.SEX, sdtm.dm_vaccine.AGE, sdtm.dm_vaccine.AGEU",
-      actual$executable_programs)
+      "\\n# This impacts the following data that will be ignored:\\n# sdtm.dm.SEX, sdtm.dm.AGE, sdtm.dm.AGEU, sdtm.sv.SEX, sdtm.sv.AGE, sdtm.sv.AGEU, sdtm.dm_vaccine.SEX, sdtm.dm_vaccine.AGE, sdtm.dm_vaccine.AGEU", # nolint: line_length_linter
+      actual$executable_programs
     )
+  )
 
   # Check executable program can be run
   write_adam_programs(
@@ -610,10 +667,8 @@ column_action:
   expect_error(x |> source(), "Can't select columns that don't exist.")
 })
 
-test_that(
-  "Filter removes missing base domain variables and creates lineage message", {
-
-# SETUP -------------------------------------------------------------------
+test_that("Filter removes missing base domain variables and creates lineage message", {
+  # SETUP -------------------------------------------------------------------
   trial_path <- withr::local_tempdir()
 
   yml <- "
@@ -639,7 +694,13 @@ column_action:
 "
 
   # Setup test data with dm domain but remove dm.AGEU
-  pt <- prepare_test(trial_path, yml, c("lb"), c("adsl"), remove_data = data.table(domain = c("lb"), columns = c("LBSTRESN")))
+  pt <- prepare_test(
+    trial_path,
+    yml,
+    c("lb"),
+    c("adsl"),
+    remove_data = data.table(domain = c("lb"), columns = c("LBSTRESN"))
+  )
   ui_data <- create_temp_yaml(yml)
   cnt <- connector::connect(file.path(trial_path, "_connector.yml"))
 
@@ -663,11 +724,19 @@ column_action:
   expect_true(eps[3]$can_execute)
 
   # Check lineage message
-  expect_identical(eps[3]$lineage,
-                   "Code can be executed but the following columns are not found in source data and are ignored in the filter step:\nadam.ADLB.LBSTRESN")
+  expect_identical(
+    eps[3]$lineage,
+    "Code can be executed but the following columns are not found in source data and are ignored in the filter step:\nadam.ADLB.LBSTRESN" # nolint: line_length_linter
+  )
   # Check removed outputs from read_data and init_domain actions
-  expect_identical(eps[node_id == "ADLB-1-read_data"]$removed_outputs[[1]], "lb.LBSTRESN")
-  expect_identical(eps[node_id == "ADLB-init_domain"]$removed_outputs[[1]], "ADLB.LBSTRESN")
+  expect_identical(
+    eps[node_id == "ADLB-1-read_data"]$removed_outputs[[1]],
+    "lb.LBSTRESN"
+  )
+  expect_identical(
+    eps[node_id == "ADLB-init_domain"]$removed_outputs[[1]],
+    "ADLB.LBSTRESN"
+  )
 
   # Check executable program can be run
   write_adam_programs(
@@ -680,5 +749,4 @@ column_action:
 
   # Check ADSL table generated by executable program and verify LBSTRESN is missing
   expect_setequal(names(ADLB), c("STUDYID", "USUBJID", "SEX", "LBSEQ"))
-  })
-
+})

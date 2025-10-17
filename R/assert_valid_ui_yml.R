@@ -2,8 +2,7 @@
 #' @description Validates that ui_yml parameter meets expected structure and content requirements
 #' @param ui_yml The UI YAML input to validate
 #' @return Invisible TRUE if valid, otherwise stops with error
-assert_valid_ui_yml <-  function(ui_yml) {
-
+assert_valid_ui_yml <- function(ui_yml) {
   # Check all elements are named
   if (is.null(names(ui_yml)) || any(names(ui_yml) == "")) {
     stop("All elements in ui_yml must be named (representing domain names)")
@@ -13,7 +12,10 @@ assert_valid_ui_yml <-  function(ui_yml) {
   domain_names <- names(ui_yml)
   if (any(duplicated(domain_names))) {
     duplicated_domains <- domain_names[duplicated(domain_names)]
-    stop("Duplicate domain names found in ui_yml: ", paste(duplicated_domains, collapse = ", "))
+    stop(
+      "Duplicate domain names found in ui_yml: ",
+      paste(duplicated_domains, collapse = ", ")
+    )
   }
 
   # Validate each domain specification
@@ -34,21 +36,35 @@ assert_valid_ui_yml <-  function(ui_yml) {
 assert_valid_domain_spec <- function(domain_spec, domain_name) {
   # Check basic structure
   if (!is.list(domain_spec)) {
-    stop("Domain specification for '", domain_name, "' must be a list, got: ", class(domain_spec)[1])
+    stop(
+      "Domain specification for '",
+      domain_name,
+      "' must be a list, got: ",
+      class(domain_spec)[1]
+    )
   }
 
   # Check required top-level elements
   required_elements <- c("columns", "domain")
   missing_elements <- setdiff(required_elements, names(domain_spec))
   if (length(missing_elements) > 0) {
-    stop("Domain specification for '", domain_name, "' is missing required elements: ",
-         paste(missing_elements, collapse = ", "))
+    stop(
+      "Domain specification for '",
+      domain_name,
+      "' is missing required elements: ",
+      paste(missing_elements, collapse = ", ")
+    )
   }
 
   # Validate domain name consistency
   if (!identical(domain_spec$domain, domain_name)) {
-    stop("Domain name mismatch: list element named '", domain_name,
-         "' but domain specification contains domain = '", domain_spec$domain, "'")
+    stop(
+      "Domain name mismatch: list element named '",
+      domain_name,
+      "' but domain specification contains domain = '",
+      domain_spec$domain,
+      "'"
+    )
   }
 
   # Validate columns structure
@@ -62,7 +78,7 @@ assert_valid_domain_spec <- function(domain_spec, domain_name) {
 
   # Validate each column specification
   for (i in seq_along(domain_spec$columns)) {
-    column_spec <-  domain_spec$columns[[i]]
+    column_spec <- domain_spec$columns[[i]]
     assert_valid_column_spec(column_spec, domain_name, i)
   }
 
@@ -82,27 +98,53 @@ assert_valid_domain_spec <- function(domain_spec, domain_name) {
 #' @return Invisible TRUE if valid, otherwise stops with error
 assert_valid_column_spec <- function(column_spec, domain_name, column_index) {
   if (!is.list(column_spec)) {
-    stop("Column specification ", column_index, " in domain '", domain_name,
-         "' must be a list, got: ", class(column_spec)[1])
+    stop(
+      "Column specification ",
+      column_index,
+      " in domain '",
+      domain_name,
+      "' must be a list, got: ",
+      class(column_spec)[1]
+    )
   }
 
   # Validate depend_cols structure if present
-  if ("depend_cols" %in% names(column_spec) && !is.null(column_spec$depend_cols)) {
-    if (!is.character(column_spec$depend_cols) && !is.list(column_spec$depend_cols)) {
-      stop("depend_cols in column ", column_index, " of domain '", domain_name,
-           "' must be character vector or list")
+  if (
+    "depend_cols" %in% names(column_spec) && !is.null(column_spec$depend_cols)
+  ) {
+    if (
+      !is.character(column_spec$depend_cols) &&
+        !is.list(column_spec$depend_cols)
+    ) {
+      stop(
+        "depend_cols in column ",
+        column_index,
+        " of domain '",
+        domain_name,
+        "' must be character vector or list"
+      )
     }
   }
 
   # Validate outputs structure if present
   if ("outputs" %in% names(column_spec) && !is.null(column_spec$outputs)) {
     if (!is.character(column_spec$outputs)) {
-      stop("outputs in column ", column_index, " of domain '", domain_name,
-           "' must be character vector")
+      stop(
+        "outputs in column ",
+        column_index,
+        " of domain '",
+        domain_name,
+        "' must be character vector"
+      )
     }
     if (length(column_spec$outputs) == 0) {
-      stop("outputs in column ", column_index, " of domain '", domain_name,
-           "' cannot be empty")
+      stop(
+        "outputs in column ",
+        column_index,
+        " of domain '",
+        domain_name,
+        "' cannot be empty"
+      )
     }
   }
 
@@ -116,7 +158,12 @@ assert_valid_column_spec <- function(column_spec, domain_name, column_index) {
 #' @return Invisible TRUE if valid, otherwise stops with error
 assert_valid_init_spec <- function(init_spec, domain_name) {
   if (!is.list(init_spec)) {
-    stop("'init' section for domain '", domain_name, "' must be a list, got: ", class(init_spec)[1])
+    stop(
+      "'init' section for domain '",
+      domain_name,
+      "' must be a list, got: ",
+      class(init_spec)[1]
+    )
   }
 
   # Validate filter specifications if present
@@ -124,8 +171,12 @@ assert_valid_init_spec <- function(init_spec, domain_name) {
   for (field in filter_fields) {
     if (field %in% names(init_spec) && !is.null(init_spec[[field]])) {
       if (!is.character(init_spec[[field]]) && !is.list(init_spec[[field]])) {
-        stop(field, " in `init` section for domain '", domain_name,
-             "' must be character vector or list")
+        stop(
+          field,
+          " in `init` section for domain '",
+          domain_name,
+          "' must be character vector or list"
+        )
       }
     }
   }

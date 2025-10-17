@@ -1,5 +1,5 @@
 #' @title New lbtest 09
-#' @description A description 
+#' @description A description
 #' @type row
 #' @depends ADLB LBTEST
 #' @outputs LBTEST

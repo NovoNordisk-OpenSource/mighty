@@ -82,14 +82,12 @@ test_that("Complex test with multiple domains and column/row operations", {
     programs[["1_ADSL.R"]]
   )
   expect_section_order(
-    c("ADSL-PLANNED_ARM",
-      "ADSL-AGE_DIFF1"),
+    c("ADSL-PLANNED_ARM", "ADSL-AGE_DIFF1"),
     "ADSL-AGE_DIFF2",
     programs[["1_ADSL.R"]]
   )
   expect_section_order(
-    c("ADSL-PLANNED_ARM",
-      "ADSL-AGE_DIFF1"),
+    c("ADSL-PLANNED_ARM", "ADSL-AGE_DIFF1"),
     "ADSL-NEWFL01-NEWREA01",
     programs[["1_ADSL.R"]]
   )
@@ -116,8 +114,7 @@ test_that("Complex test with multiple domains and column/row operations", {
     programs[["2_ADLB.R"]]
   )
   expect_section_order(
-    c("ADLB-new_microcytes",
-      "ADLB-AVAL_GRP"),
+    c("ADLB-new_microcytes", "ADLB-AVAL_GRP"),
     "ADLB-AVAL_GRP2",
     programs[["2_ADLB.R"]]
   )
@@ -142,8 +139,7 @@ test_that("Complex test with multiple domains and column/row operations", {
     programs[["2_ADLB.R"]]
   )
   expect_section_order(
-    c("ADLB-AVALC",
-      "ADLB-LBTEST"),
+    c("ADLB-AVALC", "ADLB-LBTEST"),
     "ADLB-new_macrocytes",
     programs[["2_ADLB.R"]]
   )
@@ -158,14 +154,12 @@ test_that("Complex test with multiple domains and column/row operations", {
     programs[["2_ADLB.R"]]
   )
   expect_section_order(
-    c("ADLB-LBTEST",
-      "ADLB-new_microcytes"),
+    c("ADLB-LBTEST", "ADLB-new_microcytes"),
     "ADLB-new_microcytes2",
     programs[["2_ADLB.R"]]
   )
   expect_section_order(
-    c("ADLB-AVAL",
-      "ADLB-new_aval_01"),
+    c("ADLB-AVAL", "ADLB-new_aval_01"),
     "ADLB-new_aval_02",
     programs[["2_ADLB.R"]]
   )
@@ -211,5 +205,4 @@ test_that("Complex test with multiple domains and column/row operations", {
   ADSL |>
     data.table::setDF() |>
     expect_snapshot_value(style = "json2", variant = "adsl_2")
-
 })

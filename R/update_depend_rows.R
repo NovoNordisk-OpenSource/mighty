@@ -14,14 +14,16 @@
 #' @return A data.table with updated `depend_rows` where prefixes are added.
 #'
 update_depend_rows <- function(nodes) {
-
   #  Make a copy of the input data.table to preserve original data
   x <- copy(nodes)
 
   # Update depend_rows by prepending the corresponding domain prefix
-  x[!is.na(depend_rows), depend_rows := lapply(1:.N, function(i) {
-    paste0(domain[i], "-", depend_rows[[i]])  # Concatenate domain and depend_rows
-  })]
+  x[
+    !is.na(depend_rows),
+    depend_rows := lapply(seq_len(.N), function(i) {
+      paste0(domain[i], "-", depend_rows[[i]]) # Concatenate domain and depend_rows
+    })
+  ]
 
   # Return the updated data.table
   return(x)

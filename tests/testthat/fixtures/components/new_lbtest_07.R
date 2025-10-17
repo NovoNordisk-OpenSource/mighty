@@ -1,5 +1,5 @@
 #' @title lbtest 07
-#' @description A description 
+#' @description A description
 #' @type row
 #' @depends ADLB LBTEST
 #' @outputs LBTEST

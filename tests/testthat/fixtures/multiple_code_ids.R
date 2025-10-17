@@ -5,7 +5,7 @@
 #' @outputs A
 #' @outputs B
 #' @returns `.self`
-fn_AB <- function(.self, params = list(param_1=NULL, param_2 = NULL)){
+fn_AB <- function(.self, params = list(param_1 = NULL, param_2 = NULL)) {
   print("hello world")
 }
 
@@ -16,7 +16,7 @@ fn_AB <- function(.self, params = list(param_1=NULL, param_2 = NULL)){
 #' @depends .self USUBJID
 #' @outputs C
 #' @returns `.self`
-fn_C <- function(.self, params = list(param_1=NULL)){
+fn_C <- function(.self, params = list(param_1 = NULL)) {
   print("hello world")
 }
 
@@ -27,7 +27,7 @@ fn_C <- function(.self, params = list(param_1=NULL)){
 #' @depends .self USUBJID
 #' @outputs C
 #' @returns `.self`
-fn_D <- function(.self, params = list(param_1=NULL)){
+fn_D <- function(.self, params = list(param_1 = NULL)) {
   print("hello world")
 }
 
@@ -37,6 +37,6 @@ fn_D <- function(.self, params = list(param_1=NULL)){
 #' @depends .self USUBJID
 #' @outputs C
 #' @returns `.self`
-fn_E <- function(.self, params = list(param_1=NULL)){
+fn_E <- function(.self, params = list(param_1 = NULL)) {
   print("hello world")
 }

@@ -1,5 +1,5 @@
 #' @title Arm match 01
-#' @description A description 
+#' @description A description
 #' @type derivation
 #' @depends ADSL PLANNED_ARM
 #' @depends ADSL ACTARM

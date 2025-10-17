@@ -98,7 +98,6 @@ generate_adam_code <- function(
   check_cross_domain_adam_dependencies = TRUE,
   data_context = NULL
 ) {
-
   # Read data from UI containing explicit user input
   ui_yml <- read_adam_specs(path_ui_data, validate = TRUE)
   ui_init <- purrr::list_transpose(ui_yml)[["init"]]
@@ -126,7 +125,11 @@ generate_adam_code <- function(
   actions_04_org <- organize_actions(actions_03_filter, edges)
   actions_05_read <- add_read_data_actions(actions_04_org)
   actions_06_write <- add_write_data_actions(actions_05_read)
-  actions_07_check <- add_check_executable_status(actions_06_write, ui_yml, data_context)
+  actions_07_check <- add_check_executable_status(
+    actions_06_write,
+    ui_yml,
+    data_context
+  )
   # Create programs
   actions_08_code <- render_code(
     actions = actions_06_write,
@@ -135,11 +138,11 @@ generate_adam_code <- function(
     path_trial = path_trial
   )
   actions_08_available_data <- render_code(
-     actions = actions_07_check$actions,
-     domain_keys = domain_keys,
-     ui_data = ui_yml,
-     path_trial = path_trial,
-     available_data = actions_07_check$available_columns
+    actions = actions_07_check$actions,
+    domain_keys = domain_keys,
+    ui_data = ui_yml,
+    path_trial = path_trial,
+    available_data = actions_07_check$available_columns
   )
   return(
     list(

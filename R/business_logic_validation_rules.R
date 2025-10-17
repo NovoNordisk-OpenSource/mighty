@@ -8,7 +8,6 @@
 #' @return List with 'valid' (logical) and 'errors' (character vector)
 #' @noRd
 val_no_params_when_missing_code_id <- function(yaml_data, context = list()) {
-
   inx <- vapply(
     yaml_data$column_action,
     function(i) !is.null(i$parameters) && is.null(i$code_id),
@@ -65,7 +64,6 @@ val_no_duplicate_columns <- function(yaml_data, context = list()) {
 #' @return List with 'valid' (logical) and 'errors' (character vector)
 #' @noRd
 val_no_duplicate_row_ids <- function(yaml_data, context = list()) {
-
   row_ids <- names(yaml_data$row_action)
   row_duplicates <- row_ids[duplicated(row_ids)]
 
@@ -91,10 +89,9 @@ val_no_duplicate_row_ids <- function(yaml_data, context = list()) {
 #' @param context Validation context (yaml_file, ruleset_name, etc.)
 #' @return List with 'valid' (logical) and 'errors' (character vector)
 #' @noRd
-val_depend_rows <-  function(yaml_data, context = list()) {
-
+val_depend_rows <- function(yaml_data, context = list()) {
   a <- lapply(yaml_data$column_action, `[[`, "depend_rows") |> unlist()
-  b <-  lapply(yaml_data$row_action, `[[`, "depend_rows") |> unlist()
+  b <- lapply(yaml_data$row_action, `[[`, "depend_rows") |> unlist()
   all_row_depends <- c(a, b)
 
   # row action IDs are now the names of the list elements
@@ -109,7 +106,10 @@ val_depend_rows <-  function(yaml_data, context = list()) {
   list(
     valid = FALSE,
     errors = c(
-      "The following row actions are not defined, but are listed as row dependencies for either a column or another row action: ",
+      paste(
+        "The following row actions are not defined,",
+        "but are listed as row dependencies for either a column or another row action:"
+      ),
       paste0("  - ", missing_row_actions)
     )
   )
@@ -128,7 +128,6 @@ val_source_and_code_id_notboth_populated <- function(
   yaml_data,
   context = list()
 ) {
-
   inx <- vapply(
     yaml_data$column_action,
     function(i) !is.null(i$code_id) && !is.null(i$source),

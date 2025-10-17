@@ -1,5 +1,5 @@
 #' @title age_redefined_02
-#' @description A description 
+#' @description A description
 #' @type derivation
 #' @depends core AGE
 #' @outputs AGE
@@ -10,4 +10,3 @@ age_redefined_02 <- function(ADLB) {
     dplyr::mutate(AGE = AGE + 1)
   return(ADLB)
 }
-

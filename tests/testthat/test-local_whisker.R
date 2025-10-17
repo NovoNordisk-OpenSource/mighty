@@ -44,7 +44,7 @@ column_action:
 
   path_ui_data <- file.path(trial_path, "ui_yml.yml")
   whisker::whisker.render(yml, data = list(ady_custom = tmp_file)) |>
-  writeLines(path_ui_data)
+    writeLines(path_ui_data)
 
   path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
   output_path <- trial_path
@@ -57,14 +57,15 @@ column_action:
     check_cross_domain_adam_dependencies = FALSE
   )
 
-# ASSERT -----------------------------------------------------------------
-#
-  actual$program_sequence[outputs=="A",code] |> strsplit("\n") |>
+  # ASSERT -----------------------------------------------------------------
+  #
+  actual$program_sequence[outputs == "A", code] |>
+    strsplit("\n") |>
     _[[1]][3:4] |>
     expect_snapshot()
 
   actual_code <- actual$program_sequence[outputs == "A", code] |>
     strsplit("\n") |>
-    _[[1]][3:4] 
-    expect_snapshot(actual_code)
+    _[[1]][3:4]
+  expect_snapshot(actual_code)
 })

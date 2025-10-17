@@ -37,7 +37,6 @@ render_code <- function(
   path_trial,
   available_data = NULL
 ) {
-
   actions_program_summary <- actions |>
     dplyr::group_by(domain) |>
     dplyr::summarize(last_program = max(program_id))
@@ -48,16 +47,20 @@ render_code <- function(
 
   for (i in seq_len(nrow(actions_))) {
     action_i <- actions_[i]
-    action_has_comment <- !is.null(action_i$lineage) && nchar(action_i$lineage) > 0
-    no_line_break <- i==1 && !action_has_comment
+    action_has_comment <- !is.null(action_i$lineage) &&
+      nchar(action_i$lineage) > 0
+    no_line_break <- i == 1 && !action_has_comment
     is_final_pgm <- action_i$program_id == final_programs_lkp[[action_i$domain]]
     # In case the call is based on actions that are modified due to missing
     # data, there may be situations where no outputs can be created. In this
     # case, use the removed_outputs to generate code instead
     # TODO: Assess if a similar approach is needed for depend_columns
-    output_cols = action_i$outputs[[1]]
-    if (length(action_i$outputs[[1]]) == 0 && !is.null(action_i$removed_outputs) )
+    output_cols <- action_i$outputs[[1]]
+    if (
+      length(action_i$outputs[[1]]) == 0 && !is.null(action_i$removed_outputs)
+    ) {
       output_cols <- action_i$removed_outputs[[1]]
+    }
     params <- define_params(
       code_id = action_i$code_id,
       .self = action_i$domain,
@@ -73,11 +76,11 @@ render_code <- function(
       available_data = available_data
     )
 
-    code <- mighty.component::get_rendered_component(component =
-        action_i$code_id |> format_internal_code_id(),
-        params = params
-      )$code |>
-        paste0(collapse = "\n")
+    code <- mighty.component::get_rendered_component(
+      component = action_i$code_id |> format_internal_code_id(),
+      params = params
+    )$code |>
+      paste0(collapse = "\n")
     code_i <- paste0(
       gen_node_header(action_i$node_id, no_line_break),
       ifelse(action_has_comment, add_hash(action_i$lineage), ""),
@@ -176,7 +179,6 @@ define_params <- function(
   is_final_pgm,
   available_data
 ) {
-
   init_metadata <- domain_ui_data$init
 
   switch(
@@ -212,11 +214,12 @@ define_params <- function(
       outputs = output_cols,
       domain_keys = domain_keys
     ),
-    "_write_data.mustache" = params_write_domain_code(.self = .self,
-                                                      is_final_pgm = is_final_pgm,
-                                                      domain_keys = domain_keys,
-                                                      domain_ui_data = domain_ui_data,
-                                                      available_data = available_data
+    "_write_data.mustache" = params_write_domain_code(
+      .self = .self,
+      is_final_pgm = is_final_pgm,
+      domain_keys = domain_keys,
+      domain_ui_data = domain_ui_data,
+      available_data = available_data
     ),
     # Default case for col_compute/row_compute
     format_col_compute_params(action_parameters = action_parameters)
@@ -239,15 +242,12 @@ format_col_compute_params <- function(action_parameters) {
 gen_node_header <- function(title, no_line_break) {
   n_dash <- 80 - (nchar(title) + 3)
   if (n_dash > 0) {
-
     title_line <- paste0(" ", paste0(rep("-", n_dash), collapse = ""))
   } else {
     title_line <- "----"
   }
 
-  return(paste0(ifelse(no_line_break, "# ", "\n# "),
-                title,
-                title_line, "\n"))
+  return(paste0(ifelse(no_line_break, "# ", "\n# "), title, title_line, "\n"))
 }
 
 add_hash <- function(text) {
@@ -273,11 +273,11 @@ add_hash <- function(text) {
 #' internal code IDs, or the original code_id for external components.
 #'
 format_internal_code_id <- function(code_id) {
-  if(!startsWith(code_id, "_")){
+  if (!startsWith(code_id, "_")) {
     return(code_id)
   }
   file.path("components", code_id) |>
-      system.file(package = "mighty")
+    system.file(package = "mighty")
 }
 
 compile_into_programs <- function(actions) {

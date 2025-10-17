@@ -10,7 +10,7 @@
 #' type: col_compute
 #' ```
 #'
-fn_AB <- function(.self, params = list(param_1=NULL, param_2 = NULL)){
+fn_AB <- function(.self, params = list(param_1 = NULL, param_2 = NULL)) {
   print("hello world")
 }
 
@@ -28,6 +28,6 @@ fn_AB <- function(.self, params = list(param_1=NULL, param_2 = NULL)){
 #' type: col_compute
 #' ```
 #'
-fn_b <- function(.self, params = list(param_1=NULL, param_2 = NULL)){
+fn_b <- function(.self, params = list(param_1 = NULL, param_2 = NULL)) {
   print("hello world")
 }

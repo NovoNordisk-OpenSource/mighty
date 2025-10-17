@@ -11,6 +11,7 @@ lbtest_02 <- function(ADLB) {
       LBTEST2 = dplyr::case_when(
         !is.na(LBTEST) ~ LBTEST,
         is.na(LBTEST) ~ "Invalid"
-      ))
+      )
+    )
   return(ADLB)
 }

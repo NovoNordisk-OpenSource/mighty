@@ -1,9 +1,12 @@
 vis_code_tree <- function(nodes, edges) {
-  edges_ranked <- merge(edges, nodes[, .(node_id, rank)], by = "node_id", all.x = TRUE) |>
-    setnames(old = c("node_id", "parent_node"),
-             new = c("to", "from")) |>
+  edges_ranked <- merge(
+    edges,
+    nodes[, .(node_id, rank)],
+    by = "node_id",
+    all.x = TRUE
+  ) |>
+    setnames(old = c("node_id", "parent_node"), new = c("to", "from")) |>
     data.table::setorder(rank)
-
 
   nodes_vs <- data.table::copy(nodes)
   nodes_vs <- setnames(nodes_vs, c("node_id", "type"), c("id", "group")) |>
@@ -16,24 +19,34 @@ vis_code_tree <- function(nodes, edges) {
   # Plot the interactive graph
 
   RColorBrewer::brewer.pal(8, "Paired")
-  domain_colors <-  c("ADLB" = "#FF7F00", "ADSL" = "#1F78B4")
+  domain_colors <- c("ADLB" = "#FF7F00", "ADSL" = "#1F78B4")
   # Add more colors for other domains if needed
   nodes_vs[, color := domain_colors[as.character(nodes_vs$domain)]]
 
   visNetwork::visNetwork(nodes_vs, edges_ranked) |>
-    visNetwork::visEdges(arrows = "to",
-                         smooth = list(type = "cubicBezier", roundness = 0.5)) |>
+    visNetwork::visEdges(
+      arrows = "to",
+      smooth = list(type = "cubicBezier", roundness = 0.5)
+    ) |>
     visNetwork::visOptions(
       highlightNearest = list(
-        enabled = T,
+        enabled = TRUE,
         degree = 1,
-        hover = T
+        hover = TRUE
       ),
       nodesIdSelection = TRUE
     ) |>
-    visNetwork::visNodes(shadow = list(enabled = TRUE, size = 10), color = "color") |>
+    visNetwork::visNodes(
+      shadow = list(enabled = TRUE, size = 10),
+      color = "color"
+    ) |>
     visNetwork::visGroups(groupname = "column", shape = "dot") |>
-    visNetwork::visGroups(groupname = "preprocess_domain", shape = "star", borderWidth=2, size=30) |>
+    visNetwork::visGroups(
+      groupname = "preprocess_domain",
+      shape = "star",
+      borderWidth = 2,
+      size = 30
+    ) |>
     visNetwork::visGroups(groupname = "row", shape = "box") |>
     visNetwork::visGroups(groupname = "predecessor", shape = "triangle") |>
     visNetwork::visHierarchicalLayout(
@@ -54,5 +67,4 @@ vis_code_tree <- function(nodes, edges) {
       ),
       solver = "hierarchicalRepulsion"
     )
-
 }

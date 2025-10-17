@@ -37,7 +37,7 @@
 #' 'source' to 'depends') the conver_internal_to_yaml must be updated.
 #'
 #' @export
-write_adam_specs <-  function(adam_specs, output_dir = ".") {
+write_adam_specs <- function(adam_specs, output_dir = ".") {
   lapply(names(adam_specs), function(domain_name) {
     spec <- adam_specs[[domain_name]]
     output_path <- file.path(output_dir, paste0(domain_name, ".yml"))
@@ -129,19 +129,23 @@ convert_internal_to_yaml <- function(spec) {
     for (field in names(item)) {
       if (field == "depend_cols") {
         reversed_item[["source"]] <- item[[field]]
-      }
-      else if (field == "outputs") {
+      } else if (field == "outputs") {
         reversed_item[["column"]] <- item[[field]]
-      }
-      else {
+      } else {
         # While reading yaml specs, NA fields were added to depend_rows and
         # parameters if elements were not present. Ensure these are not restored
-        if (!any(is.na(item[[field]])) || field %in% c("depend_rows", "parameters")) {
-          if (!(field %in% c("depend_rows", "parameters") && any(is.na(item[[field]])))) {
+        if (
+          !any(is.na(item[[field]])) ||
+            field %in% c("depend_rows", "parameters")
+        ) {
+          if (
+            !(field %in%
+                c("depend_rows", "parameters") &&
+                any(is.na(item[[field]])))
+          ) {
             reversed_item[[field]] <- item[[field]]
           }
-        }
-        else {
+        } else {
           reversed_item[[field]] <- item[[field]]
         }
       }
@@ -165,9 +169,8 @@ convert_internal_to_yaml <- function(spec) {
     column_action = column_action
   )
   if (length(row_action) > 0) {
-    yaml_structure$row_action = row_action
+    yaml_structure$row_action <- row_action
   }
-
 
   return(yaml_structure)
 }

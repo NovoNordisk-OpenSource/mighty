@@ -9,12 +9,16 @@ test_that("Complex test with multiple domains and column/row operations", {
     testthat::test_path("fixtures", "adsl_0001.R"),
     testthat::test_path("fixtures", "adlb_0001.R")
   )
-  domain_keys_path <- system.file("standards", "domain_keys.yml", package = "mighty")
+  domain_keys_path <- system.file(
+    "standards",
+    "domain_keys.yml",
+    package = "mighty"
+  )
   output_path <- withr::local_tempdir()
   # ACT
   actual <- generate_adam_code(
     path_ui_data = ui_path,
-    code_component_source_files =  std_lib_path,
+    code_component_source_files = std_lib_path,
     path_trial_metadata = path_trial_metadata,
     path_domain_keys = domain_keys_path,
     path_output = output_path,
@@ -26,5 +30,4 @@ test_that("Complex test with multiple domains and column/row operations", {
 
   vis_code_tree(nodes = actual$data_for_visualization, edges = actual$edges)
   names(programs) <- basename(x)
-
 })

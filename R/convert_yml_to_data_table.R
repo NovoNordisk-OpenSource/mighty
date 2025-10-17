@@ -92,34 +92,41 @@ convert_yml_to_data_table_ <- function(nested_list, domain) {
   for (i in seq_along(parent_names)) {
     parent_data <- nested_list[[i]]
     parent_names_chr[[i]] <- list(parent_names[i])
-    type_list[[i]] <- if (!is.null(parent_data$type))
+    type_list[[i]] <- if (!is.null(parent_data$type)) {
       parent_data$type
-    else
+    } else {
       NA_character_
-    depend_cols_list[[i]] <- if (!is.null(parent_data$depend_cols))
+    }
+    depend_cols_list[[i]] <- if (!is.null(parent_data$depend_cols)) {
       list(parent_data$depend_cols)
-    else
+    } else {
       list(NA_character_)
-    parameters[[i]] <- if (all(!is.na(parent_data$parameters)))
+    }
+    parameters[[i]] <- if (all(!is.na(parent_data$parameters))) {
       list(as.list(unlist(parent_data$parameters)))
-    else
+    } else {
       list(NA_character_)
-    outputs_list[[i]] <- if (!is.null(parent_data$outputs))
+    }
+    outputs_list[[i]] <- if (!is.null(parent_data$outputs)) {
       list(parent_data$outputs)
-    else
+    } else {
       list(NA_character_)
-    depend_rows_list[[i]] <- if (!is.null(parent_data$depend_rows))
+    }
+    depend_rows_list[[i]] <- if (!is.null(parent_data$depend_rows)) {
       list(parent_data$depend_rows)
-    else
+    } else {
       list(NA_character_)
-    code_id_chr[[i]] <- if (!is.null(parent_data$code_id))
+    }
+    code_id_chr[[i]] <- if (!is.null(parent_data$code_id)) {
       parent_data$code_id
-    else
+    } else {
       NA_character_
-    id_chr[[i]] <- if (!is.null(parent_data$id))
+    }
+    id_chr[[i]] <- if (!is.null(parent_data$id)) {
       parent_data$id
-    else
+    } else {
       NA_character_
+    }
   }
 
   dt <- data.table::data.table(

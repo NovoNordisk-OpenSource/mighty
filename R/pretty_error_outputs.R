@@ -2,7 +2,7 @@ pretty_error_outputs <- function(lst) {
   # Initialize the error message with the parent list element name
   error_message_intro_1 <- "    Expected column outputs:\n"
   error_message_intro_2 <- "    Actual column outputs:\n"
-  missing_from_code <-"    Missing from expected outputs:\n"
+  missing_from_code <- "    Missing from expected outputs:\n"
   # Add each child element to the error message
   error_message <- vector("character")
 

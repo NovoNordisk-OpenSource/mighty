@@ -27,9 +27,12 @@
 #' Actions that cannot execute due to missing dependencies are flagged
 #' accordingly.
 #'
-add_check_executable_status <-  function(actions, ui_data, data_context) {
+add_check_executable_status <- function(actions, ui_data, data_context) {
   if (is.null(data_context)) {
-    return(list(actions = add_default_execution_status(actions), available_columns = NULL))
+    return(list(
+      actions = add_default_execution_status(actions),
+      available_columns = NULL
+    ))
   }
 
   available_cols <- determine_available_columns(data_context)
@@ -38,27 +41,35 @@ add_check_executable_status <-  function(actions, ui_data, data_context) {
   # * depend_cols,
   # * outputs,
   # added columns
-  # + can_execute,
-  # + missing_dependency,
-  # + removed_outputs,
-  # + lineage
+  # - can_execute,
+  # - missing_dependency,
+  # - removed_outputs,
+  # - lineage
   actions_execute <- data.table()
 
   for (action_id in seq_len(nrow(actions))) {
     action <- actions[action_id]
-    updated_action  <- process_action(action, actions_execute, available_cols, ui_data)
+    updated_action <- process_action(
+      action,
+      actions_execute,
+      available_cols,
+      ui_data
+    )
     actions_execute <- rbind(actions_execute, updated_action)
 
-    available_cols <- update_available_columns_for_action(updated_action, available_cols)
+    available_cols <- update_available_columns_for_action(
+      updated_action,
+      available_cols
+    )
   }
 
-  validate_removed_outputs <-  function(x) {
+  validate_removed_outputs <- function(x) {
     (all(sapply(x, is.character)) || all(sapply(x, is.na)))
   }
 
   validate_removed_depend_cols <- function(x) {
     (length(x) == 1 && is.na(x)) ||
-    (is.data.frame(x) && nrow(x) > 0)
+      (is.data.frame(x) && nrow(x) > 0)
   }
 
   # Apply assertions using the same pattern
@@ -68,7 +79,10 @@ add_check_executable_status <-  function(actions, ui_data, data_context) {
   )
 
   assertthat::assert_that(
-    all(sapply(actions_execute$removed_depend_cols, validate_removed_depend_cols)),
+    all(sapply(
+      actions_execute$removed_depend_cols,
+      validate_removed_depend_cols
+    )),
     msg = "removed_depend_cols contains invalid data"
   )
   return(list(actions = actions_execute, available_columns = available_cols))
@@ -100,13 +114,19 @@ add_check_executable_status <-  function(actions, ui_data, data_context) {
 #' Modified action object returned from the appropriate handler function
 #' with updated execution status, dependencies, outputs, and lineage.
 #'
-process_action <- function(action, processed_actions, available_cols, ui_data = NULL) {
-  handler <- switch(action$code_id,
+process_action <- function(
+  action,
+  processed_actions,
+  available_cols,
+  ui_data = NULL
+) {
+  handler <- switch(
+    action$code_id,
     "_read_data.mustache" = handle_read_data_action,
     "_init_domain.mustache" = handle_init_domain_action,
     "_filter_domain.mustache" = handle_filter_domain_action,
     "_write_data.mustache" = handle_write_domain_action,
-    handle_generic_action  # default case
+    handle_generic_action # default case
   )
 
   handler(action, processed_actions, available_cols, ui_data)
@@ -137,18 +157,32 @@ process_action <- function(action, processed_actions, available_cols, ui_data = 
 #' Modified action object with updated execution status, valid outputs, removed
 #' outputs, and lineage information detailing any missing source data columns.
 #'
-handle_read_data_action <- function(action, processed_actions, available_cols, ui_data) {
+handle_read_data_action <- function(
+  action,
+  processed_actions,
+  available_cols,
+  ui_data
+) {
   expected_outputs <- parse_output_columns(action$outputs[[1]])
   missing_in_data <- find_missing_columns(expected_outputs, available_cols)
-  valid_outputs <- expected_outputs[!column_name %in% missing_in_data$column_name]
+  valid_outputs <- expected_outputs[
+    !column_name %in% missing_in_data$column_name
+  ]
   removed_outputs <- find_missing_columns(expected_outputs, valid_outputs)
 
-  valid_outputs <- paste(valid_outputs$domain, valid_outputs$column_name, sep = ".")
-  removed_outputs <- paste(removed_outputs$domain, removed_outputs$column_name, sep = ".")
-  if (length(removed_outputs) > 0){
+  valid_outputs <- paste(
+    valid_outputs$domain,
+    valid_outputs$column_name,
+    sep = "."
+  )
+  removed_outputs <- paste(
+    removed_outputs$domain,
+    removed_outputs$column_name,
+    sep = "."
+  )
+  if (length(removed_outputs) > 0) {
     removed_outputs <- list(prefix_with_domain(removed_outputs, action$domain))
-  }
-  else {
+  } else {
     removed_outputs <- NA
   }
   action$outputs <- list(valid_outputs)
@@ -157,13 +191,19 @@ handle_read_data_action <- function(action, processed_actions, available_cols, u
   action$can_execute <- (length(valid_outputs) > 0)
   lineage <- ""
   if (action$can_execute && !is.na(removed_outputs)) {
-    lineage <- paste("Code can be executed but the following columns are not found in source data:",
+    lineage <- paste(
+      "Code can be executed but the following columns are not found in source data:",
       collapse_missing_dependencies(missing_in_data),
       "This impacts the following data that will be ignored:",
-      collapse_missing_dependencies(parse_output_columns(removed_outputs[[1]])), sep = "\n")
-  }
-  else if (!action$can_execute) {
-    lineage <- create_lineage_message("Cannot read needed base data:", action, missing_in_data)
+      collapse_missing_dependencies(parse_output_columns(removed_outputs[[1]])),
+      sep = "\n"
+    )
+  } else if (!action$can_execute) {
+    lineage <- create_lineage_message(
+      "Cannot read needed base data:",
+      action,
+      missing_in_data
+    )
   }
   action$lineage <- lineage
 
@@ -193,7 +233,12 @@ handle_read_data_action <- function(action, processed_actions, available_cols, u
 #' Modified action object with updated execution status, dependencies, outputs,
 #' and lineage information reflecting any columns missing from source data.
 #'
-handle_init_domain_action <- function(action, processed_actions, available_cols, ui_data) {
+handle_init_domain_action <- function(
+  action,
+  processed_actions,
+  available_cols,
+  ui_data
+) {
   # Initialise defaults
   can_execute <- TRUE
   valid_outputs <- action$outputs[[1]]
@@ -202,19 +247,25 @@ handle_init_domain_action <- function(action, processed_actions, available_cols,
   removed_depend_cols <- NA
 
   # Check if read_data action was lacking outputs
-  rda <- processed_actions[program_id == action$program_id & code_id == "_read_data.mustache"][1]
+  rda <- processed_actions[
+    program_id == action$program_id & code_id == "_read_data.mustache"
+  ][1]
   rda_removed_outputs <- rda$removed_outputs[[1]]
   if (length(rda_removed_outputs) > 1 || !is.na(rda_removed_outputs)) {
     removed_cols <- parse_output_columns(rda_removed_outputs)
     # If outputs from rda were removed, adjust depend_cols
-    depend_cols <- dplyr::anti_join(action$depend_cols[[1]],
+    depend_cols <- dplyr::anti_join(
+      action$depend_cols[[1]],
       removed_cols,
-      by = c("column_name", "domain", "domain_type"))
+      by = c("column_name", "domain", "domain_type")
+    )
     removed_depend_cols <- find_missing_dependencies(
-      action$depend_cols[[1]], depend_cols)
+      action$depend_cols[[1]],
+      depend_cols
+    )
     removed_outputs <- unique(removed_cols$column_name)
     valid_outputs <- setdiff(action$outputs[[1]], removed_outputs)
-    can_execute = length(valid_outputs) > 0
+    can_execute <- length(valid_outputs) > 0
   }
   action$depend_cols <- list(depend_cols)
   action$outputs <- list(valid_outputs)
@@ -222,14 +273,18 @@ handle_init_domain_action <- function(action, processed_actions, available_cols,
 
   # Only remove outputs if they are part of the depend cols
   if (!is.na(removed_depend_cols)) {
-    action$removed_outputs <- list(prefix_with_domain(removed_outputs, action$domain))
-  }
-  else {
+    action$removed_outputs <- list(prefix_with_domain(
+      removed_outputs,
+      action$domain
+    ))
+  } else {
     action$removed_outputs <- NA
   }
   action$can_execute <- can_execute
   action$lineage <- create_lineage_message(
-    "The following columns are part of the specification but does not exist in source data:", action)
+    "The following columns are part of the specification but does not exist in source data:",
+    action
+  )
 
   action
 }
@@ -257,7 +312,12 @@ handle_init_domain_action <- function(action, processed_actions, available_cols,
 #' Modified action object with updated execution status, dependencies, outputs,
 #' and lineage information.
 #'
-handle_filter_domain_action <- function(action, processed_actions, available_cols, ui_data) {
+handle_filter_domain_action <- function(
+  action,
+  processed_actions,
+  available_cols,
+  ui_data
+) {
   # Filter domain action relies on the `outputs` of read_data action. If
   # outputs are removed in the read_data action, and filter is depending of
   # these, filter should not be executable.
@@ -277,7 +337,9 @@ handle_filter_domain_action <- function(action, processed_actions, available_col
   depend_cols <- action$depend_cols[[1]]
   removed_depend_cols <- list()
   # Check if read_data action had missing dependencies
-  rda <- processed_actions[program_id == action$program_id & code_id == "_read_data.mustache"][1]
+  rda <- processed_actions[
+    program_id == action$program_id & code_id == "_read_data.mustache"
+  ][1]
   rda_removed_outputs <- rda$removed_outputs[[1]]
 
   # Executable status should depend on the filtering condition:
@@ -295,25 +357,30 @@ handle_filter_domain_action <- function(action, processed_actions, available_col
   # Removed outputs in init domain also needs to be considered as removed columns
   ida <- processed_actions[
     program_id == action$program_id &
-    code_id    == "_init_domain.mustache"][1]
+      code_id == "_init_domain.mustache"
+  ][1]
   ida_removed <- ida$removed_outputs[[1]]
   if (length(ida_removed) > 1 || !is.na(ida_removed)) {
     ida_removed_outputs <- ida_removed
-  }
-  else {
+  } else {
     ida_removed_outputs <- list()
   }
-  removed_cols <- parse_output_columns(union(rda_removed_outputs, ida_removed_outputs), default_prefix = rda$domain)
+  removed_cols <- parse_output_columns(
+    union(rda_removed_outputs, ida_removed_outputs),
+    default_prefix = rda$domain
+  )
 
-  if (!is.null(rda_removed_outputs) || !is.null(ida_removed_outputs))
-  {
+  if (!is.null(rda_removed_outputs) || !is.null(ida_removed_outputs)) {
     removed_outputs <- unique(removed_cols[domain == action$domain]$column_name)
   }
   if (!is.null(rda_removed_outputs) && length(filtering_columns_base)) {
-    invalid_filters <-  intersect(filtering_columns, removed_outputs)
+    invalid_filters <- intersect(filtering_columns, removed_outputs)
   }
   if (!is.null(rda_removed_outputs) && length(filtering_columns_other)) {
-    invalid_filters <- c(invalid_filters,  intersect(filtering_columns, rda_removed_outputs))
+    invalid_filters <- c(
+      invalid_filters,
+      intersect(filtering_columns, rda_removed_outputs)
+    )
   }
 
   can_execute <- length(invalid_filters) == 0
@@ -323,13 +390,15 @@ handle_filter_domain_action <- function(action, processed_actions, available_col
     by = c("column_name", "domain", "domain_type")
   )
 
-  removed_depend_cols <- find_missing_dependencies(action$depend_cols[[1]], depend_cols)
+  removed_depend_cols <- find_missing_dependencies(
+    action$depend_cols[[1]],
+    depend_cols
+  )
   valid_outputs <- setdiff(action$outputs[[1]], removed_outputs)
 
   if (length(removed_outputs) == 0) {
     removed_outputs <- NA
-  }
-  else {
+  } else {
     removed_outputs <- list(prefix_with_domain(removed_outputs, action$domain))
   }
 
@@ -341,11 +410,18 @@ handle_filter_domain_action <- function(action, processed_actions, available_col
   # Define lineage
   lineage <- ""
   if (can_execute && length(removed_outputs) > 0 && !is.na(removed_outputs)) {
-    lineage <- paste("Code can be executed but the following columns are not found in source data and are ignored in the filter step:",
-      collapse_missing_dependencies(parse_output_columns(action$removed_outputs[[1]])), sep = "\n")
-  }
-  else if (!can_execute) {
-    lineage <- paste("Filter cannot be applied due to missing column(s):", paste(invalid_filters, collapse = ", "))
+    lineage <- paste(
+      "Code can be executed but the following columns are not found in source data and are ignored in the filter step:",
+      collapse_missing_dependencies(parse_output_columns(action$removed_outputs[[
+        1
+      ]])),
+      sep = "\n"
+    )
+  } else if (!can_execute) {
+    lineage <- paste(
+      "Filter cannot be applied due to missing column(s):",
+      paste(invalid_filters, collapse = ", ")
+    )
   }
   action$lineage <- lineage
 
@@ -378,7 +454,12 @@ handle_filter_domain_action <- function(action, processed_actions, available_col
 #' and lineage information reflecting any columns that cannot be written due
 #' to missing source data.
 #'
-handle_write_domain_action <- function(action, processed_actions, available_cols, ui_data) {
+handle_write_domain_action <- function(
+  action,
+  processed_actions,
+  available_cols,
+  ui_data
+) {
   # Action may be impacted by previous init_domain action if columns are
   # removed due to missing data.
   # If this is the case,
@@ -394,17 +475,26 @@ handle_write_domain_action <- function(action, processed_actions, available_cols
   depend_cols <- action$depend_cols[[1]]
   removed_depend_cols <- NA
   # Check if init_domain action was lacking outputs
-  ida <- processed_actions[program_id == action$program_id & code_id == "_init_domain.mustache"][1]
+  ida <- processed_actions[
+    program_id == action$program_id & code_id == "_init_domain.mustache"
+  ][1]
   ida_removed_outputs <- ida$removed_outputs[[1]]
 
   if (!is.null(ida_removed_outputs)) {
-    removed_cols <- parse_output_columns(ida_removed_outputs, default_prefix = ida$domain)
+    removed_cols <- parse_output_columns(
+      ida_removed_outputs,
+      default_prefix = ida$domain
+    )
     # If outputs from rda were removed, adjust depend_cols
     depend_cols <- dplyr::anti_join(
       action$depend_cols[[1]],
       removed_cols,
-      by = c("column_name", "domain", "domain_type"))
-    removed_depend_cols <- find_missing_dependencies(action$depend_cols[[1]], depend_cols)
+      by = c("column_name", "domain", "domain_type")
+    )
+    removed_depend_cols <- find_missing_dependencies(
+      action$depend_cols[[1]],
+      depend_cols
+    )
     removed_outputs <- unique(removed_cols$column_name)
     valid_outputs <- setdiff(action$outputs[[1]], removed_outputs)
     can_execute <- ida$can_execute
@@ -412,8 +502,7 @@ handle_write_domain_action <- function(action, processed_actions, available_cols
 
   if (length(removed_outputs) && !is.na(removed_outputs[1])) {
     removed_outputs <- list(prefix_with_domain(removed_outputs, action$domain))
-  }
-  else {
+  } else {
     removed_outputs <- NA
   }
   action$depend_cols <- list(depend_cols)
@@ -448,7 +537,12 @@ handle_write_domain_action <- function(action, processed_actions, available_cols
 #' Modified action object with updated execution status, dependencies, outputs,
 #' and lineage information indicating any missing dependencies.
 #'
-handle_generic_action <- function(action, processed_actions, available_cols, ui_data) {
+handle_generic_action <- function(
+  action,
+  processed_actions,
+  available_cols,
+  ui_data
+) {
   can_execute <- TRUE
   missing_dependencies <- NA
   removed_outputs <- NA
@@ -456,15 +550,22 @@ handle_generic_action <- function(action, processed_actions, available_cols, ui_
   depend_cols <- action$depend_cols[[1]]
 
   # If dependencies are missing, action cannot execute
-  if (!(is.null(depend_cols) || length(depend_cols) == 1 && is.na(depend_cols))) {
-    missing_dependencies <- find_missing_dependencies(depend_cols, available_cols)
+  if (
+    !(is.null(depend_cols) || length(depend_cols) == 1 && is.na(depend_cols))
+  ) {
+    missing_dependencies <- find_missing_dependencies(
+      depend_cols,
+      available_cols
+    )
     can_execute <- is.na(missing_dependencies)
   }
   if (!is.na(missing_dependencies)) {
     if (length(valid_outputs) > 0) {
-      removed_outputs <- list(prefix_with_domain(valid_outputs[[1]], action$domain))
+      removed_outputs <- list(prefix_with_domain(
+        valid_outputs[[1]],
+        action$domain
+      ))
     }
-#    valid_outputs <- NA
   }
   action$outputs <- valid_outputs
   action$removed_depend_cols <- NA
@@ -472,7 +573,11 @@ handle_generic_action <- function(action, processed_actions, available_cols, ui_
   action$can_execute <- can_execute
 
   action$lineage <- create_lineage_message(
-    "Cannot execute code that is depending on:", action, missing_dependencies[[1]], TRUE)
+    "Cannot execute code that is depending on:",
+    action,
+    missing_dependencies[[1]],
+    TRUE
+  )
   action
 }
 
@@ -501,8 +606,16 @@ handle_generic_action <- function(action, processed_actions, available_cols, ui_
 #' empty data table if outputs is NULL, empty, or contains only NA values.
 #'
 parse_output_columns <- function(outputs, default_prefix = "") {
-  if (is.null(outputs) || length(outputs) == 0 || (length(outputs) == 1 && is.na(outputs))) {
-    return(data.table(domain_type = character(), domain = character(), column_name = character()))
+  if (
+    is.null(outputs) ||
+      length(outputs) == 0 ||
+      (length(outputs) == 1 && is.na(outputs))
+  ) {
+    return(data.table(
+      domain_type = character(),
+      domain = character(),
+      column_name = character()
+    ))
   }
   outputs <- prefix_with_domain(outputs, default_prefix)
   split_result <- tstrsplit(outputs, "\\.")
@@ -534,7 +647,8 @@ parse_output_columns <- function(outputs, default_prefix = "") {
 #' "domain.column_name" for columns that didn't already contain dots.
 #'
 prefix_with_domain <- function(column, domain) {
-  ifelse (grepl(".", column, fixed = TRUE),
+  ifelse(
+    grepl(".", column, fixed = TRUE),
     column,
     paste(domain, column, sep = ".")
   )
@@ -575,19 +689,21 @@ find_missing_columns <- function(needed_outputs, available_cols) {
 #' "domain_type", "domain", "column_name", or NA if no dependencies are missing
 #' or input is invalid.
 #'
-find_missing_dependencies <-  function(depend_cols, available_cols) {
+find_missing_dependencies <- function(depend_cols, available_cols) {
   if (!is.data.table(depend_cols)) {
     return(NA)
   }
 
   missing_dependencies <- depend_cols |>
-    dplyr::anti_join(available_cols, by = c("column_name", "domain", "domain_type")) |>
+    dplyr::anti_join(
+      available_cols,
+      by = c("column_name", "domain", "domain_type")
+    ) |>
     # ensure re-ordering of columns such that they can be reported by domain_type, domain, column_name
     dplyr::select(domain_type, domain, column_name)
   if (nrow(missing_dependencies) > 0) {
     return(list(missing_dependencies))
-  }
-  else {
+  } else {
     return(NA)
   }
 }
@@ -612,18 +728,22 @@ find_missing_dependencies <-  function(depend_cols, available_cols) {
 #'
 update_available_columns_for_action <- function(action, available_cols) {
   # Handle case where outputs is NA or NULL
-  if (action$code_id == "_read_data.mustache" || is.null(action$outputs[[1]]) || (length(action$outputs[[1]]) == 1 && is.na(action$outputs[[1]]))) {
+  if (
+    action$code_id == "_read_data.mustache" ||
+      is.null(action$outputs[[1]]) ||
+      (length(action$outputs[[1]]) == 1 && is.na(action$outputs[[1]]))
+  ) {
     return(available_cols)
   }
   if (action$can_execute) {
     output_cols <- data.frame(
       column_name = action$outputs[[1]],
       domain = action$domain,
-      domain_type = classify_data_domains(action$domain))
+      domain_type = classify_data_domains(action$domain)
+    )
     return(unique(rbind(available_cols, output_cols)))
   }
   return(available_cols)
-
 }
 
 # ============================================================================
@@ -646,12 +766,16 @@ update_available_columns_for_action <- function(action, available_cols) {
 #' Character string containing the formatted lineage message, or empty string
 #' if action can execute.
 #'
-create_lineage_message <- function(message, action, dependencies = NULL, report_missing_outputs = FALSE) {
+create_lineage_message <- function(
+  message,
+  action,
+  dependencies = NULL,
+  report_missing_outputs = FALSE
+) {
   if (!action$can_execute) {
     if (is.null(dependencies)) {
       c <- collapse_missing_dependencies(action$removed_depend_cols[[1]])
-    }
-    else {
+    } else {
       c <- collapse_missing_dependencies(dependencies)
     }
     missing_outputs <-
@@ -659,7 +783,10 @@ create_lineage_message <- function(message, action, dependencies = NULL, report_
         report_missing_outputs,
         paste(
           "The following columns cannot be created: ",
-          collapse_missing_dependencies(parse_output_columns(action$removed_outputs[[1]], action$domain)),
+          collapse_missing_dependencies(parse_output_columns(
+            action$removed_outputs[[1]],
+            action$domain
+          )),
           sep = "\n"
         ),
         ""
@@ -670,8 +797,7 @@ create_lineage_message <- function(message, action, dependencies = NULL, report_
 }
 
 collapse_missing_dependencies <- function(removed_data) {
-  paste(apply(removed_data,
-        1, paste, collapse = "."), collapse = ", ")
+  paste(apply(removed_data, 1, paste, collapse = "."), collapse = ", ")
 }
 
 #' Add Default Execution Status to Actions

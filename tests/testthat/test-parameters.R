@@ -1,5 +1,4 @@
 test_that("Complex test with multiple domains and column/row operations", {
-
   # SETUP -------------------------------------------------------------------
 
   path_ui_data <- c(
@@ -80,11 +79,10 @@ test_that("Complex test with multiple domains and column/row operations", {
   expect_equal(ADLB[["LBSTNRLO"]], ADLB[["LBSTNRLO_COPY"]])
   expect_equal(ADLB[["LBSTRESN"]], ADLB[["LBSTRESN_COPY"]])
   expect_equal(unique(ADLB[["PARAM_VAR1"]]), "ABC")
-  expect_equal(ADLB[["PARAM_VAR2"]], ADLB[["LBSTNRLO"]]+ADLB[["LBSTNRHI"]])
+  expect_equal(ADLB[["PARAM_VAR2"]], ADLB[["LBSTNRLO"]] + ADLB[["LBSTNRHI"]])
   expect_equal(unique(ADLB[["VAR4"]]), "A")
   expect_equal(unique(ADLB[["VAR5"]]), "B")
   expect_equal(ADLB[["VAR6"]], ADLB[["LBSTNRLO"]])
   expect_equal(ADLB[["VAR7"]], ADLB[["LBSTNRHI"]])
   expect_equal(ADLB[["AVAL"]], ADLB[["LBSTRESN"]])
-
 })

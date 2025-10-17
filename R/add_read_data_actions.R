@@ -12,7 +12,6 @@
 #' program_id and rank to ensure proper execution order.
 #'
 add_read_data_actions <- function(actions) {
-
   actions_by_pgm <- split(actions, by = "program_id")
 
   # Extract actions from initial ADaM programs
@@ -48,18 +47,20 @@ add_read_data_actions <- function(actions) {
       rank = 0,
       code_id = "_read_data.mustache",
       type = "read_data",
-      depend_cols =  list(data.table(column_name = character(0),
-                                     domain = character(0),
-                                     domain_type = character(0))),
+      depend_cols = list(data.table(
+        column_name = character(0),
+        domain = character(0),
+        domain_type = character(0)
+      )),
       outputs = list(paste0(dep_cols$domain, ".", dep_cols$column_name)),
       depend_rows = list(NA),
       parameters = list(NA),
       domain = dom
     )
-  }) |> rbindlist()
+  }) |>
+    rbindlist()
 
   # Add read_data actions to existing set of actions
   rbind(actions, read_data_actions) |>
     dplyr::arrange(.data$program_id, .data$rank)
-
 }

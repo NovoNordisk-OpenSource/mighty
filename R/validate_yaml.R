@@ -1,4 +1,3 @@
-
 #' Validate YAML configuration file against JSON schema
 #'
 #' @param yaml_file Path to YAML configuration file
@@ -7,7 +6,7 @@
 #' @param use_yq Use yq for YAML parsing (default: TRUE, falls back to yaml package if FALSE or yq unavailable)
 #' @return Parsed YAML data if valid, otherwise throws error
 #' @export
-validate_yaml <-  function(
+validate_yaml <- function(
   yaml_file,
   schema_name,
   verbose = TRUE,
@@ -65,18 +64,23 @@ check_yq_available <- function() {
 #' Character string containing the JSON representation of the YAML content.
 #'
 convert_yaml_to_json_with_yq <- function(yaml_file) {
-  yq_result <- tryCatch({
-    system2("yq",
-           args = c("eval", "-o=json", shQuote(yaml_file)),
-           stdout = TRUE,
-           stderr = TRUE,
-           wait = TRUE)
-  }, error = function(e) {
-    cli::cli_abort(c(
-      "x" = "Failed to execute yq command",
-      "!" = "Error: {e$message}"
-    ))
-  })
+  yq_result <- tryCatch(
+    {
+      system2(
+        "yq",
+        args = c("eval", "-o=json", shQuote(yaml_file)),
+        stdout = TRUE,
+        stderr = TRUE,
+        wait = TRUE
+      )
+    },
+    error = function(e) {
+      cli::cli_abort(c(
+        "x" = "Failed to execute yq command",
+        "!" = "Error: {e$message}"
+      ))
+    }
+  )
 
   exit_code <- attr(yq_result, "status")
 
@@ -123,26 +127,32 @@ convert_yaml_to_json_with_yq <- function(yaml_file) {
 #'
 
 convert_yaml_to_json_with_r <- function(yaml_file) {
-  yaml_data <- tryCatch({
-    yaml::read_yaml(
-      yaml_file,
-      handlers = list(seq = function(x) as.list(x))
-    )
-  }, error = function(e) {
-    cli::cli_abort(c(
-      "x" = "Failed to parse YAML file {.file {basename(yaml_file)}}",
-      "!" = "YAML syntax error: {e$message}"
-    ))
-  })
+  yaml_data <- tryCatch(
+    {
+      yaml::read_yaml(
+        yaml_file,
+        handlers = list(seq = function(x) as.list(x))
+      )
+    },
+    error = function(e) {
+      cli::cli_abort(c(
+        "x" = "Failed to parse YAML file {.file {basename(yaml_file)}}",
+        "!" = "YAML syntax error: {e$message}"
+      ))
+    }
+  )
 
-  json_data <- tryCatch({
-    jsonlite::toJSON(yaml_data, auto_unbox = TRUE, null = "null")
-  }, error = function(e) {
-    cli::cli_abort(c(
-      "x" = "Failed to convert YAML file {.file {basename(yaml_file)}} to JSON for validation",
-      "!" = "Error: {e$message}"
-    ))
-  })
+  json_data <- tryCatch(
+    {
+      jsonlite::toJSON(yaml_data, auto_unbox = TRUE, null = "null")
+    },
+    error = function(e) {
+      cli::cli_abort(c(
+        "x" = "Failed to convert YAML file {.file {basename(yaml_file)}} to JSON for validation",
+        "!" = "Error: {e$message}"
+      ))
+    }
+  )
 
   return(json_data)
 }
@@ -187,14 +197,17 @@ convert_yaml_to_json <- function(yaml_file, use_yq = TRUE, verbose = TRUE) {
 #' Parsed YAML content as an R object (list, vector, etc.).
 #'
 parse_yaml_for_return <- function(yaml_file) {
-  tryCatch({
-    yaml::read_yaml(yaml_file)
-  }, error = function(e) {
-    cli::cli_abort(c(
-      "x" = "Failed to parse YAML file for return value",
-      "!" = "Error: {e$message}"
-    ))
-  })
+  tryCatch(
+    {
+      yaml::read_yaml(yaml_file)
+    },
+    error = function(e) {
+      cli::cli_abort(c(
+        "x" = "Failed to parse YAML file for return value",
+        "!" = "Error: {e$message}"
+      ))
+    }
+  )
 }
 
 #' Get Schema Path from Schema Name
@@ -216,8 +229,11 @@ get_schema_path <- function(schema_name) {
     ))
   }
 
-  schema_path <- system.file("schemas", paste0(schema_name, ".json"),
-                            package = "mighty")
+  schema_path <- system.file(
+    "schemas",
+    paste0(schema_name, ".json"),
+    package = "mighty"
+  )
 
   if (schema_path == "") {
     available <- list_available_schemas()
@@ -246,7 +262,10 @@ list_available_schemas <- function() {
     return(character(0))
   }
 
-  schema_files <- list.files(schemas_dir, pattern = "\\.json$", full.names = FALSE)
+  schema_files <- list.files(
+    schemas_dir,
+    pattern = "\\.json$",
+    full.names = FALSE
+  )
   sub("\\.json$", "", schema_files)
 }
-

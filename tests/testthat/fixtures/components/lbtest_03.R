@@ -12,11 +12,13 @@ lbtest_03 <- function(ADLB) {
       LBTEST3 = dplyr::case_when(
         !is.na(LBTEST) ~ LBTEST,
         is.na(LBTEST) ~ "Invalid"
-      )) |>
+      )
+    ) |>
     dplyr::mutate(
       LBTEST3_FLG = dplyr::case_when(
         LBTEST3 == "Invalid" ~ "Y",
         LBTEST3 != "Invalid" ~ "Invalid"
-      ))
+      )
+    )
   return(ADLB)
 }

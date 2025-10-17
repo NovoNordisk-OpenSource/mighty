@@ -5,9 +5,9 @@ params_domain_filter_code <- function(
   keep_columns,
   domain_keys
 ) {
-  domain_filter_ = init_metadata$filter_domain |> unlist(recursive = F)
-  global_filter = init_metadata$filter_global
-  domain_required_for_filter = init_metadata$filter_depend_cols |>
+  domain_filter_ <- init_metadata$filter_domain |> unlist(recursive = FALSE)
+  global_filter <- init_metadata$filter_global
+  domain_required_for_filter <- init_metadata$filter_depend_cols |>
     format_filter_depends() |>
     names()
   keys_by_domain <- domain_keys[toupper(domain_required_for_filter)]
@@ -17,7 +17,7 @@ params_domain_filter_code <- function(
   filter_cols <- init_metadata$filter_depend_cols |>
     format_filter_depends()
 
-  cols_required_for_filter = c(
+  cols_required_for_filter <- c(
     unique_domain_keys,
     filter_cols |> unlist() |> unname()
   )
@@ -32,7 +32,12 @@ params_domain_filter_code <- function(
       list(
         table = i,
         cols = c(filter_cols[i], keys_by_domain[toupper(i)]) |> unlist(),
-        keys = paste0('"', keys_by_domain[toupper(i)] |> unlist(), '"', collapse = ", ")
+        keys = paste0(
+          '"',
+          keys_by_domain[toupper(i)] |> unlist(),
+          '"',
+          collapse = ", "
+        )
       )
     })
   }
@@ -42,7 +47,7 @@ params_domain_filter_code <- function(
   has_keep_columns <- !is.null(keep_columns) && length(keep_columns) > 0
 
   # Logic for domain-specific vairables
-  domain_specific_filter_expr <-if (has_domain_filter) {
+  domain_specific_filter_expr <- if (has_domain_filter) {
     purrr::imap_chr(
       domain_filter_,
       build_domain_specific_filter_expr
@@ -63,8 +68,7 @@ params_domain_filter_code <- function(
     global_filter = global_filter,
     has_keep_columns = has_keep_columns,
     keep_columns = keep_cols
-  )
-  )
+  ))
 }
 
 
@@ -88,4 +92,3 @@ build_domain_specific_filter_expr <- function(
     paste0(base_condition, " & ", filter_condition, ")")
   }
 }
-

@@ -6,7 +6,7 @@
 #' @outputs RACE_COUNTRY
 #' @returns `ADSL`
 #' @code
-race_x_country_01 <-   function(ADSL) {
+race_x_country_01 <- function(ADSL) {
   ADSL <- ADSL |>
     dplyr::mutate(RACE_COUNTRY = paste0(RACE, "-", COUNTRY))
   return(ADSL)

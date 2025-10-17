@@ -45,8 +45,13 @@ add_keys_to_depend_cols <- function(nodes, pk, ui_init) {
 #'   col_echo actions.
 process_external_echo_dependencies <- function(x, index_echos, pk) {
   # Extract domains from dependencies
-  dep_domains <- vapply(x[["depend_cols"]][index_echos], function(dc)
-    dc[["domain"]], character(1))
+  dep_domains <- vapply(
+    x[["depend_cols"]][index_echos],
+    function(dc) {
+      dc[["domain"]]
+    },
+    character(1)
+  )
 
   # Identify external domains
   nodes_echo_external <- x[["domain"]][index_echos] != dep_domains
@@ -82,10 +87,12 @@ process_external_echo_dependencies <- function(x, index_echos, pk) {
 #'
 #' @returns A modified `data.table` with enriched foreign key dependency columns
 #'   for external actions.
-add_foreign_key_as_depends_col <- function(x,
-                                           index_echo,
-                                           nodes_echo_external,
-                                           pk) {
+add_foreign_key_as_depends_col <- function(
+  x,
+  index_echo,
+  nodes_echo_external,
+  pk
+) {
   for (i in index_echo[nodes_echo_external]) {
     domain_i <- x[["domain"]][[i]]
     dep_domain <- x[["depend_cols"]][[i]][["domain"]]
@@ -104,7 +111,8 @@ add_foreign_key_as_depends_col <- function(x,
         domain = c(domain_i, dep_domain),
         domain_type = classify_data_domains(c(domain_i, dep_domain))
       )
-    }) |> rbindlist()
+    }) |>
+      rbindlist()
 
     x[["depend_cols"]][[i]] <- rbind(x[["depend_cols"]][[i]], new_dep_cols)
   }

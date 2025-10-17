@@ -1,5 +1,5 @@
 #' @title Lbtest 01
-#' @description A description 
+#' @description A description
 #' @type derivation
 #' @depends ADLB USUBJID
 #' @depends ADLB LBSEQ
@@ -12,8 +12,7 @@
 #' @outputs LBTEST
 #' @returns `ADLB`
 #' @code
-lbtest_01 <-   function(ADLB, lb, ADSL) {
-
+lbtest_01 <- function(ADLB, lb, ADSL) {
   # join with adsl, only derive lbtest if adsl.planned_arm != "" and
   # if aval is na them lbtest = "Invalid"
   ADLB <- ADLB |>

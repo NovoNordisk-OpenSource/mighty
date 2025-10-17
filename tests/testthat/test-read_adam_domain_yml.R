@@ -1,11 +1,11 @@
 test_that("read_adam_specs handles missing files correctly", {
   # Test single missing file
 
-    read_adam_specs("nonexistent_file.yml") |>
-      expect_error(
-        "The following ADaM Specification file(s) do not exist: 'nonexistent_file.yml'",
-        fixed = TRUE
-  )
+  read_adam_specs("nonexistent_file.yml") |>
+    expect_error(
+      "The following ADaM Specification file(s) do not exist: 'nonexistent_file.yml'",
+      fixed = TRUE
+    )
 
   # Test multiple missing files
   missing_files <- c("missing1.yml", "missing2.yml", "missing3.yml")
@@ -45,16 +45,14 @@ column_action:
   trial_path <- withr::local_tempdir()
   ui_path <- file.path(trial_path, "invalid.yml")
   yml_no_table |>
-  writeLines(ui_path)
-  
-  
-    read_adam_specs(ui_path) |> expect_snapshot_error()
+    writeLines(ui_path)
+
+  read_adam_specs(ui_path) |> expect_snapshot_error()
 })
 
 
-
 test_that("read_adam_specs errors on invalid filter specifications", {
-  yml_invalid_filter <-  "
+  yml_invalid_filter <- "
 table:
   name: ADSL
 
@@ -73,7 +71,7 @@ column_action:
 "
 
   trial_path <- withr::local_tempdir()
-  
+
   ui_path <- create_temp_yaml(yml_invalid_filter)
   expect_error(
     read_adam_specs(ui_path),

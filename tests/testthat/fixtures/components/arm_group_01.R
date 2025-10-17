@@ -5,12 +5,14 @@
 #' @outputs ARM_GRP1
 #' @returns `ADSL`
 #' @code
-arm_group_01 <-   function(ADSL) {
+arm_group_01 <- function(ADSL) {
   ADSL <- ADSL |>
-    dplyr::mutate(ARM_GRP1 = ifelse(
-      PLANNED_ARM %in% c("Placebo", "Screen Failure"),
-      "Placebo or Screen Failure",
-      PLANNED_ARM
-    ))
+    dplyr::mutate(
+      ARM_GRP1 = ifelse(
+        PLANNED_ARM %in% c("Placebo", "Screen Failure"),
+        "Placebo or Screen Failure",
+        PLANNED_ARM
+      )
+    )
   return(ADSL)
 }

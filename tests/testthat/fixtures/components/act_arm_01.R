@@ -1,6 +1,6 @@
 #' @title ACTARM
 #' @description A description
-#' 
+#'
 #' @type derivation
 #' @depends dm STUDYID
 #' @depends dm USUBJID
@@ -16,12 +16,18 @@
 act_arm_01 <- function(ADSL, dm, dm_vaccine) {
   ADSL <- ADSL |>
     dplyr::left_join(
-      rbind(dm |> dplyr::select(STUDYID, USUBJID, ACTARM),
-            dm_vaccine |> dplyr::select(STUDYID, USUBJID, ACTARM)),
+      rbind(
+        dm |> dplyr::select(STUDYID, USUBJID, ACTARM),
+        dm_vaccine |> dplyr::select(STUDYID, USUBJID, ACTARM)
+      ),
       by = c("STUDYID", "USUBJID")
     ) |>
-    dplyr::mutate(ACTARM = ifelse(
-      ACTARM == "Placebo", "PLACEBO", ACTARM
-    ))
+    dplyr::mutate(
+      ACTARM = ifelse(
+        ACTARM == "Placebo",
+        "PLACEBO",
+        ACTARM
+      )
+    )
   return(ADSL)
 }

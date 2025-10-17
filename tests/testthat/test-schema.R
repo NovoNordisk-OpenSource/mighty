@@ -82,8 +82,6 @@ column_action:
     expect_error(
       "Error location: table | Error message: Property 'another_forbidden' is not allowed"
     )
-
-
 })
 
 
@@ -118,8 +116,6 @@ column_action:
     expect_error(
       "Error location: table | Error message: Property 'forbidden_field' is not allowed"
     )
-
-
 })
 
 
@@ -150,8 +146,6 @@ column_action:
     expect_error(
       "Error location: init | Error message: Property 'forbidden_extra_field' is not allowed"
     )
-
-
 })
 
 
@@ -179,8 +173,6 @@ column_action:
     expect_error(
       "Error location: init | Error message: Missing required field 'filter_depend_cols'"
     )
-
-
 })
 
 
@@ -210,7 +202,6 @@ column_action:
   # ACT / ASSERT ---------------------------------------------------------------
   validate_yaml(yaml_file, "domain_schema", use_yq = TRUE) |>
     expect_snapshot_error()
-
 })
 
 
@@ -243,17 +234,17 @@ column_action:
 
   validate_yaml(yaml_file, "domain_schema", use_yq = TRUE) |>
     expect_error(
-      "Error location: column_metadata -> VAR1 -> parameters -> item 1 | Error message: Expected type 'object' but got character"
+      "Error location: column_metadata -> VAR1 -> parameters -> item 1 | Error message: Expected type 'object' but got character" # nolint: line_length_linter
     )
 
   validate_yaml(yaml_file, "domain_schema", use_yq = TRUE) |>
     expect_error(
-      "Error location: column_metadata -> VAR1 -> parameters -> item 2 | Error message: Expected type 'object' but got character"
+      "Error location: column_metadata -> VAR1 -> parameters -> item 2 | Error message: Expected type 'object' but got character" # nolint: line_length_linter
     )
 
   validate_yaml(yaml_file, "domain_schema", use_yq = TRUE) |>
     expect_error(
-      "Error location: column_metadata -> VAR1 -> parameters -> item 3 | Error message: Expected type 'object' but got character"
+      "Error location: column_metadata -> VAR1 -> parameters -> item 3 | Error message: Expected type 'object' but got character" # nolint: line_length_linter
     )
 })
 
@@ -320,8 +311,6 @@ column_action:
     expect_error(
       "The following columns have both `source` and `code_id` field populated"
     )
-
-
 })
 
 
@@ -357,7 +346,6 @@ column_action:
     expect_error("The following columns have parameters but no code_id")
   validate_yaml(yaml_file, "domain_schema", use_yq = TRUE) |>
     expect_error("VAR2")
-
 })
 
 
@@ -412,11 +400,12 @@ column_metadata_wrong:
   # ACT / ASSERT ---------------------------------------------------------------
 
   validate_yaml(yaml_file, "domain_schema", use_yq = TRUE) |>
-    expect_error("Required field 'column_action' is missing. Please add this field")
+    expect_error(
+      "Required field 'column_action' is missing. Please add this field"
+    )
 
   validate_yaml(yaml_file, "domain_schema", use_yq = TRUE) |>
     expect_error("Unexpected field 'column_metadata_wrong' found")
-
 })
 
 
@@ -551,8 +540,6 @@ row_action:
 
   validate_yaml(yaml_file, "domain_schema", use_yq = TRUE) |>
     expect_snapshot_error()
-
-
 })
 
 
@@ -585,8 +572,6 @@ row_action:
 
   validate_yaml(yaml_file, "domain_schema", use_yq = TRUE) |>
     expect_snapshot_error()
-
-
 })
 
 test_that("Duplicate columns fail validation", {
@@ -615,7 +600,6 @@ column_action:
 
   validate_yaml(yaml_file, "domain_schema", use_yq = TRUE) |>
     expect_error("Duplicate map key: 'VAR1'")
-
 })
 
 
@@ -649,7 +633,6 @@ row_action:
 
   validate_yaml(yaml_file, "domain_schema", use_yq = TRUE) |>
     expect_error("Duplicate map key: 'row_action_1'")
-
 })
 
 test_that("Multiple business logic validations fail", {
@@ -682,7 +665,6 @@ column_action:
 
   validate_yaml(yaml_file, "domain_schema", use_yq = TRUE) |>
     expect_snapshot_error()
-
 })
 
 
@@ -719,8 +701,9 @@ row_action:
   # ACT / ASSERT ---------------------------------------------------------------
 
   validate_yaml(yaml_file, "domain_schema", use_yq = TRUE) |>
-    expect_error("The following row actions are not defined, but are listed as row dependencies for either a column or another row action")
+    expect_error(
+      "The following row actions are not defined, but are listed as row dependencies for either a column or another row action" # nolint: line_length_linter
+    )
   validate_yaml(yaml_file, "domain_schema", use_yq = TRUE) |>
     expect_error("row_action_1")
-
 })

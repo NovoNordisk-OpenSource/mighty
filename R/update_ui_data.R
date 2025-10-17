@@ -16,7 +16,6 @@
 #' # Example usage would go here
 consolidate_metadata <- function(code_component_metadata, ui_data) {
   if (length(code_component_metadata) > 0) {
-
     # Extract and prepare metadata for active code IDs
     code_id_data <- extract_code_component_metadata(code_component_metadata)
 
@@ -40,9 +39,11 @@ consolidate_metadata <- function(code_component_metadata, ui_data) {
     unlist()
   ui_data_updated[, "type_from_code" := NULL]
 
-
   # Assign internal code_id for predecessor action types
-  ui_data_updated[ui_data_updated$type == "col_echo", "code_id" := "_col_echo.mustache"]
+  ui_data_updated[
+    ui_data_updated$type == "col_echo",
+    "code_id" := "_col_echo.mustache"
+  ]
   ui_data_updated[
     ui_data_updated$type == "col_mutate",
     "code_id" := "_col_mutate.mustache"
@@ -55,13 +56,17 @@ consolidate_metadata <- function(code_component_metadata, ui_data) {
 }
 
 pred_type <- function(code_id, type_from_code, depend_cols, outputs, domain) {
-
   # Check if code_id is provided and retrieve the type
   if (!is.na(code_id)) {
-    if (type_from_code %in% c("derivation", "predecessor")) { return("col_compute") }
-    else if (type_from_code == "row") { return("row_compute") }
-    else {
-      stop(paste0("Invalid action type ", type_from_code, " for ", code_id), ".")
+    if (type_from_code %in% c("derivation", "predecessor")) {
+      return("col_compute")
+    } else if (type_from_code == "row") {
+      return("row_compute")
+    } else {
+      stop(
+        paste0("Invalid action type ", type_from_code, " for ", code_id),
+        "."
+      )
     }
   }
 
@@ -120,7 +125,6 @@ has_code_id_references <- function(ui_data) {
 #'
 #' @return Data table with formatted metadata for active code IDs, or NULL if no metadata found
 extract_code_component_metadata <- function(code_component_metadata) {
-
   # Skip if no metadata found
   if (length(code_component_metadata) == 0) {
     return(NULL)
@@ -130,8 +134,7 @@ extract_code_component_metadata <- function(code_component_metadata) {
     code_component_metadata,
     simplify = FALSE
   )
-  metadata_transposed$type <- metadata_transposed$type |> unlist(F)
-
+  metadata_transposed$type <- metadata_transposed$type |> unlist(FALSE)
 
   code_id_data <- data.table::data.table(
     node_id = names(code_component_metadata),
@@ -160,7 +163,10 @@ merge_ui_with_metadata <- function(ui_data, code_id_data) {
   }
 
   rnm_cols <- names(code_id_data) != "node_id"
-  names(code_id_data)[rnm_cols] <- paste0(names(code_id_data)[rnm_cols], "_from_code")
+  names(code_id_data)[rnm_cols] <- paste0(
+    names(code_id_data)[rnm_cols],
+    "_from_code"
+  )
 
   merged_data <- merge(
     ui_data,
@@ -241,7 +247,7 @@ process_column_dependencies <- function(type, depend_cols, domain, outputs) {
         domain_type = classify_data_domains(domain)
       )
     )
-  } else if(type == "col_compute" & all(is.na(depend_cols))){
+  } else if (type == "col_compute" && all(is.na(depend_cols))) {
     # col_compute actions with no dependencies will have an empty dependency table
     return(
       data.table::data.table(
@@ -333,9 +339,9 @@ add_node_id <- function(nodes) {
         "-",
         formatted_outputs[[i]]
       )
-
     }
-  }) |> unlist()
+  }) |>
+    unlist()
 
   return(nodes)
 }

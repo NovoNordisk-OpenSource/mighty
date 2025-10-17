@@ -43,7 +43,7 @@
 #' params$domains[[1]]$data_type  # "sdtm"
 #' }
 #'
-params_read_data_code <-  function(payload, domain, path_trial) {
+params_read_data_code <- function(payload, domain, path_trial) {
   # Whisker template
 
   v <- strsplit(payload, "\\.")
@@ -59,8 +59,7 @@ params_read_data_code <-  function(payload, domain, path_trial) {
     path_trial = path_trial,
     domains = purrr::imap(by_domain, prepare_domain_data, .self = domain) |>
       unname()
-  )
-  )
+  ))
 }
 
 #' Prepare Domain-Specific Data Reading Parameters
@@ -73,7 +72,7 @@ params_read_data_code <-  function(payload, domain, path_trial) {
 #' @param .self Character. Target domain for self-reference detection.
 #'
 #' @return Named list with domain reading specifications.
-prepare_domain_data <-  function(domain_data, domain_name, .self) {
+prepare_domain_data <- function(domain_data, domain_name, .self) {
   keep_vars <- domain_data[["column_name"]] |>
     toupper() |>
     unique() |>
