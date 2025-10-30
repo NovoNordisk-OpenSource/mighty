@@ -21,7 +21,6 @@
 #' @param data_context Optional list or environment providing additional context
 #'   about available data sources for executable program generation. If `NULL`,
 #'   all programs are considered potentially executable.
-#'
 #' @return A named list containing the complete ADaM program generation results:
 #'   \describe{
 #'     \item{programs}{List of complete, ready-to-execute R programs for each ADaM dataset}

@@ -28,7 +28,7 @@
 #' @return
 #' Data table combining the original actions with newly created filter_domain
 #' actions, maintaining the same structure and column definitions.
-#'
+#' @noRd
 add_filter_domain_actions <- function(actions, ui_init, domain_keys) {
   # Filter dependencies
   filter_depends_cols <- purrr::list_transpose(ui_init)$filter_depend_cols

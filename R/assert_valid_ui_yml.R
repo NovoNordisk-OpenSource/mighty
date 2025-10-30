@@ -2,6 +2,7 @@
 #' @description Validates that ui_yml parameter meets expected structure and content requirements
 #' @param ui_yml The UI YAML input to validate
 #' @return Invisible TRUE if valid, otherwise stops with error
+#' @noRd
 assert_valid_ui_yml <- function(ui_yml) {
   # Check all elements are named
   if (is.null(names(ui_yml)) || any(names(ui_yml) == "")) {
@@ -33,6 +34,7 @@ assert_valid_ui_yml <- function(ui_yml) {
 #' @param domain_spec The domain specification to validate
 #' @param domain_name The name of the domain (for error messages)
 #' @return Invisible TRUE if valid, otherwise stops with error
+#' @noRd
 assert_valid_domain_spec <- function(domain_spec, domain_name) {
   # Check basic structure
   if (!is.list(domain_spec)) {
@@ -96,6 +98,7 @@ assert_valid_domain_spec <- function(domain_spec, domain_name) {
 #' @param domain_name The domain name (for error messages)
 #' @param column_index The index of the column (for error messages)
 #' @return Invisible TRUE if valid, otherwise stops with error
+#' @noRd
 assert_valid_column_spec <- function(column_spec, domain_name, column_index) {
   if (!is.list(column_spec)) {
     stop(
@@ -156,6 +159,7 @@ assert_valid_column_spec <- function(column_spec, domain_name, column_index) {
 #' @param init_spec The init specification to validate
 #' @param domain_name The domain name (for error messages)
 #' @return Invisible TRUE if valid, otherwise stops with error
+#' @noRd
 assert_valid_init_spec <- function(init_spec, domain_name) {
   if (!is.list(init_spec)) {
     stop(

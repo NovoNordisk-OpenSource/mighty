@@ -44,7 +44,7 @@
 #' actions_table <- result$actions
 #' rendered_components <- result$code_components_rendered
 #' }
-#'
+#' @noRd
 setup_actions <- function(
   ui_yml,
   standards_lib,

@@ -33,10 +33,10 @@
 #' @seealso
 #' \code{\link{write_adam_domain_yml}} for writing individual domain specifications
 #' \code{\link{convert_internal_to_yaml}} for internal structure conversion.
-#' IMPORTANT: In case of changes to internal datamodet (e.g. proposal to change
-#' 'source' to 'depends') the conver_internal_to_yaml must be updated.
+#' IMPORTANT: In case of changes to internal datamodel (e.g. proposal to change
+#' 'source' to 'depends') the convert_internal_to_yaml must be updated.
 #'
-#' @export
+#' @noRd
 write_adam_specs <- function(adam_specs, output_dir = ".") {
   lapply(names(adam_specs), function(domain_name) {
     spec <- adam_specs[[domain_name]]
@@ -68,6 +68,7 @@ write_adam_specs <- function(adam_specs, output_dir = ".") {
 #' output_path <- write_adam_domain_yml(adae_spec, "specs/ADAE.yml")
 #'}
 #'
+#' @noRd
 write_adam_domain_yml <- function(spec, output_path) {
   # Convert internal structure back to YAML structure
   yaml_structure <- convert_internal_to_yaml(spec)
@@ -112,6 +113,7 @@ write_adam_domain_yml <- function(spec, output_path) {
 #'     fields that were added during reading
 #' }
 #'
+#' @noRd
 convert_internal_to_yaml <- function(spec) {
   # Convert NA_character back to "NA" strings
   spec_with_na_strings <- convert_from_NA_character(spec)

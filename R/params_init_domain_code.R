@@ -94,7 +94,7 @@
 #' @seealso
 #' [define_params()] for the parent function that prepare the parameters for all
 #' actions
-#'
+#' @noRd
 params_init_domain_code <- function(.self, keep_columns, source_domains) {
   # Initialize ADaM table by row binding source domain(s) and selecting
   # predecessors from source domain(s).

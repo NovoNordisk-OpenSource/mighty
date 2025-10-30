@@ -18,6 +18,7 @@
 #'
 #' @details
 #' Throws error for unrecognized domain names.
+#' @noRd
 classify_data_domains <- function(vector) {
   result <- character(length(vector))
   result[!grepl("\\.", vector, ignore.case = TRUE)] <- "self"

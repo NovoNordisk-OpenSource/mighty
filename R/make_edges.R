@@ -17,7 +17,7 @@
 #'
 #' @return A data.table with two columns (parent_node, node_id) representing the
 #'   directed edges in the computational graph
-#'
+#' @noRd
 make_edges <- function(nodes, primary_domain = "ADSL") {
   # Process column dependencies to create edges
   column_edges <- create_column_dependency_edges(nodes)
@@ -43,6 +43,7 @@ make_edges <- function(nodes, primary_domain = "ADSL") {
 #'   dependencies
 #' @param nodes The nodes data.table
 #' @return A data.table of edges based on column dependencies
+#' @noRd
 create_column_dependency_edges <- function(nodes) {
   nodes2 <- nodes[nodes$type != "col_copy", ]
 
@@ -102,6 +103,7 @@ create_column_dependency_edges <- function(nodes) {
 #' @description Creates a detailed list of columns each node depends on
 #' @param nodes The nodes data.table
 #' @return A data.table with expanded parent column information
+#' @noRd
 expand_parent_columns <- function(nodes) {
   # This gives a data.table showing which columns each node depends on
   parents_expanded <- nodes[,
@@ -130,6 +132,7 @@ expand_parent_columns <- function(nodes) {
 #' @description Creates a detailed list of columns each node produces
 #' @param nodes The nodes data.table
 #' @return A data.table with expanded child column information
+#' @noRd
 expand_child_columns <- function(nodes) {
   # This is a list matching each node id to the columns it produces
   # We exclude row_compute nodes as they only modify existing columns
@@ -160,6 +163,7 @@ expand_child_columns <- function(nodes) {
 #' @param nodes The nodes data.table
 #' @return A data.table of edges based on row dependencies, or NULL if none
 #'   exist
+#' @noRd
 create_row_dependency_edges <- function(nodes) {
   # Early exit if there are no row operations
   if (!any(nodes$type == "row_compute")) {
@@ -274,6 +278,7 @@ remove_child_filter_edges <- function(edges, actions) {
 #' @param column_edges Edges from column dependencies
 #' @param row_edges Edges from row dependencies
 #' @return A cleaned data.table of unique edges
+#' @noRd
 combine_and_clean_edges <- function(column_edges, row_edges) {
   # Combine column and row edges if row edges exist
   if (!is.null(row_edges)) {

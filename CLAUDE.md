@@ -95,6 +95,10 @@ Key package dependencies:
 - **testthat**: Testing framework
 
 ## Git
+
+
+### PRs
+
 When making PR messages, follow the following format:
 
 ```md
@@ -112,9 +116,11 @@ When making PR messages, follow the following format:
 
 ```
 
-When making an issue, follow the following templates:
+### Issues
 
-1. Feature:
+#### Features
+
+When making a feature issue, follow the following template:
 
 ```md
 ## Feature Request
@@ -138,6 +144,7 @@ When making an issue, follow the following templates:
 [Are there any related issues or pull requests that are relevant to this feature request?]
 ```
 
+#### Bug reports
 
 When writing a bug issue, follow this template:
 

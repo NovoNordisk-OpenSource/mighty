@@ -33,6 +33,7 @@
 #'   \item{keys}{Character vector of primary key columns for the domain}
 #'   \item{init}{List containing initialization settings including base_domains,
 #'     filter specifications}
+#' @noRd
 read_adam_specs <- function(
   paths,
   validate = TRUE,
@@ -74,6 +75,7 @@ read_adam_specs <- function(
 #' @param use_yq Use yq for YAML parsing during validation (default: TRUE)
 #'
 #' @return A named list containing the processed domain specification
+#' @noRd
 read_adam_domain_yml <- function(
   yml,
   validate = TRUE,

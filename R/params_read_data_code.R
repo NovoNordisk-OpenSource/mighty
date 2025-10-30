@@ -42,7 +42,7 @@
 #' params$domains[[1]]$keep_vars  # "AGE, USUBJID"
 #' params$domains[[1]]$data_type  # "sdtm"
 #' }
-#'
+#' @noRd
 params_read_data_code <- function(payload, domain, path_trial) {
   # Whisker template
 
@@ -72,6 +72,7 @@ params_read_data_code <- function(payload, domain, path_trial) {
 #' @param .self Character. Target domain for self-reference detection.
 #'
 #' @return Named list with domain reading specifications.
+#' @noRd
 prepare_domain_data <- function(domain_data, domain_name, .self) {
   keep_vars <- domain_data[["column_name"]] |>
     toupper() |>

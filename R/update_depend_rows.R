@@ -12,7 +12,7 @@
 #'   }
 #'
 #' @return A data.table with updated `depend_rows` where prefixes are added.
-#'
+#' @noRd
 update_depend_rows <- function(nodes) {
   #  Make a copy of the input data.table to preserve original data
   x <- copy(nodes)

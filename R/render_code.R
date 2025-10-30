@@ -29,7 +29,7 @@
 #' The input actions data table with an additional 'code' column containing
 #' the generated code for each action, properly formatted with headers and
 #' comments as needed.
-#'
+#' @noRd
 render_code <- function(
   actions,
   domain_keys,
@@ -165,6 +165,7 @@ render_code <- function(
 #' interface.
 #'
 #'
+#' @noRd
 define_params <- function(
   code_id,
   .self,
@@ -272,6 +273,7 @@ add_hash <- function(text) {
 #' Character string containing the full system path to the component file for
 #' internal code IDs, or the original code_id for external components.
 #'
+#' @noRd
 format_internal_code_id <- function(code_id) {
   if (!startsWith(code_id, "_")) {
     return(code_id)

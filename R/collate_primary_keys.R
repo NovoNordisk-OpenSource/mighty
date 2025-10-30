@@ -11,6 +11,7 @@
 #' A list where each element is a named vector containing the primary keys
 #' for that domain, combining all three data sources.
 #'
+#' @noRd
 collate_primary_keys <- function(trial_metadata_keys) {
   c(
     trial_metadata_keys$primary_keys_sdtm,

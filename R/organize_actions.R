@@ -109,7 +109,7 @@
 #' [traverse_and_group_actions()] for the core grouping algorithm,
 #' [make_edges()] for creating dependency relationships
 #'
-#' @export
+#' @noRd
 organize_actions <- function(actions, edges) {
   # Sort actions according to execution order, aiming to:
   #  - execute primary domain actions as early as possible

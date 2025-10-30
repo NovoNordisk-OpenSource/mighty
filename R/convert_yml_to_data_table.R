@@ -38,6 +38,7 @@
 #' }
 #'
 #' @seealso [convert_yml_to_data_table_()] for the internal conversion function
+#' @noRd
 convert_yml_to_data_table <- function(yml_list) {
   lapply(yml_list, function(i) {
     convert_yml_to_data_table_(i$columns, i$domain)
@@ -75,6 +76,7 @@ convert_yml_to_data_table <- function(yml_list) {
 #' `list(NA_character_)` as appropriate.
 #'
 #' @keywords internal
+#' @noRd
 convert_yml_to_data_table_ <- function(nested_list, domain) {
   parent_names <- names(nested_list)
 

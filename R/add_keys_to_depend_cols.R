@@ -14,6 +14,7 @@
 #'
 #' @returns A modified `data.table` of nodes with enriched `depend_cols`
 #'   information.
+#' @noRd
 add_keys_to_depend_cols <- function(nodes, pk, ui_init) {
   x <- copy(nodes)
 
@@ -43,6 +44,7 @@ add_keys_to_depend_cols <- function(nodes, pk, ui_init) {
 #'
 #' @returns A modified `data.table` of nodes with enriched dependencies for
 #'   col_echo actions.
+#' @noRd
 process_external_echo_dependencies <- function(x, index_echos, pk) {
   # Extract domains from dependencies
   dep_domains <- vapply(
@@ -87,6 +89,7 @@ process_external_echo_dependencies <- function(x, index_echos, pk) {
 #'
 #' @returns A modified `data.table` with enriched foreign key dependency columns
 #'   for external actions.
+#' @noRd
 add_foreign_key_as_depends_col <- function(
   x,
   index_echo,

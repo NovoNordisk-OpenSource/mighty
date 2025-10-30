@@ -4,6 +4,7 @@
 #' @param yaml_file Path to YAML file (for error context)
 #' @param ruleset_name Schema name to determine applicable rules
 #' @return Invisible NULL if valid, throws error if invalid
+#' @noRd
 validate_business_logic <- function(yaml_data, yaml_file, ruleset_name = NULL) {
   # Get applicable rules for this schema
   rules <- get_business_rules(ruleset_name)
@@ -88,6 +89,7 @@ validate_business_logic <- function(yaml_data, yaml_file, ruleset_name = NULL) {
 #'
 #' @param ruleset_name Name of schema to get rules for
 #' @return Named list with 'stop_on_error' and 'collect_errors' rule functions
+#' @noRd
 get_business_rules <- function(ruleset_name) {
   # Registry of rules by schema
   rule_registry <- list(

@@ -10,7 +10,7 @@
 #' @return
 #' Data table combining original actions with new read_data actions, sorted by
 #' program_id and rank to ensure proper execution order.
-#'
+#' @noRd
 add_read_data_actions <- function(actions) {
   actions_by_pgm <- split(actions, by = "program_id")
 

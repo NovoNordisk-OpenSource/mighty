@@ -27,6 +27,7 @@
 #' Actions that cannot execute due to missing dependencies are flagged
 #' accordingly.
 #'
+#' @noRd
 add_check_executable_status <- function(actions, ui_data, data_context) {
   if (is.null(data_context)) {
     return(list(
@@ -114,6 +115,7 @@ add_check_executable_status <- function(actions, ui_data, data_context) {
 #' Modified action object returned from the appropriate handler function
 #' with updated execution status, dependencies, outputs, and lineage.
 #'
+#' @noRd
 process_action <- function(
   action,
   processed_actions,
@@ -157,6 +159,7 @@ process_action <- function(
 #' Modified action object with updated execution status, valid outputs, removed
 #' outputs, and lineage information detailing any missing source data columns.
 #'
+#' @noRd
 handle_read_data_action <- function(
   action,
   processed_actions,
@@ -233,6 +236,7 @@ handle_read_data_action <- function(
 #' Modified action object with updated execution status, dependencies, outputs,
 #' and lineage information reflecting any columns missing from source data.
 #'
+#' @noRd
 handle_init_domain_action <- function(
   action,
   processed_actions,
@@ -312,6 +316,7 @@ handle_init_domain_action <- function(
 #' Modified action object with updated execution status, dependencies, outputs,
 #' and lineage information.
 #'
+#' @noRd
 handle_filter_domain_action <- function(
   action,
   processed_actions,
@@ -454,6 +459,7 @@ handle_filter_domain_action <- function(
 #' and lineage information reflecting any columns that cannot be written due
 #' to missing source data.
 #'
+#' @noRd
 handle_write_domain_action <- function(
   action,
   processed_actions,
@@ -537,6 +543,7 @@ handle_write_domain_action <- function(
 #' Modified action object with updated execution status, dependencies, outputs,
 #' and lineage information indicating any missing dependencies.
 #'
+#' @noRd
 handle_generic_action <- function(
   action,
   processed_actions,
@@ -604,7 +611,7 @@ handle_generic_action <- function(
 #' @return
 #' Data table with columns: domain_type, domain, and column_name. Returns
 #' empty data table if outputs is NULL, empty, or contains only NA values.
-#'
+#' @noRd
 parse_output_columns <- function(outputs, default_prefix = "") {
   if (
     is.null(outputs) ||
@@ -645,7 +652,7 @@ parse_output_columns <- function(outputs, default_prefix = "") {
 #' @return
 #' Character vector with domain-prefixed column names in the format
 #' "domain.column_name" for columns that didn't already contain dots.
-#'
+#' @noRd
 prefix_with_domain <- function(column, domain) {
   ifelse(
     grepl(".", column, fixed = TRUE),
@@ -667,7 +674,7 @@ prefix_with_domain <- function(column, domain) {
 #'
 #' @return
 #' Data frame containing the missing columns with "column_name" and "domain" columns.
-#'
+#' @noRd
 find_missing_columns <- function(needed_outputs, available_cols) {
   needed_outputs |>
     dplyr::anti_join(available_cols, by = c("column_name", "domain"))
@@ -689,6 +696,7 @@ find_missing_columns <- function(needed_outputs, available_cols) {
 #' "domain_type", "domain", "column_name", or NA if no dependencies are missing
 #' or input is invalid.
 #'
+#' @noRd
 find_missing_dependencies <- function(depend_cols, available_cols) {
   if (!is.data.table(depend_cols)) {
     return(NA)
@@ -725,7 +733,7 @@ find_missing_dependencies <- function(depend_cols, available_cols) {
 #' @return
 #' Updated data frame of available columns including new outputs if the action
 #' can execute, otherwise returns the original available_cols unchanged.
-#'
+#' @noRd
 update_available_columns_for_action <- function(action, available_cols) {
   # Handle case where outputs is NA or NULL
   if (
@@ -766,6 +774,7 @@ update_available_columns_for_action <- function(action, available_cols) {
 #' Character string containing the formatted lineage message, or empty string
 #' if action can execute.
 #'
+#' @noRd
 create_lineage_message <- function(
   message,
   action,
@@ -810,7 +819,7 @@ collapse_missing_dependencies <- function(removed_data) {
 #' @return
 #' A copy of the input data.table with added columns describing execution status.
 #' `missing_dependency` (NA), `lineage` (""), and `removed_outputs` ("").
-#'
+#' @noRd
 add_default_execution_status <- function(actions) {
   actions_execute <- copy(actions)
   actions_execute$can_execute <- TRUE

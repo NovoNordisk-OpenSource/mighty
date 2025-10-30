@@ -62,6 +62,7 @@
 #' [check_adam_dependencies_cross_domain()] for cross-domain validation,
 #' [check_adam_dependencies_within_domain()] for within-domain validation
 #'
+#' @noRd
 assert_valid_depend_cols <- function(
   actions,
   ui_yml,
@@ -129,6 +130,7 @@ assert_valid_depend_cols <- function(
 #' @param x data.table containing columns 'domain', 'outputs', and 'type'
 #'
 #' @returns Character vector of domain-prefixed column names in the format "domain.column_name"
+#' @noRd
 get_outputs <- function(x) {
   # Create fully qualified output names by prefixing with domain
   outputs <- purrr::map2(x$domain, x$outputs, function(domain, output) {
@@ -152,6 +154,7 @@ get_outputs <- function(x) {
 #'
 #' @return A named list of filter dependency columns enriched with keys for
 #' external dependencies, specifically for the ADaM data domain.
+#' @noRd
 get_filter_adam_dependencies <- function(ui_yml, domain_keys) {
   # Transpose the initialization section from the UI YAML to extract filter dependency columns
   ui_init <- purrr::list_transpose(ui_yml)[["init"]]
@@ -222,6 +225,7 @@ get_filter_adam_dependencies <- function(ui_yml, domain_keys) {
 #' @return
 #' Character vector of unique column dependencies for the domain, with NAs removed.
 #'
+#' @noRd
 get_all_adam_dependencies <- function(x, filter_dep) {
   # Extract column dependencies in filter
   filter_depend_cols <- filter_dep[[x$domain[[1]]]]
@@ -257,6 +261,7 @@ get_all_adam_dependencies <- function(x, filter_dep) {
 #'
 #' @returns A character vector of fully qualified column names
 #'   (domain.column_name) that represent dependencies from ADaM domains
+#' @noRd
 get_adam_dependencies_from_actions <- function(domain_table, depend_col) {
   if (all(!is.na(depend_col))) {
     # Filter for dependencies from ADaM domains
@@ -290,6 +295,7 @@ get_adam_dependencies_from_actions <- function(domain_table, depend_col) {
 #' generates an informative error showing which columns are needed and
 #' which specific actions or domain filters require them.
 #'
+#' @noRd
 check_adam_dependencies_cross_domain <- function(
   actions,
   adam_dep_by_domain,
@@ -369,6 +375,7 @@ check_adam_dependencies_cross_domain <- function(
 #' in the same domain. Returns formatted error messages for integration into
 #' larger validation workflows.
 #'
+#' @noRd
 check_adam_dependencies_within_domain <- function(
   domain,
   adam_dep_by_domain,

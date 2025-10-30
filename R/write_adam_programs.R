@@ -34,6 +34,7 @@
 #' # Write with styling
 #' write_adam_programs(programs, dir = "output/adam", style = TRUE)
 #' }
+#' @export
 write_adam_programs <- function(programs, dir, style = FALSE) {
   prog_names <- names(programs)
   purrr::imap(programs, function(prog_i, nm) {

@@ -6,6 +6,7 @@
 #' @param trial_metadata A list containing trial metadata.
 #'
 #' @returns Nothing if trial configuration contains all needed fields
+#' @noRd
 assert_valid_trial_config <- function(trial_metadata) {
   # Check if trial_metadata is a list
   if (!is.list(trial_metadata)) {

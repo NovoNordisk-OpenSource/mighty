@@ -5,7 +5,7 @@
 #' @param verbose Show detailed validation messages (default: TRUE)
 #' @param use_yq Use yq for YAML parsing (default: TRUE, falls back to yaml package if FALSE or yq unavailable)
 #' @return Parsed YAML data if valid, otherwise throws error
-#' @export
+#' @noRd
 validate_yaml <- function(
   yaml_file,
   schema_name,
@@ -48,6 +48,7 @@ validate_yaml <- function(
 
 
 #' Check if yq is available
+#' @noRd
 check_yq_available <- function() {
   Sys.which("yq") != ""
 }
@@ -63,6 +64,7 @@ check_yq_available <- function() {
 #' @return
 #' Character string containing the JSON representation of the YAML content.
 #'
+#' @noRd
 convert_yaml_to_json_with_yq <- function(yaml_file) {
   yq_result <- tryCatch(
     {
@@ -124,7 +126,7 @@ convert_yaml_to_json_with_yq <- function(yaml_file) {
 #'
 #' @return
 #' Character string containing the JSON representation of the YAML content.
-#'
+#' @noRd
 
 convert_yaml_to_json_with_r <- function(yaml_file) {
   yaml_data <- tryCatch(
@@ -170,6 +172,7 @@ convert_yaml_to_json_with_r <- function(yaml_file) {
 #' @return
 #' Character string containing the JSON representation of the YAML content.
 #'
+#' @noRd
 convert_yaml_to_json <- function(yaml_file, use_yq = TRUE, verbose = TRUE) {
   use_yq_method <- use_yq && check_yq_available()
 
@@ -196,6 +199,7 @@ convert_yaml_to_json <- function(yaml_file, use_yq = TRUE, verbose = TRUE) {
 #' @return
 #' Parsed YAML content as an R object (list, vector, etc.).
 #'
+#' @noRd
 parse_yaml_for_return <- function(yaml_file) {
   tryCatch(
     {
@@ -220,6 +224,7 @@ parse_yaml_for_return <- function(yaml_file) {
 #' @return
 #' Character string containing the full path to the schema file.
 #'
+#' @noRd
 get_schema_path <- function(schema_name) {
   if (missing(schema_name)) {
     available <- list_available_schemas()
@@ -255,6 +260,7 @@ get_schema_path <- function(schema_name) {
 #' Character vector of schema names (without .json extension), or empty vector
 #' if no schemas are found.
 #'
+#' @noRd
 list_available_schemas <- function() {
   schemas_dir <- system.file("schemas", package = "mighty")
 

@@ -17,6 +17,7 @@
 #'
 #' @return TRUE if all outputs match, or throws an error with detailed
 #'   information about mismatches
+#' @noRd
 assert_outputs_identical <- function(x) {
   # Only col_compute can have discrepancies as they have "column" defined both
   # in yml and in code components

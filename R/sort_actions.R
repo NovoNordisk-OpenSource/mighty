@@ -5,7 +5,7 @@
 #' @param primary_domain A string representing the primary domain used for prioritization.
 #'
 #' @return A character vector of node IDs sorted in topological order.
-#'
+#' @noRd
 sort_actions <- function(edges, nodes, primary_domain = "ADSL") {
   # Initialize graph and supporting data structures
   graph_data <- initialize_graph_data(edges, nodes, primary_domain)
@@ -49,6 +49,7 @@ sort_actions <- function(edges, nodes, primary_domain = "ADSL") {
 #'   \item domains_upstr_dep_prim_dom: Domains with upstream dependency on primary domain
 #' }
 #'
+#' @noRd
 initialize_graph_data <- function(edges, nodes, primary_domain) {
   # Create directed graph
   g <- igraph::graph_from_data_frame(
@@ -120,6 +121,7 @@ initialize_graph_data <- function(edges, nodes, primary_domain) {
 #' @return
 #' Character vector of node names in topologically sorted order.
 #'
+#' @noRd
 perform_topological_sort <- function(graph_data, primary_domain) {
   sorted_nodes <- c()
   selected_nodes <- c()
@@ -174,6 +176,7 @@ perform_topological_sort <- function(graph_data, primary_domain) {
 #' @return
 #' Adjacency matrix with selected nodes removed, maintaining original structure
 #' for remaining nodes.
+#' @noRd
 remove_selected_nodes <- function(adj_matrix, selected_nodes) {
   idx_to_remove <- which(colnames(adj_matrix) %in% selected_nodes)
   adj_matrix[-idx_to_remove, -idx_to_remove, drop = FALSE]
@@ -191,6 +194,7 @@ remove_selected_nodes <- function(adj_matrix, selected_nodes) {
 #' @return
 #' Character vector of node names that have zero in-degree (no dependencies).
 #'
+#' @noRd
 find_zero_indegree_nodes <- function(adj_matrix) {
   names(which(colSums(adj_matrix) == 0))
 }
@@ -227,6 +231,7 @@ find_zero_indegree_nodes <- function(adj_matrix) {
 #' Character string containing the selected node ID based on the priority
 #' rules, guaranteed to return exactly one node from the candidate set.
 #'
+#' @noRd
 select_node_by_priority <- function(
   candidate_nodes,
   sorted_nodes,
@@ -279,6 +284,7 @@ select_node_by_priority <- function(
 #' The first candidate node from the target domain, or NULL if no candidates
 #' match the domain criteria.
 #'
+#' @noRd
 apply_priority_1 <- function(
   candidate_nodes,
   sorted_nodes,
@@ -319,6 +325,7 @@ apply_priority_1 <- function(
 #' if no candidates have satisfied dependencies. Uses sub-priorities when
 #' multiple candidates are available.
 #'
+#' @noRd
 apply_priority_2 <- function(
   candidate_nodes,
   adj_matrix,
@@ -369,6 +376,7 @@ apply_priority_2 <- function(
 #' @return
 #' Character vector of domain names that still have upstream dependencies.
 #'
+#' @noRd
 find_remaining_upstream_dependencies <- function(adj_matrix, lkp_dom) {
   # Create domain-level adjacency matrix
   adj_dom <- lkp_dom[attr(adj_matrix, "dimnames")[[1]]] |> unname()
@@ -406,6 +414,7 @@ find_remaining_upstream_dependencies <- function(adj_matrix, lkp_dom) {
 #' Selected node identifier based on sub-priority rules (2a-2d), with sorting
 #' as tiebreaker.
 #'
+#' @noRd
 apply_priority_2_subpriorities <- function(
   candidate_nodes_upstr_dep_cov,
   adj_matrix,

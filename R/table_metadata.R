@@ -3,7 +3,7 @@
 #' @description
 #' Stores metadata information for a single table including variable names and types.
 #'
-#' @export
+#' @noRd
 table_metadata <- R6::R6Class(
   classname = "table_metadata",
   public = list(

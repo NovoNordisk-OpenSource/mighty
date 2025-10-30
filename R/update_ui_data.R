@@ -10,7 +10,7 @@
 #' @param ui_data Data table containing UI data with optional code_id references
 #'
 #' @return A data table with UI data enriched with code component metadata and processed dependent columns
-#' @export
+#' @noRd
 #'
 #' @examples
 #' # Example usage would go here
@@ -105,6 +105,7 @@ pred_type <- function(code_id, type_from_code, depend_cols, outputs, domain) {
 #' @param ui_data Data table to check for code_id references
 #'
 #' @return Logical value: TRUE if code_id references exist, FALSE otherwise
+#' @noRd
 has_code_id_references <- function(ui_data) {
   active_code_ids <- unique(ui_data[
     !is.na(code_id) & !grepl("^_", code_id),
@@ -124,6 +125,7 @@ has_code_id_references <- function(ui_data) {
 #' @param code_component_metadata List of metadata for code components, indexed by code_id
 #'
 #' @return Data table with formatted metadata for active code IDs, or NULL if no metadata found
+#' @noRd
 extract_code_component_metadata <- function(code_component_metadata) {
   # Skip if no metadata found
   if (length(code_component_metadata) == 0) {
@@ -157,6 +159,7 @@ extract_code_component_metadata <- function(code_component_metadata) {
 #' @param code_id_data Metadata for code IDs, formatted as a data table
 #'
 #' @return Merged data table with consolidated columns
+#' @noRd
 merge_ui_with_metadata <- function(ui_data, code_id_data) {
   if (is.null(code_id_data)) {
     return(ui_data)
@@ -204,6 +207,7 @@ merge_ui_with_metadata <- function(ui_data, code_id_data) {
 #' @param data UI data with depend_cols to process
 #'
 #' @return Data with processed depend_cols column
+#' @noRd
 process_depend_cols <- function(data) {
   results <- purrr::pmap(
     data[, .(type, depend_cols, domain, outputs)],
@@ -237,6 +241,7 @@ process_depend_cols <- function(data) {
 #' Data table with processed dependencies containing columns: column_name, domain,
 #' and domain_type. Returns empty data table if no valid dependencies are found.
 #'
+#' @noRd
 process_column_dependencies <- function(type, depend_cols, domain, outputs) {
   # col_copy actions have dependencies on themselves
   if (type == "col_copy") {
@@ -324,6 +329,7 @@ process_column_dependencies <- function(type, depend_cols, domain, outputs) {
 #' @param nodes Data table to add node IDs to
 #'
 #' @return Data table with node_id column added
+#' @noRd
 add_node_id <- function(nodes) {
   # Format components of the node ID
   formatted_outputs <- format_outputs(nodes$outputs)
@@ -355,6 +361,7 @@ add_node_id <- function(nodes) {
 #' @param outputs List of outputs to format
 #'
 #' @return Vector of formatted output strings
+#' @noRd
 format_outputs <- function(outputs) {
   ifelse(
     !is.na(outputs),
@@ -372,6 +379,7 @@ format_outputs <- function(outputs) {
 #' @param code_id Vector of code IDs to format
 #'
 #' @return Vector of formatted code ID strings
+#' @noRd
 format_code_id <- function(code_id) {
   ifelse(!is.na(code_id), paste0("-", code_id), "")
 }
@@ -385,6 +393,7 @@ format_code_id <- function(code_id) {
 #' @param parameters Vector of parameters to format
 #'
 #' @return Vector of formatted parameter strings
+#' @noRd
 format_parameters <- function(parameters) {
   ifelse(!is.na(parameters), paste0("-", parameters), "")
 }

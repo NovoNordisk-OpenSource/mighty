@@ -24,7 +24,7 @@
 #' # Assuming you have an actions data.table
 #' updated_actions <-  add_write_data_actions(actions)
 #' }
-#'
+#' @noRd
 add_write_data_actions <- function(actions) {
   # Split actions by program
   actions_split <- split(

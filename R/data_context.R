@@ -76,7 +76,7 @@
 #' all_tables <- dc$tables
 #' }
 #'
-#' @export
+#' @noRd
 data_context <- R6::R6Class(
   classname = "data_context",
   public = list(

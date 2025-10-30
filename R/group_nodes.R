@@ -80,12 +80,8 @@
 #' grouped[, .(nodes = paste(node_id, collapse = ", ")), by = program_id]
 #' }
 #'
-#' @seealso
-#' [traverse_and_group_actions()] for the core traversal algorithm,
-#' [organize_actions()] for the broader action organization workflow,
-#' [make_edges()] for creating dependency edges
 #'
-#' @export
+#' @noRd
 group_actions <- function(ordered_nodes, vertices, edges) {
   checkmate::assert_data_table(edges)
   checkmate::assert_data_table(vertices)
@@ -247,6 +243,7 @@ group_actions <- function(ordered_nodes, vertices, edges) {
 #' [make_edges()] for creating the dependency edge structure,
 #' [organize_actions()] for the broader action organization workflow
 #'
+#' @noRd
 traverse_and_group_actions <- function(
   n_remaining,
   n_stack,
