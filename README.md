@@ -60,8 +60,8 @@ domain. This column indicates whether the subject’s end-of-study status
 is “COMPLETED.”
 
 ``` yml
-table_metadata:
-  table: ADSL
+table:
+  name: ADSL
 
 init:
   base_domains:
@@ -71,7 +71,7 @@ init:
   filter_global: NA
   filter_depend_cols: NA
 
-column_metadata:
+column_action:
   USUBJID:
     source: USUBJID
   EOSSTT:
@@ -96,7 +96,7 @@ Custom components need to be specified with a path to their location:
     code_id: path/to/custom/component/der_complsfl.R
 ```
 
-Notice the `.R` extension. Custom components are simply R functiond that
+Notice the `.R` extension. Custom components are simply R scripts that
 adhere to a few simple rules. See \[\] for more details
 
 As mighty matures, more of these functions will be pre-defined and ready
@@ -112,26 +112,20 @@ it ourselves:
 ``` r
 #' @title Completion Status Flag Calculation
 #'
-#' @description This function adds a `COMPLSFL` column to the input data frame,
+#' @description This script adds a `COMPLSFL` column to the input data frame,
 #' indicating whether a subject's end-of-study status is marked as "COMPLETED".
-#' 
+#'
 #' @type derivation
-#' 
+#'
 #' @depends .self EOSSTT
-#' 
+#'
 #' @outputs COMPLSFL
-#' 
-#' @returns `.self`
-#' 
-#' @export
-complsfl <- function(.self) {
-  # Add a new column COMPLSFL based on the EOSSTT value
-  .self <- .self |> dplyr::mutate(
-    COMPLSFL = dplyr::case_when(
-      EOSSTT == "COMPLETED" ~ "Y",  # Mark "Y" if EOSSTT is "COMPLETED"
-      TRUE                   ~ "N"    # Mark "N" otherwise
-    )
+
+# Add a new column COMPLSFL based on the EOSSTT value
+.self <- .self |> dplyr::mutate(
+  COMPLSFL = dplyr::case_when(
+    EOSSTT == "COMPLETED" ~ "Y",  # Mark "Y" if EOSSTT is "COMPLETED"
+    TRUE                   ~ "N"    # Mark "N" otherwise
   )
-  return(.self)  
-}
+)
 ```

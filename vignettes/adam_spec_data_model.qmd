@@ -161,13 +161,13 @@ Each column specification uses different fields depending on whether it's a pred
 
 ### Derived columns
 
-All derivations need to be linked to a code component that contains the R code to perform the data transformation. This linkage is done via the `code_id`\` field. A code component can be one of three types:
+All derivations need to be linked to a code component that contains the R code to perform the data transformation. This linkage is done via the `code_id` field. A code component can be one of three types:
 
-1.  Standard code component
-2.  Custom component (local R function)
-3.  Custom component (local mustache template)
+1.  Standard code component (Mustache template)
+2.  Custom component (plain R script)
+3.  Custom component (Mustache template)
 
-<!-- -->
+#### Examples (continued):
 
 5.  Adding a derived column using a standard code component. For **standard** code components, the simple name of the code component is provided
 
@@ -177,9 +177,9 @@ All derivations need to be linked to a code component that contains the R code t
         code_id: arm_group_01
     ```
 
-    Creates `ARM_GRP1` using the standard code component `arm_group_01`. The function's metadata defines which columns it depends on.
+    Creates `ARM_GRP1` using the standard code component `arm_group_01`. The component's metadata defines which columns it depends on.
 
-6.  Adding a derived column using a **custom** code component (**R function**)˛. For custom code components the path to the code component is provided
+6.  Adding a derived column using a **custom** code component (**plain R script**). For custom code components the path to the code component is provided. Custom R scripts should contain the data manipulation code directly without function wrappers.
 
     ``` yml
     column_action:
@@ -187,7 +187,7 @@ All derivations need to be linked to a code component that contains the R code t
         code_id: path/to/code_component/arm_group_01.R
     ```
 
-7.  Adding a derived column using a **custom** code component (**mustache template**)˛. For custom code components the path to the code component is provided
+7.  Adding a derived column using a **custom** code component (**mustache template**). For custom code components the path to the code component is provided
 
     ``` yml
     column_action:
@@ -205,7 +205,7 @@ All derivations need to be linked to a code component that contains the R code t
         code_id: newfl_01
     ```
 
-    Adds both `NEWFL01` and `NEWREA01` columns by calling the standard code component `newfl_01`. The function must be designed to output both variables.
+    Adds both `NEWFL01` and `NEWREA01` columns by calling the standard code component `newfl_01`. The component must be designed to output both variables.
 
 9.  Adding a derived column using a parameterized standard code component
 
@@ -216,7 +216,7 @@ All derivations need to be linked to a code component that contains the R code t
           - cut_points: c(20, 45)
     ```
 
-    Creates `AGE_GRP1` using `age_group_01` code component with custom parameters - in this case cut points c(20, 45). **NOTE:** it is only possible to pass parameters to code components that are mustache templates (standard components and custom mustache components), it is not possible to pass parameters to custom R function components.
+    Creates `AGE_GRP1` using `age_group_01` code component with custom parameters - in this case cut points c(20, 45). **NOTE:** it is only possible to pass parameters to code components that are mustache templates (standard components and custom mustache components), it is not possible to pass parameters to custom R components.
 
 10. Adding multiple derived columns with a single, parameterized code component
 
@@ -260,7 +260,7 @@ Row operations can add, modify, or delete subsets of rows and columns in your AD
 
 Row operations are specified in the `row_action` section of the ADaM domain yml.
 
-Like column derivations, row operations can use either standard components, custom mustache templates or custom R functions.
+Like column derivations, row operations can use either standard components, custom mustache templates or custom R components.
 
 Row operations have both an ID and a code_id. The code_id refers to the code component used, while the ID is a value given by the user. The ID is needed because the same component can be used with different parameter values, so the ID allows the user to refer to a specific implementation of a code component when specifying dependencies.
 

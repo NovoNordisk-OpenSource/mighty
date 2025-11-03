@@ -677,6 +677,7 @@ test_that("Incomplete within-domain spec w/ component fails when x-check disable
   # EXPECT -------------------------------------------------------------------
 
   error_msg_clean <- gsub("\\s+", " ", gsub("\\n", "", error_msg$message))
+
   expect_true(grepl(
     ".* ADLB spec: ADLB.LBTESTto execute: ADLB.LBTEST2 ADLB.LBTEST3 ADLB.LBTEST3_FLG",
     error_msg_clean

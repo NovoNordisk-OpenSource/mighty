@@ -3,10 +3,6 @@
 #' @type derivation
 #' @depends ADSL AGE
 #' @outputs AGE2
-#' @returns `ADSL`
 #' @code
-age_crop_01 <- function(ADSL) {
-  ADSL <- ADSL |>
-    dplyr::mutate(AGE2 = ifelse(AGE > 80, 80, AGE))
-  return(ADSL)
-}
+ADSL <- ADSL |>
+  dplyr::mutate(AGE2 = ifelse(AGE > 80, 80, AGE))

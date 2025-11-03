@@ -3,16 +3,12 @@
 #' @type row
 #' @depends ADLB VISITNUM
 #' @outputs VISITNUM
-#' @returns `ADLB`
 #' @code
-new_visitnum_01 <- function(ADLB) {
-  new_visitnum <- ADLB |>
-    dplyr::filter(round(VISITNUM, 2) == 1.3) |>
-    dplyr::mutate(VISITNUM = 1.4)
+new_visitnum <- ADLB |>
+  dplyr::filter(round(VISITNUM, 2) == 1.3) |>
+  dplyr::mutate(VISITNUM = 1.4)
 
-  if (nrow(new_visitnum) == 0) {
-  }
-
-  ADLB <- rbind(ADLB, new_visitnum)
-  return(ADLB)
+if (nrow(new_visitnum) == 0) {
 }
+
+ADLB <- rbind(ADLB, new_visitnum)

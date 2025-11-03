@@ -13,21 +13,17 @@
 #' @depends suppdm_vaccine QVAL
 #' @outputs EFFICACY
 #' @outputs SAFETY
-#' @returns `ADSL`
 #' @code
-supp_dm_01 <- function(ADSL, suppdm, suppdm_vaccine) {
-  # Collect supplementary data
-  data_supp <- rbind(suppdm, suppdm_vaccine) |>
-    dplyr::select(STUDYID, USUBJID, QNAM, QVAL) |>
-    dplyr::filter(QNAM %in% c("EFFICACY", "SAFETY"))
+# Collect supplementary data
+data_supp <- rbind(suppdm, suppdm_vaccine) |>
+  dplyr::select(STUDYID, USUBJID, QNAM, QVAL) |>
+  dplyr::filter(QNAM %in% c("EFFICACY", "SAFETY"))
 
-  # Transpose and join supplementary data
-  tDatasetSupp <- tidyr::pivot_wider(
-    data_supp,
-    id_cols = c("STUDYID", "USUBJID"),
-    values_from = "QVAL",
-    names_from = "QNAM"
-  )
-  ADSL <- dplyr::left_join(ADSL, tDatasetSupp, by = c("USUBJID", "STUDYID"))
-  return(ADSL)
-}
+# Transpose and join supplementary data
+tDatasetSupp <- tidyr::pivot_wider(
+  data_supp,
+  id_cols = c("STUDYID", "USUBJID"),
+  values_from = "QVAL",
+  names_from = "QNAM"
+)
+ADSL <- dplyr::left_join(ADSL, tDatasetSupp, by = c("USUBJID", "STUDYID"))

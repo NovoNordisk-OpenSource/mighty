@@ -80,11 +80,11 @@ The package follows a structured pipeline for ADaM code generation:
 
 ## Code Components
 
-Code components are R functions that implement specific derivations or transformations:
-- Standard components referenced by name (e.g., `der_complsfl`)
-- Custom components specified with file paths (e.g., `path/to/custom/component.R`)
-- Must follow roxygen2 conventions for metadata extraction
-- Templates stored in `inst/components/` using Mustache syntax
+Code components implement specific derivations or transformations:
+- Standard components referenced by name (e.g., `der_complsfl`) - these are Mustache templates stored in `inst/components/`
+- Custom components specified with file paths (e.g., `path/to/custom/component.R`) - these are plain R scripts (not functions)
+- Custom components must follow roxygen2 conventions for metadata extraction (but don't require @export or function wrappers)
+- Standard component templates use Mustache syntax
 
 ## External Dependencies
 
