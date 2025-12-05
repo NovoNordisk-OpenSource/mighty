@@ -1,31 +1,31 @@
-table:
-  name: ADLB
+id: ADLB
+keys:
+  - USUBJID
+  - STUDYID
+  - LBSEQ
 
-init:
-  base_domains:
-    - lb
-  filter_domain:
-    - lb: '!is.na(LBSTRESN)'
-  filter_global:
-    - '!is.na(SEX)'
-    - 'LBSTRESU == "fL"'
-  filter_depend_cols:
-    - LBSTRESN
-    - ADSL.SEX
-    - LBSTRESU
+population:
+  base:
+    - domain: lb
+      depends:
+        - LBSTRESN
+      filter: '!is.na(LBSTRESN)'
+  global:
+    - filter: '!is.na(SEX)'
+      depends:
+        - ADSL.SEX
+    - filter: 'LBSTRESU == "fL"'
+      depends:
+        - LBSTRESU
 
-column_action:
- # - column: USUBJID
+columns:
+  - id: STUDYID
 
-  STUDYID:
+  - id: VISITNUM
 
-  VISITNUM:
+  - id: LBSTRESN
 
-  LBSTRESN:
+  - id: LBSTRESU
 
-  LBSTRESU:
-
-  AGE:
-    source: ADSL.AGE
-
-
+  - id: AGE
+    method: ADSL.AGE

@@ -1,35 +1,36 @@
-table:
-  name: ADAE
+id: ADAE
+keys:
+  - USUBJID
+  - AESEQ
 
-init:
-  base_domains:
-    - ae
-  filter_domain:
-    - ae: '!is.na(AEBODSYS)'
-  filter_global:
-    - '!is.na(SEX)'
-    - 'AETRTEM == "Y"'
-  filter_depend_cols:
-    - AEBODSYS
-    - adsl.SEX
-    - AETRTEM
+population:
+  base:
+    - domain: ae
+      depends:
+        - AEBODSYS
+      filter: '!is.na(AEBODSYS)'
+  global:
+    - filter: '!is.na(SEX)'
+      depends:
+        - adsl.SEX
+    - filter: 'AETRTEM == "Y"'
+      depends:
+        - AETRTEM
 
-column_action:
+columns:
+  - id: STUDYID
 
-  STUDYID:
+  - id: USUBJID
 
-  USUBJID:
+  - id: AESEQ
 
-  AESEQ:
+  - id: AESOC
 
-  AESOC:
+  - id: AEBODSYS
 
-  AEBODSYS:
+  - id: AGE
+    method: adsl.AGE
 
-  AGE:
-    source: adsl.AGE
-
-  AETRTEM:
-    code_id: {path_base}/fixtures/components/supp_ae_01.R
-
-
+  - id: AETRTEM
+    component:
+      id: "{path_base}/fixtures/components/supp_ae_01.R"

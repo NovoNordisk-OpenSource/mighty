@@ -4,22 +4,24 @@ test_that("No source data makes all actions non-executable", {
   trial_path <- withr::local_tempdir()
 
   yml <- "
-table:
-  name: ADSL
-init:
-  base_domains:
-    - DM
-  filter_domain:
-    - DM: NA
-  filter_global:
-    - NA
-  filter_depend_cols:
-    - NA
-column_action:
-  USUBJID:
-  SEX:
-  AGE:
-  AGEU:
+id: ADSL
+keys: []
+population:
+  base:
+    - domain: DM
+      depends:
+        - NA
+      filter: NA
+  global:
+    - filter: NA
+      depends:
+        - NA
+
+columns:
+  - id: USUBJID
+  - id: SEX
+  - id: AGE
+  - id: AGEU
 
 "
   ui_data <- create_temp_yaml(yml)
@@ -29,7 +31,7 @@ column_action:
   # ACT ---------------------------------------------------------------------
 
   actual <- generate_adam_code(
-    path_ui_data = ui_data,
+    adam_specifications = ui_data,
     path_trial_metadata = pt$path_trial_metadata,
     path_trial = trial_path,
     check_cross_domain_adam_dependencies = TRUE,
@@ -53,24 +55,25 @@ test_that("Available source data makes all actions executable", {
   trial_path <- withr::local_tempdir()
 
   yml <- "
-table:
-  name: ADSL
-init:
-  base_domains:
-    - dm
-  filter_domain:
-    - dm: NA
-  filter_global:
-    - NA
-  filter_depend_cols:
-    - NA
-column_action:
-  STUDYID:
-  USUBJID:
-  SEX:
-  AGE:
-  AGEU:
+id: ADSL
+keys: []
+population:
+  base:
+    - domain: dm
+      depends:
+        - NA
+      filter: NA
+  global:
+    - filter: NA
+      depends:
+        - NA
 
+columns:
+  - id: STUDYID
+  - id: USUBJID
+  - id: SEX
+  - id: AGE
+  - id: AGEU
 
 "
   ui_data <- create_temp_yaml(yml)
@@ -80,7 +83,7 @@ column_action:
   # ACT ---------------------------------------------------------------------
 
   actual <- generate_adam_code(
-    path_ui_data = ui_data,
+    adam_specifications = ui_data,
     path_trial_metadata = pt$path_trial_metadata,
     path_trial = trial_path,
     check_cross_domain_adam_dependencies = TRUE,
@@ -113,24 +116,25 @@ test_that("Missing variable in source data makes filter action non-executable", 
   trial_path <- withr::local_tempdir()
 
   yml <- "
-table:
-  name: ADSL
-init:
-  base_domains:
-    - dm
-  filter_domain:
-    - dm: '!is.na(SEX)'
-  filter_global:
-    - NA
-  filter_depend_cols:
-    - SEX
-column_action:
-  STUDYID:
-  USUBJID:
-  SEX:
-  AGE:
-  AGEU:
+id: ADSL
+keys: []
+population:
+  base:
+    - domain: dm
+      depends:
+        - SEX
+      filter: '!is.na(SEX)'
+  global:
+    - filter: NA
+      depends:
+        - NA
 
+columns:
+  - id: STUDYID
+  - id: USUBJID
+  - id: SEX
+  - id: AGE
+  - id: AGEU
 
 "
   # Setup test data with dm domain but remove dm.SEX and dm.AGEU
@@ -146,7 +150,7 @@ column_action:
   # ACT ---------------------------------------------------------------------
 
   actual <- generate_adam_code(
-    path_ui_data = ui_data,
+    adam_specifications = ui_data,
     path_trial_metadata = pt$path_trial_metadata,
     path_trial = trial_path,
     check_cross_domain_adam_dependencies = TRUE,
@@ -196,23 +200,25 @@ test_that("Missing variable in source data with no filter impact keeps filter ex
   trial_path <- withr::local_tempdir()
 
   yml <- "
-table:
-  name: ADSL
-init:
-  base_domains:
-    - dm
-  filter_domain:
-    - dm: '!is.na(SEX)'
-  filter_global:
-    - NA
-  filter_depend_cols:
-    - SEX
-column_action:
-  STUDYID:
-  USUBJID:
-  SEX:
-  AGE:
-  AGEU:
+id: ADSL
+keys: []
+population:
+  base:
+    - domain: dm
+      depends:
+        - SEX
+      filter: '!is.na(SEX)'
+  global:
+    - filter: NA
+      depends:
+        - NA
+
+columns:
+  - id: STUDYID
+  - id: USUBJID
+  - id: SEX
+  - id: AGE
+  - id: AGEU
 
 "
 
@@ -229,7 +235,7 @@ column_action:
   # ACT ---------------------------------------------------------------------
 
   actual <- generate_adam_code(
-    path_ui_data = ui_data,
+    adam_specifications = ui_data,
     path_trial_metadata = pt$path_trial_metadata,
     path_trial = trial_path,
     check_cross_domain_adam_dependencies = TRUE,
@@ -265,30 +271,34 @@ column_action:
 
 test_that("Missing variables in source data makes filter action non-executable - case with global and domain filter", {
   # SETUP -------------------------------------------------------------------
-
   trial_path <- withr::local_tempdir()
   yml <- "
-table:
-  name: ADLB
-init:
-  base_domains:
-    - lb
-  filter_domain:
-    - lb: 'LBTESTCD ==\"ALB\"'
-  filter_global:
-    - '!is.na(SEX)'
-  filter_depend_cols:
-    - adsl.SEX
-    - LBTESTCD
-column_action:
-  STUDYID:
-  USUBJID:
-  LBSEQ:
-  SEX:
-    source: adsl.SEX
-  VISITNUM:
-  LBTEST:
-  LBTESTCD:
+id: ADLB
+keys:
+  - USUBJID
+  - STUDYID
+  - LBSEQ
+
+population:
+  base:
+    - domain: lb
+      depends:
+        - LBTESTCD
+      filter:
+        - 'LBTESTCD ==\"ALB\"'
+  global:
+    - filter: '!is.na(SEX)'
+      depends:
+        - adsl.SEX
+columns:
+  - id: STUDYID
+  - id: USUBJID
+  - id: LBSEQ
+  - id: SEX
+    method: adsl.SEX
+  - id: VISITNUM
+  - id: LBTEST
+  - id: LBTESTCD
 
 "
   # Setup test data with lb and adsl domains but remove lb.LBTESTCD and adsl.SEX
@@ -300,7 +310,8 @@ column_action:
     remove_data = data.table(
       domain = c("lb", "adsl"),
       columns = c("LBTESTCD", "SEX")
-    )
+    ),
+    trial_metadata_basename = "trial_metadata_lowercase_adsl.yml"
   )
   ui_data <- create_temp_yaml(yml)
   cnt <- connector::connect(file.path(trial_path, "_connector.yml"))
@@ -308,7 +319,7 @@ column_action:
   # ACT ---------------------------------------------------------------------
 
   actual <- generate_adam_code(
-    path_ui_data = ui_data,
+    adam_specifications = ui_data,
     path_trial_metadata = pt$path_trial_metadata,
     path_trial = trial_path,
     check_cross_domain_adam_dependencies = FALSE,
@@ -359,23 +370,25 @@ test_that("Missing variable in source data makes actions executable but deactiva
   trial_path <- withr::local_tempdir()
 
   yml <- "
-table:
-  name: ADSL
-init:
-  base_domains:
-    - dm
-  filter_domain:
-    - dm: NA
-  filter_global:
-    - NA
-  filter_depend_cols:
-    - NA
-column_action:
-  STUDYID:
-  USUBJID:
-  SEX:
-  AGE:
-  AGEU:
+id: ADSL
+keys: []
+population:
+  base:
+    - domain: dm
+      depends:
+        - NA
+      filter: NA
+  global:
+    - filter: NA
+      depends:
+        - NA
+
+columns:
+  - id: STUDYID
+  - id: USUBJID
+  - id: SEX
+  - id: AGE
+  - id: AGEU
 
 "
 
@@ -392,7 +405,7 @@ column_action:
   # ACT ---------------------------------------------------------------------
 
   actual <- generate_adam_code(
-    path_ui_data = ui_data,
+    adam_specifications = ui_data,
     path_trial_metadata = pt$path_trial_metadata,
     path_trial = trial_path,
     check_cross_domain_adam_dependencies = TRUE,
@@ -442,26 +455,29 @@ test_that("Missing domain in source data makes actions non-executable", {
   trial_path <- withr::local_tempdir()
 
   yml <- "
-table:
-  name: ADSL
-init:
-  base_domains:
-    - dm
-    - dm_vaccine
-  filter_domain:
-    - dm: NA
-    - dm_vaccine: NA
-  filter_global:
-    - NA
-  filter_depend_cols:
-    - NA
-column_action:
-  STUDYID:
-  USUBJID:
-  SEX:
-  AGE:
-  AGEU:
+id: ADSL
+keys: []
+population:
+  base:
+    - domain: dm
+      depends:
+        - NA
+      filter: NA
+    - domain: dm_vaccine
+      depends:
+        - NA
+      filter: NA
+  global:
+    - filter: NA
+      depends:
+        - NA
 
+columns:
+  - id: STUDYID
+  - id: USUBJID
+  - id: SEX
+  - id: AGE
+  - id: AGEU
 
 "
 
@@ -473,7 +489,7 @@ column_action:
   # ACT ---------------------------------------------------------------------
 
   actual <- generate_adam_code(
-    path_ui_data = ui_data,
+    adam_specifications = ui_data,
     path_trial_metadata = pt$path_trial_metadata,
     path_trial = trial_path,
     check_cross_domain_adam_dependencies = TRUE,
@@ -508,28 +524,33 @@ test_that("Missing base domain does not allow execution based on available data 
   trial_path <- withr::local_tempdir()
 
   yml <- "
-table:
-  name: ADSL
-init:
-  base_domains:
-    - dm
-    - DM
-    - dm_vaccine
-  filter_domain:
-    - dm: NA
-    - DM: NA
-    - dm_vaccine: NA
-  filter_global:
-    - NA
-  filter_depend_cols:
-    - NA
-column_action:
-  STUDYID:
-  USUBJID:
-  SEX:
-  AGE:
-  AGEU:
+id: ADSL
+keys: []
+population:
+  base:
+    - domain: dm
+      depends:
+        - NA
+      filter: NA
+    - domain: DM
+      depends:
+        - NA
+      filter: NA
+    - domain: dm_vaccine
+      depends:
+        - NA
+      filter: NA
+  global:
+    - filter: NA
+      depends:
+        - NA
 
+columns:
+  - id: STUDYID
+  - id: USUBJID
+  - id: SEX
+  - id: AGE
+  - id: AGEU
 
 "
 
@@ -541,7 +562,7 @@ column_action:
   # ACT ---------------------------------------------------------------------
 
   actual <- generate_adam_code(
-    path_ui_data = ui_data,
+    adam_specifications = ui_data,
     path_trial_metadata = pt$path_trial_metadata,
     path_trial = trial_path,
     check_cross_domain_adam_dependencies = TRUE,
@@ -573,28 +594,33 @@ test_that("Missing columns in one base domain are disregarded in other base doma
   trial_path <- withr::local_tempdir()
 
   yml <- "
-table:
-  name: ADSL
-init:
-  base_domains:
-    - dm
-    - sv
-    - dm_vaccine
-  filter_domain:
-    - dm: NA
-    - sv: NA
-    - dm_vaccine: NA
-  filter_global:
-    - NA
-  filter_depend_cols:
-    - NA
-column_action:
-  STUDYID:
-  USUBJID:
-  SEX:
-  AGE:
-  AGEU:
+id: ADSL
+keys: []
+population:
+  base:
+    - domain: dm
+      depends:
+        - NA
+      filter: NA
+    - domain: sv
+      depends:
+        - NA
+      filter: NA
+    - domain: dm_vaccine
+      depends:
+        - NA
+      filter: NA
+  global:
+    - filter: NA
+      depends:
+        - NA
 
+columns:
+  - id: STUDYID
+  - id: USUBJID
+  - id: SEX
+  - id: AGE
+  - id: AGEU
 
 "
 
@@ -606,7 +632,7 @@ column_action:
   # ACT ---------------------------------------------------------------------
 
   actual <- generate_adam_code(
-    path_ui_data = ui_data,
+    adam_specifications = ui_data,
     path_trial_metadata = pt$path_trial_metadata,
     path_trial = trial_path,
     check_cross_domain_adam_dependencies = TRUE,
@@ -672,24 +698,28 @@ test_that("Filter removes missing base domain variables and creates lineage mess
   trial_path <- withr::local_tempdir()
 
   yml <- "
-table:
-  name: ADLB
-init:
-  base_domains:
-    - lb
-  filter_domain:
-    - lb: NA
-  filter_global:
-    - '!is.na(SEX)'
-  filter_depend_cols:
-    - adsl.SEX
-column_action:
-  STUDYID:
-  USUBJID:
-  SEX:
-    source: adsl.SEX
-  LBSTRESN:
-  LBSEQ:
+id: ADLB
+keys:
+  - USUBJID
+  - STUDYID
+  - LBSEQ
+population:
+  base:
+    - domain: lb
+      depends:
+        - NA
+      filter: NA
+  global:
+    - filter: '!is.na(SEX)'
+      depends:
+        - adsl.SEX
+columns:
+  - id: STUDYID
+  - id: USUBJID
+  - id: SEX
+    method: adsl.SEX
+  - id: LBSTRESN
+  - id: LBSEQ
 
 "
 
@@ -699,7 +729,8 @@ column_action:
     yml,
     c("lb"),
     c("adsl"),
-    remove_data = data.table(domain = c("lb"), columns = c("LBSTRESN"))
+    remove_data = data.table(domain = c("lb"), columns = c("LBSTRESN")),
+    trial_metadata_basename = "trial_metadata_lowercase_adsl.yml"
   )
   ui_data <- create_temp_yaml(yml)
   cnt <- connector::connect(file.path(trial_path, "_connector.yml"))
@@ -707,7 +738,7 @@ column_action:
   # ACT ---------------------------------------------------------------------
 
   actual <- generate_adam_code(
-    path_ui_data = ui_data,
+    adam_specifications = ui_data,
     path_trial_metadata = pt$path_trial_metadata,
     path_trial = trial_path,
     check_cross_domain_adam_dependencies = FALSE,

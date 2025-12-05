@@ -1,23 +1,28 @@
-table:
-  name: ADLB
+id: ADLB
+keys:
+  - USUBJID
+  - STUDYID
+  - LBSEQ
 
-init:
-  base_domains:
-    - lb
-  filter_domain:
-    - lb: NA
-  filter_global:
-  - NA
-  filter_depend_cols:
-  - NA
+population:
+  base:
+    - domain: lb
+      depends:
+        - NA
+      filter: NA
+  global:
+    - filter: NA
+      depends:
+        - NA
 
-column_action:
-  USUBJID:
+columns:
+  - id: USUBJID
 
-  LBSTRESN:
+  - id: LBSTRESN
 
-  AVAL:
-    source: LBSTRESN
+  - id: AVAL
+    method: LBSTRESN
 
-  AVALFL:
-    code_id: {path_base}/fixtures/components/avalfl_01.R
+  - id: AVALFL
+    component:
+      id: "{path_base}/fixtures/components/avalfl_01.R"

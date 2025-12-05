@@ -1,29 +1,35 @@
-table:
-  name: ADSL
+id: ADSL
+keys:
+  - USUBJID
+  - STUDYID
 
-init:
-  base_domains:
-    - dm
-    - dm_vaccine
-  filter_domain:
-    - dm: 'is.na(DTHFL)'
-    - dm_vaccine: NA
-  filter_global:
-  - NA
-  filter_depend_cols:
-    - DTHFL
+population:
+  base:
+    - domain: dm
+      depends:
+        - DTHFL
+      filter: 'is.na(DTHFL)'
+    - domain: dm_vaccine
+      depends:
+        - NA
+      filter: NA
+  global:
+    - filter: NA
+      depends:
+        - NA
 
-column_action:
-  USUBJID:
+columns:
+  - id: USUBJID
 
-  STUDYID:
+  - id: STUDYID
 
-  ARM:
+  - id: ARM
 
-  PLANNED_ARM:
-    source: ARM
+  - id: PLANNED_ARM
+    method: ARM
 
-  DTHFL:
+  - id: DTHFL
 
-  ARM_GRP1:
-    code_id: {path_base}/fixtures/components/arm_group_01.R
+  - id: ARM_GRP1
+    component:
+      id: "{path_base}/fixtures/components/arm_group_01.R"

@@ -1,15 +1,15 @@
 test_that("Complete spec passes when cross-domain disabled", {
   # SETUP -------------------------------------------------------------------
 
-  path_ui_data <- testthat::test_path(
+  adam_specifications <- testthat::test_path(
     "fixtures",
     "assert_valid_adam_dependencies_adlb_01.yml"
   )
-  path_ui_data_rendered <- setup_yml_file_for_testing(
-    path_ui_data,
+  adam_specifications_rendered <- setup_yml_file_for_testing(
+    adam_specifications,
     environment()
   )
-  path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
+  path_trial_metadata <- test_path("fixtures", "trial_metadata_lowercase_adsl.yml")
   path_trial <- withr::local_tempdir()
 
   setup_testdata(
@@ -22,7 +22,7 @@ test_that("Complete spec passes when cross-domain disabled", {
   # EXPECT -------------------------------------------------------------------
 
   actual <- generate_adam_code(
-    path_ui_data = path_ui_data_rendered,
+    adam_specifications = adam_specifications_rendered,
     standards_lib = standards_lib,
     path_trial_metadata = path_trial_metadata,
     path_trial = path_trial,
@@ -49,15 +49,15 @@ test_that("Complete spec passes when cross-domain disabled", {
 test_that("Complete spec passes when cross-domain enabled", {
   # SETUP -------------------------------------------------------------------
 
-  path_ui_data <- testthat::test_path(
+  adam_specifications <- testthat::test_path(
     "fixtures",
     "assert_valid_adam_dependencies_adlb_01.yml"
   )
-  path_ui_data_rendered <- setup_yml_file_for_testing(
-    path_ui_data,
+  adam_specifications_rendered <- setup_yml_file_for_testing(
+    adam_specifications,
     environment()
   )
-  path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
+  path_trial_metadata <- test_path("fixtures", "trial_metadata_lowercase_adsl.yml")
   path_trial <- withr::local_tempdir()
 
   setup_testdata(
@@ -70,7 +70,7 @@ test_that("Complete spec passes when cross-domain enabled", {
   # EXPECT -------------------------------------------------------------------
 
   actual <- generate_adam_code(
-    path_ui_data = path_ui_data_rendered,
+    adam_specifications = adam_specifications_rendered,
     standards_lib = standards_lib,
     path_trial_metadata = path_trial_metadata,
     path_trial = path_trial,
@@ -97,15 +97,15 @@ test_that("Complete spec passes when cross-domain enabled", {
 test_that("Incomplete cross-domain ADaM spec fails when checks enabled", {
   # SETUP -------------------------------------------------------------------
 
-  path_ui_data <- testthat::test_path(
+  adam_specifications <- testthat::test_path(
     "fixtures",
     "assert_valid_adam_dependencies_adlb_02.yml"
   )
-  path_ui_data_rendered <- setup_yml_file_for_testing(
-    path_ui_data,
+  adam_specifications_rendered <- setup_yml_file_for_testing(
+    adam_specifications,
     environment()
   )
-  path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
+  path_trial_metadata <- test_path("fixtures", "trial_metadata_lowercase_adsl.yml")
   path_trial <- withr::local_tempdir()
 
   setup_testdata(
@@ -118,7 +118,7 @@ test_that("Incomplete cross-domain ADaM spec fails when checks enabled", {
   # ACT -------------------------------------------------------------------
 
   error_msg <- generate_adam_code(
-    path_ui_data = path_ui_data_rendered,
+    adam_specifications = adam_specifications_rendered,
     standards_lib = standards_lib,
     path_trial_metadata = path_trial_metadata,
     path_trial = path_trial,
@@ -139,15 +139,15 @@ test_that("Incomplete cross-domain ADaM spec fails when checks enabled", {
 test_that("Incomplete cross-domain ADaM spec passes when checks disabled", {
   # SETUP -------------------------------------------------------------------
 
-  path_ui_data <- testthat::test_path(
+  adam_specifications <- testthat::test_path(
     "fixtures",
     "assert_valid_adam_dependencies_adlb_02.yml"
   )
-  path_ui_data_rendered <- setup_yml_file_for_testing(
-    path_ui_data,
+  adam_specifications_rendered <- setup_yml_file_for_testing(
+    adam_specifications,
     environment()
   )
-  path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
+  path_trial_metadata <- test_path("fixtures", "trial_metadata_lowercase_adsl.yml")
   path_trial <- withr::local_tempdir()
 
   setup_testdata(
@@ -160,7 +160,7 @@ test_that("Incomplete cross-domain ADaM spec passes when checks disabled", {
   # EXPECT -------------------------------------------------------------------
 
   actual <- generate_adam_code(
-    path_ui_data = path_ui_data_rendered,
+    adam_specifications = adam_specifications_rendered,
     standards_lib = standards_lib,
     path_trial_metadata = path_trial_metadata,
     path_trial = path_trial,
@@ -187,15 +187,15 @@ test_that("Incomplete cross-domain ADaM spec passes when checks disabled", {
 test_that("Incomplete within-domain ADaM spec fails when checks disabled", {
   # SETUP -------------------------------------------------------------------
 
-  path_ui_data <- testthat::test_path(
+  adam_specifications <- testthat::test_path(
     "fixtures",
     "assert_valid_adam_dependencies_adlb_03.yml"
   )
-  path_ui_data_rendered <- setup_yml_file_for_testing(
-    path_ui_data,
+  adam_specifications_rendered <- setup_yml_file_for_testing(
+    adam_specifications,
     environment()
   )
-  path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
+  path_trial_metadata <- test_path("fixtures", "trial_metadata_lowercase_adsl.yml")
   path_trial <- withr::local_tempdir()
 
   setup_testdata(
@@ -208,7 +208,7 @@ test_that("Incomplete within-domain ADaM spec fails when checks disabled", {
   # ACT -------------------------------------------------------------------
 
   generate_adam_code(
-    path_ui_data = path_ui_data_rendered,
+    adam_specifications = adam_specifications_rendered,
     standards_lib = standards_lib,
     path_trial_metadata = path_trial_metadata,
     path_trial = path_trial,
@@ -221,15 +221,15 @@ test_that("Incomplete within-domain ADaM spec fails when checks disabled", {
 test_that("Incomplete within-domain ADaM spec fails when checks enabled", {
   # SETUP -------------------------------------------------------------------
 
-  path_ui_data <- testthat::test_path(
+  adam_specifications <- testthat::test_path(
     "fixtures",
     "assert_valid_adam_dependencies_adlb_03.yml"
   )
-  path_ui_data_rendered <- setup_yml_file_for_testing(
-    path_ui_data,
+  adam_specifications_rendered <- setup_yml_file_for_testing(
+    adam_specifications,
     environment()
   )
-  path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
+  path_trial_metadata <- test_path("fixtures", "trial_metadata_lowercase_adsl.yml")
   path_trial <- withr::local_tempdir()
 
   setup_testdata(
@@ -242,7 +242,7 @@ test_that("Incomplete within-domain ADaM spec fails when checks enabled", {
   # ACT -------------------------------------------------------------------
 
   error_msg <- generate_adam_code(
-    path_ui_data = path_ui_data_rendered,
+    adam_specifications = adam_specifications_rendered,
     standards_lib = standards_lib,
     path_trial_metadata = path_trial_metadata,
     path_trial = path_trial,
@@ -255,15 +255,15 @@ test_that("Incomplete within-domain ADaM spec fails when checks enabled", {
 test_that("Incomplete within and cross-domain specs fail when checks disabled", {
   # SETUP -------------------------------------------------------------------
 
-  path_ui_data <- testthat::test_path(
+  adam_specifications <- testthat::test_path(
     "fixtures",
     "assert_valid_adam_dependencies_adlb_04.yml"
   )
-  path_ui_data_rendered <- setup_yml_file_for_testing(
-    path_ui_data,
+  adam_specifications_rendered <- setup_yml_file_for_testing(
+    adam_specifications,
     environment()
   )
-  path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
+  path_trial_metadata <- test_path("fixtures", "trial_metadata_lowercase_adsl.yml")
   path_trial <- withr::local_tempdir()
 
   setup_testdata(
@@ -276,7 +276,7 @@ test_that("Incomplete within and cross-domain specs fail when checks disabled", 
   # ACT -------------------------------------------------------------------
 
   error_msg <- generate_adam_code(
-    path_ui_data = path_ui_data_rendered,
+    adam_specifications = adam_specifications_rendered,
     standards_lib = standards_lib,
     path_trial_metadata = path_trial_metadata,
     path_trial = path_trial,
@@ -297,15 +297,15 @@ test_that("Incomplete within and cross-domain specs fail when checks disabled", 
 test_that("Incomplete within and cross-domain specs fail when checks enabled", {
   # SETUP -------------------------------------------------------------------
 
-  path_ui_data <- testthat::test_path(
+  adam_specifications <- testthat::test_path(
     "fixtures",
     "assert_valid_adam_dependencies_adlb_04.yml"
   )
-  path_ui_data_rendered <- setup_yml_file_for_testing(
-    path_ui_data,
+  adam_specifications_rendered <- setup_yml_file_for_testing(
+    adam_specifications,
     environment()
   )
-  path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
+  path_trial_metadata <- test_path("fixtures", "trial_metadata_lowercase_adsl.yml")
   path_trial <- withr::local_tempdir()
 
   setup_testdata(
@@ -318,7 +318,7 @@ test_that("Incomplete within and cross-domain specs fail when checks enabled", {
   # ACT -------------------------------------------------------------------
 
   error_msg <- generate_adam_code(
-    path_ui_data = path_ui_data_rendered,
+    adam_specifications = adam_specifications_rendered,
     standards_lib = standards_lib,
     path_trial_metadata = path_trial_metadata,
     path_trial = path_trial,
@@ -339,15 +339,15 @@ test_that("Incomplete within and cross-domain specs fail when checks enabled", {
 test_that("Incomplete ADSL filter spec fails when cross-domain enabled", {
   # SETUP -------------------------------------------------------------------
 
-  path_ui_data <- testthat::test_path(
+  adam_specifications <- testthat::test_path(
     "fixtures",
     "assert_valid_adam_dependencies_adlb_05.yml"
   )
-  path_ui_data_rendered <- setup_yml_file_for_testing(
-    path_ui_data,
+  adam_specifications_rendered <- setup_yml_file_for_testing(
+    adam_specifications,
     environment()
   )
-  path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
+  path_trial_metadata <- test_path("fixtures", "trial_metadata_lowercase_adsl.yml")
   path_trial <- withr::local_tempdir()
 
   setup_testdata(
@@ -360,7 +360,7 @@ test_that("Incomplete ADSL filter spec fails when cross-domain enabled", {
   # ACT -------------------------------------------------------------------
 
   error_msg <- generate_adam_code(
-    path_ui_data = path_ui_data_rendered,
+    adam_specifications = adam_specifications_rendered,
     standards_lib = standards_lib,
     path_trial_metadata = path_trial_metadata,
     path_trial = path_trial,
@@ -381,15 +381,15 @@ test_that("Incomplete ADSL filter spec fails when cross-domain enabled", {
 test_that("Incomplete ADSL filter spec passes when cross-domain disabled", {
   # SETUP -------------------------------------------------------------------
 
-  path_ui_data <- testthat::test_path(
+  adam_specifications <- testthat::test_path(
     "fixtures",
     "assert_valid_adam_dependencies_adlb_05.yml"
   )
-  path_ui_data_rendered <- setup_yml_file_for_testing(
-    path_ui_data,
+  adam_specifications_rendered <- setup_yml_file_for_testing(
+    adam_specifications,
     environment()
   )
-  path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
+  path_trial_metadata <- test_path("fixtures", "trial_metadata_lowercase_adsl.yml")
   path_trial <- withr::local_tempdir()
 
   setup_testdata(
@@ -402,7 +402,7 @@ test_that("Incomplete ADSL filter spec passes when cross-domain disabled", {
   # EXPECT -------------------------------------------------------------------
 
   actual <- generate_adam_code(
-    path_ui_data = path_ui_data_rendered,
+    adam_specifications = adam_specifications_rendered,
     standards_lib = standards_lib,
     path_trial_metadata = path_trial_metadata,
     path_trial = path_trial,
@@ -428,15 +428,15 @@ test_that("Incomplete ADSL filter spec passes when cross-domain disabled", {
 test_that("Incomplete ADSL filter and actions fail when checks enabled", {
   # SETUP -------------------------------------------------------------------
 
-  path_ui_data <- testthat::test_path(
+  adam_specifications <- testthat::test_path(
     "fixtures",
     "assert_valid_adam_dependencies_adlb_06.yml"
   )
-  path_ui_data_rendered <- setup_yml_file_for_testing(
-    path_ui_data,
+  adam_specifications_rendered <- setup_yml_file_for_testing(
+    adam_specifications,
     environment()
   )
-  path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
+  path_trial_metadata <- test_path("fixtures", "trial_metadata_lowercase_adsl.yml")
   path_trial <- withr::local_tempdir()
 
   setup_testdata(
@@ -449,7 +449,7 @@ test_that("Incomplete ADSL filter and actions fail when checks enabled", {
   # ACT -------------------------------------------------------------------
 
   error_msg <- generate_adam_code(
-    path_ui_data = path_ui_data_rendered,
+    adam_specifications = adam_specifications_rendered,
     standards_lib = standards_lib,
     path_trial_metadata = path_trial_metadata,
     path_trial = path_trial,
@@ -470,15 +470,15 @@ test_that("Incomplete ADSL filter and actions fail when checks enabled", {
 test_that("Incomplete ADSL filter and actions pass when checks disabled", {
   # SETUP -------------------------------------------------------------------
 
-  path_ui_data <- testthat::test_path(
+  adam_specifications <- testthat::test_path(
     "fixtures",
     "assert_valid_adam_dependencies_adlb_06.yml"
   )
-  path_ui_data_rendered <- setup_yml_file_for_testing(
-    path_ui_data,
+  adam_specifications_rendered <- setup_yml_file_for_testing(
+    adam_specifications,
     environment()
   )
-  path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
+  path_trial_metadata <- test_path("fixtures", "trial_metadata_lowercase_adsl.yml")
   path_trial <- withr::local_tempdir()
 
   setup_testdata(
@@ -491,7 +491,7 @@ test_that("Incomplete ADSL filter and actions pass when checks disabled", {
   # EXPECT -------------------------------------------------------------------
 
   actual <- generate_adam_code(
-    path_ui_data = path_ui_data_rendered,
+    adam_specifications = adam_specifications_rendered,
     standards_lib = standards_lib,
     path_trial_metadata = path_trial_metadata,
     path_trial = path_trial,
@@ -518,15 +518,15 @@ test_that("Incomplete ADSL filter and actions pass when checks disabled", {
 test_that("Incomplete ADSL filter in two domains fails when checks enabled", {
   # SETUP -------------------------------------------------------------------
 
-  path_ui_data <- c(
+  adam_specifications <- c(
     test_path("fixtures", "assert_valid_adam_dependencies_adlb_06.yml"),
     test_path("fixtures", "assert_valid_adam_dependencies_advs_01.yml")
   )
-  path_ui_data_rendered <- setup_yml_file_for_testing(
-    path_ui_data,
+  adam_specifications_rendered <- setup_yml_file_for_testing(
+    adam_specifications,
     environment()
   )
-  path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
+  path_trial_metadata <- test_path("fixtures", "trial_metadata_lowercase_adsl.yml")
   path_trial <- withr::local_tempdir()
 
   setup_testdata(
@@ -539,7 +539,7 @@ test_that("Incomplete ADSL filter in two domains fails when checks enabled", {
   # ACT -------------------------------------------------------------------
 
   error_msg <- generate_adam_code(
-    path_ui_data = path_ui_data_rendered,
+    adam_specifications = adam_specifications_rendered,
     standards_lib = standards_lib,
     path_trial_metadata = path_trial_metadata,
     path_trial = path_trial,
@@ -559,15 +559,15 @@ test_that("Incomplete ADSL filter in two domains fails when checks enabled", {
 test_that("Incomplete ADSL filter in two domains passes when checks disabled", {
   # SETUP -------------------------------------------------------------------
 
-  path_ui_data <- c(
+  adam_specifications <- c(
     test_path("fixtures", "assert_valid_adam_dependencies_adlb_06.yml"),
     test_path("fixtures", "assert_valid_adam_dependencies_advs_01.yml")
   )
-  path_ui_data_rendered <- setup_yml_file_for_testing(
-    path_ui_data,
+  adam_specifications_rendered <- setup_yml_file_for_testing(
+    adam_specifications,
     environment()
   )
-  path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
+  path_trial_metadata <- test_path("fixtures", "trial_metadata_lowercase_adsl.yml")
   path_trial <- withr::local_tempdir()
 
   setup_testdata(
@@ -580,7 +580,7 @@ test_that("Incomplete ADSL filter in two domains passes when checks disabled", {
   # EXPECT -------------------------------------------------------------------
 
   actual <- generate_adam_code(
-    path_ui_data = path_ui_data_rendered,
+    adam_specifications = adam_specifications_rendered,
     standards_lib = standards_lib,
     path_trial_metadata = path_trial_metadata,
     path_trial = path_trial,
@@ -605,15 +605,15 @@ test_that("Incomplete ADSL filter in two domains passes when checks disabled", {
 
 test_that("Incomplete within-domain in two domains fails when checks disabled", {
   # SETUP
-  path_ui_data <- c(
+  adam_specifications <- c(
     test_path("fixtures", "assert_valid_adam_dependencies_adlb_03.yml"),
     test_path("fixtures", "assert_valid_adam_dependencies_advs_02.yml")
   )
-  path_ui_data_rendered <- setup_yml_file_for_testing(
-    path_ui_data,
+  adam_specifications_rendered <- setup_yml_file_for_testing(
+    adam_specifications,
     environment()
   )
-  path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
+  path_trial_metadata <- test_path("fixtures", "trial_metadata_lowercase_adsl.yml")
   path_trial <- withr::local_tempdir()
 
   setup_testdata(
@@ -626,7 +626,7 @@ test_that("Incomplete within-domain in two domains fails when checks disabled", 
   # ACT -------------------------------------------------------------------
 
   error_msg <- generate_adam_code(
-    path_ui_data = path_ui_data_rendered,
+    adam_specifications = adam_specifications_rendered,
     standards_lib = standards_lib,
     path_trial_metadata = path_trial_metadata,
     path_trial = path_trial,
@@ -645,15 +645,15 @@ test_that("Incomplete within-domain in two domains fails when checks disabled", 
 
 test_that("Incomplete within-domain spec w/ component fails when x-check disabled", {
   # SETUP
-  path_ui_data <- test_path(
+  adam_specifications <- test_path(
     "fixtures",
     "assert_valid_adam_dependencies_adlb_07.yml"
   )
-  path_ui_data_rendered <- setup_yml_file_for_testing(
-    path_ui_data,
+  adam_specifications_rendered <- setup_yml_file_for_testing(
+    adam_specifications,
     environment()
   )
-  path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
+  path_trial_metadata <- test_path("fixtures", "trial_metadata_lowercase_adsl.yml")
   path_trial <- withr::local_tempdir()
 
   setup_testdata(
@@ -666,7 +666,7 @@ test_that("Incomplete within-domain spec w/ component fails when x-check disable
   # ACT -------------------------------------------------------------------
 
   error_msg <- generate_adam_code(
-    path_ui_data = path_ui_data_rendered,
+    adam_specifications = adam_specifications_rendered,
     standards_lib = standards_lib,
     path_trial_metadata = path_trial_metadata,
     path_trial = path_trial,
@@ -687,15 +687,15 @@ test_that("Incomplete within-domain spec w/ component fails when x-check disable
 
 test_that("Incomplete within-domain spec w/ component fails when x-check enabled", {
   # SETUP
-  path_ui_data <- test_path(
+  adam_specifications <- test_path(
     "fixtures",
     "assert_valid_adam_dependencies_adlb_07.yml"
   )
-  path_ui_data_rendered <- setup_yml_file_for_testing(
-    path_ui_data,
+  adam_specifications_rendered <- setup_yml_file_for_testing(
+    adam_specifications,
     environment()
   )
-  path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
+  path_trial_metadata <- test_path("fixtures", "trial_metadata_lowercase_adsl.yml")
   path_trial <- withr::local_tempdir()
 
   setup_testdata(
@@ -708,7 +708,7 @@ test_that("Incomplete within-domain spec w/ component fails when x-check enabled
   # ACT -------------------------------------------------------------------
 
   error_msg <- generate_adam_code(
-    path_ui_data = path_ui_data_rendered,
+    adam_specifications = adam_specifications_rendered,
     standards_lib = standards_lib,
     path_trial_metadata = path_trial_metadata,
     path_trial = path_trial,
@@ -729,15 +729,15 @@ test_that("Incomplete within-domain spec w/ component fails when x-check enabled
 test_that("Incomplete filter_depend_cols fails when x-check enabled", {
   # SETUP -------------------------------------------------------------------
 
-  path_ui_data <- testthat::test_path(
+  adam_specifications <- testthat::test_path(
     "fixtures",
     "assert_valid_adam_dependencies_adlb_08.yml"
   )
-  path_ui_data_rendered <- setup_yml_file_for_testing(
-    path_ui_data,
+  adam_specifications_rendered <- setup_yml_file_for_testing(
+    adam_specifications,
     environment()
   )
-  path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
+  path_trial_metadata <- test_path("fixtures", "trial_metadata_lowercase_adsl.yml")
   path_trial <- withr::local_tempdir()
 
   setup_testdata(
@@ -750,7 +750,7 @@ test_that("Incomplete filter_depend_cols fails when x-check enabled", {
   # ACT -------------------------------------------------------------------
 
   error_msg <- generate_adam_code(
-    path_ui_data = path_ui_data_rendered,
+    adam_specifications = adam_specifications_rendered,
     standards_lib = standards_lib,
     path_trial_metadata = path_trial_metadata,
     path_trial = path_trial,
@@ -771,15 +771,15 @@ test_that("Incomplete filter_depend_cols fails when x-check enabled", {
 test_that("Incomplete filter_depend_cols fails when x-check disabled", {
   # SETUP -------------------------------------------------------------------
 
-  path_ui_data <- testthat::test_path(
+  adam_specifications <- testthat::test_path(
     "fixtures",
     "assert_valid_adam_dependencies_adlb_08.yml"
   )
-  path_ui_data_rendered <- setup_yml_file_for_testing(
-    path_ui_data,
+  adam_specifications_rendered <- setup_yml_file_for_testing(
+    adam_specifications,
     environment()
   )
-  path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
+  path_trial_metadata <- test_path("fixtures", "trial_metadata_lowercase_adsl.yml")
   path_trial <- withr::local_tempdir()
 
   setup_testdata(
@@ -792,7 +792,7 @@ test_that("Incomplete filter_depend_cols fails when x-check disabled", {
   # ACT -------------------------------------------------------------------
 
   error_msg <- generate_adam_code(
-    path_ui_data = path_ui_data_rendered,
+    adam_specifications = adam_specifications_rendered,
     standards_lib = standards_lib,
     path_trial_metadata = path_trial_metadata,
     path_trial = path_trial,

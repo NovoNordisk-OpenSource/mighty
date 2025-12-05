@@ -1,25 +1,29 @@
-table:
-  name: ADSL
+id: ADSL
+keys:
+  - USUBJID
+  - STUDYID
 
-init:
-  base_domains:
-    - dm
-    - dm_vaccine
-  filter_domain:
-    - dm: NA
-    - dm_vaccine: NA
-  filter_global:
-  - NA
-  filter_depend_cols:
-  - NA
+population:
+  base:
+    - domain: dm
+      depends:
+        - NA
+      filter: NA
+    - domain: dm_vaccine
+      depends:
+        - NA
+      filter: NA
+  global:
+    - filter: NA
+      depends:
+        - NA
 
-column_action:
-  USUBJID:
+columns:
+  - id: USUBJID
 
-  STUDYID:
+  - id: STUDYID
 
-  ARM:
+  - id: ARM
 
-  PLANNED_ARM:
-    source: ARM
-
+  - id: PLANNED_ARM
+    method: ARM

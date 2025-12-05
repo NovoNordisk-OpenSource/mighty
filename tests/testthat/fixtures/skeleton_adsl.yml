@@ -1,0 +1,12 @@
+id: ADSL
+keys:
+  - USUBJID
+  - STUDYID
+
+population:
+  base:
+    - domain: DM
+
+columns:
+  - id: USUBJID
+  - id: STUDYID

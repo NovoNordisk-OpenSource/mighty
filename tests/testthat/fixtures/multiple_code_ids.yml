@@ -1,43 +1,50 @@
-table:
-  name: ADLB
-  
-init:
-  base_domains:
-    - LB
-  filter_domain:
-    - LB: NA
-  filter_global:
-    - '!is.na(SEX)'
-  filter_depend_cols:
-    - ADSL.SEX
+id: ADLB
+keys: []
 
-column_action:
-  USUBJID:
-    source: core.USUBJID
+population:
+  base:
+    - domain: LB
+      depends:
+        - NA
+      filter: NA
+  global:
+    - filter: '!is.na(SEX)'
+      depends:
+        - ADSL.SEX
 
-  A:
-    code_id: fn_AB
-    parameters:
-      - param_1: "1"
-      - param_2: "2"
+columns:
+  - id: USUBJID
+    method: core.USUBJID
 
-  B:
-    code_id: fn_AB
-    parameters:
-      - param_1: "x"
-      - param_2: "y"
+  - id: A
+    component:
+      id: fn_AB
+      with:
+        param_1: "1"
+        param_2: "2"
 
-  C:
-    code_id: fn_C
-    parameters:
-      - param_1: "hello"
+  - id: B
+    component:
+      id: fn_AB
+      with:
+        param_1: "x"
+        param_2: "y"
 
+  - id: C
+    component:
+      id: fn_C
+      with:
+        param_1: "hello"
 
-row_action:
-  fn_D:
-    parameters:
-      - param_1: "hello"
+rows:
+  - id: fn_D
+    component:
+      id: fn_D
+      with:
+        param_1: "hello"
 
-  fn_E:
-    parameters:
-    - param_1: "hello_2"
+  - id: fn_E
+    component:
+      id: fn_E
+      with:
+        param_1: "hello_2"

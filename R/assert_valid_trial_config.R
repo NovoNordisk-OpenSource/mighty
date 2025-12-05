@@ -19,8 +19,7 @@ assert_valid_trial_config <- function(trial_metadata) {
     "project_id",
     "complete_id",
     "instance",
-    "primary_keys_sdtm",
-    "primary_keys_adam"
+    "keys"
   )
   missing_fields <- setdiff(required_fields, names(trial_metadata))
   if (length(missing_fields) > 0) {

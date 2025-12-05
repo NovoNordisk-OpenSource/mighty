@@ -1,12 +1,12 @@
 test_that("Check that action types are classified correctly", {
   # SETUP -------------------------------------------------------------------
 
-  path_ui_data <- testthat::test_path(
-    "fixtures",
-    "categorisation_of_action_type_adlb_01.yml"
+  adam_specifications <- c(
+    testthat::test_path("fixtures", "skeleton_adsl_with_age_sex.yml"),
+    testthat::test_path("fixtures", "categorisation_of_action_type_adlb_01.yml")
   )
-  path_ui_data_rendered <- setup_yml_file_for_testing(
-    path_ui_data,
+  adam_specifications_rendered <- setup_yml_file_for_testing(
+    adam_specifications,
     environment()
   )
   path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
@@ -22,7 +22,7 @@ test_that("Check that action types are classified correctly", {
   # ACT -------------------------------------------------------------------
 
   actual <- generate_adam_code(
-    path_ui_data = path_ui_data_rendered,
+    adam_specifications = adam_specifications_rendered,
     standards_lib = standards_lib,
     path_trial_metadata = path_trial_metadata,
     path_trial = path_trial,
@@ -35,7 +35,7 @@ test_that("Check that action types are classified correctly", {
   # EXPECT -------------------------------------------------------------------
 
   ps <- actual$program_sequence
-  expect_equal(ps[ps$node_id == "ADLB-1-read_data", ][["type"]], "read_data")
+  expect_equal(ps[ps$node_id == "ADLB-2-read_data", ][["type"]], "read_data")
   expect_equal(ps[ps$node_id == "ADLB-init_domain", ][["type"]], "init_domain")
   expect_equal(ps[ps$node_id == "ADLB-PLANNED_ARM", ][["type"]], "col_echo")
   expect_equal(ps[ps$node_id == "ADLB-ARM", ][["type"]], "col_echo")
@@ -51,5 +51,5 @@ test_that("Check that action types are classified correctly", {
     ps[ps$node_id == "ADLB-new_microcytes", ][["type"]],
     "row_compute"
   )
-  expect_equal(ps[ps$node_id == "ADLB-1-write_data", ][["type"]], "write_data")
+  expect_equal(ps[ps$node_id == "ADLB-2-write_data", ][["type"]], "write_data")
 })

@@ -4,9 +4,10 @@ prepare_test <- function(
   yml,
   sdtm_testdata,
   adam_testdata = c(),
-  remove_data = NULL
+  remove_data = NULL,
+  trial_metadata_basename = "trial_metadata_0001.yml"
 ) {
-  path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
+  path_trial_metadata <- test_path("fixtures", trial_metadata_basename)
   # Ensure symbolic link created in setup_testdata is not removed
   # until test is completed
   setup_testdata(

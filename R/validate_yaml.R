@@ -2,7 +2,7 @@
 #'
 #' @param yaml_file Path to YAML configuration file
 #' @param schema_name Name of schema to use for validation
-#' @param verbose Show detailed validation messages (default: TRUE)
+
 #' @param use_yq Use yq for YAML parsing (default: TRUE, falls back to yaml package if FALSE or yq unavailable)
 #' @return Parsed YAML data if valid, otherwise throws error
 #' @noRd
@@ -18,11 +18,9 @@ validate_yaml <- function(
 
   schema_path <- get_schema_path(schema_name)
 
-  if (verbose) {
-    cli::cli_inform(c(
-      "i" = "Validating {.file {basename(yaml_file)}} against {.val {schema_name}} schema"
-    ))
-  }
+  cli::cli_inform(c(
+    "i" = "Validating {.file {basename(yaml_file)}} against {.val {schema_name}} schema"
+  ))
 
   json_data <- convert_yaml_to_json(yaml_file, use_yq, verbose)
 
@@ -39,9 +37,7 @@ validate_yaml <- function(
   # Business rules unchanged (still functional)
   validate_business_logic(yaml_data, yaml_file, ruleset_name = "adam_domain")
 
-  if (verbose) {
-    cli::cli_alert_success("YAML file {.file {basename(yaml_file)}} is valid!")
-  }
+  cli::cli_alert_success("YAML file {.file {basename(yaml_file)}} is valid")
 
   invisible(yaml_data)
 }

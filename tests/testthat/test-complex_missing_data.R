@@ -1,12 +1,12 @@
 test_that("Complex test w/ missing dm_vaccine.SEX", {
   # SETUP -------------------------------------------------------------------
 
-  path_ui_data <- c(
+  adam_specifications <- c(
     test_path("fixtures", "complex_adsl.yml"),
     test_path("fixtures", "complex_adlb.yml")
   )
-  path_ui_data_rendered <- setup_yml_file_for_testing(
-    path_ui_data,
+  adam_specifications_rendered <- setup_yml_file_for_testing(
+    adam_specifications,
     environment()
   )
 
@@ -25,7 +25,7 @@ test_that("Complex test w/ missing dm_vaccine.SEX", {
   # ACT ---------------------------------------------------------------------
 
   actual <- generate_adam_code(
-    path_ui_data = path_ui_data_rendered,
+    adam_specifications = adam_specifications_rendered,
     standards_lib = standards_lib,
     path_trial_metadata = path_trial_metadata,
     path_trial = path_trial,
@@ -150,12 +150,12 @@ test_that("Complex test w/ missing dm_vaccine.SEX", {
 test_that("Complex test w/ missing dm_vaccine.AGE and dm.SEX", {
   # SETUP -------------------------------------------------------------------
 
-  path_ui_data <- c(
+  adam_specifications <- c(
     test_path("fixtures", "complex_adsl.yml"),
     test_path("fixtures", "complex_adlb.yml")
   )
-  path_ui_data_rendered <- setup_yml_file_for_testing(
-    path_ui_data,
+  adam_specifications_rendered <- setup_yml_file_for_testing(
+    adam_specifications,
     environment()
   )
 
@@ -177,7 +177,7 @@ test_that("Complex test w/ missing dm_vaccine.AGE and dm.SEX", {
   # ACT ---------------------------------------------------------------------
 
   actual <- generate_adam_code(
-    path_ui_data = path_ui_data_rendered,
+    adam_specifications = adam_specifications_rendered,
     standards_lib = standards_lib,
     path_trial_metadata = path_trial_metadata,
     path_trial = path_trial,
@@ -239,42 +239,42 @@ test_that("Complex test w/ missing dm_vaccine.AGE and dm.SEX", {
   #   adam.ADSL.col1, adam.ADSL.col2
   #   The following columns cannot be created:
   #   adam.ADSL.col3
-  node <-  ea[node_id == "ADSL-AGE2"]
+  node <- ea[node_id == "ADSL-AGE2"]
   expect_true(
     grep("adam.ADSL.AGE", node$lineage) &&
       grep("adam.ADSL.AGE2", node$lineage)
   )
   expect_setequal(node$removed_outputs[[1]], c("ADSL.AGE2"))
 
-  node <-  ea[node_id == "ADSL-AGE_DIFF1"]
+  node <- ea[node_id == "ADSL-AGE_DIFF1"]
   expect_true(
     grep("adam.ADSL.AGE, adam.ADSL.AGE2", node$lineage) &&
       grep("adam.ADSL.AGE_DIFF1", node$lineage)
   )
   expect_setequal(node$removed_outputs[[1]], c("ADSL.AGE_DIFF1"))
 
-  node <-  ea[node_id == "ADSL-AGE_GRP1"]
+  node <- ea[node_id == "ADSL-AGE_GRP1"]
   expect_true(
     grep("adam.ADSL.AGE2", node$lineage) &&
       grep("adam.ADSL.AGE_GRP1", node$lineage)
   )
   expect_setequal(node$removed_outputs[[1]], c("ADSL.AGE_GRP1"))
 
-  node <-  ea[node_id == "ADSL-AGE_DIFF2"]
+  node <- ea[node_id == "ADSL-AGE_DIFF2"]
   expect_true(
     grep("adam.ADSL.AGE_DIFF1", node$lineage) &&
       grep("adam.ADSL.AGE_DIFF2", node$lineage)
   )
   expect_setequal(node$removed_outputs[[1]], c("ADSL.AGE_DIFF2"))
 
-  node <-  ea[node_id == "ADSL-NEWFL01-NEWREA01"]
+  node <- ea[node_id == "ADSL-NEWFL01-NEWREA01"]
   expect_true(
     grep("adam.ADSL.AGE_DIFF1", node$lineage) &&
       grep("adam.ADSL.NEWFL01, adam.ADSL.NEWREA01", node$lineage)
   )
   expect_setequal(node$removed_outputs[[1]], c("ADSL.NEWFL01", "ADSL.NEWREA01"))
 
-  node <-  ea[node_id == "ADSL-NEWFL03-NEWREA03"]
+  node <- ea[node_id == "ADSL-NEWFL03-NEWREA03"]
   expect_true(
     grep("adam.ADSL.NEWFL01", node$lineage) &&
       grep("adam.ADSL.NEWFL03, adam.ADSL.NEWREA03", node$lineage)
@@ -358,12 +358,12 @@ test_that("Complex test w/ missing dm_vaccine.AGE and dm.SEX", {
 
 test_that("Complex test w/ missing lb.LBSTRESN", {
   # SETUP -------------------------------------------------------------------
-  path_ui_data <- c(
+  adam_specifications <- c(
     test_path("fixtures", "complex_adsl.yml"),
     test_path("fixtures", "complex_adlb.yml")
   )
-  path_ui_data_rendered <- setup_yml_file_for_testing(
-    path_ui_data,
+  adam_specifications_rendered <- setup_yml_file_for_testing(
+    adam_specifications,
     environment()
   )
 
@@ -382,7 +382,7 @@ test_that("Complex test w/ missing lb.LBSTRESN", {
   # ACT ---------------------------------------------------------------------
 
   actual <- generate_adam_code(
-    path_ui_data = path_ui_data_rendered,
+    adam_specifications = adam_specifications_rendered,
     standards_lib = standards_lib,
     path_trial_metadata = path_trial_metadata,
     path_trial = path_trial,

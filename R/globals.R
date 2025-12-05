@@ -54,11 +54,6 @@ utils::globalVariables(c(
   # remove_child_filter_edges variables
   # (type already declared above)
 
-  # remove_duplicated_actions variables
-  "depend_cols_tmp",
-  "outputs_tmp",
-  "parameters_tmp",
-
   # render_code variables
   # (domain, program_id already declared above)
 

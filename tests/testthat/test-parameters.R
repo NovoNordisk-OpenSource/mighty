@@ -1,11 +1,11 @@
 test_that("Complex test with multiple domains and column/row operations", {
   # SETUP -------------------------------------------------------------------
 
-  path_ui_data <- c(
+  adam_specifications <- c(
     test_path("fixtures", "parameters_adlb.yml")
   )
-  path_ui_data_rendered <- setup_yml_file_for_testing(
-    path_ui_data,
+  adam_specifications_rendered <- setup_yml_file_for_testing(
+    adam_specifications,
     environment()
   )
   path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
@@ -21,7 +21,7 @@ test_that("Complex test with multiple domains and column/row operations", {
   # ACT ---------------------------------------------------------------------
 
   actual <- generate_adam_code(
-    path_ui_data = path_ui_data_rendered,
+    adam_specifications = adam_specifications_rendered,
     standards_lib = standards_lib,
     path_trial_metadata = path_trial_metadata,
     path_trial = path_trial,

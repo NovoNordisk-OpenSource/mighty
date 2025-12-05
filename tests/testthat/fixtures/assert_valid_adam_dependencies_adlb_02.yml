@@ -1,25 +1,28 @@
-table:
-  name: adlb
+id: ADLB
+keys:
+  - USUBJID
+  - STUDYID
 
-init:
-  base_domains:
-  - LB
-  filter_domain: 
-   - LB: NA
-  filter_global:
-  - NA
-  filter_depend_cols:
-  - NA
+population:
+  base:
+    - domain: LB
+      depends:
+        - NA
+      filter: NA
+  global:
+    - filter: NA
+      depends:
+        - NA
 
-column_action:
-  STUDYID:
+columns:
+  - id: STUDYID
 
-  USUBJID:
+  - id: USUBJID
 
-  VISITNUM:
+  - id: VISITNUM
 
-  VISITNUM2:
-    source: VISITNUM
+  - id: VISITNUM2
+    method: VISITNUM
 
-  AGE:
-    source: adsl.AGE
+  - id: AGE
+    method: ADSL.AGE

@@ -1,33 +1,34 @@
-table:
-  name: ADAE
+id: ADAE
+keys:
+  - USUBJID
 
-init:
-  base_domains:
-    - ae
-  filter_domain:
-    - ae: 'AEBODSYS_GRP == "MILD DISORDER"'
-  filter_global:
-  - NA
-  filter_depend_cols:
-    - AEBODSYS_GRP
+population:
+  base:
+    - domain: ae
+      depends:
+        - AEBODSYS_GRP
+      filter: 'AEBODSYS_GRP == "MILD DISORDER"'
+  global:
+    - filter: NA
+      depends:
+        - NA
 
-column_action:
+columns:
+  - id: STUDYID
 
-  STUDYID:
+  - id: USUBJID
 
-  USUBJID:
+  - id: AESEV
 
-  AESEV:
+  - id: AEBODSYS
 
-  AEBODSYS:
+  - id: AGE
+    method: adsl.AGE
 
-  AGE:
-    source: adsl.AGE
+  - id: AESEV_GRP
+    component:
+      id: "{path_base}/fixtures/components/aesev_grp_01.R"
 
-  AESEV_GRP:
-    code_id: {path_base}/fixtures/components/aesev_grp_01.R
-
-  AEBODSYS_GRP:
-    code_id: {path_base}/fixtures/components/aebodsys_grp_01.R
-
-
+  - id: AEBODSYS_GRP
+    component:
+      id: "{path_base}/fixtures/components/aebodsys_grp_01.R"

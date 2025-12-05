@@ -1,12 +1,12 @@
 test_that("No filters", {
   # SETUP -------------------------------------------------------------------
 
-  path_ui_data <- testthat::test_path(
+  adam_specifications <- testthat::test_path(
     "fixtures",
     "column_dependencies_adsl_01.yml"
   )
-  path_ui_data_rendered <- setup_yml_file_for_testing(
-    path_ui_data,
+  adam_specifications_rendered <- setup_yml_file_for_testing(
+    adam_specifications,
     environment()
   )
   path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
@@ -22,7 +22,7 @@ test_that("No filters", {
   # ACT -------------------------------------------------------------------
 
   actual <- generate_adam_code(
-    path_ui_data = path_ui_data_rendered,
+    adam_specifications = adam_specifications_rendered,
     standards_lib = standards_lib,
     path_trial_metadata = path_trial_metadata,
     path_trial = path_trial,
@@ -82,12 +82,12 @@ test_that("No filters", {
 test_that("No filters - external core domain dependency on col_compute action", {
   # SETUP -------------------------------------------------------------------
 
-  path_ui_data <- testthat::test_path(
+  adam_specifications <- testthat::test_path(
     "fixtures",
     "column_dependencies_adsl_06.yml"
   )
-  path_ui_data_rendered <- setup_yml_file_for_testing(
-    path_ui_data,
+  adam_specifications_rendered <- setup_yml_file_for_testing(
+    adam_specifications,
     environment()
   )
   path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
@@ -103,7 +103,7 @@ test_that("No filters - external core domain dependency on col_compute action", 
   # ACT -------------------------------------------------------------------
 
   actual <- generate_adam_code(
-    path_ui_data = path_ui_data_rendered,
+    adam_specifications = adam_specifications_rendered,
     standards_lib = standards_lib,
     path_trial_metadata = path_trial_metadata,
     path_trial = path_trial,
@@ -175,12 +175,12 @@ test_that("No filters - external core domain dependency on col_compute action", 
 test_that("No domain filters", {
   # SETUP -------------------------------------------------------------------
 
-  path_ui_data <- testthat::test_path(
+  adam_specifications <- testthat::test_path(
     "fixtures",
     "column_dependencies_adsl_02.yml"
   )
-  path_ui_data_rendered <- setup_yml_file_for_testing(
-    path_ui_data,
+  adam_specifications_rendered <- setup_yml_file_for_testing(
+    adam_specifications,
     environment()
   )
   path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
@@ -196,7 +196,7 @@ test_that("No domain filters", {
   # ACT -------------------------------------------------------------------
 
   actual <- generate_adam_code(
-    path_ui_data = path_ui_data_rendered,
+    adam_specifications = adam_specifications_rendered,
     standards_lib = standards_lib,
     path_trial_metadata = path_trial_metadata,
     path_trial = path_trial,
@@ -263,12 +263,12 @@ test_that("No domain filters", {
 test_that("No global filters", {
   # SETUP -------------------------------------------------------------------
 
-  path_ui_data <- testthat::test_path(
+  adam_specifications <- testthat::test_path(
     "fixtures",
     "column_dependencies_adsl_03.yml"
   )
-  path_ui_data_rendered <- setup_yml_file_for_testing(
-    path_ui_data,
+  adam_specifications_rendered <- setup_yml_file_for_testing(
+    adam_specifications,
     environment()
   )
   path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
@@ -284,7 +284,7 @@ test_that("No global filters", {
   # ACT -------------------------------------------------------------------
 
   actual <- generate_adam_code(
-    path_ui_data = path_ui_data_rendered,
+    adam_specifications = adam_specifications_rendered,
     standards_lib = standards_lib,
     path_trial_metadata = path_trial_metadata,
     path_trial = path_trial,
@@ -351,12 +351,12 @@ test_that("No global filters", {
 test_that("No filters and no derivations", {
   # SETUP -------------------------------------------------------------------
 
-  path_ui_data <- testthat::test_path(
+  adam_specifications <- testthat::test_path(
     "fixtures",
     "column_dependencies_adsl_04.yml"
   )
-  path_ui_data_rendered <- setup_yml_file_for_testing(
-    path_ui_data,
+  adam_specifications_rendered <- setup_yml_file_for_testing(
+    adam_specifications,
     environment()
   )
   path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
@@ -372,7 +372,7 @@ test_that("No filters and no derivations", {
   # ACT -------------------------------------------------------------------
 
   actual <- generate_adam_code(
-    path_ui_data = path_ui_data_rendered,
+    adam_specifications = adam_specifications_rendered,
     standards_lib = standards_lib,
     path_trial_metadata = path_trial_metadata,
     path_trial = path_trial,
@@ -424,12 +424,12 @@ test_that("No filters and no derivations", {
 test_that("Global filter and domain filter", {
   # SETUP -------------------------------------------------------------------
 
-  path_ui_data <- testthat::test_path(
+  adam_specifications <- testthat::test_path(
     "fixtures",
     "column_dependencies_adsl_05.yml"
   )
-  path_ui_data_rendered <- setup_yml_file_for_testing(
-    path_ui_data,
+  adam_specifications_rendered <- setup_yml_file_for_testing(
+    adam_specifications,
     environment()
   )
   path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
@@ -445,7 +445,7 @@ test_that("Global filter and domain filter", {
   # ACT -------------------------------------------------------------------
 
   actual <- generate_adam_code(
-    path_ui_data = path_ui_data_rendered,
+    adam_specifications = adam_specifications_rendered,
     standards_lib = standards_lib,
     path_trial_metadata = path_trial_metadata,
     path_trial = path_trial,
@@ -513,15 +513,15 @@ test_that("Global filter and domain filter", {
 test_that("Global filter and domain filter incl. adsl dependencies (lower case)", {
   # SETUP -------------------------------------------------------------------
 
-  path_ui_data <- testthat::test_path(
+  adam_specifications <- testthat::test_path(
     "fixtures",
     "column_dependencies_adlb_02.yml"
   )
-  path_ui_data_rendered <- setup_yml_file_for_testing(
-    path_ui_data,
+  adam_specifications_rendered <- setup_yml_file_for_testing(
+    adam_specifications,
     environment()
   )
-  path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
+  path_trial_metadata <- test_path("fixtures", "trial_metadata_lowercase_adsl.yml")
   path_trial <- withr::local_tempdir()
 
   setup_testdata(
@@ -535,7 +535,7 @@ test_that("Global filter and domain filter incl. adsl dependencies (lower case)"
   # ACT -------------------------------------------------------------------
 
   actual <- generate_adam_code(
-    path_ui_data = path_ui_data_rendered,
+    adam_specifications = adam_specifications_rendered,
     standards_lib = standards_lib,
     path_trial_metadata = path_trial_metadata,
     path_trial = path_trial,
@@ -579,7 +579,6 @@ test_that("Global filter and domain filter incl. adsl dependencies (lower case)"
     "adlb-1-write_data",
     programs[["1_adlb.R"]]
   )
-
   # Check generated ADLB
   x[[1]] |> source()
   expect_setequal(
@@ -593,15 +592,15 @@ test_that("Global filter and domain filter incl. adsl dependencies (lower case)"
 test_that("External predecessor dependencies are handled correctly in filter and col_echo", {
   # SETUP -------------------------------------------------------------------
 
-  path_ui_data <- testthat::test_path(
+  adam_specifications <- testthat::test_path(
     "fixtures",
     "column_dependencies_adlb_03.yml"
   )
-  path_ui_data_rendered <- setup_yml_file_for_testing(
-    path_ui_data,
+  adam_specifications_rendered <- setup_yml_file_for_testing(
+    adam_specifications,
     environment()
   )
-  path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
+  path_trial_metadata <- test_path("fixtures", "trial_metadata_lowercase_adsl.yml")
   path_trial <- withr::local_tempdir()
 
   setup_testdata(
@@ -615,7 +614,7 @@ test_that("External predecessor dependencies are handled correctly in filter and
   # ACT -------------------------------------------------------------------
 
   actual <- generate_adam_code(
-    path_ui_data = path_ui_data_rendered,
+    adam_specifications = adam_specifications_rendered,
     standards_lib = standards_lib,
     path_trial_metadata = path_trial_metadata,
     path_trial = path_trial,
@@ -647,23 +646,23 @@ test_that("External predecessor dependencies are handled correctly in filter and
   names(programs) <- basename(x)
 
   expect_section_order(
-    "adlb-1-read_data",
-    "adlb-init_domain",
-    programs[["1_adlb.R"]]
+    "ADLB-1-read_data",
+    "ADLB-init_domain",
+    programs[["1_ADLB.R"]]
   )
   expect_section_order(
-    "adlb-init_domain",
-    "adlb-filter_domain",
-    programs[["1_adlb.R"]]
+    "ADLB-init_domain",
+    "ADLB-filter_domain",
+    programs[["1_ADLB.R"]]
   )
-  expect_section_order("adlb-filter_domain", "adlb-AGE", programs[["1_adlb.R"]])
-  expect_section_order("adlb-AGE", "adlb-1-write_data", programs[["1_adlb.R"]])
+  expect_section_order("ADLB-filter_domain", "ADLB-AGE", programs[["1_ADLB.R"]])
+  expect_section_order("ADLB-AGE", "ADLB-1-write_data", programs[["1_ADLB.R"]])
 
   # Check generated ADLB
   x[[1]] |> source()
   expect_setequal(
-    names(adlb),
+    names(ADLB),
     c("USUBJID", "STUDYID", "LBSEQ", "VISITNUM", "LBSTRESN", "LBSTRESU", "AGE")
   )
-  expect_equal(nrow(adlb), 1790)
+  expect_equal(nrow(ADLB), 1790)
 })

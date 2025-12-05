@@ -1,40 +1,48 @@
-table:
-  name: ADSL
-  
-init:
-  base_domains:
-    - dm
-    - dm_vaccine
-  filter_domain:
-    - dm: '!is.na(AGEU)'
-    - dm_vaccine: NA
-  filter_global:
-    - 'STUDYID == "CDISCPILOT01"'
-    - 'DOMAIN == "DM"'
-  filter_depend_cols:
-    - AGEU
-    - STUDYID
-    - DOMAIN
+id: ADSL
+keys:
+  - USUBJID
+  - STUDYID
 
-column_action:
-  STUDYID:
+population:
+  base:
+    - domain: dm
+      depends:
+        - AGEU
+      filter: '!is.na(AGEU)'
+    - domain: dm_vaccine
+      depends:
+        - NA
+      filter: NA
+  global:
+    - filter: 'STUDYID == "CDISCPILOT01"'
+      depends:
+        - STUDYID
+    - filter: 'DOMAIN == "DM"'
+      depends:
+        - DOMAIN
 
-  USUBJID:
+columns:
+  - id: STUDYID
 
-  ARM:
+  - id: USUBJID
 
-  PLANNED_ARM:
-    source: ARM
+  - id: ARM
 
-  AGEU:
+  - id: PLANNED_ARM
+    method: ARM
 
-  DOMAIN:
+  - id: AGEU
 
-  ARM_GRP1:
-    code_id: {path_base}/fixtures/components/arm_group_01.R
+  - id: DOMAIN
 
-  EFFICACY:
-    code_id: {path_base}/fixtures/components/supp_dm_01.R
+  - id: ARM_GRP1
+    component:
+      id: "{path_base}/fixtures/components/arm_group_01.R"
 
-  SAFETY:
-    code_id: {path_base}/fixtures/components/supp_dm_01.R
+  - id: EFFICACY
+    component:
+      id: "{path_base}/fixtures/components/supp_dm_01.R"
+
+  - id: SAFETY
+    component:
+      id: "{path_base}/fixtures/components/supp_dm_01.R"

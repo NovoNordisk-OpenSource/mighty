@@ -1,89 +1,109 @@
-table:
-  name: ADSL
+id: ADSL
+keys:
+  - USUBJID
+  - STUDYID
 
-init:
-  base_domains:
-    - dm
-    - dm_vaccine
-  filter_domain:
-    - dm: '!is.na(AGEU)'
-    - dm_vaccine: NA
-  filter_global:
-    - 'STUDYID == "CDISCPILOT01"'
-    - 'DOMAIN == "DM"'
-  filter_depend_cols:
-    - STUDYID
-    - DOMAIN
-    - AGEU
+population:
+  base:
+    - domain: dm
+      depends:
+        - AGEU
+      filter: '!is.na(AGEU)'
+    - domain: dm_vaccine
+      depends:
+        - NA
+      filter: NA
+  global:
+    - filter: 'STUDYID == "CDISCPILOT01"'
+      depends:
+        - STUDYID
+    - filter: 'DOMAIN == "DM"'
+      depends:
+        - DOMAIN
 
-column_action:
-  USUBJID:
+columns:
+  - id: USUBJID
 
-  DOMAIN:
+  - id: DOMAIN
 
-  AGEU:
+  - id: AGEU
+    method: AGEU
 
-  PLANNED_ARM:
-    source: ARM
+  - id: PLANNED_ARM
+    method: ARM
 
-  SEX:
+  - id: SEX
 
-  ARM_GRP1:
-    code_id: {path_base}/fixtures/components/arm_group_01.R
+  - id: ARM_GRP1
+    component:
+      id: "{path_base}/fixtures/components/arm_group_01.R"
 
-  ARM_CAT1:
-    code_id: {path_base}/fixtures/components/arm_category_01.R
+  - id: ARM_CAT1
+    component:
+      id: "{path_base}/fixtures/components/arm_category_01.R"
 
-  ARM_MATCH:
-    code_id: {path_base}/fixtures/components/arm_match_01.R
+  - id: ARM_MATCH
+    component:
+      id: "{path_base}/fixtures/components/arm_match_01.R"
 
-  AGE2:
-    code_id: {path_base}/fixtures/components/age_crop_01.R
+  - id: AGE2
+    component:
+      id: "{path_base}/fixtures/components/age_crop_01.R"
 
-  AGE_DIFF1:
-    code_id: {path_base}/fixtures/components/age_diff_01.R
+  - id: AGE_DIFF1
+    component:
+      id: "{path_base}/fixtures/components/age_diff_01.R"
 
-  AGE_DIFF2:
-    code_id: {path_base}/fixtures/components/age_diff_02.R
+  - id: AGE_DIFF2
+    component:
+      id: "{path_base}/fixtures/components/age_diff_02.R"
 
-  RACE_COUNTRY:
-    code_id: {path_base}/fixtures/components/race_x_country_01.R
+  - id: RACE_COUNTRY
+    component:
+      id: "{path_base}/fixtures/components/race_x_country_01.R"
 
-  NEW_ARM:
-    code_id: {path_base}/fixtures/components/arm_01.R
+  - id: NEW_ARM
+    component:
+      id: "{path_base}/fixtures/components/arm_01.R"
 
-  MIN_AVAL:
-    code_id: {path_base}/fixtures/components/min_aval_01.R
+  - id: MIN_AVAL
+    component:
+      id: "{path_base}/fixtures/components/min_aval_01.R"
 
-  ARM:
+  - id: ARM
 
-  DTHFL:
+  - id: DTHFL
 
-  AGE:
+  - id: AGE
 
-  NEWFL01:
-    code_id: {path_base}/fixtures/components/newfl_01.R
+  - id: NEWFL01
+    component:
+      id: "{path_base}/fixtures/components/newfl_01.R"
 
-  NEWREA01:
-    code_id: {path_base}/fixtures/components/newfl_01.R
+  - id: NEWREA01
+    component:
+      id: "{path_base}/fixtures/components/newfl_01.R"
 
-  NEWFL02:
-    code_id: {path_base}/fixtures/components/newfl_02.R
+  - id: NEWFL02
+    component:
+      id: "{path_base}/fixtures/components/newfl_02.R"
 
-  NEWFL03:
-    code_id: {path_base}/fixtures/components/newfl_03.R
+  - id: NEWFL03
+    component:
+      id: "{path_base}/fixtures/components/newfl_03.R"
 
-  NEWREA03:
-    code_id: {path_base}/fixtures/components/newfl_03.R
+  - id: NEWREA03
+    component:
+      id: "{path_base}/fixtures/components/newfl_03.R"
 
-  STUDYID:
+  - id: STUDYID
 
-  ACTARM:
+  - id: ACTARM
 
-  COUNTRY:
+  - id: COUNTRY
 
-  RACE:
+  - id: RACE
 
-  AGE_GRP1:
-    code_id: {path_base}/fixtures/components/age_group_01.R
-
+  - id: AGE_GRP1
+    component:
+      id: "{path_base}/fixtures/components/age_group_01.R"

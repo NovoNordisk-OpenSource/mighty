@@ -103,6 +103,7 @@ setup_testdata <- function(
       function(x) {
         tryCatch(
           {
+            # pharmaverseadam uses lowercase names, but preserve original case for filename
             dataset <- eval(parse(text = paste0("pharmaverseadam::", x)))
             if (!is.null(remove_cols)) {
               dataset <- dataset |>

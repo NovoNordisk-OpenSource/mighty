@@ -1,9 +1,9 @@
 test_that("Supplementary data action is placed after filter_domain when no supplementary columns are used in filters", {
   # SETUP -------------------------------------------------------------------
 
-  path_ui_data <- test_path("fixtures", "supplementary_data_adsl_01.yml")
-  path_ui_data_rendered <- setup_yml_file_for_testing(
-    path_ui_data,
+  adam_specifications <- test_path("fixtures", "supplementary_data_adsl_01.yml")
+  adam_specifications_rendered <- setup_yml_file_for_testing(
+    adam_specifications,
     environment()
   )
   path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
@@ -19,7 +19,7 @@ test_that("Supplementary data action is placed after filter_domain when no suppl
   # ACT ---------------------------------------------------------------------
 
   actual <- generate_adam_code(
-    path_ui_data = path_ui_data_rendered,
+    adam_specifications = adam_specifications_rendered,
     standards_lib = standards_lib,
     path_trial_metadata = path_trial_metadata,
     path_trial = path_trial,
@@ -30,7 +30,6 @@ test_that("Supplementary data action is placed after filter_domain when no suppl
   x <- list.files(path_trial, pattern = ".R", full.names = TRUE)
   programs <- x |> lapply(readLines)
   names(programs) <- basename(x)
-
   # EXPECT ------------------------------------------------------------------
 
   # Check program order
@@ -78,9 +77,9 @@ test_that("Supplementary data action is placed after filter_domain when no suppl
 test_that("Supplementary data action is placed before filter_domain when supplementary columns are used in filters (1 domain filter)", { # nolint: line_length_linter
   # SETUP -------------------------------------------------------------------
 
-  path_ui_data <- test_path("fixtures", "supplementary_data_adsl_02.yml")
-  path_ui_data_rendered <- setup_yml_file_for_testing(
-    path_ui_data,
+  adam_specifications <- test_path("fixtures", "supplementary_data_adsl_02.yml")
+  adam_specifications_rendered <- setup_yml_file_for_testing(
+    adam_specifications,
     environment()
   )
   path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
@@ -96,7 +95,7 @@ test_that("Supplementary data action is placed before filter_domain when supplem
   # ACT ---------------------------------------------------------------------
 
   actual <- generate_adam_code(
-    path_ui_data = path_ui_data_rendered,
+    adam_specifications = adam_specifications_rendered,
     standards_lib = standards_lib,
     path_trial_metadata = path_trial_metadata,
     path_trial = path_trial,
@@ -155,9 +154,9 @@ test_that("Supplementary data action is placed before filter_domain when supplem
 test_that("Supplementary data action is placed before filter_domain when supplementary columns are used in filters (2 domain filters)", { # nolint: line_length_linter
   # SETUP -------------------------------------------------------------------
 
-  path_ui_data <- test_path("fixtures", "supplementary_data_adsl_03.yml")
-  path_ui_data_rendered <- setup_yml_file_for_testing(
-    path_ui_data,
+  adam_specifications <- test_path("fixtures", "supplementary_data_adsl_03.yml")
+  adam_specifications_rendered <- setup_yml_file_for_testing(
+    adam_specifications,
     environment()
   )
   path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
@@ -173,7 +172,7 @@ test_that("Supplementary data action is placed before filter_domain when supplem
   # ACT ---------------------------------------------------------------------
 
   actual <- generate_adam_code(
-    path_ui_data = path_ui_data_rendered,
+    adam_specifications = adam_specifications_rendered,
     standards_lib = standards_lib,
     path_trial_metadata = path_trial_metadata,
     path_trial = path_trial,
@@ -233,12 +232,12 @@ test_that("Supplementary data action is placed before filter_domain when supplem
 test_that("Supplementary data action is placed before filter_domain when supplementary columns and ADSL cols are used in filters", { # nolint: line_length_linter
   # SETUP -------------------------------------------------------------------
 
-  path_ui_data <- test_path("fixtures", "supplementary_data_adae_01.yml")
-  path_ui_data_rendered <- setup_yml_file_for_testing(
-    path_ui_data,
+  adam_specifications <- test_path("fixtures", "supplementary_data_adae_01.yml")
+  adam_specifications_rendered <- setup_yml_file_for_testing(
+    adam_specifications,
     environment()
   )
-  path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
+  path_trial_metadata <- test_path("fixtures", "trial_metadata_lowercase_adsl.yml")
   path_trial <- withr::local_tempdir()
 
   setup_testdata(
@@ -252,7 +251,7 @@ test_that("Supplementary data action is placed before filter_domain when supplem
   # ACT ---------------------------------------------------------------------
 
   actual <- generate_adam_code(
-    path_ui_data = path_ui_data_rendered,
+    adam_specifications = adam_specifications_rendered,
     standards_lib = standards_lib,
     path_trial_metadata = path_trial_metadata,
     path_trial = path_trial,
@@ -296,12 +295,12 @@ test_that("Supplementary data action is placed before filter_domain when supplem
 test_that("Col_compute and parent col_compute is placed before filter_domain when the col_compute is used in filters", {
   # SETUP -------------------------------------------------------------------
 
-  path_ui_data <- test_path("fixtures", "supplementary_data_adae_02.yml")
-  path_ui_data_rendered <- setup_yml_file_for_testing(
-    path_ui_data,
+  adam_specifications <- test_path("fixtures", "supplementary_data_adae_02.yml")
+  adam_specifications_rendered <- setup_yml_file_for_testing(
+    adam_specifications,
     environment()
   )
-  path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
+  path_trial_metadata <- test_path("fixtures", "trial_metadata_lowercase_adsl.yml")
   path_trial <- withr::local_tempdir()
 
   setup_testdata(
@@ -315,7 +314,7 @@ test_that("Col_compute and parent col_compute is placed before filter_domain whe
   # ACT ---------------------------------------------------------------------
 
   actual <- generate_adam_code(
-    path_ui_data = path_ui_data_rendered,
+    adam_specifications = adam_specifications_rendered,
     standards_lib = standards_lib,
     path_trial_metadata = path_trial_metadata,
     path_trial = path_trial,

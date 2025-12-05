@@ -2,6 +2,36 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## General advice
+* When running R from the console, always run it with `--quiet --vanilla`
+* Always run `air format .` after generating code
+
+### Testing
+
+- Use `devtools::test()` to run all tests
+- Use `devtools::test_file("tests/testthat/test-filename.R")` to run tests in a specific file
+- DO NOT USE `devtools::test_active_file()`
+- All testing functions automatically load code; you don't needs to.
+- `devtools::check()` - Run R CMD check (includes tests, documentation checks, etc.)
+
+- All new code should have an accompanying test.
+- Tests for `R/{name}.R` go in `tests/testthat/test-{name}.R`. 
+- If there are existing tests, place new tests next to similar existing tests.
+
+### Documentation
+
+- Run `devtools::document()` after changing any roxygen2 docs.
+- Every user facing function should be exported and have roxygen2 documentation.
+- Whenever you add a new documentation file, make sure to also add the topic name to `_pkgdown.yml`. 
+- Run `pkgdown::check_pkgdown()` to check that all topics are included in the reference index.
+- Use sentence case for all headings
+
+### Package Development
+- `devtools::load_all()` - Load package for development
+- `devtools::install()` - Install package locally
+- `devtools::build()` - Build source package
+
+
 ## Project Overview
 
 **mighty** is an R package that powers the mightyverse - a declarative paradigm for building ADaM (Analysis Data Model) datasets in clinical trials. It emphasizes specifying *what* you need rather than *how* to create it, allowing users to focus on dataset structure, derivations, and intent while abstracting away tedious processes.
@@ -12,21 +42,6 @@ Key capabilities:
 - Dependency tracking for columns and rows
 - Automated ADaM program generation
 
-## Development Commands
-
-### Testing
-- `devtools::test()` - Run all tests
-- `testthat::test_file("tests/testthat/test-filename.R")` - Run specific test file
-- `devtools::check()` - Run R CMD check (includes tests, documentation checks, etc.)
-
-### Documentation
-- `devtools::document()` - Generate documentation from roxygen2 comments
-- `devtools::build_vignettes()` - Build package vignettes
-
-### Package Development
-- `devtools::load_all()` - Load package for development
-- `devtools::install()` - Install package locally
-- `devtools::build()` - Build source package
 
 ## Architecture Overview
 

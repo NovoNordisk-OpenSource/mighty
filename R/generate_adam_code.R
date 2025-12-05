@@ -5,7 +5,7 @@
 #' It processes UI data, validates dependencies, creates action sequences, and
 #' renders executable R code for ADaM dataset creation.
 #'
-#' @param path_ui_data Character string. File path to the UI data specifications
+#' @param adam_specifications Character string. File path to the UI data specifications
 #'   (typically a YAML file) containing user-defined ADaM dataset configurations,
 #'   column definitions, and transformation rules.
 #' @param standards_lib Optional list or environment containing standard code
@@ -67,7 +67,7 @@
 #' \dontrun{
 #' # Generate ADaM programs with full dependency checking
 #' result <- generate_adam_code(
-#'   path_ui_data = "path/to/ui_specs.yml",
+#'   adam_specifications = "path/to/ui_specs.yml",
 #'   path_trial_metadata = "path/to/trial_metadata.yml",
 #'   path_trial = "path/to/trial_directory",
 #'   check_cross_domain_adam_dependencies = TRUE
@@ -79,7 +79,7 @@
 #'
 #' # Generate with custom standards library
 #' result_custom <- generate_adam_code(
-#'   path_ui_data = "ui_specs.yml",
+#'   adam_specifications = "ui_specs.yml",
 #'   standards_lib = my_custom_standards,
 #'   path_trial_metadata = "trial_config.yml",
 #'   path_trial = "trial_data/",
@@ -90,7 +90,7 @@
 #' @import data.table
 #' @export
 generate_adam_code <- function(
-  path_ui_data,
+  adam_specifications,
   standards_lib = NULL,
   path_trial_metadata,
   path_trial,
@@ -98,11 +98,13 @@ generate_adam_code <- function(
   data_context = NULL
 ) {
   # Read data from UI containing explicit user input
-  ui_yml <- read_adam_specs(path_ui_data, validate = TRUE)
+  ui_yml <- lapply(adam_specifications, read_mighty_metadata_adam_domain) |>
+    unlist(recursive = FALSE)
+
   ui_init <- purrr::list_transpose(ui_yml)[["init"]]
   trial_metadata <- yaml::read_yaml(path_trial_metadata) |>
     assert_valid_trial_config()
-  domain_keys <- collate_primary_keys(trial_metadata)
+  domain_keys <- collate_primary_keys(ui_yml, trial_metadata)
 
   # Prepare the initial internal nodes data model and create environment to store
   # standard components

@@ -5,13 +5,14 @@
 #' @param ruleset_name Schema name to determine applicable rules
 #' @return Invisible NULL if valid, throws error if invalid
 #' @noRd
-validate_business_logic <- function(yaml_data, yaml_file, ruleset_name = NULL) {
+validate_business_logic <- function(yaml_data, yaml_file, ruleset_name = "adam_domain") {
   # Get applicable rules for this schema
   rules <- get_business_rules(ruleset_name)
 
   if (length(rules$stop_on_error) == 0 && length(rules$collect_errors) == 0) {
     return(invisible(NULL))
   }
+
   # Create context for rules
   context <- list(
     yaml_file = yaml_file,
@@ -82,7 +83,7 @@ validate_business_logic <- function(yaml_data, yaml_file, ruleset_name = NULL) {
     handle_business_logic_errors(all_errors, yaml_file)
   }
 
-  return(invisible(NULL))
+  return(invisible(yaml_data))
 }
 
 #' Get business rules for a given schema
@@ -123,7 +124,7 @@ handle_business_logic_errors <- function(all_errors, yaml_file) {
   )
 }
 
-# Auto-names the rules based on their function name so dev dosen't have to manually type out each name
+# Auto-names the rules based on their function name so dev doesn't have to manually type out each name
 register_rules <- function(...) {
   fns <- list(...)
   calls <- as.list(match.call(expand.dots = FALSE)$...)

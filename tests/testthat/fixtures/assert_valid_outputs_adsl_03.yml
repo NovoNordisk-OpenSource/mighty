@@ -1,22 +1,28 @@
-table:
-  name: ADSL
+id: ADSL
+keys:
+  - USUBJID
+  - STUDYID
 
-init:
-  base_domains:
-    - dm
-    - dm_vaccine
-  filter_domain:
-    - dm: NA
-    - dm_vaccine: NA
-  filter_global:
-  - NA
-  filter_depend_cols:
-  - NA
+population:
+  base:
+    - domain: dm
+      depends:
+        - NA
+      filter: NA
+    - domain: dm_vaccine
+      depends:
+        - NA
+      filter: NA
+  global:
+    - filter: NA
+      depends:
+        - NA
 
-column_action:
-  USUBJID:
+columns:
+  - id: USUBJID
 
-  AGE:
+  - id: AGE
 
-  AGE_INVALID:
-    code_id: {path_base}/fixtures/components/age_redefined_02.R
+  - id: AGE_INVALID
+    component:
+      id: "{path_base}/fixtures/components/age_redefined_02.R"

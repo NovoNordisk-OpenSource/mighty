@@ -1,49 +1,58 @@
-table:
-  name: ADLB
+id: ADLB
+keys:
+  - USUBJID
+  - STUDYID
+  - LBSEQ
 
-init:
-  base_domains:
-    - lb
-  filter_domain:
-    - lb: NA
-  filter_global:
-  - NA
-  filter_depend_cols:
-  - NA
+population:
+  base:
+    - domain: lb
+      depends:
+        - NA
+      filter: NA
+  global:
+    - filter: NA
+      depends:
+        - NA
 
-column_action:
-  USUBJID:
+columns:
+  - id: USUBJID
 
-  STUDYID:
+  - id: STUDYID
 
-  LBSEQ:
+  - id: LBSEQ
 
-  LBSTRESN:
+  - id: LBSTRESN
 
-  PLANNED_ARM:
-    source: ADSL.PLANNED_ARM
+  - id: PLANNED_ARM
+    method: ADSL.PLANNED_ARM
 
-  ARM:
-    source: ADSL.PLANNED_ARM
+  - id: ARM
+    method: ADSL.PLANNED_ARM
 
-  AVAL:
-    source: LBSTRESN
+  - id: AVAL
+    method: LBSTRESN
 
-  AVAL_GRP:
-    code_id: {path_base}/fixtures/components/aval_grp_01.R
+  - id: AVAL_GRP
+    component:
+      id: "{path_base}/fixtures/components/aval_grp_01.R"
 
-  AVAL2:
-    source: AVAL
+  - id: AVAL2
+    method: AVAL
 
-  LBTEST:
-    code_id: {path_base}/fixtures/components/lbtest_01.R
+  - id: LBTEST
+    component:
+      id: "{path_base}/fixtures/components/lbtest_01.R"
 
-  AVALFL:
-    code_id: {path_base}/fixtures/components/avalfl_01.R
+  - id: AVALFL
+    component:
+      id: "{path_base}/fixtures/components/avalfl_01.R"
 
-  AVALREA:
-    code_id: {path_base}/fixtures/components/avalfl_01.R
+  - id: AVALREA
+    component:
+      id: "{path_base}/fixtures/components/avalfl_01.R"
 
-row_action:
-  new_microcytes:
-    code_id: {path_base}/fixtures/components/new_lbtest_01.R
+rows:
+  - id: new_microcytes
+    component:
+      id: "{path_base}/fixtures/components/new_lbtest_01.R"

@@ -4,6 +4,9 @@ complete_id: "0001-1234"
 instance: "current"
 
 keys:
+   adsl:
+      - STUDYID
+      - USUBJID
    EX:
     - USUBJID
    DS:

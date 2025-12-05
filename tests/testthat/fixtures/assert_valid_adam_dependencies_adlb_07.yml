@@ -1,32 +1,37 @@
-table:
-  name: adlb
+id: ADLB
+keys:
+  - USUBJID
+  - STUDYID
 
-init:
-  base_domains:
-    - LB
-  filter_domain:
-    - LB: NA
-  filter_global:
-  - NA
-  filter_depend_cols:
-  - NA
+population:
+  base:
+    - domain: LB
+      depends:
+        - NA
+      filter: NA
+  global:
+    - filter: NA
+      depends:
+        - NA
 
-column_action:
-  STUDYID:
+columns:
+  - id: STUDYID
 
-  USUBJID:
+  - id: USUBJID
 
-  VISITNUM:
+  - id: VISITNUM
 
-  VISITNUM2:
-    source: VISITNUM
+  - id: VISITNUM2
+    method: VISITNUM
 
-  LBTEST2:
-    code_id: {path_base}/fixtures/components/lbtest_02.R
+  - id: LBTEST2
+    component:
+      id: "{path_base}/fixtures/components/lbtest_02.R"
 
-  LBTEST3:
-    code_id: {path_base}/fixtures/components/lbtest_03.R
+  - id: LBTEST3
+    component:
+      id: "{path_base}/fixtures/components/lbtest_03.R"
 
-  LBTEST3_FLG:
-    code_id: {path_base}/fixtures/components/lbtest_03.R
-
+  - id: LBTEST3_FLG
+    component:
+      id: "{path_base}/fixtures/components/lbtest_03.R"

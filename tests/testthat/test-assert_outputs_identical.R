@@ -2,21 +2,24 @@ test_that("Error when code component outputs not referenced in YML", {
   # ARRANGE -----------------------------------------------------------------
 
   yml <- "
-table:
-  name: ADSL
-init:
-  base_domains: ['DM']
-  filter_domain:
-  - DM: NA
-  filter_global: 
-    - NA
-  filter_depend_cols: 
-    - NA
-column_action:
-  USUBJID:
-  A:
-    code_id: {{ady_custom}}
-    
+id: ADSL
+keys: []
+population:
+  base:
+    - domain: DM
+      depends:
+        - NA
+      filter: NA
+  global:
+    - filter: NA
+      depends:
+        - NA
+
+columns:
+  - id: USUBJID
+  - id: A
+    component:
+      id: {{ady_custom}}
 "
 
   tmp_file <- withr::local_tempdir() |>
@@ -29,25 +32,25 @@ column_action:
 #' @depends ADSL USUBJID
 #' @outputs A
 #' @outputs B
-#' @code 
-ADSL <- ADSL |> 
-  dplyr::mutate(A=USUBJID) |> 
+#' @code
+ADSL <- ADSL |>
+  dplyr::mutate(A=USUBJID) |>
   dplyr::mutate(B=USUBJID)
 }
  " |>
     writeLines(con = tmp_file)
   trial_path <- withr::local_tempdir()
 
-  path_ui_data <- file.path(trial_path, "ui_yml.yml")
+  adam_specifications <- file.path(trial_path, "ui_yml.yml")
   whisker::whisker.render(yml, data = list(ady_custom = tmp_file)) |>
-    writeLines(path_ui_data)
+    writeLines(adam_specifications)
 
   path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
   output_path <- trial_path
   # ACT & ASSERT ------------------------------------------------------------
 
   generate_adam_code(
-    path_ui_data = path_ui_data,
+    adam_specifications = adam_specifications,
     path_trial_metadata = path_trial_metadata,
     path_trial = trial_path,
     check_cross_domain_adam_dependencies = FALSE

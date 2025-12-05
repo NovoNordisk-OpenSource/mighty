@@ -6,20 +6,13 @@ trial_id: '0001'
 project_id: '1234'
 complete_id: '0001-1234'
 instance: 'current'
-primary_keys_sdtm:
+keys:
   EX:
     - USUBJID
   DS:
     - USUBJID
     - DSSEQ
-primary_keys_adam:
-  ADSL:
-    - USUBJID
-    - STUDYID
-  ADLB:
-    - USUBJID
-    - PARAMCD
-primary_keys_md:
+
   MDPARAM:
     - STUDYID
     - TOPICCD
@@ -42,14 +35,11 @@ trial_id: '0001'
 project_id: '1234mad'
 complete_id: '0001-1234mad'
 instance: 'draft'
-primary_keys_sdtm:
+keys:
   LB:
     - USUBJID
     - LBSEQ
-primary_keys_adam:
-  ADSL:
-    - USUBJID
-primary_keys_md:
+
   MDVISIT:
     - STUDYID
     - AVISITN
@@ -72,13 +62,10 @@ trial_id: '01'
 project_id: '1234'
 complete_id: '0001-1234'
 instance: 'current'
-primary_keys_sdtm:
+keys:
   EX:
     - USUBJID
-primary_keys_adam:
-  ADSL:
-    - USUBJID
-primary_keys_md:
+
   MDPARAM:
     - STUDYID
 "
@@ -101,13 +88,10 @@ trial_id: '0001'
 project_id: '123'
 complete_id: '0001-1234'
 instance: 'current'
-primary_keys_sdtm:
+keys:
   EX:
     - USUBJID
-primary_keys_adam:
-  ADSL:
-    - USUBJID
-primary_keys_md:
+
   MDPARAM:
     - STUDYID
 "
@@ -130,13 +114,10 @@ trial_id: '0001'
 project_id: '1234'
 complete_id: '01-1234'
 instance: 'current'
-primary_keys_sdtm:
+keys:
   EX:
     - USUBJID
-primary_keys_adam:
-  ADSL:
-    - USUBJID
-primary_keys_md:
+
   MDPARAM:
     - STUDYID
 "
@@ -159,13 +140,10 @@ trial_id: '0001'
 project_id: '1234'
 complete_id: '0001-1234'
 instance: ''
-primary_keys_sdtm:
+keys:
   EX:
     - USUBJID
-primary_keys_adam:
-  ADSL:
-    - USUBJID
-primary_keys_md:
+
   MDPARAM:
     - STUDYID
 "
@@ -187,11 +165,8 @@ test_that("Missing required top-level fields fail validation", {
 trial_id: '0001'
 project_id: '1234'
 instance: 'current'
-primary_keys_sdtm:
+keys:
   EX:
-    - USUBJID
-primary_keys_adam:
-  ADSL:
     - USUBJID
 "
   yaml_file <- create_temp_yaml(yaml_content, name = "temp_trial_metadata.yml")
@@ -211,13 +186,10 @@ project_id: '1234'
 complete_id: '0001-1234'
 instance: 'current'
 extra_field: 'not allowed'
-primary_keys_sdtm:
+keys:
   EX:
     - USUBJID
-primary_keys_adam:
-  ADSL:
-    - USUBJID
-primary_keys_md:
+
   MDPARAM:
     - STUDYID
 "
@@ -232,7 +204,7 @@ primary_keys_md:
 })
 
 
-test_that("Empty primary_keys sections fail validation", {
+test_that("Empty keys sections fail validation", {
   # SETUP ----------------------------------------------------------------------
 
   yaml_content <- "
@@ -240,13 +212,7 @@ trial_id: '0001'
 project_id: '1234'
 complete_id: '0001-1234'
 instance: 'current'
-primary_keys_sdtm:
-primary_keys_adam:
-  ADSL:
-    - USUBJID
-primary_keys_md:
-  MDPARAM:
-    - STUDYID
+keys:
 "
   yaml_file <- create_temp_yaml(yaml_content, name = "temp_trial_metadata.yml")
 
@@ -254,12 +220,12 @@ primary_keys_md:
 
   validate_yaml(yaml_file, "trial_metadata_schema", use_yq = TRUE) |>
     expect_error(
-      "Error location: primary_keys_sdtm | Error message: Expected type 'object', must be object"
+      "Error location: keys | Error message: Expected type 'object', must be object"
     )
 })
 
 
-test_that("Invalid domain names in primary_keys fail validation", {
+test_that("Invalid domain names in keys fail validation", {
   # SETUP ----------------------------------------------------------------------
 
   yaml_content <- "
@@ -267,15 +233,12 @@ trial_id: '0001'
 project_id: '1234'
 complete_id: '0001-1234'
 instance: 'current'
-primary_keys_sdtm:
+keys:
   invalid_domain:
     - USUBJID
   '123INVALID':
     - STUDYID
-primary_keys_adam:
-  ADSL:
-    - USUBJID
-primary_keys_md:
+
   MDPARAM:
     - STUDYID
 "
@@ -285,17 +248,17 @@ primary_keys_md:
 
   validate_yaml(yaml_file, "trial_metadata_schema", use_yq = TRUE) |>
     expect_error(
-      "Error location: primary_keys_sdtm | Error message: Property 'invalid_domain' is not allowed"
+      "Error location: keys | Error message: Property 'invalid_domain' is not allowed"
     )
 
   validate_yaml(yaml_file, "trial_metadata_schema", use_yq = TRUE) |>
     expect_error(
-      "Error location: primary_keys_sdtm | Error message: Property '123INVALID' is not allowed"
+      "Error location: keys | Error message: Property '123INVALID' is not allowed"
     )
 })
 
 
-test_that("Invalid variable names in primary keys fail validation", {
+test_that("Invalid domain names in keys fail validation", {
   # SETUP ----------------------------------------------------------------------
 
   yaml_content <- "
@@ -303,16 +266,13 @@ trial_id: '0001'
 project_id: '1234'
 complete_id: '0001-1234'
 instance: 'current'
-primary_keys_sdtm:
+keys:
   EX:
     - USUBJID
     - invalid_var
     - '123INVALID'
     - ''
-primary_keys_adam:
-  ADSL:
-    - USUBJID
-primary_keys_md:
+
   MDPARAM:
     - STUDYID
 "
@@ -322,22 +282,22 @@ primary_keys_md:
 
   validate_yaml(yaml_file, "trial_metadata_schema", use_yq = TRUE) |>
     expect_error(
-      "Error location: primary_keys_sdtm -> EX -> item 2 | Error message: String does not match pattern"
+      "Error location: keys -> EX -> item 2 | Error message: String does not match pattern"
     )
 
   validate_yaml(yaml_file, "trial_metadata_schema", use_yq = TRUE) |>
     expect_error(
-      "Error location: primary_keys_sdtm -> EX -> item 3 | Error message: String does not match pattern"
+      "Error location: keys -> EX -> item 3 | Error message: String does not match pattern"
     )
 
   validate_yaml(yaml_file, "trial_metadata_schema", use_yq = TRUE) |>
     expect_error(
-      "Error location: primary_keys_sdtm -> EX -> item 4 | Error message: String is too short"
+      "Error location: keys -> EX -> item 4 | Error message: String is too short"
     )
 })
 
 
-test_that("Empty primary key arrays fail validation", {
+test_that("Empty key arrays fail validation", {
   # SETUP ----------------------------------------------------------------------
 
   yaml_content <- "
@@ -345,12 +305,9 @@ trial_id: '0001'
 project_id: '1234'
 complete_id: '0001-1234'
 instance: 'current'
-primary_keys_sdtm:
+keys:
   EX:
-primary_keys_adam:
-  ADSL:
-    - USUBJID
-primary_keys_md:
+
   MDPARAM:
     - STUDYID
 "
@@ -360,12 +317,12 @@ primary_keys_md:
 
   validate_yaml(yaml_file, "trial_metadata_schema", use_yq = TRUE) |>
     expect_error(
-      "Error location: primary_keys_sdtm -> EX | Error message: Expected type 'array', must be array"
+      "Error location: keys -> EX | Error message: Expected type 'array', must be array"
     )
 })
 
 
-test_that("Duplicate variable names in primary keys fail validation", {
+test_that("Duplicate variable names in keys fail validation", {
   # SETUP ----------------------------------------------------------------------
 
   yaml_content <- "
@@ -373,15 +330,11 @@ trial_id: '0001'
 project_id: '1234'
 complete_id: '0001-1234'
 instance: 'current'
-primary_keys_sdtm:
+keys:
   EX:
     - USUBJID
-    - EXSEQ
     - USUBJID
-primary_keys_adam:
-  ADSL:
-    - USUBJID
-primary_keys_md:
+
   MDPARAM:
     - STUDYID
 "
@@ -391,12 +344,12 @@ primary_keys_md:
 
   validate_yaml(yaml_file, "trial_metadata_schema", use_yq = TRUE) |>
     expect_error(
-      "Error location: primary_keys_sdtm -> EX | Error message: Array items are not unique"
+      "Error location: keys -> EX | Error message: Array items are not unique"
     )
 })
 
 
-test_that("Primary keys sections with no domains fail validation", {
+test_that("Keys sections with no domains fail validation", {
   # SETUP ----------------------------------------------------------------------
 
   yaml_content <- "
@@ -404,13 +357,7 @@ trial_id: '0001'
 project_id: '1234'
 complete_id: '0001-1234'
 instance: 'current'
-primary_keys_sdtm:
-  {}
-primary_keys_adam:
-  ADSL:
-    - USUBJID
-primary_keys_md:
-  MDPARAM:
+keys:
     - STUDYID
 "
   yaml_file <- create_temp_yaml(yaml_content, name = "temp_trial_metadata.yml")
@@ -419,7 +366,7 @@ primary_keys_md:
 
   validate_yaml(yaml_file, "trial_metadata_schema", use_yq = TRUE) |>
     expect_error(
-      "Error location: primary_keys_sdtm | Error message: Object does not have enough properties"
+      "Error location: keys | Error message: Object does not have enough properties"
     )
 })
 
@@ -432,7 +379,7 @@ trial_id: '9999'
 project_id: '5678abc'
 complete_id: '9999-5678abc'
 instance: 'production_v2'
-primary_keys_sdtm:
+keys:
   DM:
     - USUBJID
     - DOMAIN
@@ -448,25 +395,7 @@ primary_keys_sdtm:
   AE:
     - USUBJID
     - AESEQ
-primary_keys_adam:
-  ADSL:
-    - USUBJID
-    - STUDYID
-    - SITEID
-  ADLB:
-    - USUBJID
-    - PARAMCD
-    - AVISITN
-    - ADT
-  ADAE:
-    - USUBJID
-    - TRTA
-    - AESEQ
-  ADTTE:
-    - USUBJID
-    - PARAMCD
-    - CNSR
-primary_keys_md:
+
   MDPARAM:
     - STUDYID
     - TOPICCD
@@ -502,17 +431,13 @@ trial_id: '0001'
 project_id: '1234'
 complete_id: '0001-1234'
 instance: 'current'
-primary_keys_sdtm:
+keys:
   A:
     - A
   Z9_TEST:
     - VAR_123
     - TEST_VAR_ABC
-primary_keys_adam:
-  AD123:
-    - USUBJID123
-    - TEST_123_ABC
-primary_keys_md:
+
   MD_COMPLEX_NAME:
     - COMPLEX_VAR_NAME_123
 "

@@ -9,11 +9,13 @@
 #' @noRd
 val_no_params_when_missing_code_id <- function(yaml_data, context = list()) {
   inx <- vapply(
-    yaml_data$column_action,
-    function(i) !is.null(i$parameters) && is.null(i$code_id),
+    yaml_data$columns,
+    function(i) {
+      any(!is.na(i$parameters)) && is.null(i$code_id)
+    },
     logical(1)
   )
-  problems <- names(yaml_data$column_action)[inx]
+  problems <- names(yaml_data$columns)[inx]
 
   if (length(problems) == 0) {
     return(list(valid = TRUE, errors = character(0)))
@@ -38,7 +40,8 @@ val_no_params_when_missing_code_id <- function(yaml_data, context = list()) {
 #' @return List with 'valid' (logical) and 'errors' (character vector)
 #' @noRd
 val_no_duplicate_columns <- function(yaml_data, context = list()) {
-  col_names <- names(yaml_data$column_action)
+  # Filter out empty string names (which are row actions)
+  col_names <- names(yaml_data$columns)[names(yaml_data$columns) != ""]
   column_duplicates <- col_names[duplicated(col_names)]
 
   if (length(column_duplicates) == 0) {
@@ -64,7 +67,9 @@ val_no_duplicate_columns <- function(yaml_data, context = list()) {
 #' @return List with 'valid' (logical) and 'errors' (character vector)
 #' @noRd
 val_no_duplicate_row_ids <- function(yaml_data, context = list()) {
-  row_ids <- names(yaml_data$row_action)
+  # Extract id field from unnamed entries (empty string names)
+  row_entries <- yaml_data$columns[names(yaml_data$columns) == ""]
+  row_ids <- vapply(row_entries, function(x) x$id, character(1))
   row_duplicates <- row_ids[duplicated(row_ids)]
 
   if (length(row_duplicates) == 0) {
@@ -90,12 +95,19 @@ val_no_duplicate_row_ids <- function(yaml_data, context = list()) {
 #' @return List with 'valid' (logical) and 'errors' (character vector)
 #' @noRd
 val_depend_rows <- function(yaml_data, context = list()) {
-  a <- lapply(yaml_data$column_action, `[[`, "depend_rows") |> unlist()
-  b <- lapply(yaml_data$row_action, `[[`, "depend_rows") |> unlist()
-  all_row_depends <- c(a, b)
+  # Get all depend_rows from all entries in columns (both named and unnamed)
+  all_row_depends <- lapply(yaml_data$columns, `[[`, "depend_rows") |>
+    unlist() |>
+    (\(x) x[!is.na(x)])() # Filter out NA values
 
-  # row action IDs are now the names of the list elements
-  defined_row_actions <- names(yaml_data$row_action)
+  # Extract id field from unnamed entries (empty string names) to get defined row actions
+  row_entries <- yaml_data$columns[names(yaml_data$columns) == ""]
+
+  if (length(row_entries) == 0) {
+    defined_row_actions <- character(0)
+  } else {
+    defined_row_actions <- vapply(row_entries, function(x) x$id, character(1))
+  }
 
   missing_row_actions <- setdiff(all_row_depends, defined_row_actions)
 
@@ -128,9 +140,12 @@ val_source_and_code_id_notboth_populated <- function(
   yaml_data,
   context = list()
 ) {
+  # Only check named entries (columns), not unnamed entries (rows)
+  column_entries <- yaml_data$columns[names(yaml_data$columns) != ""]
+
   inx <- vapply(
-    yaml_data$column_action,
-    function(i) !is.null(i$code_id) && !is.null(i$source),
+    column_entries,
+    function(i) !is.null(i$code_id) && !is.null(i$depend_cols),
     logical(1)
   )
 
@@ -139,7 +154,7 @@ val_source_and_code_id_notboth_populated <- function(
   }
 
   # column names are now the names of the list elements
-  problem_columns <- names(yaml_data$column_action)[inx]
+  problem_columns <- names(column_entries)[inx]
 
   list(
     valid = FALSE,

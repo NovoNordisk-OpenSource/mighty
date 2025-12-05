@@ -93,7 +93,7 @@ test_that("Reading adam specs with code_id and writing back produces the same re
   ui_path <- c(
     test_path("fixtures", test_yaml)
   )
-  adam_specs <- read_adam_specs(ui_path)
+  adam_specs <- read_mighty_metadata_adam_domain(ui_path)
   output_path <- withr::local_tempdir()
 
   # ACT ---------------------------------------------------------------------
@@ -114,15 +114,15 @@ test_that("Reading adam specs with code_id and writing back produces the same re
 test_that("Reading adam specs and writing back produces the same result", {
   skip("MHzT: Writing specs back is not in scope yet")
   # SETUP -------------------------------------------------------------------
-  path_ui_data <- c(
+  adam_specifications <- c(
     test_path("fixtures", "complex_adsl.yml"),
     test_path("fixtures", "complex_adlb.yml")
   )
-  path_ui_data_rendered <- setup_yml_file_for_testing(
-    path_ui_data,
+  adam_specifications_rendered <- setup_yml_file_for_testing(
+    adam_specifications,
     environment()
   )
-  adam_specs <- read_adam_specs(path_ui_data_rendered)
+  adam_specs <- lapply(adam_specifications_rendered, read_mighty_metadata_adam_domain)
   output_path <- withr::local_tempdir()
   write_adam_specs(adam_specs, output_path)
   # ACT ---------------------------------------------------------------------

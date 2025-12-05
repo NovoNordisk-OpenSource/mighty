@@ -5,7 +5,7 @@
 \title{Generate Complete Set of ADaM Programs}
 \usage{
 generate_adam_code(
-  path_ui_data,
+  adam_specifications,
   standards_lib = NULL,
   path_trial_metadata,
   path_trial,
@@ -14,7 +14,7 @@ generate_adam_code(
 )
 }
 \arguments{
-\item{path_ui_data}{Character string. File path to the UI data specifications
+\item{adam_specifications}{Character string. File path to the UI data specifications
 (typically a YAML file) containing user-defined ADaM dataset configurations,
 column definitions, and transformation rules.}
 
@@ -93,7 +93,7 @@ The function will stop execution if:
 \dontrun{
 # Generate ADaM programs with full dependency checking
 result <- generate_adam_code(
-  path_ui_data = "path/to/ui_specs.yml",
+  adam_specifications = "path/to/ui_specs.yml",
   path_trial_metadata = "path/to/trial_metadata.yml",
   path_trial = "path/to/trial_directory",
   check_cross_domain_adam_dependencies = TRUE
@@ -105,7 +105,7 @@ executable_programs <- result$executable_programs
 
 # Generate with custom standards library
 result_custom <- generate_adam_code(
-  path_ui_data = "ui_specs.yml",
+  adam_specifications = "ui_specs.yml",
   standards_lib = my_custom_standards,
   path_trial_metadata = "trial_config.yml",
   path_trial = "trial_data/",
