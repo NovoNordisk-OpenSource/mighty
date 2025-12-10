@@ -23,7 +23,6 @@ population:
 
 columns:
   - id: USUBJID
-    method: core.USUBJID
 
   - id: ARM_GRP1
     label: "some text"

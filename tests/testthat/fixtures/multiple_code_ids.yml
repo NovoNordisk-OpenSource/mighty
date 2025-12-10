@@ -1,5 +1,5 @@
 id: ADLB
-keys: []
+keys: [USUBJID]
 
 population:
   base:
@@ -14,7 +14,6 @@ population:
 
 columns:
   - id: USUBJID
-    method: core.USUBJID
 
   - id: A
     component:

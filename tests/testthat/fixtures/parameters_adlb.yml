@@ -109,14 +109,14 @@ columns:
       id: "{path_base}/fixtures/components/param_lbstresn_crop.mustache"
       with:
         LBSTRESN_MINVAL: 38.0
-    depend_rows:
-      - new_protein
-      - new_specific_gravity
+    depends:
+      - rows.new_protein
+      - rows.new_specific_gravity
 
   - id: AVAL
     method: LBSTRESN
-    depend_rows:
-      - new_protein
+    depends:
+      - rows.new_protein
 
   - id: AVAL_GRP
     component:
