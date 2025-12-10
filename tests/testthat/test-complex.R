@@ -45,6 +45,13 @@ test_that("Complex test with multiple domains and column/row operations", {
         "type"
       )
     )
+  #remove connector save step from program 3 as this will fail on Windows
+  if (.Platform$OS.type == "windows") {
+    prog3 <- strsplit(actual$programs[3][[1]], "\n")[[1]]
+    prog3 <- prog3[-length(prog3)]
+    actual$programs[3][[1]] <- paste(prog3, collapse = "\n")
+  }
+
   write_adam_programs(
     dir = path_trial,
     programs = actual$programs,

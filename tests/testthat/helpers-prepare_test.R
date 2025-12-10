@@ -15,8 +15,7 @@ prepare_test <- function(
     test_data_path = trial_path,
     sdtm_domains = sdtm_testdata,
     adam_domains = adam_testdata,
-    remove_cols = remove_data,
-    env = parent.frame()
+    remove_cols = remove_data
   )
   list(
     trial_path = trial_path,

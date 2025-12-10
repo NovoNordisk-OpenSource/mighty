@@ -1,7 +1,7 @@
 #' @title Read data
 #' @description Template description here
 #' @type derivation
-#' @param path_trial Character string. The file path to the trial directory containing the connector configuration file (_connector.yml).
+#' @param connector_path Character string. The file path to the connector configuration file (_connector.yml).
 #' @param domains List of lists. Each element represents a domain/dataset to be read, containing the following components:
 #'   \describe{
 #'     \item{is_self_domain}{Logical. Whether to read the entire dataset (TRUE) or apply variable selection (FALSE). Is generally only true for an "update" program - e.g. ADSL "update"}
@@ -28,7 +28,7 @@
 #'   )
 #'   }
 #' @code
-cnt <- connector::connect(config = '{{path_trial}}/_connector.yml')
+cnt <- connector::connect(config = '{{connector_path}}')
 {{#domains}}
   {{#is_self_domain}}
   {{domain_name}} <-  cnt${{data_type}}$read_cnt('{{domain_name}}')

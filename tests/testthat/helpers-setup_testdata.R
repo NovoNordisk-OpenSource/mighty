@@ -41,8 +41,7 @@ setup_testdata <- function(
   test_data_path,
   sdtm_domains = c("dm", "suppdm", "dm_vaccine", "ae", "lb", "sv"),
   adam_domains = c(),
-  remove_cols = NULL,
-  env = parent.frame()
+  remove_cols = NULL
 ) {
   testdata <- match.arg(testdata)
   # TODO: Should we only allow a set of SDTM domains to be available (in
@@ -50,12 +49,24 @@ setup_testdata <- function(
   # Currently: allow any
 
   if (testdata == "pharmaverse") {
-    # copy connector config
-    file.copy(
-      from = file.path(test_path("fixtures", "_connector.yml")),
-      to = test_data_path,
-      overwrite = TRUE
+    # copy and modify connector config
+    if (.Platform$OS.type == "windows") {
+      # Normalize and convert to forward slashes
+      test_data_path <- normalizePath(test_data_path, winslash = "/", mustWork = FALSE)
+    }
+    yaml <- test_path("fixtures", "_connector.yml") |>
+      readLines() |>
+      paste0(collapse = "\n") |>
+      glue::glue(
+        root = test_data_path,
+        .open = "{{",
+        .close = "}}"
+      )
+
+    writeLines(yaml,
+      con = file.path(test_data_path, "_connector.yml")
     )
+
     # setup temporary data area
     data_path <- file.path(test_data_path, "data")
     sdtm_testdata_path <- file.path(data_path, "sdtm")
@@ -127,24 +138,6 @@ setup_testdata <- function(
       }
     )
 
-    # Create symbolic link to temporary data and ensure it is removed after test
-    # is completed. This is needed to ensure that
-    # since the connector needs to link to a static file location, whereas
-    # the test data is created in a temporary location that will be cleaned up
-    # after testing
-
-    # Ensure link is removed, if it exists
-    unlink(test_path("fixtures", "data"), recursive = TRUE, force = TRUE)
-
-    # Create link
-    file.symlink(
-      data_path,
-      test_path("fixtures", "data")
-    )
-    withr::defer(
-      envir = env,
-      unlink(test_path("fixtures", "data"), recursive = TRUE, force = TRUE)
-    )
     return(test_data_path)
   } else {
     stop("Unsupported test data type.")
