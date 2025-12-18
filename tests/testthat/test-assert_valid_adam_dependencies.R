@@ -9,7 +9,10 @@ test_that("Complete spec passes when cross-domain disabled", {
     adam_specifications,
     environment()
   )
-  path_trial_metadata <- test_path("fixtures", "trial_metadata_lowercase_adsl.yml")
+  path_trial_metadata <- test_path(
+    "fixtures",
+    "trial_metadata_lowercase_adsl.yml"
+  )
   path_trial <- withr::local_tempdir()
 
   setup_testdata(
@@ -57,7 +60,10 @@ test_that("Complete spec passes when cross-domain enabled", {
     adam_specifications,
     environment()
   )
-  path_trial_metadata <- test_path("fixtures", "trial_metadata_lowercase_adsl.yml")
+  path_trial_metadata <- test_path(
+    "fixtures",
+    "trial_metadata_lowercase_adsl.yml"
+  )
   path_trial <- withr::local_tempdir()
 
   setup_testdata(
@@ -105,7 +111,10 @@ test_that("Incomplete cross-domain ADaM spec fails when checks enabled", {
     adam_specifications,
     environment()
   )
-  path_trial_metadata <- test_path("fixtures", "trial_metadata_lowercase_adsl.yml")
+  path_trial_metadata <- test_path(
+    "fixtures",
+    "trial_metadata_lowercase_adsl.yml"
+  )
   path_trial <- withr::local_tempdir()
 
   setup_testdata(
@@ -147,7 +156,10 @@ test_that("Incomplete cross-domain ADaM spec passes when checks disabled", {
     adam_specifications,
     environment()
   )
-  path_trial_metadata <- test_path("fixtures", "trial_metadata_lowercase_adsl.yml")
+  path_trial_metadata <- test_path(
+    "fixtures",
+    "trial_metadata_lowercase_adsl.yml"
+  )
   path_trial <- withr::local_tempdir()
 
   setup_testdata(
@@ -195,7 +207,10 @@ test_that("Incomplete within-domain ADaM spec fails when checks disabled", {
     adam_specifications,
     environment()
   )
-  path_trial_metadata <- test_path("fixtures", "trial_metadata_lowercase_adsl.yml")
+  path_trial_metadata <- test_path(
+    "fixtures",
+    "trial_metadata_lowercase_adsl.yml"
+  )
   path_trial <- withr::local_tempdir()
 
   setup_testdata(
@@ -229,7 +244,10 @@ test_that("Incomplete within-domain ADaM spec fails when checks enabled", {
     adam_specifications,
     environment()
   )
-  path_trial_metadata <- test_path("fixtures", "trial_metadata_lowercase_adsl.yml")
+  path_trial_metadata <- test_path(
+    "fixtures",
+    "trial_metadata_lowercase_adsl.yml"
+  )
   path_trial <- withr::local_tempdir()
 
   setup_testdata(
@@ -263,7 +281,10 @@ test_that("Incomplete within and cross-domain specs fail when checks disabled", 
     adam_specifications,
     environment()
   )
-  path_trial_metadata <- test_path("fixtures", "trial_metadata_lowercase_adsl.yml")
+  path_trial_metadata <- test_path(
+    "fixtures",
+    "trial_metadata_lowercase_adsl.yml"
+  )
   path_trial <- withr::local_tempdir()
 
   setup_testdata(
@@ -305,7 +326,10 @@ test_that("Incomplete within and cross-domain specs fail when checks enabled", {
     adam_specifications,
     environment()
   )
-  path_trial_metadata <- test_path("fixtures", "trial_metadata_lowercase_adsl.yml")
+  path_trial_metadata <- test_path(
+    "fixtures",
+    "trial_metadata_lowercase_adsl.yml"
+  )
   path_trial <- withr::local_tempdir()
 
   setup_testdata(
@@ -347,7 +371,10 @@ test_that("Incomplete ADSL filter spec fails when cross-domain enabled", {
     adam_specifications,
     environment()
   )
-  path_trial_metadata <- test_path("fixtures", "trial_metadata_lowercase_adsl.yml")
+  path_trial_metadata <- test_path(
+    "fixtures",
+    "trial_metadata_lowercase_adsl.yml"
+  )
   path_trial <- withr::local_tempdir()
 
   setup_testdata(
@@ -389,7 +416,10 @@ test_that("Incomplete ADSL filter spec passes when cross-domain disabled", {
     adam_specifications,
     environment()
   )
-  path_trial_metadata <- test_path("fixtures", "trial_metadata_lowercase_adsl.yml")
+  path_trial_metadata <- test_path(
+    "fixtures",
+    "trial_metadata_lowercase_adsl.yml"
+  )
   path_trial <- withr::local_tempdir()
 
   setup_testdata(
@@ -436,7 +466,10 @@ test_that("Incomplete ADSL filter and actions fail when checks enabled", {
     adam_specifications,
     environment()
   )
-  path_trial_metadata <- test_path("fixtures", "trial_metadata_lowercase_adsl.yml")
+  path_trial_metadata <- test_path(
+    "fixtures",
+    "trial_metadata_lowercase_adsl.yml"
+  )
   path_trial <- withr::local_tempdir()
 
   setup_testdata(
@@ -478,7 +511,10 @@ test_that("Incomplete ADSL filter and actions pass when checks disabled", {
     adam_specifications,
     environment()
   )
-  path_trial_metadata <- test_path("fixtures", "trial_metadata_lowercase_adsl.yml")
+  path_trial_metadata <- test_path(
+    "fixtures",
+    "trial_metadata_lowercase_adsl.yml"
+  )
   path_trial <- withr::local_tempdir()
 
   setup_testdata(
@@ -526,7 +562,10 @@ test_that("Incomplete ADSL filter in two domains fails when checks enabled", {
     adam_specifications,
     environment()
   )
-  path_trial_metadata <- test_path("fixtures", "trial_metadata_lowercase_adsl.yml")
+  path_trial_metadata <- test_path(
+    "fixtures",
+    "trial_metadata_lowercase_adsl.yml"
+  )
   path_trial <- withr::local_tempdir()
 
   setup_testdata(
@@ -567,7 +606,10 @@ test_that("Incomplete ADSL filter in two domains passes when checks disabled", {
     adam_specifications,
     environment()
   )
-  path_trial_metadata <- test_path("fixtures", "trial_metadata_lowercase_adsl.yml")
+  path_trial_metadata <- test_path(
+    "fixtures",
+    "trial_metadata_lowercase_adsl.yml"
+  )
   path_trial <- withr::local_tempdir()
 
   setup_testdata(
@@ -613,7 +655,10 @@ test_that("Incomplete within-domain in two domains fails when checks disabled", 
     adam_specifications,
     environment()
   )
-  path_trial_metadata <- test_path("fixtures", "trial_metadata_lowercase_adsl.yml")
+  path_trial_metadata <- test_path(
+    "fixtures",
+    "trial_metadata_lowercase_adsl.yml"
+  )
   path_trial <- withr::local_tempdir()
 
   setup_testdata(
@@ -653,7 +698,10 @@ test_that("Incomplete within-domain spec w/ component fails when x-check disable
     adam_specifications,
     environment()
   )
-  path_trial_metadata <- test_path("fixtures", "trial_metadata_lowercase_adsl.yml")
+  path_trial_metadata <- test_path(
+    "fixtures",
+    "trial_metadata_lowercase_adsl.yml"
+  )
   path_trial <- withr::local_tempdir()
 
   setup_testdata(
@@ -695,7 +743,10 @@ test_that("Incomplete within-domain spec w/ component fails when x-check enabled
     adam_specifications,
     environment()
   )
-  path_trial_metadata <- test_path("fixtures", "trial_metadata_lowercase_adsl.yml")
+  path_trial_metadata <- test_path(
+    "fixtures",
+    "trial_metadata_lowercase_adsl.yml"
+  )
   path_trial <- withr::local_tempdir()
 
   setup_testdata(
@@ -737,7 +788,10 @@ test_that("Incomplete filter_depend_cols fails when x-check enabled", {
     adam_specifications,
     environment()
   )
-  path_trial_metadata <- test_path("fixtures", "trial_metadata_lowercase_adsl.yml")
+  path_trial_metadata <- test_path(
+    "fixtures",
+    "trial_metadata_lowercase_adsl.yml"
+  )
   path_trial <- withr::local_tempdir()
 
   setup_testdata(
@@ -779,7 +833,10 @@ test_that("Incomplete filter_depend_cols fails when x-check disabled", {
     adam_specifications,
     environment()
   )
-  path_trial_metadata <- test_path("fixtures", "trial_metadata_lowercase_adsl.yml")
+  path_trial_metadata <- test_path(
+    "fixtures",
+    "trial_metadata_lowercase_adsl.yml"
+  )
   path_trial <- withr::local_tempdir()
 
   setup_testdata(

@@ -12,12 +12,12 @@ knitr:
 
 
 
-Mighty in itself does not read any data, but the generated programs will be
+Mighty in itself does not read any data, but the generated programs will
 need to connect to a data source to be able to execute. Thus, the programs
 will use the
 [`connector`](https://github.com/NovoNordisk-OpenSource/connector/tree/main?tab=readme-ov-file#readme) 
 package to connect to study data. Connector is setup via the `_connector.yml` 
-configuration and must be placed under the `inst` folder.
+configuration.
 
 An example of a generated program can be seen below, where the `cnt` object is 
 

@@ -6,6 +6,12 @@ keys:
 population:
   base:
     - domain: DM
+      depends: NA
+      filter: NA
+  global:
+    - filter: NA
+      depends:
+        - NA
 
 columns:
   - id: USUBJID

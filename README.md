@@ -1,58 +1,52 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# mighty
+# Overview
 
-<!-- badges: start -->
+The mighty framework introduces a declarative paradigm to building ADaM
+datasets, emphasizing *what you need* rather than *how to create it*.
+This shift enables users to focus on the structure, derivations, and
+intent of your datasets while abstracting away tedious implementation
+details.
 
-<!-- badges: end -->
+**Important** mighty is a work-in-progress, so expect the documentation
+and functionality to change.
 
-Mighty is the main package that powers the mightyverse.
+## Why mighty?
 
-The mightyverse introduces a declarative paradigm to building ADaM
-datasets, emphasizing what you need rather than how to create it. This
-shift enables you to focus on the structure, derivations, and intent of
-your datasets while abstracting away tedious processes.
-
-# Why mighty?
-
-## Declarative Specification
+### Declarative Specification
 
 With mighty, you specify exactly what belongs in your ADaM
 datasets—including columns, derivations, and row transformations—and
 point to existing code implementations (or your own custom ones) that
 handle the actual data manipulations. Mighty orchestrates and compiles
-these instructions into executable ADaM programs, optimizing for
-accuracy, traceability, and reproducibility.
+these instructions into executable ADaM programs.
 
-## Automation and Synchronization
+### Single Source of Truth
 
-Let mighty take care of the heavy lifting:
+Mighty ensures metadata required for your define.xml always matches the
+code implementation. Components and specifications are consolidated into
+a single representation, ensuring any changes automatically propagate
+throughout your ADaM programs and keeping documentation synchronized
+with implementation.
 
-- **Define.XML Alignment:** Ensures the metadata required for your
-  define.xml always matches the current implementation of your ADaM
-  program. Any changes to your ADaM specifications or code components
-  automatically propagate to the compiled program.
-- **Dependency Tracking:** Tracks column and row dependencies for every
-  derivation. You’ll receive real-time alerts when a dependency is
-  missing, reducing debugging time and ensuring seamless integrations.
-- **Streamlined Compilation:** Mighty compiles your ADaM programs while
-  maintaining standards for clarity and functionality
+### Dependency Analysis
 
-# Example Workflow
+Mighty tracks column and row dependencies for every derivation,
+analyzing the dependency topology among actions to determine execution
+order. This ensures that derived variables are created in the correct
+sequence, with prerequisite calculations completed before dependent
+operations. Dependency validation alerts you when required columns are
+missing, or if cyclic dependencies are detected, to aide debugging.
 
-Here’s a simple overview of how mighty works:
+### Missing Data Analysis
 
-1.  Define your ADaM table in a YAML file with sections for table
-    metadata, initialization, column specifications, and row operations.
-2.  Write or reference R functions as code components for derivations
-    and row manipulations.
-3.  Use mighty to compile the ADaM program based on your specifications
-    and code components.
-4.  Execute the program in your preferred environment for dataset
-    creation.
+Identification of discrepancies between specified ADaM requirements and
+available SDTM/ADaM data, enables generation of executable programs that
+gracefully adapt to current data availability. See
+`vignette("missing_data_analysis")` for more details.
 
-# Example: Deriving COMPLSFL in ADSL
+## Example: Deriving COMPLSFL in ADSL
 
 To illustrate mighty’s declarative paradigm, consider the following
 example where we define and derive the variable COMPLSFL for the ADSL
@@ -60,51 +54,75 @@ domain. This column indicates whether the subject’s end-of-study status
 is “COMPLETED.”
 
 ``` yml
-table:
-  name: ADSL
+id: ADSL
 
-init:
-  base_domains:
-    - DM
-  filter_domain:
-    - DM: NA
-  filter_global: NA
-  filter_depend_cols: NA
+keys:
+  - USUBJID
+  - STUDYID
 
-column_action:
-  USUBJID:
-    source: USUBJID
-  EOSSTT:
-    source: EOSSTT
-  COMPLSFL:
-    code_id: der_complsfl
+population:
+  base:
+    - domain: DM
+      depends: NA
+      filter: NA
+  global:
+    - filter: NA
+      depends: NA
+
+columns:
+  - id: USUBJID
+
+  - id: STUDYID
+
+  - id: EOSSTT
+
+  - id: COMPLSFL
+    component:
+      id: der_complsfl
 ```
 
-This specification points to the code component called `der_complsfl`.
+This specification uses the mighty.metadata format with four main
+sections:
 
-# Code components
+- **id**: The ADaM domain name (ADSL)
+- **keys**: Primary key variables for the dataset
+- **population**: Defines which SDTM domains form the base population
+- **columns**: An array of column definitions with their derivation
+  methods
+
+The `COMPLSFL` column points to the code component called
+`der_complsfl`.
+
+### Code components
 
 Code components can either be validated standard components or custom
-(un-validated) components. In this example `der_comflsfl` is a standard
-component. We can see this is the case because we simply refer to the
-name of the component.
+(un-validated) components. In this example `der_complsfl` is a
+**standard component**. We can see this is the case because we simply
+refer to the component name in the `id` field.
 
-Custom components need to be specified with a path to their location:
+**Custom components** need to be specified with a path to their
+location:
 
 ``` yml
-  COMPLSFL:
-    code_id: path/to/custom/component/der_complsfl.R
+  - id: COMPLSFL
+    component:
+      id: path/to/custom/component/der_complsfl.R
 ```
 
 Notice the `.R` extension. Custom components are simply R scripts that
-adhere to a few simple rules. See \[\] for more details
+adhere to a few simple rules. See `vignette("code_components")` for more
+details.
 
-As mighty matures, more of these functions will be pre-defined and ready
-for use, so nothing more would need to be done by the user. For more
-information, please refer to
-[`mighty.component`](https://github.com/NN-OpenSource/mighty.component).
+As mighty matures, more of these components will be pre-defined and
+ready for use, so fewer compononents would need to be defined by the
+user. Standard components are provided by
+[`mighty.standards`](https://github.com/NN-OpenSource/mighty.standards),
+while
+[`mighty.component`](https://github.com/NN-OpenSource/mighty.component)
+provides utilities for rendering both standard and custom components.
 
-See \[\] section for more details on the ADaM Specification data model.
+See `vignette("adam_specification")` for more details on the ADaM
+Specification data model.
 
 For now, let’s assume `der_complsfl` doesn’t exist and we have to write
 it ourselves:
@@ -117,15 +135,72 @@ it ourselves:
 #'
 #' @type derivation
 #'
-#' @depends .self EOSSTT
+#' @depends ADSL EOSSTT
 #'
 #' @outputs COMPLSFL
+#' @code
 
 # Add a new column COMPLSFL based on the EOSSTT value
-.self <- .self |> dplyr::mutate(
+ADSL <- ADSL |> dplyr::mutate(
   COMPLSFL = dplyr::case_when(
     EOSSTT == "COMPLETED" ~ "Y",  # Mark "Y" if EOSSTT is "COMPLETED"
-    TRUE                   ~ "N"    # Mark "N" otherwise
+    TRUE                  ~ "N"   # Mark "N" otherwise
   )
 )
+```
+
+## How it works
+
+mighty processes three key inputs to automatically generate ADaM
+programs:
+
+1.  **ADaM domain specifications** - Define structure and requirements
+    for analysis datasets
+2.  **Code components** - Reusable building blocks referenced in
+    specifications
+3.  **Data availability context** - Information about which SDTM/ADaM
+    domains and columns are currently available
+
+The package intelligently orchestrates the execution order of
+derivations, parameters, and imputations, organizing these operations
+into structured, production-ready ADaM programs.
+
+> **Note:** Code components can be sourced from mighty.standards
+> (processed via mighty.component) or defined as custom user components,
+> depending on project requirements.
+
+See `vignette("trial_metadata")` and `vignette("adam_specification")`
+for more details on ADaM specifications, and
+`vignette("connect_to_data")` for more details on how source data is
+retrieved in the rendered programs.
+
+## The mighty ecosystem
+
+The mighty framework consists of these complementary packages:
+
+- **[mighty](https://github.com/NN-OpenSource/mighty)** - Core orchestration engine (this package)
+- **[mighty.metadata](https://github.com/NN-OpenSource/mighty.metadata?tab=readme-ov-file#mightymetadata)** - ADaM metadata management in YAML format
+- **[mighty.component](https://github.com/NN-OpenSource/mighty.component?tab=readme-ov-file#mightycomponent)** - Utilities enabling mighty to handle code
+  components
+- **[mighty.standards](https://github.com/NN-OpenSource/mighty.standards?tab=readme-ov-file#mightystandards)** - Standard component library with pre-built,
+  validated derivations (coming later)
+- **[mighty.ai](https://github.com/NN-OpenSource/mighty.ai?tab=readme-ov-file#mightyai)** - AI-powered helper for the mighty ecosystem (coming
+  later)
+- **[mighty.editor](https://github.com/NN-OpenSource/mighty.editor?tab=readme-ov-file#mightyeditor)** - An enhanced editor for handling ADaM
+  specifications and components (coming later)
+- **[mighty.toolbox](https://github.com/NN-OpenSource/mighty.toolbox?tab=readme-ov-file#mightytoolbox)** - A toolbox for define.xml generation and
+  validation of ADaM related deliverables according to CDISC and
+  regulatory requirements
+
+> **Note:** All packages in the mighty ecosystem are currently under
+> active development and are subject to change. Package names, features,
+> and functionality may evolve as the ecosystem matures.
+
+## Installation
+
+Install the development version from GitHub:
+
+``` r
+# Using pak (recommended)
+pak::pak("NN-OpenSource/mighty")
 ```

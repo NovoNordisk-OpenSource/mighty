@@ -55,7 +55,10 @@ params_read_data_code <- function(payload, domain, path_trial) {
 
   # Prepare template data
   by_domain <- split(payload_dt, by = "domain")
-  connector_path <- file.path(normalizePath(path_trial, winslash = "/"), "_connector.yml")
+  connector_path <- file.path(
+    normalizePath(path_trial, winslash = "/"),
+    "_connector.yml"
+  )
   return(list(
     connector_path = connector_path,
     domains = purrr::imap(by_domain, prepare_domain_data, .self = domain) |>

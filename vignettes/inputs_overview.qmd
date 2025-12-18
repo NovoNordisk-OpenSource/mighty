@@ -1,0 +1,74 @@
+---
+title: "Inputs Overview"
+vignette: >
+  %\VignetteIndexEntry{Inputs Overview}
+  %\VignetteEngine{quarto::html}
+  %\VignetteEncoding{UTF-8}
+knitr:
+  opts_chunk:
+    collapse: true
+    comment: '#>'
+---
+
+## Overview
+
+mighty requires three essential input building blocks:
+
+- **Trial Level Metadata**: Centralized trial metadata and dataset relationships
+- **ADaM specification**: Domain-specific blueprints defining content requirements
+- **Code components**: Reusable, validated code blocks for complex derivations
+
+This modular approach separates the *what* (specifications) from the *how* (code components), enabling efficient and consistent ADaM development.
+By providing these 3 building blocks, mighty takes care of organizing and rendering ADaM programs.
+
+Additionally (and optional), mighty can render programs that are executable, based on the available data:
+
+- **Data Model Metadata (optional)**: Metadata about available data sources (SDTM, metadata used for ADaM generation, and non-mighty ADaM datasets)
+
+## Trial Level Metadata
+
+The trial specification serves as the central repository for trial metadata required by mighty. It contains:
+
+- **Trial identification**: Unique identifiers for project tracking
+- **Primary keys**: Key variables for all tables relevant to ADaM domains, including SDTM, metadata (MD data sets), and ADaM tables
+
+The primary keys specified for each dataset establish the relationships between tables by defining the columns used for joining operations. When mighty needs to combine data from multiple sources, it uses these primary keys to determine the appropriate join logic across SDTM, metadata, and ADaM data sets. See `vignette("trial_metadata")` for more details.
+
+## ADaM Specification
+
+Each ADaM domain requires its own specification that acts as a comprehensive blueprint. The specification defines:
+
+- **Base tables**: Which SDTM domain(s) serve as the foundation
+- **Subsetting rules**: How to filter base domains during preparation
+- **Column requirements**: Both retained SDTM variables and derived variables
+- **Row operations**: Transformations such as derived parameters and imputations
+
+For detailed information about the ADaM specification data model and syntax, see `vignette("adam_specification")`.
+
+## Code Components
+
+Code components provide the implementation logic for complex derivations referenced in ADaM specifications. These pre-validated, reusable modules ensure consistency and reduce development time.
+
+The are three component sources:
+
+**Standard Library (mighty.standards)**
+
+- Standardized derivations and calculations
+- Thoroughly tested and validated
+
+**Custom Components**
+
+- Trial-specific derivations developed during study conduct
+- Tailored to unique protocol requirements
+- Maintained within the trial repository
+
+**Internal Components**
+
+- Core functionality managed by mighty
+- Data I/O operations and filtering
+- Join operations based on trial specification primary keys
+
+
+## Data Model Metadata (optional)
+
+When a trial is in conduct, the available data may change as a result of implementing new SDTM datasets, adding columns, creating and updating supplementary qualifiers datasets, etc. until DBL. This can happen when new data points are collected, or if the protocol is ammended. Mighty produces ADaM programs that are in alignment with the ADaM specification but if underlying data sources are not compliant with these, the generated programs will not be able to execute. Therefore mighty can use data model metadata to extract code that can be executed at any given time during trial conduct. See `vignette("missing_data_analysis")` for more details.

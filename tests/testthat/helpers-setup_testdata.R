@@ -52,7 +52,11 @@ setup_testdata <- function(
     # copy and modify connector config
     if (.Platform$OS.type == "windows") {
       # Normalize and convert to forward slashes
-      test_data_path <- normalizePath(test_data_path, winslash = "/", mustWork = FALSE)
+      test_data_path <- normalizePath(
+        test_data_path,
+        winslash = "/",
+        mustWork = FALSE
+      )
     }
     yaml <- test_path("fixtures", "_connector.yml") |>
       readLines() |>
@@ -63,9 +67,7 @@ setup_testdata <- function(
         .close = "}}"
       )
 
-    writeLines(yaml,
-      con = file.path(test_data_path, "_connector.yml")
-    )
+    writeLines(yaml, con = file.path(test_data_path, "_connector.yml"))
 
     # setup temporary data area
     data_path <- file.path(test_data_path, "data")

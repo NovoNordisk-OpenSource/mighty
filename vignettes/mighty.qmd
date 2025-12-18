@@ -1,7 +1,7 @@
 ---
-title: "mighty"
+title: "Get started"
 vignette: >
-  %\VignetteIndexEntry{mighty}
+  %\VignetteIndexEntry{Get Started}
   %\VignetteEngine{quarto::html}
   %\VignetteEncoding{UTF-8}
 knitr:
@@ -10,15 +10,216 @@ knitr:
     comment: '#>'
 ---
 
-# Getting started
+```{r}
+#| include: false
+#| eval: true
 
-`mighty`is an "orchestrater" to build ADaM programs from a specification, by 
-using standard components (such as those in 
-[`mighty.component`](https://github.com/NN-OpenSource/mighty.component)) and custom components 
-(that either cannot be standardised or hasn't been so yet).
+library(mighty)
+
+temp_dir <- file.path(tempdir(), "mighty_example")
+dir.create(temp_dir, showWarnings = FALSE, recursive = TRUE)
+assign("temp_dir", temp_dir, envir = .GlobalEnv)
 
 
-# TODO: How to use the package(?)
+trial_yaml <- 'trial_id: "0001"
+project_id: "0001"
+complete_id: "0001-0001"
+instance: "current"
 
-currently we basically create an initialisation file which will not
-be the case in the final product(?) 
+keys:
+  DM: [USUBJID, STUDYID]
+  LB: [USUBJID, STUDYID, LBSEQ]
+'
+writeLines(trial_yaml, file.path(temp_dir, "example_01_trial.yaml"))
+assign("trial_yaml", trial_yaml, envir = .GlobalEnv)
+
+
+adsl_yaml <- 'id: ADSL
+
+keys: [USUBJID, STUDYID]
+
+population:
+  base:
+    - domain: DM
+      depends:
+        - AGE
+      filter:
+        - \'!is.na(AGE)\'
+  global:
+    - filter: NA
+      depends:
+        - NA
+
+columns:
+  - id: USUBJID
+
+  - id: STUDYID
+
+  - id: ARM
+
+  - id: PLANNED_ARM
+    method: ARM
+
+  - id: AGE
+
+  - id: AGE_GRP1
+    component:
+      id: "age_group_01.R"
+'
+# The path to the age_group.R component needs to be an absolute path when
+# the vignette is rendered by `pkgdown`, but we don't want to show
+# that ugly tmp path to the users
+adsl_yaml_with_abspath <- gsub(
+  '"age_group_01.R"',
+  sprintf('"%s"', normalizePath(file.path(temp_dir, "age_group_01.R"), winslash = "/", mustWork = FALSE)),
+  adsl_yaml
+)
+writeLines(adsl_yaml_with_abspath, file.path(temp_dir, "example_01_adsl.yaml"))
+assign("adsl_yaml", adsl_yaml, envir = .GlobalEnv)
+
+
+component_code <- "#' @title Age group 01
+#' @description Grouping of age
+#' @type derivation
+#' @depends ADSL AGE
+#' @outputs AGE_GRP1
+#' @returns `ADSL`
+#' @code
+ADSL <- ADSL |>
+  dplyr::mutate(
+    AGE_GRP1 = cut(
+      AGE,
+      breaks = c(-Inf, 18, 65, 75, Inf),
+      labels = c(\"< 18 years\", \"18 - 64 years\", \"65 - 74 years\", \">= 75 years\"),
+      right = FALSE
+    )
+  )
+"
+writeLines(component_code, file.path(temp_dir, "age_group_01.R"))
+assign("component_code", component_code, envir = .GlobalEnv)
+
+
+main_script_content <- "# ADSL with 1 base domain
+#   - 4 predecessors
+#   - 1 renamed predecessor
+#   - 1 derivation
+
+# Load mighty
+library(mighty)
+
+# Generate ADaM program
+results <- mighty::generate_adam_code(
+  adam_specifications = \"example_01_adsl.yaml\",
+  path_trial_metadata = \"example_01_trial.yaml\",
+  standards_lib = \"mighty.standards\",
+  path_trial = \".\"
+)
+
+# Print rendered ADaM program
+results$programs$`1_ADSL` |> cat()
+"
+writeLines(main_script_content, file.path(temp_dir, "example_01_main.R"))
+assign("main_script_content", main_script_content, envir = .GlobalEnv)
+```
+
+# Your first mighty ADaM program
+
+Here is a minimal example that demonstrates how to specify and render a simple ADSL program with mighty to get you acquainted with the core concepts of the framework.
+
+## Study directory guidelines
+
+Mighty does not have any conditions on how your directory is structured. The only constraints are, there needs to be:
+
+- A location to store study-specific custom components
+- A [connector config file](https://novonordisk-opensource.github.io/connector/) that specifies where your trial data is located (SDTM, metadata, and ADaM). Mighty expects it to be located under `path_trial` with the name `_connector.yml`.
+- A location where the compiled ADaM programs can be written out to
+
+## Set up your trial metadata file
+
+This YAML file contains information that spans across all ADaM domains.
+This includes trial information and primary keys in different domains that are used for joining tables.
+
+For this example, we will focus on a simple ADSL table and only provide keys related to that domain.
+
+**example_01_trial.yaml**
+
+```{r}
+#| echo: false
+#| eval: true
+#| results: asis
+
+cat("```yml\n")
+cat(trial_yaml)
+cat("```")
+```
+
+## Set up your ADaM specification
+
+Provide a YAML file that specifies which columns to include in ADSL and how they are derived.
+
+This ADSL table contains 6 columns: 4 simple columns from the base domain, 1 renamed column, and 1 derivation using a custom component.
+
+**example_01_adsl.yaml**
+
+```{r}
+#| echo: false
+#| eval: true
+#| results: asis
+
+cat("```yml\n")
+cat(adsl_yaml)
+cat("```")
+```
+
+## Define your custom component
+
+The column `AGE_GRP1` in ADSL is derived by using a custom component that contains the logic to process the ADSL table by deriving the additional column `AGE_GRP1`.
+
+**age_group_01.R**
+
+```{r}
+#| echo: false
+#| eval: true
+#| results: asis
+
+cat("```r\n")
+cat(component_code)
+cat("```")
+```
+
+## Render the ADaM program
+
+Call mighty to consolidate, analyse and render your ADSL program:
+
+**example_01_main.R**
+
+```{r}
+#| echo: false
+#| eval: true
+#| results: asis
+
+cat("```r\n")
+cat(main_script_content)
+cat("\n```")
+```
+
+Printing the rendered ADaM program yields a complete program for generating ADSL based on the specifications
+
+```{r}
+#| echo: false
+#| eval: true
+#| results: asis
+
+# Execute the code generation
+results <- mighty::generate_adam_code(
+  adam_specifications = file.path(temp_dir, "example_01_adsl.yaml"),
+  path_trial_metadata = file.path(temp_dir, "example_01_trial.yaml"),
+  standards_lib = "mighty.standards",
+  path_trial = temp_dir
+)
+
+# Display the generated program with R formatting
+cat("```r\n")
+cat(results$programs$`1_ADSL`)
+cat("\n```")
+```

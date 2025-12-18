@@ -122,7 +122,10 @@ test_that("Reading adam specs and writing back produces the same result", {
     adam_specifications,
     environment()
   )
-  adam_specs <- lapply(adam_specifications_rendered, read_mighty_metadata_adam_domain)
+  adam_specs <- lapply(
+    adam_specifications_rendered,
+    read_mighty_metadata_adam_domain
+  )
   output_path <- withr::local_tempdir()
   write_adam_specs(adam_specs, output_path)
   # ACT ---------------------------------------------------------------------

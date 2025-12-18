@@ -1,0 +1,494 @@
+---
+title: "ADaM Specification"
+vignette: >
+  %\VignetteIndexEntry{adam_specification}
+  %\VignetteEngine{quarto::html}
+  %\VignetteEncoding{UTF-8}
+knitr:
+  opts_chunk:
+    collapse: true
+    comment: '#>'
+---
+
+# Overview
+
+The ADaM specification required by mighty follows the mighty.metadata format. This article discusses the structure and fields used to define ADaM datasets. Additional fields beyond those discussed here are ignored by mighty.
+
+## General structure
+
+Each ADaM domain is defined in its own YAML file with these main sections:
+
+1.  **Domain identifier** - The ADaM domain name
+2.  **Primary keys** - Unique identifiers for the dataset
+3.  **Population** - How to build the base table from SDTM domains
+4.  **Columns** - Which columns to include and how to create them
+5.  **Rows** - Operations that add, modify, or delete rows
+6.  **Parameters** (BDS only) - Parameter-level derivations
+
+# Domain identifier
+
+The domain identifier is specified at the top level of the YAML file.
+
+## Required Field
+
+| Field | Description            | Example |
+|-------|------------------------|---------|
+| `id`  | Name of the ADaM domain | `ADLB`  |
+
+## Example
+
+``` yml
+id: ADLB
+```
+
+# Primary keys
+
+Define the primary key variables that uniquely identify each row in your ADaM dataset.
+
+## Required Field
+
+| Field  | Description                                    | Example              |
+|--------|------------------------------------------------|----------------------|
+| `keys` | Array of variable names forming the primary key | `[USUBJID, PARAMCD]` |
+
+## Example
+``` yml
+keys: [USUBJID, PARAMCD, AVISIT]
+```
+
+# Population
+
+This section defines how to create the base population for your ADaM table from source SDTM domains and apply filters.
+
+## Structure
+
+The `population` section has two subsections:
+
+| Field    | Description                                        |
+|----------|----------------------------------------------------|
+| `base`   | Array of base SDTM domains with domain-specific filters |
+| `global` | Array of filters applied to the combined dataset   |
+
+## Filter execution order
+
+Understanding when filters are applied is essential for writing correct specifications. The following describes how filtering is implemented in the generated programs. Application of `SRC_` columns are thus not done at specification level:
+
+1. **Read data**: Base domains are read from SDTM
+2. **Add source tracking**: A temporary `SRC_` column is added to each domain to track its origin (only when domain-specific filters are present)
+4. **Apply domain-specific filters**: Filter expressions from `base.filter` are applied using the `SRC_` column to determine which conditions apply to which source domain
+5. **Drop `SRC_` column**: The temporary source tracking column is removed
+6. **Join external data**: If global filters reference external domains (e.g., `ADSL`), those datasets are joined
+7. **Apply global filters**: Filter expressions from `global.filter` are applied sequentially to the combined dataset
+8. **Continue with derivations**: Column and row operations proceed
+
+Domain-specific filters allow different inclusion criteria for different source domains, while global filters apply uniform criteria across the combined dataset.
+
+## Base domains
+
+Each entry in the `base` array specifies a source domain:
+
+| Field    | Description                                     | Notes |
+|----------|-------------------------------------------------|---------------|
+| `domain` | SDTM domain name                                                    | Case-sensitive |
+| `depends`| Columns needed for filtering this domain                            | Can be empty array `[]` |
+| `filter` | Filter specification. Must be an R expression that can be evaluated | Can be `NA` |
+
+### Domain-specific filtering
+
+Domain-specific filters allow you to apply different inclusion criteria to different source domains before they are combined. Each domain's filter expressions are combined with `&` (AND logic) and wrapped with `(SRC_ == 'domain_name' & conditions)`. Multiple domains' filter conditions are then combined with `|` (OR logic).
+
+This is useful when:
+
+- Different domains need different inclusion criteria
+- You want to exclude specific records from one domain but keep all records from another
+- Filtering logic depends on the source domain
+
+## Global filters
+
+Global filters are applied after row-binding and domain-specific filtering.
+
+| Field    | Description                         | Notes                                |
+|----------|-------------------------------------|--------------------------------------|
+| `depends`| Array of columns needed for global filtering | Include domain prefix (e.g., `ADSL.SAFFL`) when referencing a column outside the current domain |
+| `filter` | Filter specification. Must be an R expression that can be evaluated        | Applied to combined dataset. |
+
+### Using external domains in global filters
+
+Global filters can reference columns from external ADaM or SDTM domains by:
+
+1. Listing required columns in `global.depends` with domain prefix (e.g., `ADSL.SAFFL`)
+2. Writing filter expressions that reference the columns without the prefix (e.g., `SAFFL == "Y"`)
+
+mighty automatically handles the join operation using the primary keys defined in trial metadata.
+
+## Simple example
+
+``` yml
+population:
+  base:
+    - domain: LB
+      filter: NA
+      depends: NA
+  global:
+    - filter: NA
+      depends:
+        - NA
+```
+
+## Complex example
+
+``` yml
+population:
+  base:
+    - domain: LB
+      filter: NA
+      depends: NA
+    - domain: XL
+      filter:
+        - 'grepl("_CONV", TOPICCD)'
+      depends:
+        - TOPICCD
+  global:
+    - filter: 'LBCAT != "ANTIBODIES"'
+      depends:
+        - LBCAT
+    - filter: '!ARMNRS %in% c("SCREEN FAILURE")'
+      depends:
+        - ADSL.ARMNRS
+```
+
+## Key Points
+
+-   Multiple base domains are row-bound together
+-   Base filters apply to specific domains before combining
+-   Global filters apply to the combined dataset
+-   Column dependencies must include domain prefixes when from external domains (e.g., `ADSL.ARMNRS`)
+
+# Columns
+
+Define which columns to include in your ADaM dataset and how to create them.
+
+Column operations cannot modify the number of rows in the ADaM table. To modify rows, use the `rows` section (see below).
+
+The `columns` section is an array where each element defines one or more columns.
+
+## Fields
+
+Each column specification uses different fields depending on how the column is created:
+
+| Field       | Description                                                   | Notes |
+|-------------|---------------------------------------------------------------|-------|
+| `id`        | Name of the column in the final dataset                       | Required |
+| `method`    | Source location for simple operations                         | Use for copying/renaming columns |
+| `component` | Component definition for derivations                          | Object with `id` and optional `with` |
+| `depends`   | IDs of row or parameter operations that must complete first   | Array of strings (e.g., `rows.baseline_flag`, `parameters.bmi`) |
+
+### Component object
+
+When using `component`, it has these subfields:
+
+| Field | Description                                      | Notes |
+|-------|--------------------------------------------------|-------|
+| `id`  | Name of standard component or path to custom one | Required |
+| `with`| Parameters to pass to the component              | Object of key-value pairs |
+
+## Examples
+
+### Simple column operations
+
+1.  Adding a column from the base domain:
+
+    ``` yml
+    columns:
+      - id: USUBJID
+    ```
+
+    Retains the USUBJID variable from your base SDTM domain (e.g., LB.USUBJID).
+
+2.  Adding a column from another ADaM domain
+
+    ``` yml
+    columns:
+      - id: SAFFL
+        method: ADSL.SAFFL
+    ```
+
+    Joins the SAFFL variable from ADSL onto your current ADaM table using common keys.
+
+3.  Adding a column from another ADaM domain and renaming it
+
+    ``` yml
+    columns:
+      - id: ARM
+        method: ADSL.PLANNED_ARM
+    ```
+
+    Merges PLANNED_ARM from ADSL and names it as ARM in your table. The join is done via the common keys of the current dataset and ADSL.
+
+4.  Copying a column from the base domain with a new name
+
+    ``` yml
+    columns:
+      - id: LBSTRESN
+      - id: AVAL
+        method: LBSTRESN
+    ```
+
+    Creates a new column AVAL by copying the content of LBSTRESN from the base domain. Note that LBSTRESN must already be specified in the columns section. Both columns will exist in the resulting dataset.
+
+### Derived columns
+
+Derived columns use code components to perform data transformations. A code component can be:
+
+1.  Standard code component (Mustache template)
+2.  Custom component (plain R script)
+3.  Custom component (Mustache template)
+
+#### Examples (continued):
+
+5.  Adding a derived column using a standard code component
+
+    ``` yml
+    columns:
+      - id: ARM_GRP1
+        component:
+          id: arm_group_01
+    ```
+
+    Creates `ARM_GRP1` using the standard code component `arm_group_01`. The component's metadata defines which columns it depends on.
+
+6.  Adding a derived column using a custom code component (plain R script)
+
+    ``` yml
+    columns:
+      - id: ARM_GRP1
+        component:
+          id: path/to/code_component/arm_group_01.R
+    ```
+
+    For custom code components, provide the file path. Custom R scripts should contain the data manipulation code directly as executable script code, and metadata to declare dependencies and columns created by the component. For details, see `vignette("code_components")`.
+
+7.  Adding a derived column using a custom code component (Mustache template)
+
+    ``` yml
+    columns:
+      - id: ARM_GRP1
+        component:
+          id: path/to/code_component/arm_group_01.mustache
+    ```
+
+    Custom Mustache templates allow parameterization (see example 9).
+
+8.  Adding multiple derived columns with a single standard code component
+
+    ``` yml
+    columns:
+      - id: NEWFL01
+        component:
+          id: newfl_01
+      - id: NEWREA01
+        component:
+          id: newfl_01
+    ```
+
+    Adds both `NEWFL01` and `NEWREA01` columns by calling the standard code component `newfl_01`. The component must be designed to output both variables.
+
+9.  Adding a derived column using a parameterized code component
+
+    ``` yml
+    columns:
+      - id: AGE_GRP1
+        component:
+          id: age_group_01
+          with:
+            cut_points: c(20, 45)
+    ```
+
+    Creates `AGE_GRP1` using `age_group_01` code component with custom parameters. Parameters can only be passed to Mustache templates (standard components and custom Mustache components), not to plain R script components.
+
+10. Adding multiple derived columns with a single, parameterized code component
+
+    ``` yml
+    columns:
+      - id: A
+        component:
+          id: fn_AB
+          with:
+            param_1: 100
+            param_2: "This is a regular string"
+            param_3: min(1, 100)
+      - id: B
+        component:
+          id: fn_AB
+          with:
+            param_1: 100
+            param_2: "This is a regular string"
+            param_3: min(1, 100)
+    ```
+
+    Adds columns `A` and `B` using the same parameterized code component `fn_AB`. When one code component creates multiple columns, all columns **must** use identical parameter values.
+
+11. Adding a derived column that has a row dependency
+
+    ``` yml
+    columns:
+      - id: BASETYPE
+        component:
+          id: basetype_derivation
+        depends:
+          - rows.baseline_flag
+    ```
+
+    Creates `BASETYPE` using `basetype_derivation` code component, but only after the row operation `baseline_flag` completes. Note the `rows.` prefix for row dependencies.
+
+## Summary of column rules
+
+1.  A single component can produce multiple columns in the ADaM dataset. All columns generated by that component must have a corresponding entry in the columns section. The number of columns a component produces is determined by the component's code, not by the ADaM specification.
+2.  All parameters expected by the component need to be specified in the `with` section of the component specification.
+3.  When one code component creates multiple columns and the component takes one or more parameter values, all columns **must** use identical parameter values.
+4.  Dependencies must use appropriate prefixes: `rows.` for row operations (e.g., `rows.baseline_imputation`) or `parameters.` for parameter-level operations in BDS datasets (e.g., `parameters.bmi`).
+
+# Row operations
+
+Row operations are specified in the `rows` section of the ADaM domain YAML as an array.
+
+Like column derivations, row operations can use either standard components, custom Mustache templates, or custom R components.
+
+Row operations have an `id` field (user-specified identifier) and a `component` field. The `id` is needed because the same component can be used with different parameter values, and the `id` allows you to refer to a specific implementation when specifying dependencies.
+
+## Examples
+
+1.  Simple row operation
+
+    ``` yml
+    rows:
+      - id: baseline_flag
+        component:
+          id: add_baseline_visit
+    ```
+
+    Executes the `add_baseline_visit` standard code component. The specific actions depend on the code component's implementation.
+
+2.  Row operation with parameterized code component
+
+    ``` yml
+    rows:
+      - id: baseline_flag
+        component:
+          id: add_baseline_visit
+          with:
+            first_treatment_visit: n
+    ```
+
+    Specifies `add_baseline_visit` and passes the parameter `first_treatment_visit = n`.
+
+3.  Multiple row operations referencing the same code component
+
+    ``` yml
+    rows:
+      - id: locf_imputation
+        component:
+          id: impute_values
+          with:
+            method: LOCF
+      - id: nocb_imputation
+        component:
+          id: impute_values
+          with:
+            method: NOCB
+    ```
+
+    Uses the same code component `impute_values` twice with different parameter values. Unlike column operations, row operations allow the same code component to be called multiple times with different parameters.
+
+4.  Row operation depending on another row operation
+
+    ``` yml
+    rows:
+      - id: baseline_flag
+        component:
+          id: add_baseline_visit
+      - id: change_from_baseline
+        component:
+          id: calculate_chg
+        depends:
+          - rows.baseline_flag
+    ```
+
+    Runs `calculate_chg` only after `baseline_flag` is executed. Use this when operations must happen in a specific order. Note the `rows.` prefix in the dependency.
+
+# Parameters
+
+The `parameters` section is used primarily in BDS (Basic Data Structure) datasets to define parameter-level operations. These operations create new parameter records (e.g., adding BMI as a new PARAMCD) by deriving values across existing parameters.
+
+Parameters are specified as an array, similar to rows and columns.
+
+## Examples
+
+1.  Simple parameter operation
+
+    ``` yml
+    parameters:
+      - id: bmi
+        component:
+          id: bds_bmi
+    ```
+
+    Creates a new parameter (BMI) using the `bds_bmi` component. This typically derives BMI values from HEIGHT and WEIGHT parameters.
+
+2.  Parameter operation with parameters
+
+    ``` yml
+    parameters:
+      - id: bmi
+        component:
+          id: bds_bmi
+          with:
+            height: HEIGHT
+            weight: WEIGHT
+            by: [USUBJID, AVISITN]
+    ```
+
+    Creates BMI parameter with explicit specification of input parameters and grouping variables.
+
+3.  Parameter operation with dependencies
+
+    ``` yml
+    parameters:
+      - id: bmi
+        component:
+          id: bds_bmi
+      - id: bmi_category
+        component:
+          id: bds_groups
+        depends:
+          - parameters.bmi
+        with:
+          input: BMI
+          output: BMIGRP
+          bins: [0, 20, 25, 30, 100]
+          labels: ["<20", "20-<25", "25-<30", "30+"]
+    ```
+
+    Creates a BMI category parameter that depends on the BMI parameter being derived first. Note the `parameters.` prefix in the dependency.
+
+4.  Multiple parameters using the same component
+
+    ``` yml
+    parameters:
+      - id: protein
+        component:
+          id: add_lab_parameter
+          with:
+            test_name: Protein
+      - id: albumin
+        component:
+          id: add_lab_parameter
+          with:
+            test_name: Albumin
+    ```
+
+    Uses the same component to add multiple lab parameters with different test names.
+
+# Row vs. parameter operations
+
+The difference between row and parameter operations is entirely for the benifit of generating the define.xml document with mighty.toolbox. In mighty both operate the same way and follow the same rules for the ADaM specifications.

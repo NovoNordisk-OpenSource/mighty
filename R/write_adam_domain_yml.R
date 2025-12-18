@@ -140,11 +140,10 @@ convert_internal_to_yaml <- function(spec) {
           !any(is.na(item[[field]])) ||
             field %in% c("depend_rows", "parameters")
         ) {
-          if (
-            !(field %in%
-                c("depend_rows", "parameters") &&
-                any(is.na(item[[field]])))
-          ) {
+          if (!(
+              field %in% c("depend_rows", "parameters") &&
+              any(is.na(item[[field]]))
+          )) {
             reversed_item[[field]] <- item[[field]]
           }
         } else {

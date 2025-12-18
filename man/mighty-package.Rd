@@ -4,9 +4,16 @@
 \name{mighty-package}
 \alias{mighty}
 \alias{mighty-package}
-\title{mighty: What the Package Does (One Line, Title Case)}
+\title{mighty: ADaM Program Generation Through Declarative Specifications}
 \description{
-What the package does (one paragraph).
+Provides tools for generating ADaM programs in clinical trials using a declarative approach. Users specify what data structure and derivations they need through YAML-based specifications, rather than writing imperative code. The package handles dependency tracking between columns and rows, orchestrates code components, and automatically generates executable R programs for ADaM dataset creation.
+}
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://nn-opensource.github.io/mighty/}
+}
+
 }
 \author{
 \strong{Maintainer}: Matthew Phelps \email{mewp@novonordisk.com}

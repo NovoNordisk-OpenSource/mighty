@@ -1,7 +1,10 @@
 test_that("Error for col_compute action w/ invalid column name in UI data", {
   # SETUP -------------------------------------------------------------------
 
-  adam_specifications <- test_path("fixtures", "assert_valid_outputs_adsl_03.yml")
+  adam_specifications <- test_path(
+    "fixtures",
+    "assert_valid_outputs_adsl_03.yml"
+  )
   adam_specifications_rendered <- setup_yml_file_for_testing(
     adam_specifications,
     environment()
@@ -41,7 +44,10 @@ test_that("Error for col_compute action w/ invalid column name in UI data", {
 test_that("Error is triggered for a col_compute with two outputs that only have one output specified in the UI data", {
   # SETUP -------------------------------------------------------------------
 
-  adam_specifications <- test_path("fixtures", "assert_valid_outputs_adlb_01.yml")
+  adam_specifications <- test_path(
+    "fixtures",
+    "assert_valid_outputs_adlb_01.yml"
+  )
   adam_specifications_rendered <- setup_yml_file_for_testing(
     adam_specifications,
     environment()

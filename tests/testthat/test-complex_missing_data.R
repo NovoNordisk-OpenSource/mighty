@@ -533,11 +533,17 @@ test_that("Complex test w/ missing lb.LBSTRESN", {
   expect_no_error(x[[3]] |> source())
   expect_setequal(names(ADSL), cols_adsl1)
 
-  #remove connector save step from program 3 as this will fail on Windows
   if (.Platform$OS.type == "windows") {
+    # Remove connector save step from program 3 as this will fail on Windows
     prog3 <- strsplit(actual$programs[3][[1]], "\n")[[1]]
     prog3 <- prog3[-length(prog3)]
     actual$programs[3][[1]] <- paste(prog3, collapse = "\n")
+
+    # Clean up to release file handles before second execution
+    # This is for Windows to avoid file locking issues (error 1224)
+    rm(ADSL, ADLB, cnt, envir = .GlobalEnv)
+    gc()
+    Sys.sleep(0.5)
   }
 
   write_adam_programs(

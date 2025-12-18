@@ -521,7 +521,10 @@ test_that("Global filter and domain filter incl. adsl dependencies (lower case)"
     adam_specifications,
     environment()
   )
-  path_trial_metadata <- test_path("fixtures", "trial_metadata_lowercase_adsl.yml")
+  path_trial_metadata <- test_path(
+    "fixtures",
+    "trial_metadata_lowercase_adsl.yml"
+  )
   path_trial <- withr::local_tempdir()
 
   setup_testdata(
@@ -600,7 +603,10 @@ test_that("External predecessor dependencies are handled correctly in filter and
     adam_specifications,
     environment()
   )
-  path_trial_metadata <- test_path("fixtures", "trial_metadata_lowercase_adsl.yml")
+  path_trial_metadata <- test_path(
+    "fixtures",
+    "trial_metadata_lowercase_adsl.yml"
+  )
   path_trial <- withr::local_tempdir()
 
   setup_testdata(

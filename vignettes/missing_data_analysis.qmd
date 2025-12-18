@@ -1,7 +1,7 @@
 ---
-title: "Missing Data"
+title: "Missing Data Analysis"
 vignette: >
-  %\VignetteIndexEntry{missing_data}
+  %\VignetteIndexEntry{Missing Data Analysis}
   %\VignetteEngine{quarto::html}
   %\VignetteEncoding{UTF-8}
 knitr:
@@ -32,18 +32,18 @@ There are 3 types of missing data:
 2.  Missing columns inside existing domains
 3.  Missing/incomplete values inside columns
 
-Scenarios 1 and 2 will be handled by the mighty framework, but scenario 3 needs to be handled by the code components (e.g. inside a {mighty.component} function or custom component).
+Scenarios 1 and 2 will be handled by the mighty framework, but scenario 3 needs to be handled by the code components (e.g. within a standard component or custom component).
 
 # Workflow
 
-To handle missing domains and missing columns, {mighty.metadata} will extract available domains and columns from SDTM and metadata. ADaM is not in scope as this will be build, based on the specification yaml file. The list of available data is then passed to {mighty}, which will detect discrepancies from the specification and available data, create programs that satisfies with the specification (which will not be executable (or contain errors) due to missing data) along with programs that can be executed based on existing data, and a discrepancies list highlighting which parts of the specification cannot be implemented with the current data. {mighty.metadata} may be able to incorporate this file in the specification UI to display to the user which parts of the spec can be implemented currently.
+To handle missing domains and missing columns, mighty.metadata will extract available domains and columns from SDTM and metadata. ADaM is not in scope as this will be build, based on the specification yaml file. The list of available data is then passed to mighty, which will detect discrepancies from the specification and available data, create programs that satisfies with the specification (which will not be executable (or contain errors) due to missing data) along with programs that can be executed based on existing data, and a discrepancies list highlighting which parts of the specification cannot be implemented with the current data. Mighty.metadata may be able to incorporate this file in the specification UI to display to the user which parts of the spec can be implemented currently.
 
 Steps to Handle Missing Data:
 
 1. Wish-List Specification: Users create an ADaM specification containing all desired columns and row operations, regardless of data availability.
-2. Available Data: {mighty.metadata} supplies a [`Connector`](https://github.com/NovoNordisk-OpenSource/connector) object to {mighty} by which available data (SDTM and metadata) can be extracted.
-3. Dependency Generation: {mighty} combines the wish-list specification, and available data with corresponding code components to identify dependencies (via ancestor nodes in the topology).
-4. Code Generation: {mighty} generates programs in two versions:
+2. Available Data: mighty.metadata supplies a [`Connector`](https://github.com/NovoNordisk-OpenSource/connector) object to mighty by which available data (SDTM and metadata) can be extracted.
+3. Dependency Generation: mighty combines the wish-list specification, and available data with corresponding code components to identify dependencies (via ancestor nodes in the topology).
+4. Code Generation: mighty generates programs in two versions:
    a.  (Complete) programs based on the specification
    b.  (Executable) programs based on the available data and the parts of the specification that supports the available data. In the code, derivations that cannot be done, are still included in the program but are out commented. Before the out commented code is a sentence describing why the code is out commented. 
-5. Discrepancies list: TODO: Actions relying on missing ancestors are kept as a log (yaml) that can be absorbed by {mighty.metadata} for integration in specification editor, or displayed to the user. TODO: The input spec could be used with certain tagging to display non-derivable columns. TODO: The discepancy list can be used upstream by the trial execution pipeline to notify the user of which dependencies that are currently missing in data. This will create an overview of data collection state and implementation state of the specification.
+5. Discrepancies list: TODO: Actions relying on missing ancestors are kept as a log (yaml) that can be absorbed by mighty.metadata for integration in specification editor, or displayed to the user. TODO: The input spec could be used with certain tagging to display non-derivable columns. TODO: The discepancy list can be used upstream by the trial execution pipeline to notify the user of which dependencies that are currently missing in data. This will create an overview of data collection state and implementation state of the specification.

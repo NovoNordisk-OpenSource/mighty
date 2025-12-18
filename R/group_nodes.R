@@ -132,7 +132,6 @@ group_actions <- function(ordered_nodes, vertices, edges) {
 }
 
 
-
 #' Traverse and Group Actions in Dependency Tree
 #'
 #' This function recursively traverses a dependency tree of action nodes within

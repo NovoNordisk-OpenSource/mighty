@@ -1,4 +1,19 @@
-url: ~
+url: https://nn-opensource.github.io/mighty/
 template:
   bootstrap: 5
 
+articles:
+- title: "Articles"
+  navbar: Articles
+  contents:
+  - inputs_overview
+  - trial_metadata
+  - adam_specification
+  - code_components
+  - connect_to_data
+  - organizing_adam_programs
+  - missing_data_analysis
+- title: "Technical stuff"
+  navbar: Technical stuff
+  contents:
+  - dev_documentation

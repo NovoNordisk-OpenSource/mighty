@@ -5,7 +5,11 @@
 #' @param ruleset_name Schema name to determine applicable rules
 #' @return Invisible NULL if valid, throws error if invalid
 #' @noRd
-validate_business_logic <- function(yaml_data, yaml_file, ruleset_name = "adam_domain") {
+validate_business_logic <- function(
+  yaml_data,
+  yaml_file,
+  ruleset_name = "adam_domain"
+) {
   # Get applicable rules for this schema
   rules <- get_business_rules(ruleset_name)
 
