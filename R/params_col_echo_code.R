@@ -42,8 +42,7 @@ pre_process_generate_rename_left_join_code <- function(
     stop("The domain keys for ", join_dataset, " are not defined")
   }
   # Remove the join variables from the depend_cols
-  regexp <- paste0(by_vars, collapse = "|")
-  var_to_add <- depend_columns[!grepl(regexp, depend_columns)]
+  var_to_add <- setdiff(depend_columns, by_vars)
 
   # Remove all the domain prefixes
   var_to_add <- sub(".*\\.", "", var_to_add)
