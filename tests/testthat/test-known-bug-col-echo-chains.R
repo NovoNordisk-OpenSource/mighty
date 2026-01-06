@@ -92,6 +92,10 @@ columns:
     check_cross_domain_adam_dependencies = TRUE
   )
 
+  #remove connector save step from program 3 as this will fail on Windows
+  actual$programs[3][[1]] <-
+    remove_connector_write_step(actual$programs[3][[1]])
+
   write_adam_programs(actual$programs, path_trial, style = TRUE)
   x <- list.files(path_trial, pattern = ".R", full.names = TRUE)
 
