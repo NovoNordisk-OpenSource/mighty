@@ -20,6 +20,9 @@ Each ADaM domain is defined in its own YAML file with these main sections:
 
 1.  **Domain identifier** - The ADaM domain name
 2.  **Primary keys** - Unique identifiers for the dataset
+3.  **Label** - Label of the ADaM dataset
+4.  **Class** - CDISC class of the dataset
+5.  **Structure** - Text description of the structure of the dataset
 3.  **Population** - How to build the base table from SDTM domains
 4.  **Columns** - Which columns to include and how to create them
 5.  **Rows** - Operations that add, modify, or delete rows
@@ -54,6 +57,57 @@ Define the primary key variables that uniquely identify each row in your ADaM da
 ## Example
 ``` yml
 keys: [USUBJID, PARAMCD, AVISIT]
+```
+
+# Label
+
+A descriptive label for the ADaM domain.
+
+## Required Field
+
+| Field   | Description                        | Example                        |
+|---------|------------------------------------|--------------------------------|
+| `label` | Human-readable domain description | `Laboratory Analysis Dataset` |
+
+## Example
+``` yml
+label: Laboratory Analysis Dataset
+```
+
+# Class
+
+The ADaM dataset class according to ADaM standards.
+
+## Required Field
+
+| Field   | Description                    | Example                   |
+|---------|--------------------------------|---------------------------|
+| `class` | ADaM class of the dataset      | `BASIC DATA STRUCTURE`    |
+
+## Common values
+
+- `SUBJECT LEVEL ANALYSIS DATASET` - For ADSL
+- `BASIC DATA STRUCTURE` - For BDS datasets (ADLB, ADVS, etc.)
+- `OCCURRENCE DATA STRUCTURE` - For OCCDS datasets (ADAE, ADCM, etc.)
+
+## Example
+``` yml
+class: BASIC DATA STRUCTURE
+```
+
+# Structure
+
+A description of the dataset structure that specifies the grain/level of the data.
+
+## Required Field
+
+| Field       | Description                          | Example                                                   |
+|-------------|--------------------------------------|-----------------------------------------------------------|
+| `structure` | Description of dataset granularity   | `One record per subject per parameter per analysis visit` |
+
+## Example
+``` yml
+structure: One record per subject per parameter per analysis visit
 ```
 
 # Population

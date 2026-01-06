@@ -3,7 +3,10 @@ test_that("Depends parameters replaced with actual user-supplied values", {
 
   yml <- "
 id: ADSL
-keys: []
+label: Subject Level Analysis Dataset
+class: SUBJECT LEVEL ANALYSIS DATASET
+structure: One record per subject
+keys: [USUBJID]
 population:
   base:
     - domain: DM

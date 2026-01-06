@@ -1,4 +1,7 @@
 id: ADVS
+label: Vital Signs Analysis Dataset
+class: BASIC DATA STRUCTURE
+structure: One record per subject per parameter per analysis visit
 keys:
   - USUBJID
   - PARAMCD

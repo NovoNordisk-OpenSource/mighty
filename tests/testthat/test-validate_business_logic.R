@@ -4,7 +4,10 @@ test_that("Too many specifications for column fail yaml validation checks", {
 
   yaml_content <- "
 id: ADLB
-keys: []
+label: Laboratory Analysis Dataset
+class: BASIC DATA STRUCTURE
+structure: One record per subject per parameter per analysis visit
+keys: [USUBJID]
 population:
   base:
     - domain: LB
@@ -35,86 +38,15 @@ columns:
     )
 })
 
-
-test_that("Columns parameters with no code_id fail yaml validation checks", {
-  # SETUP ----------------------------------------------------------------------
-
-  yaml_content <- "
-id: ADLB
-keys: []
-population:
-  base:
-    - domain: LB
-      depends:
-        - NA
-      filter: NA
-  global:
-    - filter: 'SAFFL == \"Y\"'
-      depends:
-        - SAFFL
-columns:
-  - id: VAR1
-    component:
-      with:
-        parm1: A
-  - id: VAR2
-    component:
-      with:
-        parm1: A
-  - id: VAR3
-"
-  yaml_file <- create_temp_yaml(yaml_content)
-
-  # ACT / ASSERT ---------------------------------------------------------------
-
-  read_mighty_metadata_adam_domain(yaml_file) |>
-    expect_error("The following columns have parameters but no code_id")
-  read_mighty_metadata_adam_domain(yaml_file) |>
-    expect_error("VAR2")
-})
-
-test_that("Multiple business logic validations fail", {
-  # SETUP ----------------------------------------------------------------------
-
-  yaml_content <- "
-id: ADLB
-keys: []
-population:
-  base:
-    - domain: LB
-      depends:
-        - NA
-      filter: NA
-  global:
-    - filter: 'SAFFL == \"Y\"'
-      depends:
-        - SAFFL
-columns:
-  - id: VAR1
-    component:
-      with:
-        param1: 5
-  - id: VAR2
-    depends:
-      - rows.A
-  - id: VAR3
-rows: []
-"
-  yaml_file <- create_temp_yaml(yaml_content)
-
-  # ACT / ASSERT ---------------------------------------------------------------
-
-  read_mighty_metadata_adam_domain(yaml_file) |>
-    expect_snapshot_error()
-})
-
-
 test_that("row_depends with missing row_action definition caught", {
   # SETUP ----------------------------------------------------------------------
 
   yaml_content <- "
 id: ADLB
-keys: []
+label: Laboratory Analysis Dataset
+class: BASIC DATA STRUCTURE
+structure: One record per subject per parameter per analysis visit
+keys: [USUBJID]
 population:
   base:
     - domain: LB

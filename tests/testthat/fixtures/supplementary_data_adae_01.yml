@@ -1,4 +1,7 @@
 id: ADAE
+label: Adverse Events Analysis Dataset
+class: OCCURRENCE DATA STRUCTURE
+structure: One record per subject per adverse event
 keys:
   - USUBJID
   - AESEQ

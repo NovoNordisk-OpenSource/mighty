@@ -35,7 +35,9 @@ assign("trial_yaml", trial_yaml, envir = .GlobalEnv)
 
 
 adsl_yaml <- 'id: ADSL
-
+label: Subject Level Analysis Dataset
+class: SUBJECT LEVEL ANALYSIS DATASET
+structure: One record per subject
 keys: [USUBJID, STUDYID]
 
 population:

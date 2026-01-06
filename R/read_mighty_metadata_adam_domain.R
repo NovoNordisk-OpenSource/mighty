@@ -28,7 +28,8 @@ read_mighty_metadata_adam_domain <- function(yaml_file_path) {
   checkmate::assert_string(yaml_file_path)
   checkmate::assert_file_exists(yaml_file_path)
 
-  yaml_content <- yaml::read_yaml(yaml_file_path) |>
+  yaml_content <- yaml_file_path |>
+    mighty.metadata::mighty_metadata() |>
     convert_to_NA_character()
 
   checkmate::assert_list(yaml_content)

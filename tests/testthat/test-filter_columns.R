@@ -25,6 +25,9 @@ keys:
   adam_specifications <- file.path(path_trial, "ui_yml.yml")
   yml_1 <- "
 id: ADSL
+label: Subject Level Analysis Dataset
+class: SUBJECT LEVEL ANALYSIS DATASET
+structure: One record per subject
 keys: [USUBJID]
 population:
   base:
@@ -63,6 +66,9 @@ columns:
   # YAML 2 -----------------------------------------------------------------
   yml_1 <- "
 id: ADLB
+label: Laboratory Analysis Dataset
+class: BASIC DATA STRUCTURE
+structure: One record per subject per parameter per analysis visit
 keys: [USUBJID]
 population:
   base:

@@ -3,7 +3,10 @@ test_that("Error when code component outputs not referenced in YML", {
 
   yml <- "
 id: ADSL
-keys: []
+keys: [USUBJID]
+label: foo
+class: SUBJECT LEVEL ANALYSIS DATASET
+structure: SUBJECT LEVEL ANALYSIS DATASET
 population:
   base:
     - domain: DM
@@ -48,7 +51,6 @@ ADSL <- ADSL |>
   path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
   output_path <- trial_path
   # ACT & ASSERT ------------------------------------------------------------
-
   generate_adam_code(
     adam_specifications = adam_specifications,
     path_trial_metadata = path_trial_metadata,

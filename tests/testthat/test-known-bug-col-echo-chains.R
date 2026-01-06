@@ -3,6 +3,9 @@ test_that("Known bug when doing chains of col_echos using same names", {
 
   yaml_content_adsl <- "
 id: ADSL
+label: Subject Level Analysis Dataset
+class: SUBJECT LEVEL ANALYSIS DATASET
+structure: One record per subject
 keys: [USUBJID, STUDYID]
 population:
   base:
@@ -28,12 +31,16 @@ columns:
 
   yaml_content_adlb <- "
 id: ADLB
+label: Laboratory Analysis Dataset
+class: BASIC DATA STRUCTURE
+structure: One record per subject per parameter per analysis visit
 keys: [USUBJID, STUDYID]
 population:
   base:
     - domain: lb
       depends:
-        - [VISITNUM, LBTESTCD]
+        - VISITNUM
+        - LBTESTCD
       filter: \"(VISITNUM == 13 & LBTESTCD == 'BASO')\"
   global:
     - filter: NA

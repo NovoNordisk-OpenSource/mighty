@@ -5,7 +5,10 @@ test_that("No source data makes all actions non-executable", {
 
   yml <- "
 id: ADSL
-keys: []
+label: Subject Level Analysis Dataset
+class: SUBJECT LEVEL ANALYSIS DATASET
+structure: One record per subject
+keys: [USUBJID]
 population:
   base:
     - domain: DM
@@ -56,7 +59,10 @@ test_that("Available source data makes all actions executable", {
 
   yml <- "
 id: ADSL
-keys: []
+label: Subject Level Analysis Dataset
+class: SUBJECT LEVEL ANALYSIS DATASET
+structure: One record per subject
+keys: [USUBJID]
 population:
   base:
     - domain: dm
@@ -117,7 +123,10 @@ test_that("Missing variable in source data makes filter action non-executable", 
 
   yml <- "
 id: ADSL
-keys: []
+label: Subject Level Analysis Dataset
+class: SUBJECT LEVEL ANALYSIS DATASET
+structure: One record per subject
+keys: [USUBJID]
 population:
   base:
     - domain: dm
@@ -201,7 +210,10 @@ test_that("Missing variable in source data with no filter impact keeps filter ex
 
   yml <- "
 id: ADSL
-keys: []
+label: Subject Level Analysis Dataset
+class: SUBJECT LEVEL ANALYSIS DATASET
+structure: One record per subject
+keys: [USUBJID]
 population:
   base:
     - domain: dm
@@ -274,6 +286,9 @@ test_that("Missing variables in source data makes filter action non-executable -
   trial_path <- withr::local_tempdir()
   yml <- "
 id: ADLB
+label: Laboratory Analysis Dataset
+class: BASIC DATA STRUCTURE
+structure: One record per subject per parameter per analysis visit
 keys:
   - USUBJID
   - STUDYID
@@ -371,7 +386,10 @@ test_that("Missing variable in source data makes actions executable but deactiva
 
   yml <- "
 id: ADSL
-keys: []
+label: Subject Level Analysis Dataset
+class: SUBJECT LEVEL ANALYSIS DATASET
+structure: One record per subject
+keys: [USUBJID]
 population:
   base:
     - domain: dm
@@ -456,7 +474,10 @@ test_that("Missing domain in source data makes actions non-executable", {
 
   yml <- "
 id: ADSL
-keys: []
+label: Subject Level Analysis Dataset
+class: SUBJECT LEVEL ANALYSIS DATASET
+structure: One record per subject
+keys: [USUBJID]
 population:
   base:
     - domain: dm
@@ -525,7 +546,10 @@ test_that("Missing base domain does not allow execution based on available data 
 
   yml <- "
 id: ADSL
-keys: []
+label: Subject Level Analysis Dataset
+class: SUBJECT LEVEL ANALYSIS DATASET
+structure: One record per subject
+keys: [USUBJID]
 population:
   base:
     - domain: dm
@@ -595,7 +619,10 @@ test_that("Missing columns in one base domain are disregarded in other base doma
 
   yml <- "
 id: ADSL
-keys: []
+label: Subject Level Analysis Dataset
+class: SUBJECT LEVEL ANALYSIS DATASET
+structure: One record per subject
+keys: [USUBJID]
 population:
   base:
     - domain: dm
@@ -699,6 +726,9 @@ test_that("Filter removes missing base domain variables and creates lineage mess
 
   yml <- "
 id: ADLB
+label: Laboratory Analysis Dataset
+class: BASIC DATA STRUCTURE
+structure: One record per subject per parameter per analysis visit
 keys:
   - USUBJID
   - STUDYID
