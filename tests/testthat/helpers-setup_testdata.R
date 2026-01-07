@@ -45,7 +45,7 @@ setup_testdata <- function(
 ) {
   testdata <- match.arg(testdata)
   # TODO: Should we only allow a set of SDTM domains to be available (in
-  # case sdtmpharmaverse gets extended?)
+  # case pharmaversesdtm gets extended?)
   # Currently: allow any
 
   if (testdata == "pharmaverse") {
@@ -109,7 +109,7 @@ setup_testdata <- function(
         )
       }
     )
-    # create ADaM test data based on pharmaversadam
+    # create ADaM test data based on pharmaverseadam
     # loop over adam_domains to store data into adam_testdata_path
     lapply(
       adam_domains,

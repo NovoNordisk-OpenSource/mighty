@@ -191,7 +191,7 @@ cat("```")
 
 ## Render the ADaM program
 
-Call mighty to consolidate, analyse and render your ADSL program:
+Call mighty to consolidate, analyze and render your ADSL program:
 
 **example_01_main.R**
 

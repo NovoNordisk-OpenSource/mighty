@@ -8,7 +8,7 @@
 #' @details
 #' For each action in the input table, this function:
 #' 1. Calls define_params() to determine the correct parameters based on the code_id
-#' 2. Renders the code component using the mighty.componenst library
+#' 2. Renders the code component using the mighty.component library
 #' 3. Adds a node header and stores the generated code back in the actions table
 #' 4. Handles special cases for actions with missing data or execution issues
 #' 5. Comments out code for actions that cannot execute due to missing dependencies

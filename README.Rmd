@@ -91,7 +91,7 @@ Code components can either be validated standard components or custom (un-valida
 
 Notice the `.R` extension. Custom components are simply R scripts that adhere to a few simple rules. See `vignette("code_components")` for more details.
 
-As mighty matures, more of these components will be pre-defined and ready for use, so fewer compononents would need to be defined by the user. Standard components are provided by [`mighty.standards`](https://github.com/NN-OpenSource/mighty.standards), while [`mighty.component`](https://github.com/NN-OpenSource/mighty.component) provides utilities for rendering both standard and custom components.
+As mighty matures, more of these components will be pre-defined and ready for use, so fewer components would need to be defined by the user. Standard components are provided by [`mighty.standards`](https://github.com/NN-OpenSource/mighty.standards), while [`mighty.component`](https://github.com/NN-OpenSource/mighty.component) provides utilities for rendering both standard and custom components.
 
 See `vignette("adam_specification")` for more details on the ADaM Specification data model.
 

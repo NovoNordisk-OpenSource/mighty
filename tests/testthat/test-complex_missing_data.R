@@ -20,7 +20,7 @@ test_that("Complex test w/ missing dm_vaccine.SEX", {
     remove_cols = data.table(domain = c("dm_vaccine"), columns = c("SEX"))
   )
   cnt <- connector::connect(file.path(path_trial, "_connector.yml"))
-  standards_lib <- "mighy.standards"
+  standards_lib <- "mighty.standards"
 
   # ACT ---------------------------------------------------------------------
 
@@ -176,7 +176,7 @@ test_that("Complex test w/ missing dm_vaccine.AGE and dm.SEX", {
     )
   )
   cnt <- connector::connect(file.path(path_trial, "_connector.yml"))
-  standards_lib <- "mighy.standards"
+  standards_lib <- "mighty.standards"
 
   # ACT ---------------------------------------------------------------------
 
@@ -385,7 +385,7 @@ test_that("Complex test w/ missing lb.LBSTRESN", {
     remove_cols = data.table(domain = c("lb"), columns = c("LBSTRESN"))
   )
   cnt <- connector::connect(file.path(path_trial, "_connector.yml"))
-  standards_lib <- "mighy.standards"
+  standards_lib <- "mighty.standards"
 
   # ACT ---------------------------------------------------------------------
 

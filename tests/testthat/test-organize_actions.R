@@ -108,7 +108,7 @@ test_that("Multiple interacting domains are grouped correctly", {
 })
 
 
-test_that("Test that selection of primary domain superseeds minimizing the number of programs", {
+test_that("Test that selection of primary domain supersedes minimizing the number of programs", {
   # SETUP -------------------------------------------------------------------
 
   edges <- data.table(

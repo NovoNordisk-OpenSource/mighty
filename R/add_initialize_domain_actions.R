@@ -12,7 +12,7 @@ add_initialize_domain_actions <- function(actions, ui_init) {
   )
 
   domain_init_actions <-
-    lapply(seq_len(length(col_copy_outputs)), function(i) {
+    lapply(seq_along(col_copy_outputs), function(i) {
       domain_i <- names(col_copy_outputs)[[i]]
 
       # The output columns from domain_init consists of all outputs from

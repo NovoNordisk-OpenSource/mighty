@@ -263,7 +263,7 @@ remove_child_filter_edges <- function(edges, actions) {
 
       # Remove edges from filter action to the identified children
       edges <- edges[!(
-          edges$parent_node == filter_action$node_id &
+        edges$parent_node == filter_action$node_id &
           edges$node_id %in% children_to_remove
       )]
     }

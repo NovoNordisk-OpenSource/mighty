@@ -1,4 +1,4 @@
-test_that("Global filter and domain filter are equivilent when same filter use on each domain", {
+test_that("Global filter and domain filter are equivalent when same filter use on each domain", {
   # ARRANGE -----------------------------------------------------------------
   path_trial <- withr::local_tempdir()
   trial_yml <- '

@@ -178,7 +178,7 @@ test_that("Cycles are detected", {
 })
 
 
-test_that("Disconnected components afre handled correctly", {
+test_that("Disconnected components a, f, r, e handled correctly", {
   # SETUP -------------------------------------------------------------------
 
   # Create a graph with two disconnected components:

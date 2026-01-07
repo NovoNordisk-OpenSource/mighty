@@ -61,7 +61,7 @@ assert_outputs_identical <- function(x) {
           i,
           unlist(get("outputs_from_code"))
         ],
-        Outputs_from_specificaton = x_error[i, unlist(get("outputs"))]
+        Outputs_from_specification = x_error[i, unlist(get("outputs"))]
       )
   }
 

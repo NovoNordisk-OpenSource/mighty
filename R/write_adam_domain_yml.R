@@ -3,7 +3,7 @@
 #' @description
 #' Writes a collection of ADaM specifications to individual
 #' YAML files (file per domain). This is the main entry point for
-#' exporting ADaM specifications from internal datamodel back to YAML format.
+#' exporting ADaM specifications from internal data model back to YAML format.
 #'
 #' @param adam_specs A named list of ADaM specifications, where each element
 #'   represents a domain specification. Names should correspond to domain names
@@ -33,7 +33,7 @@
 #' @seealso
 #' \code{\link{write_adam_domain_yml}} for writing individual domain specifications
 #' \code{\link{convert_internal_to_yaml}} for internal structure conversion.
-#' IMPORTANT: In case of changes to internal datamodel (e.g. proposal to change
+#' IMPORTANT: In case of changes to internal data model (e.g. proposal to change
 #' 'source' to 'depends') the convert_internal_to_yaml must be updated.
 #'
 #' @noRd
@@ -66,7 +66,7 @@ write_adam_specs <- function(adam_specs, output_dir = ".") {
 #'
 #' # Write to specific directory
 #' output_path <- write_adam_domain_yml(adae_spec, "specs/ADAE.yml")
-#'}
+#' }
 #'
 #' @noRd
 write_adam_domain_yml <- function(spec, output_path) {
@@ -140,10 +140,9 @@ convert_internal_to_yaml <- function(spec) {
           !any(is.na(item[[field]])) ||
             field %in% c("depend_rows", "parameters")
         ) {
-          if (!(
-              field %in% c("depend_rows", "parameters") &&
-              any(is.na(item[[field]]))
-          )) {
+          if (
+            !(field %in% c("depend_rows", "parameters") && anyNA(item[[field]]))
+          ) {
             reversed_item[[field]] <- item[[field]]
           }
         } else {

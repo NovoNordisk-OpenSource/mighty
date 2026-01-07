@@ -17,7 +17,7 @@ test_that("Error for col_compute action w/ invalid column name in UI data", {
     test_data_path = path_trial,
     sdtm_domains = c("dm", "dm_vaccine")
   )
-  standards_lib <- "mighy.standards"
+  standards_lib <- "mighty.standards"
 
   # ACT -------------------------------------------------------------------
 
@@ -60,7 +60,7 @@ test_that("Error is triggered for a col_compute with two outputs that only have 
     test_data_path = path_trial,
     sdtm_domains = c("lb")
   )
-  standards_lib <- "mighy.standards"
+  standards_lib <- "mighty.standards"
 
   # ACT -------------------------------------------------------------------
 

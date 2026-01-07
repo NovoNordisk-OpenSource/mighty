@@ -3,7 +3,7 @@ test_that("Check that action types are classified correctly", {
 
   adam_specifications <- c(
     testthat::test_path("fixtures", "skeleton_adsl_with_age_sex.yml"),
-    testthat::test_path("fixtures", "categorisation_of_action_type_adlb_01.yml")
+    testthat::test_path("fixtures", "categorization_of_action_type_adlb_01.yml")
   )
   adam_specifications_rendered <- setup_yml_file_for_testing(
     adam_specifications,
@@ -17,7 +17,7 @@ test_that("Check that action types are classified correctly", {
     test_data_path = path_trial,
     sdtm_domains = c("lb", "sv")
   )
-  standards_lib <- "mighy.standards"
+  standards_lib <- "mighty.standards"
 
   # ACT -------------------------------------------------------------------
 

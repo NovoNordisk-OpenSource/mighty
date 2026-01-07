@@ -18,7 +18,7 @@ Code components are the building blocks that implement the actual derivations, t
 - **Mustache template components** - Parameterizable templates (`.mustache` files)
 
 
-# Columm vs Row components
+# Column vs Row components
 Beyond their technical format, components are classified by what they do to your data:
 
 **Column components** (`@type derivation`) create new columns in your dataset. They take existing columns as inputs and derive new variables. For example, calculating an age group from age, or computing a relative day from two dates. Column components:
@@ -73,7 +73,7 @@ Detailed explanation of what the component does.
 
 ```r
 #' @param domain Name of the ADaM domain
-#' @param cutpoints Vector of age cutpoints
+#' @param cut_points Vector of age cut points
 ```
 
 

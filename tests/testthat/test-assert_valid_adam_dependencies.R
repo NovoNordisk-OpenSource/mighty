@@ -20,7 +20,7 @@ test_that("Complete spec passes when cross-domain disabled", {
     test_data_path = path_trial,
     sdtm_domains = c("lb")
   )
-  standards_lib <- "mighy.standards"
+  standards_lib <- "mighty.standards"
 
   # EXPECT -------------------------------------------------------------------
 
@@ -71,7 +71,7 @@ test_that("Complete spec passes when cross-domain enabled", {
     test_data_path = path_trial,
     sdtm_domains = c("lb")
   )
-  standards_lib <- "mighy.standards"
+  standards_lib <- "mighty.standards"
 
   # EXPECT -------------------------------------------------------------------
 
@@ -122,7 +122,7 @@ test_that("Incomplete cross-domain ADaM spec fails when checks enabled", {
     test_data_path = path_trial,
     sdtm_domains = c("lb")
   )
-  standards_lib <- "mighy.standards"
+  standards_lib <- "mighty.standards"
 
   # ACT -------------------------------------------------------------------
 
@@ -167,7 +167,7 @@ test_that("Incomplete cross-domain ADaM spec passes when checks disabled", {
     test_data_path = path_trial,
     sdtm_domains = c("lb")
   )
-  standards_lib <- "mighy.standards"
+  standards_lib <- "mighty.standards"
 
   # EXPECT -------------------------------------------------------------------
 
@@ -218,7 +218,7 @@ test_that("Incomplete within-domain ADaM spec fails when checks disabled", {
     test_data_path = path_trial,
     sdtm_domains = c("lb")
   )
-  standards_lib <- "mighy.standards"
+  standards_lib <- "mighty.standards"
 
   # ACT -------------------------------------------------------------------
 
@@ -255,7 +255,7 @@ test_that("Incomplete within-domain ADaM spec fails when checks enabled", {
     test_data_path = path_trial,
     sdtm_domains = c("lb")
   )
-  standards_lib <- "mighy.standards"
+  standards_lib <- "mighty.standards"
 
   # ACT -------------------------------------------------------------------
 
@@ -292,7 +292,7 @@ test_that("Incomplete within and cross-domain specs fail when checks disabled", 
     test_data_path = path_trial,
     sdtm_domains = c("lb")
   )
-  standards_lib <- "mighy.standards"
+  standards_lib <- "mighty.standards"
 
   # ACT -------------------------------------------------------------------
 
@@ -337,7 +337,7 @@ test_that("Incomplete within and cross-domain specs fail when checks enabled", {
     test_data_path = path_trial,
     sdtm_domains = c("lb")
   )
-  standards_lib <- "mighy.standards"
+  standards_lib <- "mighty.standards"
 
   # ACT -------------------------------------------------------------------
 
@@ -382,7 +382,7 @@ test_that("Incomplete ADSL filter spec fails when cross-domain enabled", {
     test_data_path = path_trial,
     sdtm_domains = c("lb")
   )
-  standards_lib <- "mighy.standards"
+  standards_lib <- "mighty.standards"
 
   # ACT -------------------------------------------------------------------
 
@@ -427,7 +427,7 @@ test_that("Incomplete ADSL filter spec passes when cross-domain disabled", {
     test_data_path = path_trial,
     sdtm_domains = c("lb")
   )
-  standards_lib <- "mighy.standards"
+  standards_lib <- "mighty.standards"
 
   # EXPECT -------------------------------------------------------------------
 
@@ -477,7 +477,7 @@ test_that("Incomplete ADSL filter and actions fail when checks enabled", {
     test_data_path = path_trial,
     sdtm_domains = c("lb")
   )
-  standards_lib <- "mighy.standards"
+  standards_lib <- "mighty.standards"
 
   # ACT -------------------------------------------------------------------
 
@@ -522,7 +522,7 @@ test_that("Incomplete ADSL filter and actions pass when checks disabled", {
     test_data_path = path_trial,
     sdtm_domains = c("lb")
   )
-  standards_lib <- "mighy.standards"
+  standards_lib <- "mighty.standards"
 
   # EXPECT -------------------------------------------------------------------
 
@@ -573,7 +573,7 @@ test_that("Incomplete ADSL filter in two domains fails when checks enabled", {
     test_data_path = path_trial,
     sdtm_domains = c("lb")
   )
-  standards_lib <- "mighy.standards"
+  standards_lib <- "mighty.standards"
 
   # ACT -------------------------------------------------------------------
 
@@ -617,7 +617,7 @@ test_that("Incomplete ADSL filter in two domains passes when checks disabled", {
     test_data_path = path_trial,
     sdtm_domains = c("lb")
   )
-  standards_lib <- "mighy.standards"
+  standards_lib <- "mighty.standards"
 
   # EXPECT -------------------------------------------------------------------
 
@@ -666,7 +666,7 @@ test_that("Incomplete within-domain in two domains fails when checks disabled", 
     test_data_path = path_trial,
     sdtm_domains = c("lb")
   )
-  standards_lib <- "mighy.standards"
+  standards_lib <- "mighty.standards"
 
   # ACT -------------------------------------------------------------------
 
@@ -709,7 +709,7 @@ test_that("Incomplete within-domain spec w/ component fails when x-check disable
     test_data_path = path_trial,
     sdtm_domains = c("lb")
   )
-  standards_lib <- "mighy.standards"
+  standards_lib <- "mighty.standards"
 
   # ACT -------------------------------------------------------------------
 
@@ -754,7 +754,7 @@ test_that("Incomplete within-domain spec w/ component fails when x-check enabled
     test_data_path = path_trial,
     sdtm_domains = c("lb")
   )
-  standards_lib <- "mighy.standards"
+  standards_lib <- "mighty.standards"
 
   # ACT -------------------------------------------------------------------
 
@@ -799,7 +799,7 @@ test_that("Incomplete filter_depend_cols fails when x-check enabled", {
     test_data_path = path_trial,
     sdtm_domains = c("lb")
   )
-  standards_lib <- "mighy.standards"
+  standards_lib <- "mighty.standards"
 
   # ACT -------------------------------------------------------------------
 
@@ -844,7 +844,7 @@ test_that("Incomplete filter_depend_cols fails when x-check disabled", {
     test_data_path = path_trial,
     sdtm_domains = c("lb")
   )
-  standards_lib <- "mighy.standards"
+  standards_lib <- "mighty.standards"
 
   # ACT -------------------------------------------------------------------
 

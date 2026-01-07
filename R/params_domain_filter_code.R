@@ -23,7 +23,7 @@ params_domain_filter_code <- function(
   )
 
   # Some filters require joining variables from "external" datasets.
-  # It is easiers to pre-process this in R rather than in the whisker template
+  # It is easier to pre-process this in R rather than in the whisker template
   requires_data_joins <- !is.null(domain_required_for_filter) &&
     length(domain_required_for_filter) > 0
   joins <- list()
@@ -46,7 +46,7 @@ params_domain_filter_code <- function(
   has_global_filter <- !is.null(global_filter) && any(!is.na(global_filter))
   has_keep_columns <- !is.null(keep_columns) && length(keep_columns) > 0
 
-  # Logic for domain-specific vairables
+  # Logic for domain-specific variables
   domain_specific_filter_expr <- if (has_domain_filter) {
     purrr::imap_chr(
       domain_filter_,

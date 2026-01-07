@@ -8,7 +8,7 @@ pretty_error_outputs <- function(lst) {
 
   for (child in names(lst)) {
     expected <- lst[[child]][["Outputs_from_code_component"]]
-    actual <- lst[[child]][["Outputs_from_specificaton"]]
+    actual <- lst[[child]][["Outputs_from_specification"]]
 
     error_message <- c(
       error_message,

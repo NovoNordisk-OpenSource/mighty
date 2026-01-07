@@ -1,4 +1,4 @@
-test_that("Bug in cross-adam depencies", {
+test_that("Bug in cross-adam dependencies", {
   # SETUP -------------------------------------------------------------------
 
   yaml_content_adsl <- "
@@ -61,14 +61,14 @@ columns:
   )
   path_trial <- withr::local_tempdir()
 
-  standards_lib <- "mighy.standards"
+  standards_lib <- "mighty.standards"
 
   setup_testdata(
     testdata = "pharmaverse",
     test_data_path = path_trial,
     sdtm_domains = c("dm", "lb")
   )
-  standards_lib <- "mighy.standards"
+  standards_lib <- "mighty.standards"
 
   # ACT ---------------------------------------------------------------------
 

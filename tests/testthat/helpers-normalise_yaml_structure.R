@@ -1,7 +1,7 @@
-#' Normalise YAML Structure for Consistent Comparison
+#' Normalize YAML Structure for Consistent Comparison
 #'
 #' @description
-#' Recursively normalises a YAML data structure by sorting named list elements
+#' Recursively normalizes a YAML data structure by sorting named list elements
 #' alphabetically. This function ensures consistent ordering of object keys
 #' throughout nested structures, making it suitable for semantic comparison
 #' of YAML data where key ordering differences should be ignored.
@@ -23,7 +23,7 @@
 #'   \item Leaves non-list elements (scalars, vectors) unchanged
 #' }
 #'
-#' This normalisation is particularly useful when comparing YAML structures
+#' This normalization is particularly useful when comparing YAML structures
 #' where the semantic content is identical but key ordering differs, such as
 #' when comparing configuration files or data structures from different sources.
 #'
@@ -33,14 +33,14 @@
 #'   \item Does not sort array elements - only object keys
 #'   \item Array order is preserved, which may cause semantic equivalents
 #'     to appear different if array element order varies
-#'   \item For complete semantic comparison, consider additional normalisation
+#'   \item For complete semantic comparison, consider additional normalization
 #'     of array contents if order independence is required
 #' }
 #'
-normalise_yaml_structure <- function(yaml_obj) {
+normalize_yaml_structure <- function(yaml_obj) {
   if (is.list(yaml_obj)) {
-    # Recursively normalise all list elements
-    yaml_obj <- lapply(yaml_obj, normalise_yaml_structure)
+    # Recursively normalize all list elements
+    yaml_obj <- lapply(yaml_obj, normalize_yaml_structure)
 
     # Sort named lists by names to ensure consistent ordering
     if (!is.null(names(yaml_obj))) {

@@ -173,7 +173,7 @@ data_context <- R6::R6Class(
     #' @param datasource Character string specifying the datasource name.
     #'   Default is "sdtm".
     #'
-    #' @return Tibble or data.frame containing variable schema (0 rows with column types)
+    #' @return tibble or data.frame containing variable schema (0 rows with column types)
     #'
     #' @examples
     #' \dontrun{

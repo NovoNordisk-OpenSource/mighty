@@ -14,7 +14,7 @@ test_that("Supplementary data action is placed after filter_domain when no suppl
     test_data_path = path_trial,
     sdtm_domains = c("dm", "dm_vaccine", "suppdm", "suppdm_vaccine")
   )
-  standards_lib <- "mighy.standards"
+  standards_lib <- "mighty.standards"
 
   # ACT ---------------------------------------------------------------------
 
@@ -73,8 +73,7 @@ test_that("Supplementary data action is placed after filter_domain when no suppl
   )
 })
 
-
-test_that("Supplementary data action is placed before filter_domain when supplementary columns are used in filters (1 domain filter)", { # nolint: line_length_linter
+test_that("Supp data action is placed before filter_domain when supp columns are used in filters (1 domain filter)", {
   # SETUP -------------------------------------------------------------------
 
   adam_specifications <- test_path("fixtures", "supplementary_data_adsl_02.yml")
@@ -90,7 +89,7 @@ test_that("Supplementary data action is placed before filter_domain when supplem
     test_data_path = path_trial,
     sdtm_domains = c("dm", "dm_vaccine", "suppdm", "suppdm_vaccine")
   )
-  standards_lib <- "mighy.standards"
+  standards_lib <- "mighty.standards"
 
   # ACT ---------------------------------------------------------------------
 
@@ -151,7 +150,7 @@ test_that("Supplementary data action is placed before filter_domain when supplem
 })
 
 
-test_that("Supplementary data action is placed before filter_domain when supplementary columns are used in filters (2 domain filters)", { # nolint: line_length_linter
+test_that("Supp data action is placed before filter_domain when supp columns are used in filters (2 domain filters)", {
   # SETUP -------------------------------------------------------------------
 
   adam_specifications <- test_path("fixtures", "supplementary_data_adsl_03.yml")
@@ -167,7 +166,7 @@ test_that("Supplementary data action is placed before filter_domain when supplem
     test_data_path = path_trial,
     sdtm_domains = c("dm", "dm_vaccine", "suppdm", "suppdm_vaccine")
   )
-  standards_lib <- "mighy.standards"
+  standards_lib <- "mighty.standards"
 
   # ACT ---------------------------------------------------------------------
 
@@ -229,7 +228,7 @@ test_that("Supplementary data action is placed before filter_domain when supplem
 })
 
 
-test_that("Supplementary data action is placed before filter_domain when supplementary columns and ADSL cols are used in filters", { # nolint: line_length_linter
+test_that("Supp data action is placed before filter_domain when supp columns and ADSL cols are used in filters", {
   # SETUP -------------------------------------------------------------------
 
   adam_specifications <- test_path("fixtures", "supplementary_data_adae_01.yml")
@@ -237,7 +236,10 @@ test_that("Supplementary data action is placed before filter_domain when supplem
     adam_specifications,
     environment()
   )
-  path_trial_metadata <- test_path("fixtures", "trial_metadata_lowercase_adsl.yml")
+  path_trial_metadata <- test_path(
+    "fixtures",
+    "trial_metadata_lowercase_adsl.yml"
+  )
   path_trial <- withr::local_tempdir()
 
   setup_testdata(
@@ -246,7 +248,7 @@ test_that("Supplementary data action is placed before filter_domain when supplem
     sdtm_domains = c("ae", "suppae"),
     adam_domains = c("adsl")
   )
-  standards_lib <- "mighy.standards"
+  standards_lib <- "mighty.standards"
 
   # ACT ---------------------------------------------------------------------
 
@@ -300,7 +302,10 @@ test_that("Col_compute and parent col_compute is placed before filter_domain whe
     adam_specifications,
     environment()
   )
-  path_trial_metadata <- test_path("fixtures", "trial_metadata_lowercase_adsl.yml")
+  path_trial_metadata <- test_path(
+    "fixtures",
+    "trial_metadata_lowercase_adsl.yml"
+  )
   path_trial <- withr::local_tempdir()
 
   setup_testdata(
@@ -309,7 +314,7 @@ test_that("Col_compute and parent col_compute is placed before filter_domain whe
     sdtm_domains = c("ae", "suppae"),
     adam_domains = c("adsl")
   )
-  standards_lib <- "mighy.standards"
+  standards_lib <- "mighty.standards"
 
   # ACT ---------------------------------------------------------------------
 

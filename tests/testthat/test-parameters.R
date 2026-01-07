@@ -16,7 +16,7 @@ test_that("Complex test with multiple domains and column/row operations", {
     test_data_path = path_trial,
     sdtm_domains = c("lb")
   )
-  standards_lib <- "mighy.standards"
+  standards_lib <- "mighty.standards"
 
   # ACT ---------------------------------------------------------------------
 

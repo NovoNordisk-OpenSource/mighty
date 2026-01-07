@@ -17,7 +17,7 @@ test_that("No filters", {
     test_data_path = path_trial,
     sdtm_domains = c("dm", "dm_vaccine")
   )
-  standards_lib <- "mighy.standards"
+  standards_lib <- "mighty.standards"
 
   # ACT -------------------------------------------------------------------
 
@@ -98,7 +98,7 @@ test_that("No filters - external core domain dependency on col_compute action", 
     test_data_path = path_trial,
     sdtm_domains = c("dm", "dm_vaccine")
   )
-  standards_lib <- "mighy.standards"
+  standards_lib <- "mighty.standards"
 
   # ACT -------------------------------------------------------------------
 
@@ -191,7 +191,7 @@ test_that("No domain filters", {
     test_data_path = path_trial,
     sdtm_domains = c("dm", "dm_vaccine")
   )
-  standards_lib <- "mighy.standards"
+  standards_lib <- "mighty.standards"
 
   # ACT -------------------------------------------------------------------
 
@@ -279,7 +279,7 @@ test_that("No global filters", {
     test_data_path = path_trial,
     sdtm_domains = c("dm", "dm_vaccine")
   )
-  standards_lib <- "mighy.standards"
+  standards_lib <- "mighty.standards"
 
   # ACT -------------------------------------------------------------------
 
@@ -367,7 +367,7 @@ test_that("No filters and no derivations", {
     test_data_path = path_trial,
     sdtm_domains = c("dm", "dm_vaccine")
   )
-  standards_lib <- "mighy.standards"
+  standards_lib <- "mighty.standards"
 
   # ACT -------------------------------------------------------------------
 
@@ -440,7 +440,7 @@ test_that("Global filter and domain filter", {
     test_data_path = path_trial,
     sdtm_domains = c("dm", "dm_vaccine")
   )
-  standards_lib <- "mighy.standards"
+  standards_lib <- "mighty.standards"
 
   # ACT -------------------------------------------------------------------
 
@@ -533,7 +533,7 @@ test_that("Global filter and domain filter incl. adsl dependencies (lower case)"
     sdtm_domains = c("lb"),
     adam_domains = c("adsl")
   )
-  standards_lib <- "mighy.standards"
+  standards_lib <- "mighty.standards"
 
   # ACT -------------------------------------------------------------------
 
@@ -615,7 +615,7 @@ test_that("External predecessor dependencies are handled correctly in filter and
     sdtm_domains = c("lb"),
     adam_domains = c("adsl")
   )
-  standards_lib <- "mighy.standards"
+  standards_lib <- "mighty.standards"
 
   # ACT -------------------------------------------------------------------
 

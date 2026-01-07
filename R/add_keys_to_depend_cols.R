@@ -104,7 +104,7 @@ add_foreign_key_as_depends_col <- function(
       stop(paste0(
         "Domain '",
         dep_domain,
-        "' not recognised for foreign key lookup."
+        "' not recognized for foreign key lookup."
       ))
     }
 

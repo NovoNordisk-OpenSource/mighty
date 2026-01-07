@@ -1,6 +1,6 @@
 test_that("Multiple columns using same code_id, but diff parameters errors out", {
   skip(
-    message = "This check has not been re-implimented after switching to mighty.component"
+    message = "This check has not been re-implemented after switching to mighty.component"
   )
   # SETUP
   adam_specifications <- testthat::test_path(
@@ -23,6 +23,6 @@ test_that("Multiple columns using same code_id, but diff parameters errors out",
       path_output = output_path,
       mighty.metadata = FALSE
     ),
-    regexp = "Code_id `fn_AB` is used in multiple columns with different paramenters"
+    regexp = "Code_id `fn_AB` is used in multiple columns with different parameters"
   )
 })

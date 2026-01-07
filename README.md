@@ -114,7 +114,7 @@ adhere to a few simple rules. See `vignette("code_components")` for more
 details.
 
 As mighty matures, more of these components will be pre-defined and
-ready for use, so fewer compononents would need to be defined by the
+ready for use, so fewer components would need to be defined by the
 user. Standard components are provided by
 [`mighty.standards`](https://github.com/NN-OpenSource/mighty.standards),
 while

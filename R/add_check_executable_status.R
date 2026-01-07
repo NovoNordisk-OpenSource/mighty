@@ -38,7 +38,7 @@ add_check_executable_status <- function(actions, ui_data, data_context) {
 
   available_cols <- determine_available_columns(data_context)
 
-  # initialise actions - will be a copy of actions with modified columns
+  # initialize actions - will be a copy of actions with modified columns
   # * depend_cols,
   # * outputs,
   # added columns
@@ -312,7 +312,7 @@ handle_init_domain_action <- function(
   available_cols,
   ui_data
 ) {
-  # Initialise defaults
+  # Initialize defaults
   can_execute <- TRUE
   valid_outputs <- action$outputs[[1]]
   removed_outputs <- NA
@@ -399,7 +399,7 @@ handle_filter_domain_action <- function(
   # * domain specific filters
   # * global filters
 
-  # Initialise defaults
+  # Initialize defaults
   can_execute <- TRUE
   valid_outputs <- action$outputs[[1]]
   removed_outputs <- NA
@@ -538,7 +538,7 @@ handle_write_domain_action <- function(
   #   missing columns as identified in init_domain action.
 
   # Check if this action was impacted by missing data
-  # Initialise defaults
+  # Initialize defaults
   can_execute <- TRUE
   valid_outputs <- action$outputs[[1]]
   removed_outputs <- NA
