@@ -213,6 +213,75 @@ handle_read_data_action <- function(
   action
 }
 
+#' Adjust Action Dependencies Based on Removed Outputs
+#'
+#' @description
+#' Updates an action's dependencies and outputs after columns have been removed
+#' from an upstream action.
+#'
+#' @param action Action object to update.
+#' @param removed_cols_output Vector of removed column names (with domain prefix).
+#' @param default_prefix Optional domain prefix for parsing column names.
+#' @param can_execute_fallback Value to use for can_execute if outputs were removed.
+#'   Defaults to checking if valid_outputs has length > 0.
+#'
+#' @return
+#' List with updated values:
+#' \itemize{
+#'   \item depend_cols - Updated dependency columns
+#'   \item removed_depend_cols - Missing dependencies
+#'   \item removed_outputs - Removed output column names
+#'   \item valid_outputs - Remaining valid outputs
+#'   \item can_execute - Whether action can still execute
+#' }
+#'
+#' @noRd
+derive_updated_action_values <- function(
+  action,
+  removed_cols_output,
+  default_prefix = NULL,
+  can_execute_fallback = NULL
+) {
+  # Parse removed columns
+  removed_cols <- if (is.null(default_prefix)) {
+    parse_output_columns(removed_cols_output)
+  } else {
+    parse_output_columns(removed_cols_output, default_prefix = default_prefix)
+  }
+
+  # Adjust depend_cols by removing the removed columns
+  depend_cols <- dplyr::anti_join(
+    action$depend_cols[[1]],
+    removed_cols,
+    by = c("column_name", "domain", "domain_type")
+  )
+
+  # Find missing dependencies
+  removed_depend_cols <- find_missing_dependencies(
+    action$depend_cols[[1]],
+    depend_cols
+  )
+
+  # Calculate valid outputs
+  removed_outputs <- unique(removed_cols$column_name)
+  valid_outputs <- setdiff(action$outputs[[1]], removed_outputs)
+
+  # Determine if can execute
+  can_execute <- if (!is.null(can_execute_fallback)) {
+    can_execute_fallback
+  } else {
+    length(valid_outputs) > 0
+  }
+
+  list(
+    depend_cols = depend_cols,
+    removed_depend_cols = removed_depend_cols,
+    removed_outputs = removed_outputs,
+    valid_outputs = valid_outputs,
+    can_execute = can_execute
+  )
+}
+
 #' Handler for _init_domain.mustache Actions
 #'
 #' @description
@@ -256,20 +325,15 @@ handle_init_domain_action <- function(
   ][1]
   rda_removed_outputs <- rda$removed_outputs[[1]]
   if (length(rda_removed_outputs) > 1 || !is.na(rda_removed_outputs)) {
-    removed_cols <- parse_output_columns(rda_removed_outputs)
-    # If outputs from rda were removed, adjust depend_cols
-    depend_cols <- dplyr::anti_join(
-      action$depend_cols[[1]],
-      removed_cols,
-      by = c("column_name", "domain", "domain_type")
+    adjusted <- derive_updated_action_values(
+      action,
+      rda_removed_outputs
     )
-    removed_depend_cols <- find_missing_dependencies(
-      action$depend_cols[[1]],
-      depend_cols
-    )
-    removed_outputs <- unique(removed_cols$column_name)
-    valid_outputs <- setdiff(action$outputs[[1]], removed_outputs)
-    can_execute <- length(valid_outputs) > 0
+    depend_cols <- adjusted$depend_cols
+    removed_depend_cols <- adjusted$removed_depend_cols
+    removed_outputs <- adjusted$removed_outputs
+    valid_outputs <- adjusted$valid_outputs
+    can_execute <- adjusted$can_execute
   }
   action$depend_cols <- list(depend_cols)
   action$outputs <- list(valid_outputs)
@@ -487,23 +551,17 @@ handle_write_domain_action <- function(
   ida_removed_outputs <- ida$removed_outputs[[1]]
 
   if (!is.null(ida_removed_outputs)) {
-    removed_cols <- parse_output_columns(
+    adjusted <- derive_updated_action_values(
+      action,
       ida_removed_outputs,
-      default_prefix = ida$domain
+      default_prefix = ida$domain,
+      can_execute_fallback = ida$can_execute
     )
-    # If outputs from rda were removed, adjust depend_cols
-    depend_cols <- dplyr::anti_join(
-      action$depend_cols[[1]],
-      removed_cols,
-      by = c("column_name", "domain", "domain_type")
-    )
-    removed_depend_cols <- find_missing_dependencies(
-      action$depend_cols[[1]],
-      depend_cols
-    )
-    removed_outputs <- unique(removed_cols$column_name)
-    valid_outputs <- setdiff(action$outputs[[1]], removed_outputs)
-    can_execute <- ida$can_execute
+    depend_cols <- adjusted$depend_cols
+    removed_depend_cols <- adjusted$removed_depend_cols
+    removed_outputs <- adjusted$removed_outputs
+    valid_outputs <- adjusted$valid_outputs
+    can_execute <- adjusted$can_execute
   }
 
   if (length(removed_outputs) && !is.na(removed_outputs[1])) {

@@ -16,6 +16,28 @@ sort_actions <- function(edges, nodes, primary_domain = "ADSL") {
   return(sorted_nodes)
 }
 
+#' Summarize Adjacency Matrix Dependencies
+#'
+#' @description
+#' Converts an adjacency matrix to a data frame summary of dependencies,
+#' filtering out zero and self-dependencies.
+#'
+#' @param adj_matrix Adjacency matrix to summarize.
+#'
+#' @return
+#' Data frame with columns Var1, Var2, and value representing non-zero
+#' dependencies between distinct nodes.
+#'
+#' @noRd
+summarize_adjacency_matrix <- function(adj_matrix) {
+  adj_matrix |>
+    as.table() |>
+    as.data.frame(stringsAsFactors = FALSE) |>
+    dplyr::group_by(Var1, Var2) |>
+    dplyr::summarize(value = sum(Freq), .groups = "drop") |>
+    dplyr::filter(value > 0 & Var1 != Var2)
+}
+
 #' Initialize All Graph Data Structures Needed for Sorting
 #'
 #' @description
@@ -69,12 +91,7 @@ initialize_graph_data <- function(edges, nodes, primary_domain) {
   )
 
   # Summarize dependencies between nodes from adjacent matrix
-  adj_matrix_summary <- adj_matrix |>
-    as.table() |>
-    as.data.frame(stringsAsFactors = FALSE) |>
-    dplyr::group_by(Var1, Var2) |>
-    dplyr::summarize(value = sum(Freq), .groups = "drop") |>
-    dplyr::filter(value > 0 & Var1 != Var2)
+  adj_matrix_summary <- summarize_adjacency_matrix(adj_matrix)
 
   # Identify domains with upstream dependencies
   domains_upstr_dep <- adj_matrix_summary |>
@@ -384,12 +401,7 @@ find_remaining_upstream_dependencies <- function(adj_matrix, lkp_dom) {
   attr(adj_matrix_dom, "dimnames") <- list(adj_dom, adj_dom)
 
   # Summarize by domain
-  domains_deps_rem <- adj_matrix_dom |>
-    as.table() |>
-    as.data.frame(stringsAsFactors = FALSE) |>
-    dplyr::group_by(Var1, Var2) |>
-    dplyr::summarize(value = sum(Freq), .groups = "drop") |>
-    dplyr::filter(value > 0 & Var1 != Var2)
+  domains_deps_rem <- summarize_adjacency_matrix(adj_matrix_dom)
 
   unique(domains_deps_rem$Var2)
 }
