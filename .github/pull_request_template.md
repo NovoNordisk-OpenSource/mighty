@@ -1,3 +1,10 @@
+---
+name: Pull Request Template
+about: Describe the PR
+title: "PR title"
+labels: ''
+assignees: ''
+---
 ## Summary
 (Summary of made changes with explanation of what and why)
 

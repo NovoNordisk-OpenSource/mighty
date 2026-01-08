@@ -54,3 +54,9 @@ docs
 /Meta/
 /.quarto/
 .lintr
+
+# local lint reporters (for when running linters locally)
+report/
+
+# Local cspell configuration
+cspell.local.json
