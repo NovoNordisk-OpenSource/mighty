@@ -49,8 +49,7 @@ Suggests:
     connector,
     labelled,    
     tools,
-    whisker,
-    waldo
+    whisker
 VignetteBuilder: 
     knitr,
     quarto
