@@ -3,7 +3,7 @@
 #' exactly with those defined in the YAML specifications.
 #'
 #' @details This function checks for consistency between the outputs declared in
-#' YAML specifications and those actually produced by the code components. It
+#' YAML specifications and those declared by the component metadata. It
 #' focuses specifically on 'col_compute' type components since these have
 #' outputs defined in both places. The function compares the two sets of outputs
 #' and raises a detailed error if any discrepancies are found, showing exactly
