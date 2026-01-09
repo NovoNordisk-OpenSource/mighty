@@ -89,7 +89,6 @@ group_actions <- function(ordered_nodes, vertices, edges) {
     merge(vertices, by = "node_id", all.x = TRUE) |>
     setorder(rank)
 
-  # TODO: how to handle SDTM inputs
   n_remaining[is.na(domain), domain := "sdtm"]
 
   n_stack <- data.table(

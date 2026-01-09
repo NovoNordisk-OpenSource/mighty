@@ -536,7 +536,8 @@ columns:
 })
 
 test_that("Missing base domain does not allow execution based on available data in other base domains", {
-  #yaml file with three base domains
+  # SETUP -------------------------------------------------------------------
+  # yaml file with three base domains
   # NOTE: More or less identical with the test
   # "Missing domain in source data makes actions non-executable"
   # Differs since DM domain is not available. May be a use case, if the specs
@@ -595,7 +596,7 @@ columns:
 
   # EXPECT ------------------------------------------------------------------
 
-  # TODO: Here code will not be able to execute at all, even though dm and
+  # Here code will not be able to execute at all, even though dm and
   # dm_vaccine domains are complete. A modification to the handle_read_data_action
   # processing will be needed, if such a requirement occurs
 

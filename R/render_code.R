@@ -54,7 +54,6 @@ render_code <- function(
     # In case the call is based on actions that are modified due to missing
     # data, there may be situations where no outputs can be created. In this
     # case, use the removed_outputs to generate code instead
-    # TODO: Assess if a similar approach is needed for depend_columns
     output_cols <- action_i$outputs[[1]]
     if (
       length(action_i$outputs[[1]]) == 0 && !is.null(action_i$removed_outputs)

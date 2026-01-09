@@ -44,9 +44,6 @@ setup_testdata <- function(
   remove_cols = NULL
 ) {
   testdata <- match.arg(testdata)
-  # TODO: Should we only allow a set of SDTM domains to be available (in
-  # case pharmaversesdtm gets extended?)
-  # Currently: allow any
 
   if (testdata == "pharmaverse") {
     # copy and modify connector config
