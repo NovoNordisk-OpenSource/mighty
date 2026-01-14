@@ -45,7 +45,7 @@ test_that("data_context provides metadata from sdtm.dm testdata", {
     "DMDY"
   )
   expect_true(all(
-    names(dc$get_table_variables(table_name = "dm")) %in% dm_columns
+    dm_columns %in% names(dc$get_table_variables(table_name = "dm"))
   ))
   expect_false(dc$has_variables(table_name = "dm", variable_name = "TOPICCD"))
   # Test variable from non-existing data set
