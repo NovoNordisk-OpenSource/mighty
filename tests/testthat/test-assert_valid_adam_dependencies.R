@@ -576,7 +576,6 @@ test_that("Incomplete ADSL filter in two domains fails when checks enabled", {
   standards_lib <- "mighty.standards"
 
   # ACT -------------------------------------------------------------------
-
   error_msg <- generate_adam_code(
     adam_specifications = adam_specifications_rendered,
     standards_lib = standards_lib,

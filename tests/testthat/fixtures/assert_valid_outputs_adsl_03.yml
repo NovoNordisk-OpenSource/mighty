@@ -4,7 +4,7 @@ class: SUBJECT LEVEL ANALYSIS DATASET
 structure: One record per subject
 keys:
   - USUBJID
-  - STUDYID
+
 
 population:
   base:

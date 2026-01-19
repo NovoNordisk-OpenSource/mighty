@@ -3,9 +3,8 @@ label: Laboratory Analysis Dataset
 class: BASIC DATA STRUCTURE
 structure: One record per subject per parameter per analysis visit
 keys:
-  - USUBJID
   - STUDYID
-  - LBSEQ
+
 
 population:
   base:

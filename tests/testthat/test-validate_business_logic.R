@@ -82,3 +82,41 @@ rows:
   read_mighty_metadata_adam_domain(yaml_file) |>
     expect_error("row_action_1")
 })
+
+test_that("keys not defined in columns fail validation checks", {
+  # SETUP ----------------------------------------------------------------------
+
+  yaml_content <- "
+id: ADSL
+label: Subject Level Analysis Dataset
+class: BASIC DATA STRUCTURE
+structure: One record per subject
+keys:
+  - USUBJID
+  - STUDYID
+
+population:
+  base:
+    - domain: DM
+      depends:
+        - NA
+      filter: NA
+
+  global:
+    - filter: NA
+      depends:
+        - NA
+
+columns:
+  - id: USUBJID
+"
+  yaml_file <- create_temp_yaml(yaml_content)
+
+  # ACT / ASSERT ---------------------------------------------------------------
+  read_mighty_metadata_adam_domain(yaml_file) |>
+    expect_error(
+      "The following columns are specified as keys but are not defined in the columns section"
+    )
+  read_mighty_metadata_adam_domain(yaml_file) |>
+    expect_error("STUDYID")
+})

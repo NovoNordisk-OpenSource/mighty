@@ -106,7 +106,8 @@ get_business_rules <- function(ruleset_name) {
         val_no_params_when_missing_code_id,
         val_no_duplicate_columns,
         val_no_duplicate_row_ids,
-        val_depend_rows
+        val_depend_rows,
+        val_keys_included_as_columns
       )
     )
   )
@@ -119,13 +120,7 @@ handle_business_logic_errors <- function(all_errors, yaml_file) {
   error_messages <- unlist(all_errors, use.names = FALSE)
   names(error_messages) <- rep("*", length(error_messages))
 
-  cli::cli_abort(
-    c(
-      "x" = "Validation failed for {basename(yaml_file)} with the following error(s): ",
-      error_messages
-    ),
-    class = "validation_error"
-  )
+  throw_yaml_validation_error(yaml_file, error_messages)
 }
 
 # Auto-names the rules based on their function name so dev doesn't have to manually type out each name

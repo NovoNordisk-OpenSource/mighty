@@ -164,3 +164,38 @@ val_source_and_code_id_notboth_populated <- function(
     )
   )
 }
+
+
+#' Validate that all keys are defined in columns section
+#'
+#' This rule checks that all columns listed in the keys field
+#' are also defined in the columns section. This is need because
+#' if a key column is missing in the columns definition it can
+#' cause bugs
+#'
+#' @param yaml_data Parsed YAML data
+#' @param context Validation context (yaml_file, ruleset_name, etc.)
+#' @return List with 'valid' (logical) and 'errors' (character vector)
+#' @noRd
+val_keys_included_as_columns <- function(yaml_data, context = list()) {
+  keys <- yaml_data$keys
+
+  # Get defined column names (not row actions. Internally, row actions
+  # are stored alongside columns in the columns list, but distinguished
+  # by having empty string "")
+  defined_columns <- names(yaml_data$columns)[names(yaml_data$columns) != ""]
+
+  missing_keys <- setdiff(keys, defined_columns)
+
+  if (length(missing_keys) == 0) {
+    return(list(valid = TRUE, errors = character(0)))
+  }
+
+  list(
+    valid = FALSE,
+    errors = c(
+      "The following columns are specified as keys but are not defined in the columns section:",
+      paste0("  - ", missing_keys)
+    )
+  )
+}

@@ -28,9 +28,18 @@ read_mighty_metadata_adam_domain <- function(yaml_file_path) {
   checkmate::assert_string(yaml_file_path)
   checkmate::assert_file_exists(yaml_file_path)
 
-  yaml_content <- yaml_file_path |>
-    mighty.metadata::mighty_metadata() |>
-    convert_to_NA_character()
+  yaml_content <- rlang::try_fetch(
+    yaml_file_path |>
+      mighty.metadata::mighty_metadata() |>
+      convert_to_NA_character(),
+    error = function(cnd) {
+      throw_yaml_validation_error(
+        yaml_file_path,
+        messages = " ",
+        parent = cnd
+      )
+    }
+  )
 
   checkmate::assert_list(yaml_content)
   checkmate::assert_names(
