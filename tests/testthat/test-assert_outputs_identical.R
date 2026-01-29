@@ -39,7 +39,7 @@ columns:
 ADSL <- ADSL |>
   dplyr::mutate(A=USUBJID) |>
   dplyr::mutate(B=USUBJID)
-}
+
  " |>
     writeLines(con = tmp_file)
   trial_path <- withr::local_tempdir()

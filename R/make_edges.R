@@ -9,6 +9,7 @@
 #' 3. Creating edges from producer nodes to consumer nodes
 #' 4. Adding explicit row dependencies when specified
 #' 5. Removing self-referential edges and duplicates
+#' 6. Validating the resulting edges for correctness and connectivity
 #'
 #' @param nodes A data.table containing node definitions with columns: node_id,
 #'   domain, type, depend_cols, depend_rows, outputs, and code_id
@@ -34,6 +35,9 @@ make_edges <- function(nodes, primary_domain = "ADSL") {
     column_edges_2[, c("parent_node", "node_id")],
     row_edges
   )
+
+  # Validate edges before returning
+  assert_valid_edges(all_edges, nodes)
 
   return(all_edges)
 }
@@ -262,10 +266,10 @@ remove_child_filter_edges <- function(edges, actions) {
         unlist()
 
       # Remove edges from filter action to the identified children
-      edges <- edges[!(
-        edges$parent_node == filter_action$node_id &
-          edges$node_id %in% children_to_remove
-      )]
+      edges <- edges[
+        !(edges$parent_node == filter_action$node_id &
+          edges$node_id %in% children_to_remove) #nolint
+      ]
     }
   }
 

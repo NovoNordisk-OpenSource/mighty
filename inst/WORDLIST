@@ -16,6 +16,7 @@ AESEV
 aesev
 AESOC
 AETRTEM
+AGEGR
 AGEU
 Aksel
 ARMCD
@@ -35,12 +36,16 @@ basetype
 BASO
 Bezier
 BMIGRP
+BRDATE
+BRDATEOK
+BRTHDTC
 CDISC
 Column
 COMPLSFL
 complsfl
 CONV
 copys
+dataframe
 datasource
 datasourcename
 DMDTC
@@ -59,6 +64,7 @@ gsub
 Hedegaard
 igraph
 imap
+Inconsistenc
 indegree
 Johnsen
 knitr
