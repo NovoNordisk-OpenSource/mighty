@@ -226,10 +226,6 @@ define_params <- function(
   )
 }
 
-get_internal_component_path <- function(code_id) {
-  system.file("components", paste0(code_id, ".mustache"), package = "mighty")
-}
-
 format_col_compute_params <- function(action_parameters) {
   params <- action_parameters |> unlist(recursive = FALSE)
   if (!is.list(params) && is.na(params)) {

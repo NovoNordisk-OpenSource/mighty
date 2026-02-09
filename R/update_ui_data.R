@@ -94,26 +94,6 @@ pred_type <- function(code_id, type_from_code, depend_cols, outputs, domain) {
   stop("Unable to determine action type.")
 }
 
-
-#' Check if UI data contains code_id references
-#' @description
-#' Determines whether the UI data contains any non-NA code_id references.
-#' @details
-#' Checks if there are any active code_id references in the UI data
-#' that would require fetching and merging metadata.
-#'
-#' @param ui_data Data table to check for code_id references
-#'
-#' @return Logical value: TRUE if code_id references exist, FALSE otherwise
-#' @noRd
-has_code_id_references <- function(ui_data) {
-  active_code_ids <- unique(ui_data[
-    !is.na(code_id) & !grepl("^_", code_id),
-    code_id
-  ])
-  return(length(active_code_ids) > 0)
-}
-
 #' Extract and format metadata for active code IDs
 #' @description
 #' Retrieves and formats metadata for code IDs referenced in the UI data.
@@ -368,32 +348,4 @@ format_outputs <- function(outputs) {
     lapply(outputs, function(x) paste0(unlist(x), collapse = "-")),
     ""
   )
-}
-
-#' Format code ID for node ID
-#' @description
-#' Formats code IDs for inclusion in node IDs.
-#' @details
-#' Prepends a hyphen to non-NA code IDs, or returns an empty string for NA values.
-#'
-#' @param code_id Vector of code IDs to format
-#'
-#' @return Vector of formatted code ID strings
-#' @noRd
-format_code_id <- function(code_id) {
-  ifelse(!is.na(code_id), paste0("-", code_id), "")
-}
-
-#' Format parameters for node ID
-#' @description
-#' Formats parameters for inclusion in node IDs.
-#' @details
-#' Prepends a hyphen to non-NA parameters, or returns an empty string for NA values.
-#'
-#' @param parameters Vector of parameters to format
-#'
-#' @return Vector of formatted parameter strings
-#' @noRd
-format_parameters <- function(parameters) {
-  ifelse(!is.na(parameters), paste0("-", parameters), "")
 }

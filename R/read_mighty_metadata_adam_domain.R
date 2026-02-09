@@ -47,6 +47,9 @@ read_mighty_metadata_adam_domain <- function(yaml_file_path) {
     must.include = c("id", "columns")
   )
 
+  # Validate business logic on raw YAML before any transformations
+  validate_business_logic(yaml_content, yaml_file = yaml_file_path)
+
   init <- transform_population_to_init(yaml_content$population, yaml_content$id)
 
   columns <- transform_columns_to_named_list(
@@ -66,8 +69,6 @@ read_mighty_metadata_adam_domain <- function(yaml_file_path) {
     keys = yaml_content$keys,
     init = init
   )
-
-  validate_business_logic(result, yaml_file = yaml_file_path)
 
   setNames(list(result), yaml_content$id)
 }

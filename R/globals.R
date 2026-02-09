@@ -1,5 +1,7 @@
 # Global variable declarations to avoid R CMD CHECK notes
 utils::globalVariables(c(
+  "has_init",
+
   # extract_actions variables
   "code_id",
   "domain",
@@ -31,9 +33,6 @@ utils::globalVariables(c(
   # handle_*_action variables
   # (program_id, code_id, domain already declared above)
   "column_name",
-
-  # has_code_id_references variables
-  # (code_id already declared above)
 
   # initialize_graph_data variables
   # (node_id, domain, Var1, Var2, Freq, value already declared above)

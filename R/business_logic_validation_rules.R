@@ -1,31 +1,74 @@
-#' Validate that parameters are not provided when code_id is missing
+#' Validate that source and code_id are not both populated
 #'
-#' This rule checks that when a code_id field is missing or empty,
-#' no parameter fields are provided in the same object.
+#' This rule checks that columns do not have both method and component.id
+#' fields populated simultaneously, as this creates ambiguous behavior.
 #'
-#' @param yaml_data Parsed YAML data
+#' @param yaml_content Raw YAML content structure from mighty_metadata
 #' @param context Validation context (yaml_file, ruleset_name, etc.)
 #' @return List with 'valid' (logical) and 'errors' (character vector)
 #' @noRd
-val_no_params_when_missing_code_id <- function(yaml_data, context = list()) {
-  inx <- vapply(
-    yaml_data$columns,
-    function(i) {
-      any(!is.na(i$parameters)) && is.null(i$code_id)
-    },
-    logical(1)
-  )
-  problems <- names(yaml_data$columns)[inx]
+val_method_and_component_id_not_both_populated <- function(
+  yaml_content,
+  context = list()
+) {
+  problem_columns <- character(0)
+  for (col in yaml_content$columns) {
+    if (has_content(col$method) && has_content(col$component$id)) {
+      problem_columns <- c(problem_columns, col$id %||% "")
+    }
+  }
 
-  if (length(problems) == 0) {
+  if (length(problem_columns) == 0) {
     return(list(valid = TRUE, errors = character(0)))
   }
 
   list(
     valid = FALSE,
     errors = c(
-      glue::glue("The following columns have parameters but no code_id:"),
-      paste0("  - ", unlist(problems))
+      "The following columns have both `method` and `component.id` field populated: ",
+      paste0("  - ", problem_columns)
+    )
+  )
+}
+
+
+#' Generic validation for duplicate IDs across sections
+#'
+#' This function provides a unified approach to validate that IDs are unique
+#' across one or more YAML sections.
+#'
+#' @param sections List of YAML sections to check for duplicates
+#' @param error_msg_template Template for error message (e.g., "columns", "row id(s)")
+#' @param context Validation context (yaml_file, ruleset_name, etc.)
+#' @return List with 'valid' (logical) and 'errors' (character vector)
+#' @noRd
+val_no_duplicate_ids <- function(
+  sections,
+  error_msg_template,
+  context = list()
+) {
+  sections_with_content <- Filter(has_content, sections)
+  if (length(sections_with_content) == 0) {
+    return(list(valid = TRUE, errors = character(0)))
+  }
+
+  all_ids <- sections_with_content |>
+    lapply(extract_ids_from_array) |>
+    unlist()
+
+  duplicates <- all_ids[duplicated(all_ids)]
+
+  if (length(duplicates) == 0) {
+    return(list(valid = TRUE, errors = character(0)))
+  }
+
+  list(
+    valid = FALSE,
+    errors = c(
+      glue::glue(
+        "The following {error_msg_template} are defined multiple times:"
+      ),
+      paste0("  - ", duplicates)
     )
   )
 }
@@ -33,84 +76,70 @@ val_no_params_when_missing_code_id <- function(yaml_data, context = list()) {
 #' Validate that column names are unique
 #'
 #' This rule checks that no column names are duplicated within the
-#' column_action section of the YAML data.
+#' columns section of the raw YAML data.
 #'
-#' @param yaml_data Parsed YAML data
+#' @param yaml_content Raw YAML content structure from mighty_metadata
 #' @param context Validation context (yaml_file, ruleset_name, etc.)
 #' @return List with 'valid' (logical) and 'errors' (character vector)
 #' @noRd
-val_no_duplicate_columns <- function(yaml_data, context = list()) {
-  # Filter out empty string names (which are row actions)
-  col_names <- names(yaml_data$columns)[names(yaml_data$columns) != ""]
-  column_duplicates <- col_names[duplicated(col_names)]
-
-  if (length(column_duplicates) == 0) {
-    return(list(valid = TRUE, errors = character(0)))
-  }
-
-  list(
-    valid = FALSE,
-    errors = c(
-      glue::glue("The following columns are defined multiple times:"),
-      paste0("  - ", column_duplicates)
-    )
+val_no_duplicate_columns <- function(yaml_content, context = list()) {
+  val_no_duplicate_ids(
+    sections = list(yaml_content$columns),
+    error_msg_template = "columns",
+    context = context
   )
 }
 
-#' Validate that row action IDs are unique
+#' Validate that row/parameter action IDs are unique
 #'
 #' This rule checks that no row action IDs are duplicated within the
-#' row_action section of the YAML data.
+#' rows and parameters sections of the raw YAML data.
 #'
-#' @param yaml_data Parsed YAML data
+#' @param yaml_content Raw YAML content structure from mighty_metadata
 #' @param context Validation context (yaml_file, ruleset_name, etc.)
 #' @return List with 'valid' (logical) and 'errors' (character vector)
 #' @noRd
-val_no_duplicate_row_ids <- function(yaml_data, context = list()) {
-  # Extract id field from unnamed entries (empty string names)
-  row_entries <- yaml_data$columns[names(yaml_data$columns) == ""]
-  row_ids <- vapply(row_entries, function(x) x$id, character(1))
-  row_duplicates <- row_ids[duplicated(row_ids)]
-
-  if (length(row_duplicates) == 0) {
-    return(list(valid = TRUE, errors = character(0)))
-  }
-
-  list(
-    valid = FALSE,
-    errors = c(
-      glue::glue("The following row id(s) are defined multiple times:"),
-      paste0("  - ", row_duplicates)
-    )
+val_no_duplicate_row_parameter_ids <- function(yaml_content, context = list()) {
+  val_no_duplicate_ids(
+    sections = list(yaml_content$rows, yaml_content$parameters),
+    error_msg_template = "row or parameter id(s)",
+    context = context
   )
+}
+
+#' @noRd
+extract_ids_from_array <- function(array) {
+  if (!has_content(array)) {
+    return(character(0))
+  }
+  vapply(array, \(x) x$id %||% "", character(1))
 }
 
 #' Validate that all row dependencies are defined
 #'
-#' This rule checks that all row actions referenced in depend_rows
-#' are actually defined in the row_action section.
+#' This rule checks that all row actions referenced in column and row dependencies
+#' are actually defined in the rows or parameters sections.
 #'
-#' @param yaml_data Parsed YAML data
+#' @param yaml_content Raw YAML content structure from mighty_metadata
 #' @param context Validation context (yaml_file, ruleset_name, etc.)
 #' @return List with 'valid' (logical) and 'errors' (character vector)
 #' @noRd
-val_depend_rows <- function(yaml_data, context = list()) {
-  # Get all depend_rows from all entries in columns (both named and unnamed)
-  all_row_depends <- lapply(yaml_data$columns, `[[`, "depend_rows") |>
-    unlist() |>
-    (\(x) x[!is.na(x)])() # Filter out NA values
+val_depend_rows <- function(yaml_content, context = list()) {
+  all_objects <- c(
+    yaml_content$columns,
+    yaml_content$rows,
+    yaml_content$parameters
+  )
+  all_row_depends <- all_objects |>
+    lapply(extract_row_dependencies_from_object) |>
+    unlist()
 
-  # Extract id field from unnamed entries (empty string names) to get defined row actions
-  row_entries <- yaml_data$columns[names(yaml_data$columns) == ""]
-
-  if (length(row_entries) == 0) {
-    defined_row_actions <- character(0)
-  } else {
-    defined_row_actions <- vapply(row_entries, function(x) x$id, character(1))
-  }
+  defined_row_actions <- c(
+    extract_ids_from_array(yaml_content$rows),
+    extract_ids_from_array(yaml_content$parameters)
+  )
 
   missing_row_actions <- setdiff(all_row_depends, defined_row_actions)
-
   if (length(missing_row_actions) == 0) {
     return(list(valid = TRUE, errors = character(0)))
   }
@@ -127,42 +156,20 @@ val_depend_rows <- function(yaml_data, context = list()) {
   )
 }
 
-#' Validate that source and code_id are not both populated
+#' Extract row dependencies from a single object
 #'
-#' This rule checks that columns do not have both source and code_id
-#' fields populated simultaneously, as this creates ambiguous behavior.
+#' Helper function that extracts row dependencies (with "rows." or "parameters."
+#' prefixes) from a single object's depends field.
 #'
-#' @param yaml_data Parsed YAML data
-#' @param context Validation context (yaml_file, ruleset_name, etc.)
-#' @return List with 'valid' (logical) and 'errors' (character vector)
+#' @param obj A single object (column, row, or parameter) from YAML content
+#' @return Character vector of row IDs (with prefixes removed)
 #' @noRd
-val_source_and_code_id_notboth_populated <- function(
-  yaml_data,
-  context = list()
-) {
-  # Only check named entries (columns), not unnamed entries (rows)
-  column_entries <- yaml_data$columns[names(yaml_data$columns) != ""]
-
-  inx <- vapply(
-    column_entries,
-    function(i) !is.null(i$code_id) && !is.null(i$depend_cols),
-    logical(1)
-  )
-
-  if (!any(inx)) {
-    return(list(valid = TRUE, errors = character(0)))
+extract_row_dependencies_from_object <- function(obj) {
+  if (is.null(obj$depends)) {
+    return(character(0))
   }
-
-  # column names are now the names of the list elements
-  problem_columns <- names(column_entries)[inx]
-
-  list(
-    valid = FALSE,
-    errors = c(
-      "The following columns have both `source` and `code_id` field populated: ",
-      paste0("  - ", problem_columns)
-    )
-  )
+  row_deps <- grep("^(rows\\.|parameters\\.)", obj$depends, value = TRUE)
+  gsub("^(rows\\.|parameters\\.)", "", row_deps)
 }
 
 
@@ -173,17 +180,14 @@ val_source_and_code_id_notboth_populated <- function(
 #' if a key column is missing in the columns definition it can
 #' cause bugs
 #'
-#' @param yaml_data Parsed YAML data
+#' @param yaml_content Raw YAML content structure from mighty_metadata
 #' @param context Validation context (yaml_file, ruleset_name, etc.)
 #' @return List with 'valid' (logical) and 'errors' (character vector)
 #' @noRd
-val_keys_included_as_columns <- function(yaml_data, context = list()) {
-  keys <- yaml_data$keys
+val_keys_included_as_columns <- function(yaml_content, context = list()) {
+  keys <- yaml_content$keys
 
-  # Get defined column names (not row actions. Internally, row actions
-  # are stored alongside columns in the columns list, but distinguished
-  # by having empty string "")
-  defined_columns <- names(yaml_data$columns)[names(yaml_data$columns) != ""]
+  defined_columns <- extract_ids_from_array(yaml_content$columns)
 
   missing_keys <- setdiff(keys, defined_columns)
 

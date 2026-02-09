@@ -1,12 +1,12 @@
 #' Validate business logic rules for YAML configuration
 #'
-#' @param yaml_data Parsed YAML data
+#' @param yaml_content Raw YAML content structure from mighty_metadata
 #' @param yaml_file Path to YAML file (for error context)
 #' @param ruleset_name Schema name to determine applicable rules
 #' @return Invisible NULL if valid, throws error if invalid
 #' @noRd
 validate_business_logic <- function(
-  yaml_data,
+  yaml_content,
   yaml_file,
   ruleset_name = "adam_domain"
 ) {
@@ -31,7 +31,7 @@ validate_business_logic <- function(
 
       result <- tryCatch(
         {
-          rule_func(yaml_data, context)
+          rule_func(yaml_content, context)
         },
         error = function(e) {
           # If rule itself fails, that's a bug in the rule
@@ -66,7 +66,7 @@ validate_business_logic <- function(
 
     tryCatch(
       {
-        result <- rule_func(yaml_data, context)
+        result <- rule_func(yaml_content, context)
 
         if (!result$valid && length(result$errors) > 0) {
           all_errors[[rule_name]] <- result$errors
@@ -87,7 +87,7 @@ validate_business_logic <- function(
     handle_business_logic_errors(all_errors, yaml_file)
   }
 
-  return(invisible(yaml_data))
+  return(invisible(yaml_content))
 }
 
 #' Get business rules for a given schema
@@ -100,12 +100,11 @@ get_business_rules <- function(ruleset_name) {
   rule_registry <- list(
     adam_domain = list(
       stop_on_error = register_rules(
-        val_source_and_code_id_notboth_populated
+        val_method_and_component_id_not_both_populated
       ),
       collect_errors = register_rules(
-        val_no_params_when_missing_code_id,
         val_no_duplicate_columns,
-        val_no_duplicate_row_ids,
+        val_no_duplicate_row_parameter_ids,
         val_depend_rows,
         val_keys_included_as_columns
       )
