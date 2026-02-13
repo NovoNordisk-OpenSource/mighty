@@ -30,6 +30,9 @@ utils::globalVariables(c(
   "program_id",
   "type",
 
+  # create_filter_domain_action variables
+  "output",
+
   # handle_*_action variables
   # (program_id, code_id, domain already declared above)
   "column_name",

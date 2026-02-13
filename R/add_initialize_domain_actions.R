@@ -1,15 +1,10 @@
-add_initialize_domain_actions <- function(actions, ui_init) {
+add_initialize_domain_actions <- function(actions, ui_init, filter_domain) {
   col_copy_outputs <- split(
     actions[actions$type == "col_copy", c("domain", "outputs")],
     by = "domain"
   )
 
-  has_domain_filter <- lapply(
-    purrr::list_transpose(ui_init)$filter_domain,
-    function(x) {
-      any(!is.na(unlist(x)))
-    }
-  )
+  has_domain_filter <- has_domain_level_filter(filter_domain)
 
   domain_init_actions <-
     lapply(seq_along(col_copy_outputs), function(i) {

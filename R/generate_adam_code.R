@@ -150,10 +150,20 @@ generate_adam_code <- function(
   )
 
   actions_01_base <- actions_configuration$actions
-  actions_02_init <- add_initialize_domain_actions(actions_01_base, ui_init)
+
+  ui_init_t <- purrr::list_transpose(ui_init, simplify = FALSE)
+  filter_depend_cols <- ui_init_t$filter_depend_cols
+  filter_domain <- ui_init_t$filter_domain
+
+  actions_02_init <- add_initialize_domain_actions(
+    actions_01_base,
+    ui_init,
+    filter_domain
+  )
   actions_03_filter <- add_filter_domain_actions(
     actions_02_init,
-    ui_init,
+    filter_depend_cols,
+    filter_domain,
     domain_keys
   )
   edges <- make_edges(actions_03_filter)
