@@ -31,6 +31,9 @@ read_mighty_metadata_adam_domain <- function(yaml_file_path) {
   yaml_content <- rlang::try_fetch(
     yaml_file_path |>
       mighty.metadata::mighty_metadata() |>
+      S7schema::validate_list(
+        schema = system.file("schemas", "mighty.json", package = "mighty")
+      ) |>
       convert_to_NA_character(),
     error = function(cnd) {
       throw_yaml_validation_error(

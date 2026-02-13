@@ -1,3 +1,187 @@
+test_that("Column depends with wrong prefix should fail", {
+  # SETUP ----------------------------------------------------------------------
+
+  yaml_content <- "
+id: ADLB
+label: Laboratory Analysis Dataset
+class: BASIC DATA STRUCTURE
+structure: One record per subject per parameter per analysis visit
+keys: [USUBJID]
+population:
+  base:
+    - domain: LB
+      depends:
+        - NA
+      filter: NA
+  global:
+    - filter: 'SAFFL == \"Y\"'
+      depends:
+        - SAFFL
+columns:
+  - id: USUBJID
+  - id: VAR1
+    depends: 
+      parameter.row_action_00
+  - id: VAR2
+    depends: 
+      row.row_action_99
+rows:
+  - id: row_action_99
+    component:
+      id: row_action_99
+parameters:
+  - id: row_action_00
+    component:
+      id: row_action_00
+"
+  yaml_file <- create_temp_yaml(yaml_content)
+  # ACT / ASSERT ---------------------------------------------------------------
+
+  err_ <- read_mighty_metadata_adam_domain(yaml_file) |>
+    expect_error("YAML validation failed")
+  expect_match(
+    err_$parent$message,
+    "/columns/1/depends must match pattern.*(rows|parameters)",
+    all = FALSE
+  )
+})
+
+test_that("Row depends with wrong prefix should fail", {
+  # SETUP ----------------------------------------------------------------------
+
+  yaml_content <- "
+id: ADLB
+label: Laboratory Analysis Dataset
+class: BASIC DATA STRUCTURE
+structure: One record per subject per parameter per analysis visit
+keys: [USUBJID]
+population:
+  base:
+    - domain: LB
+      depends:
+        - NA
+      filter: NA
+  global:
+    - filter: 'SAFFL == \"Y\"'
+      depends:
+        - SAFFL
+columns:
+  - id: USUBJID
+rows:
+  - id: row_action_99
+    component:
+      id: row_action_99
+    depends: parameter_action_00
+parameters:
+  - id: parameter_action_00
+    component:
+      id: parameter_action_00
+"
+  yaml_file <- create_temp_yaml(yaml_content)
+  # ACT / ASSERT ---------------------------------------------------------------
+
+  err_ <- read_mighty_metadata_adam_domain(yaml_file) |>
+    expect_error("YAML validation failed")
+  expect_match(
+    err_$parent$message,
+    "/rows/0/depends must match pattern.*(rows|parameters)",
+    all = FALSE
+  )
+})
+
+test_that("Parameter depends with wrong prefix should fail", {
+  # SETUP ----------------------------------------------------------------------
+
+  yaml_content <- "
+id: ADLB
+label: Laboratory Analysis Dataset
+class: BASIC DATA STRUCTURE
+structure: One record per subject per parameter per analysis visit
+keys: [USUBJID]
+population:
+  base:
+    - domain: LB
+      depends:
+        - NA
+      filter: NA
+  global:
+    - filter: 'SAFFL == \"Y\"'
+      depends:
+        - SAFFL
+columns:
+  - id: USUBJID
+rows:
+  - id: row_action_99
+    component:
+      id: row_action_99
+parameters:
+  - id: parameter_action_00
+    component:
+      id: parameter_action_00
+    depends: row_action_99
+"
+  yaml_file <- create_temp_yaml(yaml_content)
+  # ACT / ASSERT ---------------------------------------------------------------
+
+  err_ <- read_mighty_metadata_adam_domain(yaml_file) |>
+    expect_error("YAML validation failed")
+  expect_match(
+    err_$parent$message,
+    "/parameters/0/depends must match pattern.*(rows|parameters)",
+    all = FALSE
+  )
+})
+
+test_that("Dependencies with correct prefix should pass", {
+  # SETUP ----------------------------------------------------------------------
+
+  yaml_content <- "
+id: ADLB
+label: Laboratory Analysis Dataset
+class: BASIC DATA STRUCTURE
+structure: One record per subject per parameter per analysis visit
+keys: [USUBJID]
+population:
+  base:
+    - domain: LB
+      depends:
+        - NA
+      filter: NA
+  global:
+    - filter: 'SAFFL == \"Y\"'
+      depends:
+        - SAFFL
+columns:
+  - id: USUBJID
+  - id: VAR1
+    depends: 
+    -  parameters.parameter_action_00
+  - id: VAR2
+    depends: 
+    -  rows.row_action_99
+rows:
+  - id: row_action_99
+    component:
+      id: row_action_99
+    depends: 
+    -  parameters.parameter_action_00
+    -  parameters.parameter_action_01
+parameters:    
+  - id: parameter_action_00
+    component:
+      id: parameter_action_00
+  - id: parameter_action_01
+    component:
+      id: parameter_action_01
+    depends: 
+    -  parameters.parameter_action_00
+"
+  yaml_file <- create_temp_yaml(yaml_content)
+  # ACT / ASSERT ---------------------------------------------------------------
+  read_mighty_metadata_adam_domain(yaml_file) |>
+    expect_no_error()
+})
+
 test_that("Too many specifications for column fail yaml validation checks", {
   # SETUP ----------------------------------------------------------------------
 
@@ -243,4 +427,81 @@ parameters:
       "The following row or parameter id\\(s\\) are defined multiple times:"
     )
   expect_match(err_$body, "- duplicate_row_id", all = FALSE)
+})
+
+test_that("missing population section fails validation", {
+  # SETUP ----------------------------------------------------------------------
+
+  yaml_content <- "
+id: ADLB
+label: Laboratory Analysis Dataset
+class: BASIC DATA STRUCTURE
+structure: One record per subject per parameter per analysis visit
+keys: [USUBJID]
+columns:
+  - id: USUBJID
+"
+  yaml_file <- create_temp_yaml(yaml_content)
+
+  # ACT / ASSERT ---------------------------------------------------------------
+  read_mighty_metadata_adam_domain(yaml_file) |>
+    expect_error("YAML validation failed")
+
+  read_mighty_metadata_adam_domain(yaml_file) |>
+    expect_error("must have required property 'population'")
+})
+
+test_that("missing population.base section fails validation", {
+  # SETUP ----------------------------------------------------------------------
+
+  yaml_content <- "
+id: ADLB
+label: Laboratory Analysis Dataset
+class: BASIC DATA STRUCTURE
+structure: One record per subject per parameter per analysis visit
+keys: [USUBJID]
+population:
+  global:
+    - filter: 'SAFFL == \"Y\"'
+      depends:
+        - SAFFL
+columns:
+  - id: USUBJID
+"
+  yaml_file <- create_temp_yaml(yaml_content)
+
+  # ACT / ASSERT ---------------------------------------------------------------
+  read_mighty_metadata_adam_domain(yaml_file) |>
+    expect_error("YAML validation failed")
+
+  read_mighty_metadata_adam_domain(yaml_file) |>
+    expect_error("must have required property 'base'")
+})
+
+test_that("empty population.base array fails validation", {
+  # SETUP ----------------------------------------------------------------------
+
+  yaml_content <- "
+id: ADLB
+label: Laboratory Analysis Dataset
+class: BASIC DATA STRUCTURE
+structure: One record per subject per parameter per analysis visit
+keys: [USUBJID]
+population:
+  base: []
+  global:
+    - filter: 'SAFFL == \"Y\"'
+      depends:
+        - SAFFL
+columns:
+  - id: USUBJID
+"
+  yaml_file <- create_temp_yaml(yaml_content)
+
+  # ACT / ASSERT ---------------------------------------------------------------
+  read_mighty_metadata_adam_domain(yaml_file) |>
+    expect_error("YAML validation failed")
+
+  read_mighty_metadata_adam_domain(yaml_file) |>
+    expect_error("must NOT have fewer than 1 items")
 })

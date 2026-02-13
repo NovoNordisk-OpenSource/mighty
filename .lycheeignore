@@ -1,0 +1,2 @@
+# Schema $id references to private repos - will not be available without authentication 
+https://raw.githubusercontent.com/NN-OpenSource/mighty/main/inst/schemas/mighty.json

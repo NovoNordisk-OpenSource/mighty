@@ -1,0 +1,63 @@
+{
+  "$id": "https://raw.githubusercontent.com/NN-OpenSource/mighty/main/inst/schemas/mighty.json",
+  "title": "Mighty-specific strict validation overlay",
+  "description": "Strict validation rules specific to mighty package, applied after base adam.json validation",
+  "type": "object",
+  "required": ["population"],
+  "properties": {
+    "columns": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/column_item" }
+    },
+    "rows": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/row_item" }
+    },
+    "parameters": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/parameter_item" }
+    }
+  },
+  "additionalProperties": true,
+  "definitions": {
+    "dependency_string": {
+      "type": "string",
+      "title": "Column dependencies must be prefixed with 'rows.' or 'parameters.'",
+      "pattern": "^(?:rows|parameters)\\.[a-z_][a-z0-9_]*$"
+    },
+    "depends_field": {
+      "description": "Dependencies must use 'rows.' or 'parameters.' prefix (e.g., 'rows.new_row')",
+      "oneOf": [
+        { "$ref": "#/definitions/dependency_string" },
+        {
+          "type": "array",
+          "items": { "$ref": "#/definitions/dependency_string" },
+          "minItems": 1,
+          "uniqueItems": true
+        }
+      ]
+    },
+    "column_item": {
+      "type": "object",
+      "properties": {
+        "depends": { "$ref": "#/definitions/depends_field" }
+      },
+      "additionalProperties": true
+    },
+    "row_item": {
+      "type": "object",
+      "properties": {
+        "depends": { "$ref": "#/definitions/depends_field" }
+      },
+      "additionalProperties": true
+    },
+    "parameter_item": {
+      "type": "object",
+      "properties": {
+        "depends": { "$ref": "#/definitions/depends_field" }
+      },
+      "additionalProperties": true
+    }
+  }
+}
+
