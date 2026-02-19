@@ -34,7 +34,7 @@ consolidate_metadata <- function(code_component_metadata, ui_data) {
       outputs = get("outputs"),
       domain = get("domain")
     )],
-    pred_type
+    classify_action_type
   ) |>
     unlist()
   ui_data_updated[, "type_from_code" := NULL]
@@ -55,43 +55,58 @@ consolidate_metadata <- function(code_component_metadata, ui_data) {
   return(processed_data)
 }
 
-pred_type <- function(code_id, type_from_code, depend_cols, outputs, domain) {
-  # Check if code_id is provided and retrieve the type
+classify_action_type <- function(
+  code_id,
+  type_from_code,
+  depend_cols,
+  outputs,
+  domain
+) {
+  # Type determined by code component metadata
   if (!is.na(code_id)) {
-    if (type_from_code %in% c("derivation", "predecessor")) {
-      return("col_compute")
-    } else if (type_from_code == "row") {
-      return("row_compute")
-    } else {
-      stop(
-        paste0("Invalid action type ", type_from_code, " for ", code_id),
-        "."
-      )
-    }
+    return(switch(
+      type_from_code,
+      derivation = ,
+      predecessor = "col_compute",
+      row = "row_compute",
+      cli::cli_abort(c(
+        "Invalid action type {.val {type_from_code}} for code component {.val {code_id}}.",
+        "i" = "Domain: {.val {domain}}",
+        "i" = "Output column{?s}: {.val {outputs}}",
+        "i" = "Expected type to be one of: {.val {c('derivation', 'predecessor', 'row')}}"
+      ))
+    ))
   }
 
-  # Check if depend_cols are all NA
-  if (all(sapply(depend_cols, is.na))) {
+  # No dependencies -> simple copy from source
+  if (purrr::every(depend_cols, is.na)) {
     return("col_copy")
   }
 
-  if (!grepl("\\.", depend_cols[[1]]) && depend_cols[[1]] != outputs[[1]]) {
+  dependency <- unlist(depend_cols)
+  checkmate::assert_character(dependency, len = 1L, any.missing = FALSE)
+  is_local <- !has_domain_prefix(dependency)
+  is_different_column <- dependency != unlist(outputs)
+
+  # Depends on a different local column -> mutation
+  if (is_local && is_different_column) {
     return("col_mutate")
   }
 
-  # Split the depend_cols and take the first part directly
-  v <- strsplit(depend_cols[!is.na(depend_cols)], "\\.")
-
-  # Check if there's a valid dependency
-  if (length(v[[1]]) == 2) {
-    dep_domain <- v[[1]][1] # Get the first part of the first valid depend_col
+  # Depends on column from another domain -> echo
+  if (has_domain_prefix(dependency)) {
+    dep_domain <- extract_domain_prefix(dependency)
     if (domain != dep_domain) {
       return("col_echo")
     }
   }
 
-  # If no criteria are met
-  stop("Unable to determine action type.")
+  cli::cli_abort(c(
+    "Unable to determine action type.",
+    "i" = "Domain: {.val {domain}}",
+    "i" = "Output column{?s}: {.val {outputs}}",
+    "i" = "Dependencies: {.val {depend_cols}}"
+  ))
 }
 
 #' Extract and format metadata for active code IDs
@@ -181,7 +196,7 @@ merge_ui_with_metadata <- function(ui_data, code_id_data) {
 #' @description
 #' Processes the depend_cols column in UI data by applying domain-specific transformations.
 #' @details
-#' Applies the process_column_dependencies function to each row's depend_cols
+#' Applies the process_action_depend_cols function to each action's depend_cols
 #' and domain values, transforming the depend_cols into a structured format.
 #'
 #' @param data UI data with depend_cols to process
@@ -191,28 +206,24 @@ merge_ui_with_metadata <- function(ui_data, code_id_data) {
 process_depend_cols <- function(data) {
   results <- purrr::pmap(
     data[, .(type, depend_cols, domain, outputs)],
-    process_column_dependencies
+    process_action_depend_cols
   )
   data[, depend_cols := results]
   return(data)
 }
 
-#' Process Column Dependencies
+#' Process Column Dependencies for a Single Action
 #'
 #' @description
 #' Transforms column dependencies into a structured data table with domain information.
 #'
-#' @details
-#' Processes a list of column dependencies, handling both domain-prefixed
-#' elements (containing dots) and elements without domain prefixes. Creates a data table
-#' with column names, domains, and domain types. Special handling is provided for:
-#' - col_copy actions that depend on themselves
-#' - col_compute actions with no dependencies
-#' - Pre-structured data.frame inputs
-#'
 #' @param type Character string specifying the action type (e.g., "col_copy", "col_compute").
-#' @param depend_cols List of column dependencies to process, can be a list of strings
-#'   or a data.frame with existing structure.
+#' @param depend_cols Column dependencies. Format depends on action type:
+#'   - **data.frame** (with `domain`, `column` cols): For actions with a `code_id`
+#'     (col_compute, row_compute). Parsed from code component roxygen `@depends` tags.
+#'   - **list of strings**: For actions without a `code_id` (col_echo, col_mutate).
+#'     Comes from YAML `method` field, e.g. `"adsl.TRTSDT"` or `"TRTSDT"`.
+#'   - **NA**: For col_copy actions (dependencies are inferred from outputs).
 #' @param domain Character string specifying the current domain value to use for
 #'   elements without domain prefixes.
 #' @param outputs List of outputs from the action, used for col_copy self-dependencies.
@@ -222,80 +233,64 @@ process_depend_cols <- function(data) {
 #' and domain_type. Returns empty data table if no valid dependencies are found.
 #'
 #' @noRd
-process_column_dependencies <- function(type, depend_cols, domain, outputs) {
+process_action_depend_cols <- function(type, depend_cols, domain, outputs) {
+  checkmate::assert_string(type)
+  checkmate::assert_string(domain)
+  checkmate::assert(
+    checkmate::check_data_frame(depend_cols),
+    checkmate::check_list(depend_cols),
+    checkmate::check_atomic(depend_cols)
+  )
+
   # col_copy actions have dependencies on themselves
   if (type == "col_copy") {
-    return(
-      data.table::data.table(
-        column_name = outputs,
-        domain = domain,
-        domain_type = classify_data_domains(domain)
-      )
-    )
-  } else if (type == "col_compute" && all(is.na(depend_cols))) {
-    # col_compute actions with no dependencies will have an empty dependency table
-    return(
-      data.table::data.table(
-        column_name = character(0),
-        domain = character(0),
-        domain_type = character(0)
-      )
-    )
-  }
-  # If the depend_cols is already a data.frame then add the domain of each dependency to that data.frame and rename
-  if (is.data.frame(depend_cols)) {
-    out <- data.table::as.data.table(depend_cols)
-    return(
-      out[, domain_type := classify_data_domains(domain)] |>
-        setnames(
-          old = c("column", "domain"),
-          new = c("column_name", "domain")
-        ) |>
-        setcolorder(c("column_name", "domain", "domain_type"))
-    )
-  }
-  # Extract all elements
-  elements <- unlist(depend_cols)
-
-  # Process based on element format
-  elements_with_dot <- elements[grepl("\\.", elements)]
-  elements_without_dot <- elements[!grepl("\\.", elements)]
-
-  # Create result data tables
-  result <- list()
-
-  # Process elements with domain prefix (containing dots)
-  if (length(elements_with_dot) > 0) {
-    domains <- sub("\\.(.*)", "", elements_with_dot)
-    columns <- sub("^[^.]*\\.", "", elements_with_dot)
-    domain_types <- classify_data_domains(domains)
-
-    result[[1]] <- data.table::data.table(
-      column_name = columns,
-      domain = domains,
-      domain_type = domain_types
-    )
-  }
-
-  # Process elements without domain prefix
-  if (length(elements_without_dot) > 0) {
-    result[[length(result) + 1]] <- data.table::data.table(
-      column_name = elements_without_dot,
+    return(data.table::data.table(
+      column_name = outputs,
       domain = domain,
       domain_type = classify_data_domains(domain)
-    )
-  }
-
-  # Combine results
-  if (length(result) > 0) {
-    return(data.table::rbindlist(result))
-  } else {
-    return(data.table::data.table(
-      column_name = character(0),
-      domain = character(0),
-      domain_type = character(0)
     ))
   }
+
+  # All col_compute and row_compute come via mighty.component which
+  # provides the depend_cols as a data.frame
+  if (is.data.frame(depend_cols)) {
+    if (nrow(depend_cols) == 0) {
+      return(empty_dependency_table())
+    }
+    return(data.table::data.table(
+      column_name = depend_cols$column,
+      domain = depend_cols$domain,
+      domain_type = classify_data_domains(depend_cols$domain)
+    ))
+  }
+
+  # Only col_echo and col_mutate reach here - their depend_cols comes from
+  # the YAML method field, which is always a single value
+  elements <- unlist(depend_cols)
+  checkmate::assert_character(elements, len = 1L, any.missing = FALSE)
+
+  parsed_domain <- if (has_domain_prefix(elements)) {
+    extract_domain_prefix(elements)
+  } else {
+    domain
+  }
+  parsed_id <- extract_dependency_id(elements)
+
+  data.table::data.table(
+    column_name = parsed_id,
+    domain = parsed_domain,
+    domain_type = classify_data_domains(parsed_domain)
+  )
+}
+
+#' Create an empty dependency table
+#' @noRd
+empty_dependency_table <- function() {
+  data.table::data.table(
+    column_name = character(0),
+    domain = character(0),
+    domain_type = character(0)
+  )
 }
 
 
@@ -343,9 +338,11 @@ add_node_id <- function(nodes) {
 #' @return Vector of formatted output strings
 #' @noRd
 format_outputs <- function(outputs) {
-  ifelse(
-    !is.na(outputs),
-    lapply(outputs, function(x) paste0(unlist(x), collapse = "-")),
-    ""
+  vapply(
+    outputs,
+    function(x) {
+      if (anyNA(x)) "" else paste0(unlist(x), collapse = "-")
+    },
+    character(1)
   )
 }

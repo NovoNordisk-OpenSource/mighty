@@ -115,8 +115,8 @@ get_domains_with_filters <- function(filter_depend_cols) {
 parse_external_domain_refs <- function(filter_depend_cols, domains_w_filter) {
   filter_dependencies <- filter_depend_cols[domains_w_filter]
   lapply(filter_dependencies, function(cols) {
-    cols_with_domain_prefix <- cols[grepl("\\.", cols)]
-    sub("\\..*", "", cols_with_domain_prefix) |> unique()
+    domain_prefixed <- cols[has_domain_prefix(cols)]
+    extract_domain_prefix(domain_prefixed) |> unique()
   })
 }
 

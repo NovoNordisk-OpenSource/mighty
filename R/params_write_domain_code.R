@@ -22,9 +22,8 @@ params_write_domain_code <- function(
           available_data$domain == .self & !available_data$column_name == "SRC_"
         ]
       }
-      keep_vars_contain_uncommented_code <- !(
-        length(available_vars) == length(keep_vars)
-      )
+      keep_vars_contain_uncommented_code <- !(length(available_vars) ==
+        length(keep_vars)) # nolint
       keep_vars <- paste(
         ifelse(
           keep_vars %in% available_vars,

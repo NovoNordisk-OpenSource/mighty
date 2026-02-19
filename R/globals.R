@@ -47,9 +47,6 @@ utils::globalVariables(c(
   # organize_actions variables
   "parent_node",
 
-  # process_column_dependencies variables
-  # (domain_type already declared above)
-
   # process_depend_cols variables
   # (type, depend_cols, domain, outputs already declared above)
 

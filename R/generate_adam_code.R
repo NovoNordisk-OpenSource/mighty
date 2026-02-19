@@ -140,18 +140,18 @@ generate_adam_code <- function(
     assert_valid_trial_config()
   domain_keys <- collate_primary_keys(ui_yml, trial_metadata)
 
-  # Prepare the initial internal nodes data model and create environment to store
-  # standard components
+  ui_init_t <- purrr::list_transpose(ui_init, simplify = FALSE)
+
+  # Prepare the initial internal nodes data model
   actions_configuration <- setup_actions(
     ui_yml = ui_yml,
-    standards_lib = standards_lib,
+    ui_init_t = ui_init_t,
     check_cross_domain_adam_dependencies,
     domain_keys
   )
 
   actions_01_base <- actions_configuration$actions
 
-  ui_init_t <- purrr::list_transpose(ui_init, simplify = FALSE)
   filter_depend_cols <- ui_init_t$filter_depend_cols
   filter_domain <- ui_init_t$filter_domain
 

@@ -73,10 +73,12 @@ params_domain_filter_code <- function(
 
 
 format_filter_depends <- function(x) {
-  has_dot <- grepl("\\.", x)
-  x_with_dots <- x[has_dot]
-  domains <- sub("^([^.]*)\\..*", "\\1", x_with_dots)
-  variables <- sub("^[^.]*\\.", "", x_with_dots)
+  domain_prefixed <- x[has_domain_prefix(x)]
+  if (length(domain_prefixed) == 0) {
+    return(list())
+  }
+  domains <- extract_domain_prefix(domain_prefixed)
+  variables <- extract_dependency_id(domain_prefixed)
   split(variables, domains)
 }
 

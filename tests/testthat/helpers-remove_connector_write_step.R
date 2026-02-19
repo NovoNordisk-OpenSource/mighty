@@ -30,7 +30,7 @@
 remove_connector_write_step <- function(program) {
   if (.Platform$OS.type == "windows") {
     program_lines <- strsplit(program, "\n")[[1]]
-    program_lines <- program_lines[1: (length(program_lines) - 2)]
+    program_lines <- program_lines[1:(length(program_lines) - 2)]
     return(paste(program_lines, collapse = "\n"))
   }
   program

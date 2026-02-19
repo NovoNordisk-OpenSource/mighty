@@ -169,8 +169,10 @@ get_filter_adam_dependencies <- function(ui_yml, domain_keys) {
 
       if (any(!is.na(dep_cols_i))) {
         # Identify external domains and associated dependency columns for joining
-        is_external <- grepl("\\.", dep_cols_i)
-        external_domains <- unique(gsub("\\..*", "", dep_cols_i[is_external]))
+        is_external <- has_domain_prefix(dep_cols_i)
+        external_domains <- dep_cols_i[is_external] |>
+          extract_domain_prefix() |>
+          unique()
         external_domain_types <- classify_data_domains(external_domains)
 
         keys_i <- lapply(external_domains, function(j) {

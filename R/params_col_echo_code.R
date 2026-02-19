@@ -45,11 +45,11 @@ pre_process_generate_rename_left_join_code <- function(
   var_to_add <- setdiff(depend_columns, by_vars)
 
   # Remove all the domain prefixes
-  var_to_add <- sub(".*\\.", "", var_to_add)
+  var_to_add <- extract_dependency_id(var_to_add)
   return(list(
     join_dataset = join_dataset,
     var_to_add = var_to_add,
     by_vars = by_vars,
-    output_var = sub(".*\\.", "", outputs)
+    output_var = extract_dependency_id(outputs)
   ))
 }

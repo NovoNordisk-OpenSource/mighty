@@ -274,14 +274,11 @@ should_use_method_as_depend_cols <- function(
   }
 
   # Method must reference a different column or domain
-  method_parts <- strsplit(method, ".", fixed = TRUE)[[1]]
-
-  # Check if method references a different column/domain
-  is_different <- if (length(method_parts) == 2) {
-    # Format: "DOMAIN.COLUMN"
-    method_parts[1] != domain_id || method_parts[2] != col_id
+  is_different <- if (has_domain_prefix(method)) {
+    parsed_domain <- extract_domain_prefix(method)
+    parsed_column <- extract_dependency_id(method)
+    parsed_domain != domain_id || parsed_column != col_id
   } else {
-    # Format: "COLUMN" (no domain prefix)
     method != col_id
   }
 
@@ -306,10 +303,9 @@ extract_row_deps_from_depends <- function(depends) {
   if (!has_content(depends)) {
     return(NA_character_)
   }
-  pattern <- "^(rows|parameters)\\."
-  row_deps <- grep(pattern, depends, value = TRUE)
+  row_deps <- depends[is_row_dependency(depends)]
   if (length(row_deps) > 0) {
-    sub(pattern, "", row_deps)
+    extract_dependency_id(row_deps)
   } else {
     NA_character_
   }

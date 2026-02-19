@@ -168,8 +168,8 @@ extract_row_dependencies_from_object <- function(obj) {
   if (is.null(obj$depends)) {
     return(character(0))
   }
-  row_deps <- grep("^(rows\\.|parameters\\.)", obj$depends, value = TRUE)
-  gsub("^(rows\\.|parameters\\.)", "", row_deps)
+  row_deps <- obj$depends[is_row_dependency(obj$depends)]
+  extract_dependency_id(row_deps)
 }
 
 
