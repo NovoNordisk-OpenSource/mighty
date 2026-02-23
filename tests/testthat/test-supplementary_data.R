@@ -1,12 +1,9 @@
 test_that("Supplementary data action is placed after filter_domain when no supplementary columns are used in filters", {
   # SETUP -------------------------------------------------------------------
 
-  adam_specifications <- test_path("fixtures", "supplementary_data_adsl_01.yml")
-  adam_specifications_rendered <- setup_yml_file_for_testing(
-    adam_specifications,
-    environment()
+  adam_specifications <- setup_study_from_fixtures(
+    fixtures = list("adsl" = "supplementary_data_adsl_01.yml", "_mighty" = "_mighty.yml")
   )
-  path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
   path_trial <- withr::local_tempdir()
 
   setup_testdata(
@@ -19,9 +16,9 @@ test_that("Supplementary data action is placed after filter_domain when no suppl
   # ACT ---------------------------------------------------------------------
 
   actual <- generate_adam_code(
-    adam_specifications = adam_specifications_rendered,
+    adam_specifications = adam_specifications,
     standards_lib = standards_lib,
-    path_trial_metadata = path_trial_metadata,
+
     path_trial = path_trial,
     check_cross_domain_adam_dependencies = TRUE
   )
@@ -76,12 +73,9 @@ test_that("Supplementary data action is placed after filter_domain when no suppl
 test_that("Supp data action is placed before filter_domain when supp columns are used in filters (1 domain filter)", {
   # SETUP -------------------------------------------------------------------
 
-  adam_specifications <- test_path("fixtures", "supplementary_data_adsl_02.yml")
-  adam_specifications_rendered <- setup_yml_file_for_testing(
-    adam_specifications,
-    environment()
+  adam_specifications <- setup_study_from_fixtures(
+    fixtures = list("adsl" = "supplementary_data_adsl_02.yml", "_mighty" = "_mighty.yml")
   )
-  path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
   path_trial <- withr::local_tempdir()
 
   setup_testdata(
@@ -94,9 +88,9 @@ test_that("Supp data action is placed before filter_domain when supp columns are
   # ACT ---------------------------------------------------------------------
 
   actual <- generate_adam_code(
-    adam_specifications = adam_specifications_rendered,
+    adam_specifications = adam_specifications,
     standards_lib = standards_lib,
-    path_trial_metadata = path_trial_metadata,
+
     path_trial = path_trial,
     check_cross_domain_adam_dependencies = TRUE
   )
@@ -153,12 +147,9 @@ test_that("Supp data action is placed before filter_domain when supp columns are
 test_that("Supp data action is placed before filter_domain when supp columns are used in filters (2 domain filters)", {
   # SETUP -------------------------------------------------------------------
 
-  adam_specifications <- test_path("fixtures", "supplementary_data_adsl_03.yml")
-  adam_specifications_rendered <- setup_yml_file_for_testing(
-    adam_specifications,
-    environment()
+  adam_specifications <- setup_study_from_fixtures(
+    fixtures = list("adsl" = "supplementary_data_adsl_03.yml", "_mighty" = "_mighty.yml")
   )
-  path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
   path_trial <- withr::local_tempdir()
 
   setup_testdata(
@@ -171,9 +162,9 @@ test_that("Supp data action is placed before filter_domain when supp columns are
   # ACT ---------------------------------------------------------------------
 
   actual <- generate_adam_code(
-    adam_specifications = adam_specifications_rendered,
+    adam_specifications = adam_specifications,
     standards_lib = standards_lib,
-    path_trial_metadata = path_trial_metadata,
+
     path_trial = path_trial,
     check_cross_domain_adam_dependencies = TRUE
   )
@@ -231,14 +222,8 @@ test_that("Supp data action is placed before filter_domain when supp columns are
 test_that("Supp data action is placed before filter_domain when supp columns and ADSL cols are used in filters", {
   # SETUP -------------------------------------------------------------------
 
-  adam_specifications <- test_path("fixtures", "supplementary_data_adae_01.yml")
-  adam_specifications_rendered <- setup_yml_file_for_testing(
-    adam_specifications,
-    environment()
-  )
-  path_trial_metadata <- test_path(
-    "fixtures",
-    "trial_metadata_lowercase_adsl.yml"
+  adam_specifications <- setup_study_from_fixtures(
+    fixtures = list("adae" = "supplementary_data_adae_01.yml", "_mighty" = "_mighty_lowercase_adsl.yml")
   )
   path_trial <- withr::local_tempdir()
 
@@ -253,9 +238,9 @@ test_that("Supp data action is placed before filter_domain when supp columns and
   # ACT ---------------------------------------------------------------------
 
   actual <- generate_adam_code(
-    adam_specifications = adam_specifications_rendered,
+    adam_specifications = adam_specifications,
     standards_lib = standards_lib,
-    path_trial_metadata = path_trial_metadata,
+
     path_trial = path_trial,
     check_cross_domain_adam_dependencies = FALSE
   )
@@ -297,14 +282,8 @@ test_that("Supp data action is placed before filter_domain when supp columns and
 test_that("Col_compute and parent col_compute is placed before filter_domain when the col_compute is used in filters", {
   # SETUP -------------------------------------------------------------------
 
-  adam_specifications <- test_path("fixtures", "supplementary_data_adae_02.yml")
-  adam_specifications_rendered <- setup_yml_file_for_testing(
-    adam_specifications,
-    environment()
-  )
-  path_trial_metadata <- test_path(
-    "fixtures",
-    "trial_metadata_lowercase_adsl.yml"
+  adam_specifications <- setup_study_from_fixtures(
+    fixtures = list("adae" = "supplementary_data_adae_02.yml", "_mighty" = "_mighty_lowercase_adsl.yml")
   )
   path_trial <- withr::local_tempdir()
 
@@ -319,9 +298,9 @@ test_that("Col_compute and parent col_compute is placed before filter_domain whe
   # ACT ---------------------------------------------------------------------
 
   actual <- generate_adam_code(
-    adam_specifications = adam_specifications_rendered,
+    adam_specifications = adam_specifications,
     standards_lib = standards_lib,
-    path_trial_metadata = path_trial_metadata,
+
     path_trial = path_trial,
     check_cross_domain_adam_dependencies = FALSE
   )

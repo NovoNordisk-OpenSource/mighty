@@ -1,20 +1,15 @@
-trial_id: "0001"
-project_id: "1234"
-complete_id: "0001-1234"
-instance: "current"
-
 keys:
-   EX:
+  EX:
     - USUBJID
-   DS:
+  DS:
     - USUBJID
-   MDPARAM:
+  MDPARAM:
     - STUDYID
     - TOPICCD
-   MDVISIT:
+  MDVISIT:
     - STUDYID
     - AVISITN
-   MDFLOW:
+  MDFLOW:
     - STUDYID
     - AVISITN
     - TOPICCD

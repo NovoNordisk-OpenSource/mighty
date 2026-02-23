@@ -53,3 +53,80 @@ create_temp_yaml <- function(
   writeLines(content, path)
   path
 }
+
+
+#' Setup Temporary Study Directory for Testing
+#'
+#' Creates a temporary directory and writes YAML files for testing purposes.
+#' The directory is automatically cleaned up when the calling environment exits
+#' (typically at the end of a testthat test).
+#'
+#' @param yaml_list A named list where each element contains YAML content as a
+#'   character vector (suitable for `writeLines`). The names of the list
+#'   elements will be used as filenames (with .yml extension added if not
+#'   present).
+#' @param .local_envir The environment where the temporary directory should be
+#'   registered for cleanup. Defaults to the parent frame.
+#'
+#' @return The path to the created temporary directory containing the YAML files.
+#'
+#' @keywords internal testing
+#' @noRd
+setup_study_dir <- function(yaml_list, .local_envir = parent.frame()) {
+  dir <- withr::local_tempdir(.local_envir = .local_envir)
+  for (name in names(yaml_list)) {
+    filename <- if (grepl("\\.yml$", name)) {
+      name
+    } else {
+      paste0(name, ".yml")
+    }
+
+    filepath <- file.path(dir, filename)
+    writeLines(yaml_list[[name]], filepath)
+  }
+
+  return(dir)
+}
+
+
+#' Setup Study Directory from Test Fixtures
+#'
+#' Convenience function to load YAML fixtures, process glue placeholders,
+#' and create a study directory for testing with mighty_study().
+#'
+#' @param fixtures Named list where names are file IDs (e.g., "adsl", "adlb",
+#'   "_mighty") and values are fixture filenames (e.g., "complex_adsl.yml")
+#' @param process_glue Logical. If TRUE (default), processes {path_base} glue
+#'   placeholders in the YAML files.
+#' @param .local_envir Environment for cleanup. Defaults to parent frame.
+#'
+#' @return Path to temporary study directory containing processed YAML files
+#'
+#'
+#' @noRd
+setup_study_from_fixtures <- function(
+  fixtures,
+  process_glue = TRUE,
+  .local_envir = parent.frame()
+) {
+  path_base <- testthat::test_path()
+
+  yaml_list <- lapply(names(fixtures), function(domain_id) {
+    fixture_name <- fixtures[[domain_id]]
+    content <- readLines(testthat::test_path("fixtures", fixture_name))
+
+    if (process_glue) {
+      processed <- as.character(glue::glue(
+        paste(content, collapse = "\n"),
+        path_base = path_base,
+        .trim = FALSE
+      ))
+      strsplit(processed, "\n")[[1]]
+    } else {
+      content
+    }
+  })
+  names(yaml_list) <- names(fixtures)
+
+  setup_study_dir(yaml_list, .local_envir = .local_envir)
+}

@@ -173,7 +173,7 @@ Global filters can reference columns from external ADaM or SDTM domains by:
 1. Listing required columns in `global.depends` with domain prefix (e.g., `ADSL.SAFFL`)
 2. Writing filter expressions that reference the columns without the prefix (e.g., `SAFFL == "Y"`)
 
-mighty automatically handles the join operation using the primary keys defined in trial metadata.
+mighty automatically handles the join operation using the primary keys defined in `_mighty.yml`.
 
 ## Simple example
 

@@ -7,23 +7,18 @@
 generate_adam_code(
   adam_specifications,
   standards_lib = NULL,
-  path_trial_metadata,
   path_trial,
   check_cross_domain_adam_dependencies = TRUE,
   data_context = NULL
 )
 }
 \arguments{
-\item{adam_specifications}{Character string. File path to the ADaM specifications
-(typically a YAML file) containing user-defined ADaM dataset configurations,
-column definitions, and transformation rules.}
+\item{adam_specifications}{Character string. Directory path containing ADaM
+specification YAML files (one per domain) and optionally a \verb{_mighty.yml}
+configuration file with study-level metadata and dataset keys.}
 
 \item{standards_lib}{Optional list or environment containing standard code
 components and templates. If \code{NULL}, uses default standards library.}
-
-\item{path_trial_metadata}{Character string. File path to the trial metadata
-YAML file containing study-specific configuration, domain definitions,
-and primary key specifications.}
 
 \item{path_trial}{Character string. Base path to the trial directory where
 generated programs and data files will be referenced or stored.}
@@ -127,8 +122,7 @@ invalid
 \dontrun{
 # Generate ADaM programs with full dependency checking
 result <- generate_adam_code(
-  adam_specifications = "path/to/ADaM_specs.yml",
-  path_trial_metadata = "path/to/trial_metadata.yml",
+  adam_specifications = "path/to/yaml_specs_directory",
   path_trial = "path/to/trial_directory",
   check_cross_domain_adam_dependencies = TRUE
 )
@@ -139,9 +133,8 @@ executable_programs <- result$executable_programs
 
 # Generate with custom standards library
 result_custom <- generate_adam_code(
-  adam_specifications = "ADaM_specs.yml",
+  adam_specifications = "yaml_specs/",
   standards_lib = my_custom_standards,
-  path_trial_metadata = "trial_config.yml",
   path_trial = "trial_data/",
   check_cross_domain_adam_dependencies = FALSE
 )

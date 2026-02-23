@@ -1,9 +1,8 @@
-test_that("Throws error when external domain not found in trial metadata", {
+test_that("Throws error when external domain not found in _mighty.yml", {
   # SETUP -------------------------------------------------------------------
   trial_path <- withr::local_tempdir()
-  path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
 
-  # UNKNOWN_DOMAIN is not in trial metadata YAML
+  # UNKNOWN_DOMAIN is not in _mighty.yml
   yaml_content <- "
 id: ADSL
 label: Subject Level Analysis Dataset
@@ -29,14 +28,18 @@ columns:
     method: UNKNOWN_DOMAIN.SOME_COLUMN
 "
 
-  adam_specifications <- create_temp_yaml(yaml_content)
+  mighty_yml_content <- "keys: {}"
+
+  adam_specifications <- setup_study_dir(list(
+    "adsl" = yaml_content,
+    "_mighty" = mighty_yml_content
+  ))
 
   # ACT & EXPECT ------------------------------------------------------------
 
   expect_error(
     generate_adam_code(
       adam_specifications = adam_specifications,
-      path_trial_metadata = path_trial_metadata,
       path_trial = trial_path,
       check_cross_domain_adam_dependencies = TRUE
     ),

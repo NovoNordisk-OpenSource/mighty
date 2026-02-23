@@ -47,17 +47,21 @@ columns:
     writeLines(con = tmp_file)
   trial_path <- withr::local_tempdir()
 
-  adam_specifications <- file.path(trial_path, "ui_yml.yml")
-  whisker::whisker.render(yml, data = list(ady_custom = tmp_file)) |>
-    writeLines(adam_specifications)
+  yaml_content <- whisker::whisker.render(
+    yml,
+    data = list(ady_custom = tmp_file)
+  )
+  mighty_yml_content <- "keys: {}"
+  adam_specifications <- setup_study_dir(list(
+    "adsl" = yaml_content,
+    "_mighty" = mighty_yml_content
+  ))
 
-  path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
   output_path <- trial_path
   # ACT ------------------------------------------------------------
 
   actual <- generate_adam_code(
     adam_specifications = adam_specifications,
-    path_trial_metadata = path_trial_metadata,
     path_trial = trial_path,
     check_cross_domain_adam_dependencies = FALSE
   )

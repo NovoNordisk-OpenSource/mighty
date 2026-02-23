@@ -131,7 +131,7 @@ The package intelligently orchestrates the execution order of derivations, param
 
 > **Note:** Code components can be sourced from mighty.standards (processed via mighty.component) or defined as custom user components, depending on project requirements.
 
-See `vignette("trial_metadata")` and `vignette("adam_specification")` for more details on ADaM specifications, and `vignette("connect_to_data")` for more details on how source data is retrieved in the rendered programs.
+See `vignette("adam_specification")` for more details on ADaM specifications, `vignette("trial_metadata")` for study metadata configuration, and `vignette("connect_to_data")` for more details on how source data is retrieved in the rendered programs.
 
 ## The mighty ecosystem
 

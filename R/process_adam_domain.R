@@ -20,38 +20,27 @@
 #'
 #' @examples
 #' \dontrun{
-#' ui_yml <- read_mighty_metadata_adam_domain("path/to/mighty_metadata.yaml")
+#' ui_yml <- process_adam_domain("path/to/mighty_metadata.yaml")
 #' }
 #'
 #' @noRd
-read_mighty_metadata_adam_domain <- function(yaml_file_path) {
-  checkmate::assert_string(yaml_file_path)
-  checkmate::assert_file_exists(yaml_file_path)
-
-  yaml_content <- rlang::try_fetch(
-    yaml_file_path |>
-      mighty.metadata::mighty_metadata() |>
+process_adam_domain <- function(domain, domain_name) {
+  rlang::try_fetch(
+    yaml_content <- domain |>
       S7schema::validate_list(
         schema = system.file("schemas", "mighty.json", package = "mighty")
       ) |>
       convert_to_NA_character(),
     error = function(cnd) {
       throw_yaml_validation_error(
-        yaml_file_path,
+        domain_name,
         messages = " ",
         parent = cnd
       )
     }
   )
 
-  checkmate::assert_list(yaml_content)
-  checkmate::assert_names(
-    names(yaml_content),
-    must.include = c("id", "columns")
-  )
-
-  # Validate business logic on raw YAML before any transformations
-  validate_business_logic(yaml_content, yaml_file = yaml_file_path)
+  validate_business_logic(yaml_content, domain_name = domain_name)
 
   init <- transform_population_to_init(yaml_content$population, yaml_content$id)
 
@@ -72,8 +61,6 @@ read_mighty_metadata_adam_domain <- function(yaml_file_path) {
     keys = yaml_content$keys,
     init = init
   )
-
-  setNames(list(result), yaml_content$id)
 }
 
 

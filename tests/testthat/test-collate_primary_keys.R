@@ -1,11 +1,13 @@
-test_that("Error when domain keys are defined in both trial metadata and ADaM specification", {
+test_that("Error when domain keys are defined in both _mighty.yml and ADaM specification", {
   # SETUP -------------------------------------------------------------------
   trial_path <- withr::local_tempdir()
-  path_trial_metadata <- test_path(
-    "fixtures",
-    "trial_metadata_lowercase_adsl.yml"
+  adam_specifications <- setup_study_from_fixtures(
+    fixtures = list(
+      "adsl" = "skeleton_adsl.yml",
+      "_mighty" = "_mighty_lowercase_adsl.yml"
+    ),
+    process_glue = FALSE
   )
-  adam_specifications <- test_path("fixtures", "skeleton_adsl.yml")
   standards_lib <- "mighty.standards"
 
   # ACT & EXPECT ------------------------------------------------------------
@@ -14,20 +16,19 @@ test_that("Error when domain keys are defined in both trial metadata and ADaM sp
     generate_adam_code(
       adam_specifications = adam_specifications,
       standards_lib = standards_lib,
-      path_trial_metadata = path_trial_metadata,
       path_trial = trial_path
     ),
-    "Domains have keys defined in both trial metadata and domain specifications"
+    "Domains have keys defined in both _mighty.yml and domain specifications"
   )
 })
 
 test_that("collate_primary_keys combines keys from both sources when no duplicates", {
   # SETUP -------------------------------------------------------------------
   ui_yml <- list(adlb = list(keys = c("USUBJID", "PARAMCD")))
-  trial_metadata_keys <- list(keys = list(EX = c("USUBJID")))
+  keys <- list(EX = c("USUBJID"))
 
   # ACT ---------------------------------------------------------------------
-  result <- collate_primary_keys(ui_yml, trial_metadata_keys)
+  result <- collate_primary_keys(ui_yml, keys)
 
   # EXPECT ------------------------------------------------------------------
   expect_length(result, 2)
@@ -41,15 +42,13 @@ test_that("collate_primary_keys converts domain names to uppercase", {
     adsl = list(keys = c("USUBJID"))
   )
 
-  trial_metadata_keys <- list(
-    keys = list(
-      ex = c("USUBJID"),
-      DM = c("USUBJID") #
-    )
+  keys <- list(
+    ex = c("USUBJID"),
+    DM = c("USUBJID")
   )
 
   # ACT ---------------------------------------------------------------------
-  result <- collate_primary_keys(ui_yml, trial_metadata_keys)
+  result <- collate_primary_keys(ui_yml, keys)
 
   # EXPECT ------------------------------------------------------------------
   expect_length(result, 3)

@@ -5,14 +5,11 @@
 #' It processes specifications, validates dependencies, creates action sequences, and
 #' renders executable R code for ADaM dataset creation.
 #'
-#' @param adam_specifications Character string. File path to the ADaM specifications
-#'   (typically a YAML file) containing user-defined ADaM dataset configurations,
-#'   column definitions, and transformation rules.
+#' @param adam_specifications Character string. Directory path containing ADaM
+#'   specification YAML files (one per domain) and optionally a `_mighty.yml`
+#'   configuration file with study-level metadata and dataset keys.
 #' @param standards_lib Optional list or environment containing standard code
 #'   components and templates. If `NULL`, uses default standards library.
-#' @param path_trial_metadata Character string. File path to the trial metadata
-#'   YAML file containing study-specific configuration, domain definitions,
-#'   and primary key specifications.
 #' @param path_trial Character string. Base path to the trial directory where
 #'   generated programs and data files will be referenced or stored.
 #' @param check_cross_domain_adam_dependencies Logical. If `TRUE` (default),
@@ -101,8 +98,7 @@
 #' \dontrun{
 #' # Generate ADaM programs with full dependency checking
 #' result <- generate_adam_code(
-#'   adam_specifications = "path/to/ADaM_specs.yml",
-#'   path_trial_metadata = "path/to/trial_metadata.yml",
+#'   adam_specifications = "path/to/yaml_specs_directory",
 #'   path_trial = "path/to/trial_directory",
 #'   check_cross_domain_adam_dependencies = TRUE
 #' )
@@ -113,9 +109,8 @@
 #'
 #' # Generate with custom standards library
 #' result_custom <- generate_adam_code(
-#'   adam_specifications = "ADaM_specs.yml",
+#'   adam_specifications = "yaml_specs/",
 #'   standards_lib = my_custom_standards,
-#'   path_trial_metadata = "trial_config.yml",
 #'   path_trial = "trial_data/",
 #'   check_cross_domain_adam_dependencies = FALSE
 #' )
@@ -126,20 +121,19 @@
 generate_adam_code <- function(
   adam_specifications,
   standards_lib = NULL,
-  path_trial_metadata,
   path_trial,
   check_cross_domain_adam_dependencies = TRUE,
   data_context = NULL
 ) {
-  # Read data from UI containing explicit user input
-  ui_yml <- lapply(adam_specifications, read_mighty_metadata_adam_domain) |>
-    unlist(recursive = FALSE)
+  study <- mighty.metadata::mighty_study(adam_specifications)
+  ui_yml <- study |>
+    purrr::imap(process_adam_domain)
 
+  domain_keys <- collate_primary_keys(
+    ui_yml,
+    study@info$keys
+  )
   ui_init <- purrr::list_transpose(ui_yml)[["init"]]
-  trial_metadata <- yaml::read_yaml(path_trial_metadata) |>
-    assert_valid_trial_config()
-  domain_keys <- collate_primary_keys(ui_yml, trial_metadata)
-
   ui_init_t <- purrr::list_transpose(ui_init, simplify = FALSE)
 
   # Prepare the initial internal nodes data model

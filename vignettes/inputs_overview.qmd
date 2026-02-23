@@ -14,7 +14,7 @@ knitr:
 
 mighty requires three essential input building blocks:
 
-- **Trial Level Metadata**: Centralized trial metadata and dataset relationships
+- **Study metadata (_mighty.yml)**: Study-level metadata and dataset relationships
 - **ADaM specification**: Domain-specific blueprints defining content requirements
 - **Code components**: Reusable, validated code blocks for complex derivations
 
@@ -25,11 +25,10 @@ Additionally (and optional), mighty can render programs that are executable, bas
 
 - **Data Model Metadata (optional)**: Metadata about available data sources (SDTM, metadata used for ADaM generation, and non-mighty ADaM datasets)
 
-## Trial Level Metadata
+## Study metadata (_mighty.yml)
 
-The trial specification serves as the central repository for trial metadata required by mighty. It contains:
+The `_mighty.yml` file serves as the central repository for study-level metadata required by mighty. It contains:
 
-- **Trial identification**: Unique identifiers for project tracking
 - **Primary keys**: Key variables for all tables relevant to ADaM domains, including SDTM, metadata (MD data sets), and ADaM tables
 
 The primary keys specified for each dataset establish the relationships between tables by defining the columns used for joining operations. When mighty needs to combine data from multiple sources, it uses these primary keys to determine the appropriate join logic across SDTM, metadata, and ADaM data sets. See `vignette("trial_metadata")` for more details.
@@ -66,7 +65,7 @@ The are three component sources:
 
 - Core functionality managed by mighty
 - Data I/O operations and filtering
-- Join operations based on trial specification primary keys
+- Join operations based on primary keys defined in `_mighty.yml`
 
 
 ## Data Model Metadata (optional)

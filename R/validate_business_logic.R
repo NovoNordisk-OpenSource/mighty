@@ -1,13 +1,13 @@
 #' Validate business logic rules for YAML configuration
 #'
 #' @param yaml_content Raw YAML content structure from mighty_metadata
-#' @param yaml_file Path to YAML file (for error context)
+#' @param domain_name Path to YAML file (for error context)
 #' @param ruleset_name Schema name to determine applicable rules
 #' @return Invisible NULL if valid, throws error if invalid
 #' @noRd
 validate_business_logic <- function(
   yaml_content,
-  yaml_file,
+  domain_name,
   ruleset_name = "adam_domain"
 ) {
   # Get applicable rules for this schema
@@ -19,9 +19,9 @@ validate_business_logic <- function(
 
   # Create context for rules
   context <- list(
-    yaml_file = yaml_file,
+    domain_name = domain_name,
     ruleset_name = ruleset_name,
-    basename = basename(yaml_file)
+    basename = basename(domain_name)
   )
 
   # Run stop-on-error rules first - halt execution on first failure
@@ -49,7 +49,7 @@ validate_business_logic <- function(
 
         cli::cli_abort(
           c(
-            "x" = "Validation failed for {basename(yaml_file)} with the following error(s):",
+            "x" = "Validation failed for {domain_name} with the following error(s):",
             error_messages
           ),
           class = "validation_error"
@@ -84,7 +84,7 @@ validate_business_logic <- function(
 
   # Handle any collected errors from collect-errors rules
   if (length(all_errors) > 0) {
-    handle_business_logic_errors(all_errors, yaml_file)
+    handle_business_logic_errors(all_errors, domain_name)
   }
 
   return(invisible(yaml_content))
@@ -115,11 +115,11 @@ get_business_rules <- function(ruleset_name) {
 }
 
 # Update your handle_business_logic_errors function
-handle_business_logic_errors <- function(all_errors, yaml_file) {
+handle_business_logic_errors <- function(all_errors, domain_name) {
   error_messages <- unlist(all_errors, use.names = FALSE)
   names(error_messages) <- rep("*", length(error_messages))
 
-  throw_yaml_validation_error(yaml_file, error_messages)
+  throw_yaml_validation_error(domain_name, error_messages)
 }
 
 # Auto-names the rules based on their function name so dev doesn't have to manually type out each name

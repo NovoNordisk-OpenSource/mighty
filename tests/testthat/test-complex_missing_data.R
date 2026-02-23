@@ -1,16 +1,14 @@
 test_that("Complex test w/ missing dm_vaccine.SEX", {
   # SETUP -------------------------------------------------------------------
 
-  adam_specifications <- c(
-    test_path("fixtures", "complex_adsl.yml"),
-    test_path("fixtures", "complex_adlb.yml")
-  )
-  adam_specifications_rendered <- setup_yml_file_for_testing(
-    adam_specifications,
-    environment()
+  adam_specifications <- setup_study_from_fixtures(
+    fixtures = list(
+      "adsl" = "complex_adsl.yml",
+      "adlb" = "complex_adlb.yml",
+      "_mighty" = "_mighty.yml"
+    )
   )
 
-  path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
   path_trial <- withr::local_tempdir()
 
   setup_testdata(
@@ -25,9 +23,8 @@ test_that("Complex test w/ missing dm_vaccine.SEX", {
   # ACT ---------------------------------------------------------------------
 
   actual <- generate_adam_code(
-    adam_specifications = adam_specifications_rendered,
+    adam_specifications = adam_specifications,
     standards_lib = standards_lib,
-    path_trial_metadata = path_trial_metadata,
     path_trial = path_trial,
     check_cross_domain_adam_dependencies = TRUE,
     data_context = data_context$new(cnt)
@@ -154,16 +151,14 @@ test_that("Complex test w/ missing dm_vaccine.SEX", {
 test_that("Complex test w/ missing dm_vaccine.AGE and dm.SEX", {
   # SETUP -------------------------------------------------------------------
 
-  adam_specifications <- c(
-    test_path("fixtures", "complex_adsl.yml"),
-    test_path("fixtures", "complex_adlb.yml")
-  )
-  adam_specifications_rendered <- setup_yml_file_for_testing(
-    adam_specifications,
-    environment()
+  adam_specifications <- setup_study_from_fixtures(
+    fixtures = list(
+      "adsl" = "complex_adsl.yml",
+      "adlb" = "complex_adlb.yml",
+      "_mighty" = "_mighty.yml"
+    )
   )
 
-  path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
   path_trial <- withr::local_tempdir()
 
   setup_testdata(
@@ -181,9 +176,8 @@ test_that("Complex test w/ missing dm_vaccine.AGE and dm.SEX", {
   # ACT ---------------------------------------------------------------------
 
   actual <- generate_adam_code(
-    adam_specifications = adam_specifications_rendered,
+    adam_specifications = adam_specifications,
     standards_lib = standards_lib,
-    path_trial_metadata = path_trial_metadata,
     path_trial = path_trial,
     check_cross_domain_adam_dependencies = TRUE,
     data_context = data_context$new(cnt)
@@ -366,16 +360,14 @@ test_that("Complex test w/ missing dm_vaccine.AGE and dm.SEX", {
 
 test_that("Complex test w/ missing lb.LBSTRESN", {
   # SETUP -------------------------------------------------------------------
-  adam_specifications <- c(
-    test_path("fixtures", "complex_adsl.yml"),
-    test_path("fixtures", "complex_adlb.yml")
-  )
-  adam_specifications_rendered <- setup_yml_file_for_testing(
-    adam_specifications,
-    environment()
+  adam_specifications <- setup_study_from_fixtures(
+    fixtures = list(
+      "adsl" = "complex_adsl.yml",
+      "adlb" = "complex_adlb.yml",
+      "_mighty" = "_mighty.yml"
+    )
   )
 
-  path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
   path_trial <- withr::local_tempdir()
 
   setup_testdata(
@@ -390,9 +382,8 @@ test_that("Complex test w/ missing lb.LBSTRESN", {
   # ACT ---------------------------------------------------------------------
 
   actual <- generate_adam_code(
-    adam_specifications = adam_specifications_rendered,
+    adam_specifications = adam_specifications,
     standards_lib = standards_lib,
-    path_trial_metadata = path_trial_metadata,
     path_trial = path_trial,
     check_cross_domain_adam_dependencies = TRUE,
     data_context = data_context$new(cnt)

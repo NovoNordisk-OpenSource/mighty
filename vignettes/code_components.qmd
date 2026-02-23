@@ -339,7 +339,7 @@ There are a small number of in-built components are core functionality managed b
 
 - Data I/O operations (reading from connectors, writing outputs)
 - Domain initialization and filtering
-- Join operations based on trial specification primary keys
+- Join operations based on primary keys defined in `_mighty.yml`
 - Not directly referenced by users in specifications
 
 These are automatically generated and inserted by mighty as part of the program generation process.

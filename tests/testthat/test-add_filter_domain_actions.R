@@ -1,10 +1,9 @@
 test_that("filter deps to multiple keyless domains error when cross-domain check disabled", {
   # SETUP -------------------------------------------------------------------
   trial_path <- withr::local_tempdir()
-  path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
 
   # YAML spec that references both ADVS and ADAE domains in filter dependencies
-  # Neither ADVS nor ADAE are present in trial_metadata_0001.yml
+  # Neither ADVS nor ADAE are present in _mighty.yml
   # No column external dependencies to avoid earlier validation errors
   yaml_content <- "
 id: ADLB
@@ -35,13 +34,17 @@ columns:
   - id: LBSTRESN
 "
 
-  adam_specifications <- create_temp_yaml(yaml_content)
+  mighty_yml_content <- "keys: {}"
+
+  adam_specifications <- setup_study_dir(list(
+    "adlb" = yaml_content,
+    "_mighty" = mighty_yml_content
+  ))
 
   # ACT & EXPECT ------------------------------------------------------------
   expect_snapshot(
     generate_adam_code(
       adam_specifications = adam_specifications,
-      path_trial_metadata = path_trial_metadata,
       path_trial = trial_path,
       check_cross_domain_adam_dependencies = FALSE
     ),

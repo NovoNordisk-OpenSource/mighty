@@ -50,15 +50,13 @@ columns:
   - id: STUDYID2
     method: STUDYID
 "
-  yaml_file_adsl <- create_temp_yaml(yaml_content_adsl)
-  yaml_file_adlb <- create_temp_yaml(yaml_content_adlb)
+  mighty_yml_content <- "keys: {}"
+  adam_specifications <- setup_study_dir(list(
+    "adsl" = yaml_content_adsl,
+    "adlb" = yaml_content_adlb,
+    "_mighty" = mighty_yml_content
+  ))
 
-  adam_specifications <- c(yaml_file_adsl, yaml_file_adlb)
-
-  path_trial_metadata <- test_path(
-    "fixtures",
-    "trial_metadata_0001.yml"
-  )
   path_trial <- withr::local_tempdir()
 
   standards_lib <- "mighty.standards"
@@ -75,7 +73,6 @@ columns:
   actual <- generate_adam_code(
     adam_specifications = adam_specifications,
     standards_lib = standards_lib,
-    path_trial_metadata = path_trial_metadata,
     path_trial = path_trial,
     check_cross_domain_adam_dependencies = TRUE
   )

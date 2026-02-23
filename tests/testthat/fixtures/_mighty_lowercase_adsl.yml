@@ -1,0 +1,18 @@
+keys:
+  adsl:
+    - STUDYID
+    - USUBJID
+  EX:
+    - USUBJID
+  DS:
+    - USUBJID
+  MDPARAM:
+    - STUDYID
+    - TOPICCD
+  MDVISIT:
+    - STUDYID
+    - AVISITN
+  MDFLOW:
+    - STUDYID
+    - AVISITN
+    - TOPICCD

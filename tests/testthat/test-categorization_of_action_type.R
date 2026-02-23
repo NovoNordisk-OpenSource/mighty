@@ -1,15 +1,13 @@
 test_that("Check that action types are classified correctly", {
   # SETUP -------------------------------------------------------------------
 
-  adam_specifications <- c(
-    testthat::test_path("fixtures", "skeleton_adsl_with_age_sex.yml"),
-    testthat::test_path("fixtures", "categorization_of_action_type_adlb_01.yml")
+  adam_specifications <- setup_study_from_fixtures(
+    fixtures = list(
+      "adsl" = "skeleton_adsl_with_age_sex.yml",
+      "adlb" = "categorization_of_action_type_adlb_01.yml",
+      "_mighty" = "_mighty.yml"
+    )
   )
-  adam_specifications_rendered <- setup_yml_file_for_testing(
-    adam_specifications,
-    environment()
-  )
-  path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
   path_trial <- withr::local_tempdir()
 
   setup_testdata(
@@ -22,9 +20,8 @@ test_that("Check that action types are classified correctly", {
   # ACT -------------------------------------------------------------------
 
   actual <- generate_adam_code(
-    adam_specifications = adam_specifications_rendered,
+    adam_specifications = adam_specifications,
     standards_lib = standards_lib,
-    path_trial_metadata = path_trial_metadata,
     path_trial = path_trial,
     check_cross_domain_adam_dependencies = FALSE
   )

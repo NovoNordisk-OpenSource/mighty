@@ -16,24 +16,22 @@ knitr:
 
 library(mighty)
 
-temp_dir <- file.path(tempdir(), "mighty_example")
-dir.create(temp_dir, showWarnings = FALSE, recursive = TRUE)
-assign("temp_dir", temp_dir, envir = .GlobalEnv)
+# Create study directory structure
+study_dir <- file.path(tempdir(), "mighty_example_study")
+dir.create(study_dir, showWarnings = FALSE, recursive = TRUE)
+assign("study_dir", study_dir, envir = .GlobalEnv)
 
 
-trial_yaml <- 'trial_id: "0001"
-project_id: "0001"
-complete_id: "0001-0001"
-instance: "current"
-
-keys:
+# Create _mighty.yml with key specifications
+mighty_yaml <- 'keys:
   DM: [USUBJID, STUDYID]
   LB: [USUBJID, STUDYID, LBSEQ]
 '
-writeLines(trial_yaml, file.path(temp_dir, "example_01_trial.yaml"))
-assign("trial_yaml", trial_yaml, envir = .GlobalEnv)
+writeLines(mighty_yaml, file.path(study_dir, "_mighty.yml"))
+assign("mighty_yaml", mighty_yaml, envir = .GlobalEnv)
 
 
+# Create ADSL domain specification
 adsl_yaml <- 'id: ADSL
 label: Subject Level Analysis Dataset
 class: SUBJECT LEVEL ANALYSIS DATASET
@@ -73,10 +71,10 @@ columns:
 # that ugly tmp path to the users
 adsl_yaml_with_abspath <- gsub(
   '"age_group_01.R"',
-  sprintf('"%s"', normalizePath(file.path(temp_dir, "age_group_01.R"), winslash = "/", mustWork = FALSE)),
+  sprintf('"%s"', normalizePath(file.path(study_dir, "age_group_01.R"), winslash = "/", mustWork = FALSE)),
   adsl_yaml
 )
-writeLines(adsl_yaml_with_abspath, file.path(temp_dir, "example_01_adsl.yaml"))
+writeLines(adsl_yaml_with_abspath, file.path(study_dir, "adsl.yml"))
 assign("adsl_yaml", adsl_yaml, envir = .GlobalEnv)
 
 
@@ -97,7 +95,7 @@ ADSL <- ADSL |>
     )
   )
 "
-writeLines(component_code, file.path(temp_dir, "age_group_01.R"))
+writeLines(component_code, file.path(study_dir, "age_group_01.R"))
 assign("component_code", component_code, envir = .GlobalEnv)
 
 
@@ -111,8 +109,7 @@ library(mighty)
 
 # Generate ADaM program
 results <- mighty::generate_adam_code(
-  adam_specifications = \"example_01_adsl.yaml\",
-  path_trial_metadata = \"example_01_trial.yaml\",
+  adam_specifications = \"study_dir\",
   standards_lib = \"mighty.standards\",
   path_trial = \".\"
 )
@@ -120,7 +117,7 @@ results <- mighty::generate_adam_code(
 # Print rendered ADaM program
 results$programs$`1_ADSL` |> cat()
 "
-writeLines(main_script_content, file.path(temp_dir, "example_01_main.R"))
+writeLines(main_script_content, file.path(study_dir, "example_01_main.R"))
 assign("main_script_content", main_script_content, envir = .GlobalEnv)
 ```
 
@@ -136,14 +133,14 @@ Mighty does not have any conditions on how your directory is structured. The onl
 - A [connector config file](https://novonordisk-opensource.github.io/connector/) that specifies where your trial data is located (SDTM, metadata, and ADaM). Mighty expects it to be located under `path_trial` with the name `_connector.yml`.
 - A location where the compiled ADaM programs can be written out to
 
-## Set up your trial metadata file
+## Set up your study metadata file
 
-This YAML file contains information that spans across all ADaM domains.
-This includes trial information and primary keys in different domains that are used for joining tables.
+The `_mighty.yml` file contains study-level metadata that spans across all ADaM domains.
+This includes primary keys in different domains that are used for joining tables.
 
 For this example, we will focus on a simple ADSL table and only provide keys related to that domain.
 
-**example_01_trial.yaml**
+**_mighty.yml**
 
 ```{r}
 #| echo: false
@@ -151,7 +148,7 @@ For this example, we will focus on a simple ADSL table and only provide keys rel
 #| results: asis
 
 cat("```yml\n")
-cat(trial_yaml)
+cat(mighty_yaml)
 cat("```")
 ```
 
@@ -161,7 +158,7 @@ Provide a YAML file that specifies which columns to include in ADSL and how they
 
 This ADSL table contains 6 columns: 4 simple columns from the base domain, 1 renamed column, and 1 derivation using a custom component.
 
-**example_01_adsl.yaml**
+**adsl.yml**
 
 ```{r}
 #| echo: false
@@ -214,10 +211,9 @@ Printing the rendered ADaM program yields a complete program for generating ADSL
 
 # Execute the code generation
 results <- mighty::generate_adam_code(
-  adam_specifications = file.path(temp_dir, "example_01_adsl.yaml"),
-  path_trial_metadata = file.path(temp_dir, "example_01_trial.yaml"),
+  adam_specifications = study_dir,
   standards_lib = "mighty.standards",
-  path_trial = temp_dir
+  path_trial = study_dir
 )
 
 # Display the generated program with R formatting

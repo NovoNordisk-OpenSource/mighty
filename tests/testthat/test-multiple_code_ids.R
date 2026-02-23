@@ -3,25 +3,18 @@ test_that("Multiple columns using same code_id, but diff parameters errors out",
     message = "This check has not been re-implemented after switching to mighty.component"
   )
   # SETUP
-  adam_specifications <- testthat::test_path(
-    "fixtures",
-    "multiple_code_ids.yml"
+  adam_specifications <- setup_study_from_fixtures(
+    fixtures = list("adlb" = "multiple_code_ids.yml", "_mighty" = "_mighty.yml"),
+    process_glue = FALSE
   )
-  adam_specifications_rendered <- setup_yml_file_for_testing(
-    adam_specifications,
-    environment()
-  )
-  path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
   std_lib_path <- c(testthat::test_path("fixtures", "multiple_code_ids.R"))
   output_path <- withr::local_tempdir()
 
   # ACT
   expect_error(
     generate_adam_code(
-      adam_specifications = ui_path,
-      path_trial_metadata = path_trial_metadata,
-      path_output = output_path,
-      mighty.metadata = FALSE
+      adam_specifications = adam_specifications,
+      path_trial = output_path
     ),
     regexp = "Code_id `fn_AB` is used in multiple columns with different parameters"
   )

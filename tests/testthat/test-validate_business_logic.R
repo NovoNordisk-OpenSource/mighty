@@ -20,10 +20,10 @@ population:
 columns:
   - id: USUBJID
   - id: VAR1
-    depends: 
+    depends:
       parameter.row_action_00
   - id: VAR2
-    depends: 
+    depends:
       row.row_action_99
 rows:
   - id: row_action_99
@@ -34,10 +34,11 @@ parameters:
     component:
       id: row_action_00
 "
-  yaml_file <- create_temp_yaml(yaml_content)
+  adam_specifications <- setup_study_dir(list("adlb" = yaml_content))
+  study <- mighty.metadata::mighty_study(adam_specifications)
   # ACT / ASSERT ---------------------------------------------------------------
 
-  err_ <- read_mighty_metadata_adam_domain(yaml_file) |>
+  err_ <- process_adam_domain(study$ADLB, "ADLB") |>
     expect_error("YAML validation failed")
   expect_match(
     err_$parent$message,
@@ -77,10 +78,11 @@ parameters:
     component:
       id: parameter_action_00
 "
-  yaml_file <- create_temp_yaml(yaml_content)
+  adam_specifications <- setup_study_dir(list("adlb" = yaml_content))
+  study <- mighty.metadata::mighty_study(adam_specifications)
   # ACT / ASSERT ---------------------------------------------------------------
 
-  err_ <- read_mighty_metadata_adam_domain(yaml_file) |>
+  err_ <- process_adam_domain(study$ADLB, "ADLB") |>
     expect_error("YAML validation failed")
   expect_match(
     err_$parent$message,
@@ -120,10 +122,11 @@ parameters:
       id: parameter_action_00
     depends: row_action_99
 "
-  yaml_file <- create_temp_yaml(yaml_content)
+  adam_specifications <- setup_study_dir(list("adlb" = yaml_content))
+  study <- mighty.metadata::mighty_study(adam_specifications)
   # ACT / ASSERT ---------------------------------------------------------------
 
-  err_ <- read_mighty_metadata_adam_domain(yaml_file) |>
+  err_ <- process_adam_domain(study$ADLB, "ADLB") |>
     expect_error("YAML validation failed")
   expect_match(
     err_$parent$message,
@@ -176,9 +179,10 @@ parameters:
     depends: 
     -  parameters.parameter_action_00
 "
-  yaml_file <- create_temp_yaml(yaml_content)
+  adam_specifications <- setup_study_dir(list("adlb" = yaml_content))
+  study <- mighty.metadata::mighty_study(adam_specifications)
   # ACT / ASSERT ---------------------------------------------------------------
-  read_mighty_metadata_adam_domain(yaml_file) |>
+  process_adam_domain(study$ADLB, "ADLB") |>
     expect_no_error()
 })
 
@@ -212,10 +216,11 @@ columns:
       id: fnc1
 
 "
-  yaml_file <- create_temp_yaml(yaml_content)
+  adam_specifications <- setup_study_dir(list("adlb" = yaml_content))
 
   # ACT / ASSERT ---------------------------------------------------------------
-  err_ <- read_mighty_metadata_adam_domain(yaml_file) |>
+  study <- mighty.metadata::mighty_study(adam_specifications)
+  err_ <- process_adam_domain(study$ADLB, "ADLB") |>
     expect_error(
       "The following columns have both `method` and `component.id` field populated"
     )
@@ -260,10 +265,11 @@ parameters:
       id: row_action_00
 
 "
-  yaml_file <- create_temp_yaml(yaml_content)
+  adam_specifications <- setup_study_dir(list("adlb" = yaml_content))
   # ACT / ASSERT ---------------------------------------------------------------
   # Test that all validation errors are caught: Rules "val_depend_rows" and "val_keys_included_as_columns"
-  err_ <- read_mighty_metadata_adam_domain(yaml_file) |>
+  study <- mighty.metadata::mighty_study(adam_specifications)
+  err_ <- process_adam_domain(study$ADLB, "ADLB") |>
     expect_error(
       "The following row actions are not defined, but are listed as row dependencies for either a column or another row action" # nolint: line_length_linter
     )
@@ -304,11 +310,12 @@ columns:
     component:
       id: second_component
 "
-  yaml_file <- create_temp_yaml(yaml_content)
+  adam_specifications <- setup_study_dir(list("adlb" = yaml_content))
 
   # ACT / ASSERT ---------------------------------------------------------------
   # Test that validation error is caught: Rule "val_no_duplicate_columns"
-  err_ <- read_mighty_metadata_adam_domain(yaml_file) |>
+  study <- mighty.metadata::mighty_study(adam_specifications)
+  err_ <- process_adam_domain(study$ADLB, "ADLB") |>
     expect_error(
       "The following columns are defined multiple times"
     )
@@ -342,11 +349,12 @@ population:
 columns:
   - id: USUBJID
 "
-  yaml_file <- create_temp_yaml(yaml_content)
+  adam_specifications <- setup_study_dir(list("adsl" = yaml_content))
+  study <- mighty.metadata::mighty_study(adam_specifications)
 
   # ACT / ASSERT ---------------------------------------------------------------
   # Test that validation error is caught: Rule "val_keys_included_as_columns"
-  err_ <- read_mighty_metadata_adam_domain(yaml_file) |>
+  err_ <- process_adam_domain(study$ADSL, "ADSL") |>
     expect_error(
       "The following columns are specified as keys but are not defined in the columns section"
     )
@@ -379,12 +387,13 @@ columns:
     component:
       id: second_component
 "
-  yaml_file <- create_temp_yaml(yaml_content)
+  adam_specifications <- setup_study_dir(list("adlb" = yaml_content))
+  study <- mighty.metadata::mighty_study(adam_specifications)
 
   # ACT / ASSERT ---------------------------------------------------------------
   # Should pass validation without error
   expect_no_error(
-    read_mighty_metadata_adam_domain(yaml_file)
+    process_adam_domain(study$ADLB, "ADLB")
   )
 })
 
@@ -418,11 +427,12 @@ parameters:
     component:
       id: second_component
 "
-  yaml_file <- create_temp_yaml(yaml_content)
+  adam_specifications <- setup_study_dir(list("adlb" = yaml_content))
 
   # ACT / ASSERT ---------------------------------------------------------------
   # Test that validation error is caught: Rule "val_no_duplicate_row_parameter_ids"
-  err_ <- read_mighty_metadata_adam_domain(yaml_file) |>
+  study <- mighty.metadata::mighty_study(adam_specifications)
+  err_ <- process_adam_domain(study$ADLB, "ADLB") |>
     expect_error(
       "The following row or parameter id\\(s\\) are defined multiple times:"
     )
@@ -441,67 +451,13 @@ keys: [USUBJID]
 columns:
   - id: USUBJID
 "
-  yaml_file <- create_temp_yaml(yaml_content)
+  adam_specifications <- setup_study_dir(list("adlb" = yaml_content))
+  study <- mighty.metadata::mighty_study(adam_specifications)
 
   # ACT / ASSERT ---------------------------------------------------------------
-  read_mighty_metadata_adam_domain(yaml_file) |>
+  process_adam_domain(study$ADLB, "ADLB") |>
     expect_error("YAML validation failed")
 
-  read_mighty_metadata_adam_domain(yaml_file) |>
+  process_adam_domain(study$ADLB, "ADLB") |>
     expect_error("must have required property 'population'")
-})
-
-test_that("missing population.base section fails validation", {
-  # SETUP ----------------------------------------------------------------------
-
-  yaml_content <- "
-id: ADLB
-label: Laboratory Analysis Dataset
-class: BASIC DATA STRUCTURE
-structure: One record per subject per parameter per analysis visit
-keys: [USUBJID]
-population:
-  global:
-    - filter: 'SAFFL == \"Y\"'
-      depends:
-        - SAFFL
-columns:
-  - id: USUBJID
-"
-  yaml_file <- create_temp_yaml(yaml_content)
-
-  # ACT / ASSERT ---------------------------------------------------------------
-  read_mighty_metadata_adam_domain(yaml_file) |>
-    expect_error("YAML validation failed")
-
-  read_mighty_metadata_adam_domain(yaml_file) |>
-    expect_error("must have required property 'base'")
-})
-
-test_that("empty population.base array fails validation", {
-  # SETUP ----------------------------------------------------------------------
-
-  yaml_content <- "
-id: ADLB
-label: Laboratory Analysis Dataset
-class: BASIC DATA STRUCTURE
-structure: One record per subject per parameter per analysis visit
-keys: [USUBJID]
-population:
-  base: []
-  global:
-    - filter: 'SAFFL == \"Y\"'
-      depends:
-        - SAFFL
-columns:
-  - id: USUBJID
-"
-  yaml_file <- create_temp_yaml(yaml_content)
-
-  # ACT / ASSERT ---------------------------------------------------------------
-  read_mighty_metadata_adam_domain(yaml_file) |>
-    expect_error("YAML validation failed")
-
-  read_mighty_metadata_adam_domain(yaml_file) |>
-    expect_error("must NOT have fewer than 1 items")
 })

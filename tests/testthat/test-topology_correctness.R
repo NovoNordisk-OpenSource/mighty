@@ -1,7 +1,6 @@
 test_that("Validation warning occurs when component uses ADSL implicitly without declaring @depends on ADSL", {
   # SETUP -------------------------------------------------------------------
   trial_path <- withr::local_tempdir()
-  path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
 
   # Custom component that uses ADSL but only declares dependency on external dataset
   component <- "
@@ -43,13 +42,17 @@ test_that("Validation warning occurs when component uses ADSL implicitly without
     component_file
   )
 
-  adam_specifications <- create_temp_yaml(yaml_content)
+  mighty_yml_content <- "keys: {}"
+  adam_specifications <- setup_study_dir(list(
+    "adsl" = yaml_content,
+    "_mighty" = mighty_yml_content
+  ))
   # ACT ---------------------------------------------------------------------
   err <- expect_error(
     {
       actual <- generate_adam_code(
         adam_specifications = adam_specifications,
-        path_trial_metadata = path_trial_metadata,
+
         path_trial = trial_path,
         check_cross_domain_adam_dependencies = TRUE
       )
@@ -65,7 +68,6 @@ test_that("Validation warning occurs when component uses ADSL implicitly without
 test_that("Topology is generated correctly when component declares dependencies on both ADSL and external datasets", {
   # SETUP -------------------------------------------------------------------
   trial_path <- withr::local_tempdir()
-  path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
 
   # Custom component that uses ADSL and declares dependency on ADSL and  external dataset
   component <- "
@@ -108,12 +110,16 @@ test_that("Topology is generated correctly when component declares dependencies 
     component_file
   )
 
-  adam_specifications <- create_temp_yaml(yaml_content)
+  mighty_yml_content <- "keys: {}"
+  adam_specifications <- setup_study_dir(list(
+    "adsl" = yaml_content,
+    "_mighty" = mighty_yml_content
+  ))
   # ACT ---------------------------------------------------------------------
 
   actual <- generate_adam_code(
     adam_specifications = adam_specifications,
-    path_trial_metadata = path_trial_metadata,
+
     path_trial = trial_path,
     check_cross_domain_adam_dependencies = TRUE
   )
@@ -138,7 +144,6 @@ test_that("Topology is generated correctly when component declares dependencies 
 test_that("Warning message lists all output columns from component with missing ADLB dependency", {
   # SETUP -------------------------------------------------------------------
   trial_path <- withr::local_tempdir()
-  path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
 
   # Custom component that uses ADLB without declaring dependency on ADLB
   component <- "
@@ -188,27 +193,24 @@ test_that("Warning message lists all output columns from component with missing 
           id: ",
     component_file
   )
-  yaml_adlb_file <- withr::local_tempfile(
-    fileext = ".yml"
-  )
-
-  writeLines(as.character(yaml_content), yaml_adlb_file)
 
   # The ADSL domain in this test is simple in the sense that it does not create edges in
   # the dependency graph because all ADSL variables are strict col_copy actions. Although no
   # edges are created for ADSL, this does not make the topology for ADSL invalid as this
   # is per design of the \code{make_edges()}
   # In this test case, there are no edges in the dependency graph.
-  adam_specifications <- c(
-    test_path("fixtures", "skeleton_adsl.yml"),
-    yaml_adlb_file
-  )
+  mighty_yml_content <- "keys: {}"
+  adam_specifications <- setup_study_dir(list(
+    "adsl" = readLines(test_path("fixtures", "skeleton_adsl.yml")),
+    "adlb" = yaml_content,
+    "_mighty" = mighty_yml_content
+  ))
   # ACT ---------------------------------------------------------------------
   err <- expect_error(
     {
       actual <- generate_adam_code(
         adam_specifications = adam_specifications,
-        path_trial_metadata = path_trial_metadata,
+
         path_trial = trial_path,
         check_cross_domain_adam_dependencies = TRUE
       )
@@ -225,7 +227,6 @@ test_that("Warning message lists all output columns from component with missing 
 test_that("Warn if two domains but one has component with missing depends", {
   # SETUP -------------------------------------------------------------------
   trial_path <- withr::local_tempdir()
-  path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
 
   # Custom component that uses ADLB without declaring dependency on ADLB
   component <- "
@@ -275,30 +276,36 @@ test_that("Warn if two domains but one has component with missing depends", {
           id: ",
     component_file
   )
-  yaml_adlb_file <- withr::local_tempfile(
-    fileext = ".yml"
-  )
-
-  writeLines(as.character(yaml_content), yaml_adlb_file)
 
   # The ADSL domain in this test is more complex and it has edges in
   # the dependency graph. It is important to check that these edges does not
   # influence the validation of the edges in the ADLB domain
-  adam_specifications <- c(
-    test_path("fixtures", "supplementary_data_adsl_01.yml"),
-    yaml_adlb_file
-  )
-  adam_specifications_rendered <- setup_yml_file_for_testing(
-    adam_specifications,
-    environment()
-  )
+
+  # Process ADSL fixture which contains {path_base} glue placeholders
+  adsl_content <- readLines(test_path(
+    "fixtures",
+    "supplementary_data_adsl_01.yml"
+  ))
+  path_base <- test_path()
+  adsl_processed <- as.character(glue::glue(
+    paste(adsl_content, collapse = "\n"),
+    path_base = path_base
+  ))
+
+  # ADLB content has no glue placeholders, use directly
+  mighty_yml_content <- "keys: {}"
+  adam_specifications <- setup_study_dir(list(
+    "adsl" = adsl_processed,
+    "adlb" = yaml_content,
+    "_mighty" = mighty_yml_content
+  ))
 
   # ACT ---------------------------------------------------------------------
   err <- expect_error(
     {
       actual <- generate_adam_code(
-        adam_specifications = adam_specifications_rendered,
-        path_trial_metadata = path_trial_metadata,
+        adam_specifications = adam_specifications,
+
         path_trial = trial_path,
         check_cross_domain_adam_dependencies = TRUE
       )
@@ -315,7 +322,6 @@ test_that("Warn if two domains but one has component with missing depends", {
 test_that("Validation with mix of components warning when no @depends on component", {
   # SETUP -------------------------------------------------------------------
   trial_path <- withr::local_tempdir()
-  path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
 
   # Custom component that uses ADSL but only declares dependency on external dataset
   component_invalid <- "
@@ -380,13 +386,17 @@ test_that("Validation with mix of components warning when no @depends on compone
           id: ",
     component_valid_file
   )
-  adam_specifications <- create_temp_yaml(yaml_content)
+  mighty_yml_content <- "keys: {}"
+  adam_specifications <- setup_study_dir(list(
+    "adsl" = yaml_content,
+    "_mighty" = mighty_yml_content
+  ))
   # ACT ---------------------------------------------------------------------
   err <- expect_error(
     {
       actual <- generate_adam_code(
         adam_specifications = adam_specifications,
-        path_trial_metadata = path_trial_metadata,
+
         path_trial = trial_path,
         check_cross_domain_adam_dependencies = TRUE
       )
@@ -406,7 +416,6 @@ test_that("Validation with mix of components warning when no @depends on compone
 test_that("Validation with two domains throws warning when no @depends on component", {
   # SETUP -------------------------------------------------------------------
   trial_path <- withr::local_tempdir()
-  path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
 
   # Custom component that uses ADSL but only declares dependency on external dataset
   component_invalid <- "
@@ -467,16 +476,18 @@ test_that("Validation with two domains throws warning when no @depends on compon
           id: ",
     component_invalid_file
   )
-  adam_specifications <- c(
-    create_temp_yaml(yaml_content_ADSL),
-    create_temp_yaml(yaml_content_ADLB)
-  )
+  mighty_yml_content <- "keys: {}"
+  adam_specifications <- setup_study_dir(list(
+    "adsl" = yaml_content_ADSL,
+    "adlb" = yaml_content_ADLB,
+    "_mighty" = mighty_yml_content
+  ))
   # ACT ---------------------------------------------------------------------
   err <- expect_error(
     {
       actual <- generate_adam_code(
         adam_specifications = adam_specifications,
-        path_trial_metadata = path_trial_metadata,
+
         path_trial = trial_path,
         check_cross_domain_adam_dependencies = TRUE
       )
@@ -508,7 +519,6 @@ test_that("Error when ADaM specification is missing init_domain (no population.b
   #  errors later when refactoring.
   # SETUP -------------------------------------------------------------------
   trial_path <- withr::local_tempdir()
-  path_trial_metadata <- test_path("fixtures", "trial_metadata_0001.yml")
 
   # Component that has no dependencies - creates orphaned node
   component_brdate <- "
@@ -544,14 +554,18 @@ test_that("Error when ADaM specification is missing init_domain (no population.b
     component_file
   )
 
-  adam_specifications <- create_temp_yaml(yaml_content)
+  mighty_yml_content <- "keys: {}"
+  adam_specifications <- setup_study_dir(list(
+    "adsl" = yaml_content,
+    "_mighty" = mighty_yml_content
+  ))
 
   # ACT & EXPECT ------------------------------------------------------------
 
   expect_error(
     generate_adam_code(
       adam_specifications = adam_specifications,
-      path_trial_metadata = path_trial_metadata,
+
       path_trial = trial_path,
       check_cross_domain_adam_dependencies = TRUE
     ),
