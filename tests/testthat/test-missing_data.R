@@ -324,8 +324,7 @@ population:
     - domain: lb
       depends:
         - LBTESTCD
-      filter:
-        - 'LBTESTCD ==\"ALB\"'
+      filter: 'LBTESTCD ==\"ALB\"'
   global:
     - filter: '!is.na(SEX)'
       depends:

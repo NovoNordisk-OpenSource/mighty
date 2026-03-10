@@ -141,11 +141,11 @@ test_that("Complex test w/ missing dm_vaccine.SEX", {
   )
 
   # Check ADSL program 1 fails
-  expect_error(x[[1]] |> source())
+  expect_snapshot_error(x[[1]] |> source())
   # Check ADLB program 2 fails
-  expect_error(x[[2]] |> source())
+  expect_snapshot_error(x[[2]] |> source())
   # Check ADSL program 3 fails
-  expect_error(x[[3]] |> source())
+  expect_snapshot_error(x[[3]] |> source())
 })
 
 test_that("Complex test w/ missing dm_vaccine.AGE and dm.SEX", {
@@ -351,11 +351,11 @@ test_that("Complex test w/ missing dm_vaccine.AGE and dm.SEX", {
   )
 
   # Check ADSL (program 1) will fail
-  expect_error(x[[1]] |> source())
+  expect_snapshot_error(x[[1]] |> source())
   # Check ADLB (program 2) will fail
-  expect_error(x[[2]] |> source())
+  expect_snapshot_error(x[[2]] |> source())
   # Check ADSL (program 3) will fail
-  expect_error(x[[3]] |> source())
+  expect_snapshot_error(x[[3]] |> source())
 })
 
 test_that("Complex test w/ missing lb.LBSTRESN", {
@@ -515,6 +515,10 @@ test_that("Complex test w/ missing lb.LBSTRESN", {
   expect_no_error(x[[3]] |> source())
   expect_setequal(names(ADSL), cols_adsl1)
 
+  # remove connector save step from program 1 as this will fail on Windows
+  actual$programs[1][[1]] <-
+    remove_connector_write_step(actual$programs[1][[1]])
+
   write_adam_programs(
     dir = path_trial,
     programs = actual$programs,
@@ -524,7 +528,7 @@ test_that("Complex test w/ missing lb.LBSTRESN", {
   # should be able to execute)
   expect_no_error(x[[1]] |> source())
   # Check ADLB program (cannot execute due to lack of LBSTRESN)
-  expect_error(x[[2]] |> source())
+  expect_snapshot_error(x[[2]] |> source())
   # Check ADSL program (cannot execute due to left join with ADLB)
-  expect_error(x[[3]] |> source())
+  expect_snapshot_error(x[[3]] |> source())
 })

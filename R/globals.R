@@ -40,7 +40,7 @@ utils::globalVariables(c(
   # initialize_graph_data variables
   # (node_id, domain, Var1, Var2, Freq, value already declared above)
 
-  # merge_ui_with_metadata variables
+  # merge_ui_with_component_metadata variables
   "depend_cols_from_code",
   "outputs_from_code",
 
@@ -65,7 +65,14 @@ utils::globalVariables(c(
   # vis_code_tree variables
   "label",
   "group",
-  "color"
+  "color",
+
+  # assert_code_outputs_in_yaml variables
+  "type_from_code",
+  "parameters_str",
+  "outputs_match",
+  "yaml_outputs",
+  "code_outputs"
 ))
 
 # Also declare the dot function and setNames if they're causing issues

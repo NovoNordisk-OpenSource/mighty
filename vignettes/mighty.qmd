@@ -43,8 +43,7 @@ population:
     - domain: DM
       depends:
         - AGE
-      filter:
-        - \'!is.na(AGE)\'
+      filter: \'!is.na(AGE)\'
   global:
     - filter: NA
       depends:
@@ -71,7 +70,14 @@ columns:
 # that ugly tmp path to the users
 adsl_yaml_with_abspath <- gsub(
   '"age_group_01.R"',
-  sprintf('"%s"', normalizePath(file.path(study_dir, "age_group_01.R"), winslash = "/", mustWork = FALSE)),
+  sprintf(
+    '"%s"',
+    normalizePath(
+      file.path(study_dir, "age_group_01.R"),
+      winslash = "/",
+      mustWork = FALSE
+    )
+  ),
   adsl_yaml
 )
 writeLines(adsl_yaml_with_abspath, file.path(study_dir, "adsl.yml"))

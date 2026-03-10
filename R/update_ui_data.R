@@ -15,12 +15,20 @@
 #' @examples
 #' # Example usage would go here
 consolidate_metadata <- function(code_component_metadata, ui_data) {
+  # Validate inputs
+  checkmate::assert_list(code_component_metadata)
+  checkmate::assert_data_frame(ui_data, min.rows = 1)
+  checkmate::assert_names(
+    names(ui_data),
+    must.include = c("code_id", "depend_cols", "outputs", "domain")
+  )
+
   if (length(code_component_metadata) > 0) {
     # Extract and prepare metadata for active code IDs
     code_id_data <- extract_code_component_metadata(code_component_metadata)
 
     # Merge UI data with code metadata
-    ui_data_updated <- merge_ui_with_metadata(ui_data, code_id_data)
+    ui_data_updated <- merge_ui_with_component_metadata(ui_data, code_id_data)
   } else {
     ui_data_updated <- ui_data[, "type_from_code" := NA_character_]
   }
@@ -111,72 +119,66 @@ classify_action_type <- function(
 
 #' Extract and format metadata for active code IDs
 #' @description
-#' Retrieves and formats metadata for code IDs referenced in the UI data.
-#' @details
-#' Extracts metadata for active code IDs from the code component metadata,
-#' transposes the list structure, and formats it as a data table. Also standardizes
-#' terminology by converting "derivation" type to "compute".
+#' Converts code component metadata from a named list to a data table with one row per component.
+#' Preserves mixed-type list-columns (e.g., depend_cols can be data.frame or list).
 #'
 #' @param code_component_metadata List of metadata for code components, indexed by code_id
 #'
-#' @return Data table with formatted metadata for active code IDs, or NULL if no metadata found
+#' @return Data table with formatted metadata for active code IDs
 #' @noRd
 extract_code_component_metadata <- function(code_component_metadata) {
-  # Skip if no metadata found
-  if (length(code_component_metadata) == 0) {
-    return(NULL)
-  }
-
   metadata_transposed <- purrr::list_transpose(
     code_component_metadata,
     simplify = FALSE
   )
-  metadata_transposed$type <- metadata_transposed$type |> unlist(FALSE)
+  metadata_transposed$type <- unlist(metadata_transposed$type, FALSE)
 
-  code_id_data <- data.table::data.table(
+  data.table::data.table(
     node_id = names(code_component_metadata),
     type = metadata_transposed$type,
     depend_cols = metadata_transposed$depend_cols,
     outputs = metadata_transposed$outputs,
     parameters_defaults = metadata_transposed$parameters_defaults
   )
-  return(code_id_data)
 }
 
 #' Merge UI data with code metadata
+#'
 #' @description
-#' Combines UI data with code metadata based on code_id and consolidates redundant columns.
-#' @details
-#' Merges UI data with code metadata, validates that outputs are identical,
-#' consolidates redundant columns, and cleans up temporary columns created during the merge.
+#' Enriches UI data with metadata from code components, where code component
+#' metadata takes precedence over UI-specified values for `depend_cols` and `outputs`.
 #'
-#' @param ui_data Original UI data with code_id references
-#' @param code_id_data Metadata for code IDs, formatted as a data table
+#' @param ui_data Data table with columns including `node_id`, `code_id`,
+#'   `depend_cols`, and `outputs`
+#' @param code_id_data Data table from `extract_code_component_metadata()`,
+#'   or NULL if no code components exist
 #'
-#' @return Merged data table with consolidated columns
+#' @return The input `ui_data` with `depend_cols` and `outputs` replaced by
+#'   code component values where `code_id` is present, plus a `type_from_code` column
 #' @noRd
-merge_ui_with_metadata <- function(ui_data, code_id_data) {
+merge_ui_with_component_metadata <- function(ui_data, code_id_data) {
   if (is.null(code_id_data)) {
     return(ui_data)
   }
 
-  rnm_cols <- names(code_id_data) != "node_id"
-  names(code_id_data)[rnm_cols] <- paste0(
-    names(code_id_data)[rnm_cols],
-    "_from_code"
+  # Avoid modifying caller's data
+  code_metadata <- data.table::copy(code_id_data)
+  data.table::setnames(
+    code_metadata,
+    setdiff(names(code_metadata), "node_id"),
+    \(x) paste0(x, "_from_code")
   )
 
   merged_data <- merge(
     ui_data,
-    code_id_data,
+    code_metadata,
     by = "node_id",
     all.x = TRUE
   )
 
-  # Validate outputs consistency
-  assert_outputs_identical(merged_data)
+  assert_code_outputs_in_yaml(merged_data)
 
-  # Consolidate columns for data that is redundant
+  # Code metadata is source of truth. Column dependencies specified in YAML is prohibited per mighty.json schema
   merged_data[
     !is.na(code_id),
     `:=`(
@@ -184,10 +186,7 @@ merge_ui_with_metadata <- function(ui_data, code_id_data) {
       outputs = outputs_from_code
     )
   ]
-
-  # Clean up redundant columns
-  merged_data$outputs_from_code <- NULL
-  merged_data$depend_cols_from_code <- NULL
+  merged_data[, c("depend_cols_from_code", "outputs_from_code") := NULL]
 
   return(merged_data)
 }
@@ -296,33 +295,25 @@ empty_dependency_table <- function() {
 
 #' Add node IDs to data
 #' @description
-#' Generates and adds unique node IDs to a data table based on domain, outputs, code_id, and parameters.
-#' @details
-#' Creates unique node IDs by combining domain information with formatted
-#' outputs, code_id, and parameters. Optimized for performance with vectorized operations.
+#' Generates and adds unique node IDs by combining domain with either an explicit id (if present)
+#' or formatted outputs. Node IDs follow the pattern "domain-id" or "domain-output1-output2-...".
 #'
 #' @param nodes Data table to add node IDs to
 #'
 #' @return Data table with node_id column added
 #' @noRd
 add_node_id <- function(nodes) {
-  # Format components of the node ID
   formatted_outputs <- format_outputs(nodes$outputs)
 
-  # Combine components to create node ID
-  nodes$node_id <- lapply(seq_len(nrow(nodes)), function(i) {
-    domain <- nodes$domain[[i]]
-    if (!is.na(nodes$id[[i]])) {
-      paste0(domain, "-", nodes$id[[i]])
-    } else {
-      paste0(
-        domain,
-        "-",
-        formatted_outputs[[i]]
-      )
-    }
-  }) |>
-    unlist()
+  # Use explicit id if present, otherwise fall back to formatted outputs
+  has_id <- !is.na(nodes$id)
+  nodes[,
+    node_id := data.table::fifelse(
+      has_id,
+      paste0(domain, "-", id),
+      paste0(domain, "-", formatted_outputs)
+    )
+  ]
 
   return(nodes)
 }

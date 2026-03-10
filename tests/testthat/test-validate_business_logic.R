@@ -38,13 +38,7 @@ parameters:
   study <- mighty.metadata::mighty_study(adam_specifications)
   # ACT / ASSERT ---------------------------------------------------------------
 
-  err_ <- process_adam_domain(study$ADLB, "ADLB") |>
-    expect_error("YAML validation failed")
-  expect_match(
-    err_$parent$message,
-    "/columns/1/depends must match pattern.*(rows|parameters)",
-    all = FALSE
-  )
+  expect_snapshot_error(process_adam_domain(study$ADLB, "ADLB"))
 })
 
 test_that("Row depends with wrong prefix should fail", {
@@ -82,13 +76,7 @@ parameters:
   study <- mighty.metadata::mighty_study(adam_specifications)
   # ACT / ASSERT ---------------------------------------------------------------
 
-  err_ <- process_adam_domain(study$ADLB, "ADLB") |>
-    expect_error("YAML validation failed")
-  expect_match(
-    err_$parent$message,
-    "/rows/0/depends must match pattern.*(rows|parameters)",
-    all = FALSE
-  )
+  expect_snapshot_error(process_adam_domain(study$ADLB, "ADLB"))
 })
 
 test_that("Parameter depends with wrong prefix should fail", {
@@ -125,14 +113,7 @@ parameters:
   adam_specifications <- setup_study_dir(list("adlb" = yaml_content))
   study <- mighty.metadata::mighty_study(adam_specifications)
   # ACT / ASSERT ---------------------------------------------------------------
-
-  err_ <- process_adam_domain(study$ADLB, "ADLB") |>
-    expect_error("YAML validation failed")
-  expect_match(
-    err_$parent$message,
-    "/parameters/0/depends must match pattern.*(rows|parameters)",
-    all = FALSE
-  )
+  expect_snapshot_error(process_adam_domain(study$ADLB, "ADLB"))
 })
 
 test_that("Dependencies with correct prefix should pass", {
