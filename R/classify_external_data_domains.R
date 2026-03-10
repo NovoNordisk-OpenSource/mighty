@@ -1,7 +1,7 @@
 #' Classify Data Domain Names by Type
 #'
 #' @description
-#' Classifies domain names into categories (SDTM, ADaM, metadata, core, self)
+#' Classifies domain names into categories (SDTM, ADaM, metadata)
 #' based on clinical data naming conventions.
 #'
 #' @param vector Character vector of domain names to classify.
@@ -12,33 +12,26 @@
 #'   \item `"sdtm"` - 2-char domains, "relrec", "dm_*", "supp*"
 #'   \item `"adam"` - Names starting with "ad"
 #'   \item `"md"` - Names starting with "md"
-#'   \item `"core"` - Exactly "core"
-#'   \item `"self"` - Other names without dots
+#'   \item `NA` - Domains that don't match any recognized pattern
 #' }
 #'
-#' @details
-#' Throws error for unrecognized domain names.
 #' @noRd
 classify_data_domains <- function(vector) {
-  result <- character(length(vector))
-  result[!grepl("\\.", vector, ignore.case = TRUE)] <- "self"
-  result[grepl("^ad", vector, ignore.case = TRUE)] <- "adam"
-  result[grepl("^md", vector, ignore.case = TRUE)] <- "md"
-  result[
-    nchar(vector) == 2 |
-      vector == "relrec" |
-      grepl("^dm_", vector, ignore.case = TRUE) |
-      grepl("^supp", vector, ignore.case = TRUE)
-  ] <- "sdtm"
-  result[vector == "core"] <- "core"
-
-  # Check for unclassified values
-  unclassified <- which(result == "")
-  if (length(unclassified) > 0) {
-    stop(
-      "classify_data_domains: Unknown domain(s): ",
-      paste(vector[unclassified], collapse = ", ")
-    )
+  invalid <- vector[!grepl("^[a-zA-Z][a-zA-Z0-9_]+$", vector)]
+  if (length(invalid) > 0) {
+    cli::cli_abort(c(
+      "Domain names must start with a letter and contain only letters, digits, or underscores",
+      "x" = "Invalid domain name{?s}: {.val {invalid}}"
+    ))
   }
-  return(result)
+  lc <- tolower(vector)
+  data.table::fcase(
+    nchar(lc) == 2 | grepl("^(relrec$|dm_|supp)", lc),
+    "sdtm",
+    grepl("^ad", lc),
+    "adam",
+    grepl("^md", lc),
+    "md",
+    default = NA_character_
+  )
 }

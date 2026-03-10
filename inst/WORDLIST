@@ -60,6 +60,7 @@ Dxxxx
 envir
 EOSSTT
 EXSTDY
+fcase
 fifelse
 FPFV
 grepl
@@ -84,6 +85,8 @@ LBTESTCD
 locf
 LOCF
 macrocytes
+mdcol
+MDCOL
 MDFLOW
 MDPARAM
 MDVISIT
