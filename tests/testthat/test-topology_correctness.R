@@ -53,7 +53,7 @@ test_that("Validation warning occurs when component uses ADSL implicitly without
       actual <- generate_adam_code(
         adam_specifications = adam_specifications,
 
-        path_trial = trial_path,
+        path_connector_config = trial_path,
         check_cross_domain_adam_dependencies = TRUE
       )
     },
@@ -120,7 +120,7 @@ test_that("Topology is generated correctly when component declares dependencies 
   actual <- generate_adam_code(
     adam_specifications = adam_specifications,
 
-    path_trial = trial_path,
+    path_connector_config = trial_path,
     check_cross_domain_adam_dependencies = TRUE
   )
 
@@ -211,7 +211,7 @@ test_that("Warning message lists all output columns from component with missing 
       actual <- generate_adam_code(
         adam_specifications = adam_specifications,
 
-        path_trial = trial_path,
+        path_connector_config = trial_path,
         check_cross_domain_adam_dependencies = TRUE
       )
     },
@@ -306,7 +306,7 @@ test_that("Warn if two domains but one has component with missing depends", {
       actual <- generate_adam_code(
         adam_specifications = adam_specifications,
 
-        path_trial = trial_path,
+        path_connector_config = trial_path,
         check_cross_domain_adam_dependencies = TRUE
       )
     },
@@ -397,7 +397,7 @@ test_that("Validation with mix of components warning when no @depends on compone
       actual <- generate_adam_code(
         adam_specifications = adam_specifications,
 
-        path_trial = trial_path,
+        path_connector_config = trial_path,
         check_cross_domain_adam_dependencies = TRUE
       )
     },
@@ -488,7 +488,7 @@ test_that("Validation with two domains throws warning when no @depends on compon
       actual <- generate_adam_code(
         adam_specifications = adam_specifications,
 
-        path_trial = trial_path,
+        path_connector_config = trial_path,
         check_cross_domain_adam_dependencies = TRUE
       )
     },
@@ -566,7 +566,7 @@ test_that("Error when ADaM specification is missing init_domain (no population.b
     generate_adam_code(
       adam_specifications = adam_specifications,
 
-      path_trial = trial_path,
+      path_connector_config = trial_path,
       check_cross_domain_adam_dependencies = TRUE
     ),
     "The `init_domain` node is missing for ADSL"

@@ -7,7 +7,7 @@
 generate_adam_code(
   adam_specifications,
   standards_lib = NULL,
-  path_trial,
+  path_connector_config,
   check_cross_domain_adam_dependencies = TRUE,
   data_context = NULL
 )
@@ -20,8 +20,13 @@ configuration file with study-level metadata and dataset keys.}
 \item{standards_lib}{Optional list or environment containing standard code
 components and templates. If \code{NULL}, uses default standards library.}
 
-\item{path_trial}{Character string. Base path to the trial directory where
-generated programs and data files will be referenced or stored.}
+\item{path_connector_config}{Character string. Path to the directory
+containing the connector configuration file (\verb{_connector.yml}).
+This path is embedded into the generated programs, which use it to
+locate \verb{_connector.yml} at execution time — mighty itself does not
+read the connector configuration.
+Prefix with \code{!expr } to embed an R expression that is evaluated at
+runtime by the generated program (e.g., \code{'!expr here::here()'}).}
 
 \item{check_cross_domain_adam_dependencies}{Logical. If \code{TRUE} (default),
 validates dependencies across different ADaM domains. If \code{FALSE}, only
@@ -103,7 +108,7 @@ provided specifications.
 \item ADaM specification file must be a valid YAML file with ADaM
 specifications following the schema defined in mighty.metadata
 \item Trial metadata file must contain valid study configuration
-\item Trial path must be accessible for file operations
+\item Connector configuration directory must be accessible for file operations
 }
 }
 
@@ -123,7 +128,7 @@ invalid
 # Generate ADaM programs with full dependency checking
 result <- generate_adam_code(
   adam_specifications = "path/to/yaml_specs_directory",
-  path_trial = "path/to/trial_directory",
+  path_connector_config = "path/to/trial_directory",
   check_cross_domain_adam_dependencies = TRUE
 )
 
@@ -135,7 +140,7 @@ executable_programs <- result$executable_programs
 result_custom <- generate_adam_code(
   adam_specifications = "yaml_specs/",
   standards_lib = my_custom_standards,
-  path_trial = "trial_data/",
+  path_connector_config = "trial_data/",
   check_cross_domain_adam_dependencies = FALSE
 )
 }

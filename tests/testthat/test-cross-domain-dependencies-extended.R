@@ -57,13 +57,13 @@ columns:
     "_mighty" = mighty_yml_content
   ))
 
-  path_trial <- withr::local_tempdir()
+  path_connector_config <- withr::local_tempdir()
 
   standards_lib <- "mighty.standards"
 
   setup_testdata(
     testdata = "pharmaverse",
-    test_data_path = path_trial,
+    test_data_path = path_connector_config,
     sdtm_domains = c("dm", "lb")
   )
   standards_lib <- "mighty.standards"
@@ -73,7 +73,7 @@ columns:
   actual <- generate_adam_code(
     adam_specifications = adam_specifications,
     standards_lib = standards_lib,
-    path_trial = path_trial,
+    path_connector_config = path_connector_config,
     check_cross_domain_adam_dependencies = TRUE
   )
 
@@ -82,8 +82,8 @@ columns:
   actual$programs[3][[1]] <-
     remove_connector_write_step(actual$programs[3][[1]])
 
-  write_adam_programs(actual$programs, path_trial, style = TRUE)
-  x <- list.files(path_trial, pattern = ".R", full.names = TRUE)
+  write_adam_programs(actual$programs, path_connector_config, style = TRUE)
+  x <- list.files(path_connector_config, pattern = ".R", full.names = TRUE)
 
   expect_no_error(source(x[[1]]))
   expect_no_error(source(x[[2]]))

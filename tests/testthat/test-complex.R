@@ -9,11 +9,11 @@ test_that("Complex test with multiple domains and column/row operations", {
     )
   )
 
-  path_trial <- withr::local_tempdir()
+  path_connector_config <- withr::local_tempdir()
 
   setup_testdata(
     testdata = "pharmaverse",
-    test_data_path = path_trial,
+    test_data_path = path_connector_config,
     sdtm_domains = c("dm", "dm_vaccine", "lb", "sv")
   )
   standards_lib <- "mighty.standards"
@@ -23,7 +23,7 @@ test_that("Complex test with multiple domains and column/row operations", {
   actual <- generate_adam_code(
     adam_specifications = adam_specifications,
     standards_lib = standards_lib,
-    path_trial = path_trial,
+    path_connector_config = path_connector_config,
     check_cross_domain_adam_dependencies = TRUE
   )
 
@@ -48,11 +48,11 @@ test_that("Complex test with multiple domains and column/row operations", {
     remove_connector_write_step(actual$programs[3][[1]])
 
   write_adam_programs(
-    dir = path_trial,
+    dir = path_connector_config,
     programs = actual$programs,
     style = TRUE
   )
-  x <- list.files(path_trial, pattern = ".R", full.names = TRUE)
+  x <- list.files(path_connector_config, pattern = ".R", full.names = TRUE)
 
   programs <- x |> lapply(readLines)
   names(programs) <- basename(x)

@@ -20,8 +20,10 @@
 #'   columns for data operations.
 #' @param ui_data List containing domain-specific UI data including initialization
 #'   metadata and configuration parameters.
-#' @param path_trial Character string specifying the output path where
-#'   generated programs and data should be stored.
+#' @param path_connector_config Character string. Path to the directory
+#'   containing the connector configuration file (`_connector.yml`).
+#'   Prefix with `!expr ` to embed an R expression that is evaluated at
+#'   runtime by the generated program (e.g., `'!expr Sys.getenv("TRIAL_PATH")'`).
 #' @param available_data Optional parameter containing information about
 #'   available data sources, defaults to NULL.
 #'
@@ -34,7 +36,7 @@ render_code <- function(
   actions,
   domain_keys,
   ui_data,
-  path_trial,
+  path_connector_config,
   available_data = NULL
 ) {
   actions_program_summary <- actions |>
@@ -68,7 +70,7 @@ render_code <- function(
       depend_columns = action_i$depend_cols[[1]]$column_name,
       action_parameters = action_i$parameters,
       node_id = action_i$node_id,
-      path_trial = path_trial,
+      path_connector_config = path_connector_config,
       domain_ui_data = ui_data[[action_i$domain]],
       domain_keys = domain_keys,
       is_final_pgm = is_final_pgm,
@@ -128,8 +130,10 @@ render_code <- function(
 #'
 #' @param node_id Identifier for the current processing node.
 #'
-#' @param path_trial Character string specifying the file path to the trial
-#'   data directory.
+#' @param path_connector_config Character string. Path to the directory
+#'   containing the connector configuration file (`_connector.yml`).
+#'   Prefix with `!expr ` to embed an R expression that is evaluated at
+#'   runtime by the generated program (e.g., `'!expr Sys.getenv("TRIAL_PATH")'`).
 #'
 #' @param domain_ui_data List containing UI-related domain metadata, including
 #'   initialization metadata accessed via `domain_ui_data$init`.
@@ -173,7 +177,7 @@ define_params <- function(
   depend_columns,
   action_parameters,
   node_id,
-  path_trial,
+  path_connector_config,
   domain_ui_data,
   domain_keys,
   is_final_pgm,
@@ -186,7 +190,7 @@ define_params <- function(
     "_read_data.mustache" = params_read_data_code(
       payload = output_cols,
       domain = .self,
-      path_trial = path_trial
+      path_connector_config = path_connector_config
     ),
     "_init_domain.mustache" = params_init_domain_code(
       .self = .self,

@@ -2,13 +2,16 @@ test_that("Supplementary data action is placed after filter_domain when no suppl
   # SETUP -------------------------------------------------------------------
 
   adam_specifications <- setup_study_from_fixtures(
-    fixtures = list("adsl" = "supplementary_data_adsl_01.yml", "_mighty" = "_mighty.yml")
+    fixtures = list(
+      "adsl" = "supplementary_data_adsl_01.yml",
+      "_mighty" = "_mighty.yml"
+    )
   )
-  path_trial <- withr::local_tempdir()
+  path_connector_config <- withr::local_tempdir()
 
   setup_testdata(
     testdata = "pharmaverse",
-    test_data_path = path_trial,
+    test_data_path = path_connector_config,
     sdtm_domains = c("dm", "dm_vaccine", "suppdm", "suppdm_vaccine")
   )
   standards_lib <- "mighty.standards"
@@ -19,12 +22,12 @@ test_that("Supplementary data action is placed after filter_domain when no suppl
     adam_specifications = adam_specifications,
     standards_lib = standards_lib,
 
-    path_trial = path_trial,
+    path_connector_config = path_connector_config,
     check_cross_domain_adam_dependencies = TRUE
   )
 
-  write_adam_programs(dir = path_trial, programs = actual$programs)
-  x <- list.files(path_trial, pattern = ".R", full.names = TRUE)
+  write_adam_programs(dir = path_connector_config, programs = actual$programs)
+  x <- list.files(path_connector_config, pattern = ".R", full.names = TRUE)
   programs <- x |> lapply(readLines)
   names(programs) <- basename(x)
   # EXPECT ------------------------------------------------------------------
@@ -74,13 +77,16 @@ test_that("Supp data action is placed before filter_domain when supp columns are
   # SETUP -------------------------------------------------------------------
 
   adam_specifications <- setup_study_from_fixtures(
-    fixtures = list("adsl" = "supplementary_data_adsl_02.yml", "_mighty" = "_mighty.yml")
+    fixtures = list(
+      "adsl" = "supplementary_data_adsl_02.yml",
+      "_mighty" = "_mighty.yml"
+    )
   )
-  path_trial <- withr::local_tempdir()
+  path_connector_config <- withr::local_tempdir()
 
   setup_testdata(
     testdata = "pharmaverse",
-    test_data_path = path_trial,
+    test_data_path = path_connector_config,
     sdtm_domains = c("dm", "dm_vaccine", "suppdm", "suppdm_vaccine")
   )
   standards_lib <- "mighty.standards"
@@ -91,12 +97,12 @@ test_that("Supp data action is placed before filter_domain when supp columns are
     adam_specifications = adam_specifications,
     standards_lib = standards_lib,
 
-    path_trial = path_trial,
+    path_connector_config = path_connector_config,
     check_cross_domain_adam_dependencies = TRUE
   )
 
-  write_adam_programs(dir = path_trial, programs = actual$programs)
-  x <- list.files(path_trial, pattern = ".R", full.names = TRUE)
+  write_adam_programs(dir = path_connector_config, programs = actual$programs)
+  x <- list.files(path_connector_config, pattern = ".R", full.names = TRUE)
   programs <- x |> lapply(readLines)
   names(programs) <- basename(x)
 
@@ -148,13 +154,16 @@ test_that("Supp data action is placed before filter_domain when supp columns are
   # SETUP -------------------------------------------------------------------
 
   adam_specifications <- setup_study_from_fixtures(
-    fixtures = list("adsl" = "supplementary_data_adsl_03.yml", "_mighty" = "_mighty.yml")
+    fixtures = list(
+      "adsl" = "supplementary_data_adsl_03.yml",
+      "_mighty" = "_mighty.yml"
+    )
   )
-  path_trial <- withr::local_tempdir()
+  path_connector_config <- withr::local_tempdir()
 
   setup_testdata(
     testdata = "pharmaverse",
-    test_data_path = path_trial,
+    test_data_path = path_connector_config,
     sdtm_domains = c("dm", "dm_vaccine", "suppdm", "suppdm_vaccine")
   )
   standards_lib <- "mighty.standards"
@@ -165,12 +174,12 @@ test_that("Supp data action is placed before filter_domain when supp columns are
     adam_specifications = adam_specifications,
     standards_lib = standards_lib,
 
-    path_trial = path_trial,
+    path_connector_config = path_connector_config,
     check_cross_domain_adam_dependencies = TRUE
   )
 
-  write_adam_programs(dir = path_trial, programs = actual$programs)
-  x <- list.files(path_trial, pattern = ".R", full.names = TRUE)
+  write_adam_programs(dir = path_connector_config, programs = actual$programs)
+  x <- list.files(path_connector_config, pattern = ".R", full.names = TRUE)
   programs <- x |> lapply(readLines)
   names(programs) <- basename(x)
 
@@ -223,13 +232,16 @@ test_that("Supp data action is placed before filter_domain when supp columns and
   # SETUP -------------------------------------------------------------------
 
   adam_specifications <- setup_study_from_fixtures(
-    fixtures = list("adae" = "supplementary_data_adae_01.yml", "_mighty" = "_mighty_lowercase_adsl.yml")
+    fixtures = list(
+      "adae" = "supplementary_data_adae_01.yml",
+      "_mighty" = "_mighty_lowercase_adsl.yml"
+    )
   )
-  path_trial <- withr::local_tempdir()
+  path_connector_config <- withr::local_tempdir()
 
   setup_testdata(
     testdata = "pharmaverse",
-    test_data_path = path_trial,
+    test_data_path = path_connector_config,
     sdtm_domains = c("ae", "suppae"),
     adam_domains = c("adsl")
   )
@@ -241,12 +253,12 @@ test_that("Supp data action is placed before filter_domain when supp columns and
     adam_specifications = adam_specifications,
     standards_lib = standards_lib,
 
-    path_trial = path_trial,
+    path_connector_config = path_connector_config,
     check_cross_domain_adam_dependencies = FALSE
   )
 
-  write_adam_programs(dir = path_trial, programs = actual$programs)
-  x <- list.files(path_trial, pattern = ".R", full.names = TRUE)
+  write_adam_programs(dir = path_connector_config, programs = actual$programs)
+  x <- list.files(path_connector_config, pattern = ".R", full.names = TRUE)
   programs <- x |> lapply(readLines)
   names(programs) <- basename(x)
 
@@ -283,13 +295,16 @@ test_that("Col_compute and parent col_compute is placed before filter_domain whe
   # SETUP -------------------------------------------------------------------
 
   adam_specifications <- setup_study_from_fixtures(
-    fixtures = list("adae" = "supplementary_data_adae_02.yml", "_mighty" = "_mighty_lowercase_adsl.yml")
+    fixtures = list(
+      "adae" = "supplementary_data_adae_02.yml",
+      "_mighty" = "_mighty_lowercase_adsl.yml"
+    )
   )
-  path_trial <- withr::local_tempdir()
+  path_connector_config <- withr::local_tempdir()
 
   setup_testdata(
     testdata = "pharmaverse",
-    test_data_path = path_trial,
+    test_data_path = path_connector_config,
     sdtm_domains = c("ae", "suppae"),
     adam_domains = c("adsl")
   )
@@ -301,12 +316,12 @@ test_that("Col_compute and parent col_compute is placed before filter_domain whe
     adam_specifications = adam_specifications,
     standards_lib = standards_lib,
 
-    path_trial = path_trial,
+    path_connector_config = path_connector_config,
     check_cross_domain_adam_dependencies = FALSE
   )
 
-  write_adam_programs(dir = path_trial, programs = actual$programs)
-  x <- list.files(path_trial, pattern = ".R", full.names = TRUE)
+  write_adam_programs(dir = path_connector_config, programs = actual$programs)
+  x <- list.files(path_connector_config, pattern = ".R", full.names = TRUE)
   programs <- x |> lapply(readLines)
   names(programs) <- basename(x)
 

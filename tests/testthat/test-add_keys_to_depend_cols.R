@@ -40,7 +40,7 @@ columns:
   expect_error(
     generate_adam_code(
       adam_specifications = adam_specifications,
-      path_trial = trial_path,
+      path_connector_config = trial_path,
       check_cross_domain_adam_dependencies = TRUE
     ),
     "Domain 'UNKNOWN_DOMAIN' not recognized for foreign key lookup\\."

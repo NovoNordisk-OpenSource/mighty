@@ -6,11 +6,16 @@
 #' @param payload Character vector. Variable specifications in "domain.variable"
 #'   format (e.g., c("dm.USUBJID", "vs.VSTESTCD", "adsl.AGE")).
 #' @param domain Character. Target ADaM domain name for self-reference detection.
-#' @param path_trial Character. File path to trial data directory.
+#' @param path_connector_config Character string. Path to the directory
+#'   containing the connector configuration file (`_connector.yml`).
+#'   Prefix with `!expr ` to embed an R expression that is evaluated at
+#'   runtime by the generated program (e.g., `'!expr Sys.getenv("TRIAL_PATH")'`).
 #'
 #' @return Named list with template parameters:
 #'   \describe{
-#'     \item{path_trial}{Character. Trial data path}
+#'     \item{connector_path_expr}{Character. A `file.path()` call as R code that
+#'       resolves the connector config path. The first argument is either a quoted
+#'       literal directory path or an R expression.}
 #'     \item{domains}{List. Domain specifications with elements:
 #'       \code{is_self_domain}, \code{domain_name}, \code{data_type}, \code{keep_vars}}
 #'   }
@@ -26,24 +31,11 @@
 #'
 #' Generated code typically follows this pattern:
 #' \preformatted{
-#' dm <-  read_domain(file.path(path_trial, "sdtm", "dm.xpt")) |>
+#' dm <-  read_domain(file.path(path_connector_config, "sdtm", "dm.xpt")) |>
 #'   select(USUBJID, AGE, SEX)
 #' }
-#'
-#' @examples
-#' \dontrun{
-#' params <- params_read_data_code(
-#'   payload = c("dm.USUBJID", "dm.AGE", "vs.VSTESTCD"),
-#'   domain = "adae",
-#'   path_trial = "/path/to/data"
-#' )
-#'
-#' # Check domain specifications
-#' params$domains[[1]]$keep_vars  # "AGE, USUBJID"
-#' params$domains[[1]]$data_type  # "sdtm"
-#' }
 #' @noRd
-params_read_data_code <- function(payload, domain, path_trial) {
+params_read_data_code <- function(payload, domain, path_connector_config) {
   # Whisker template
 
   v <- strsplit(payload, "\\.")
@@ -55,15 +47,36 @@ params_read_data_code <- function(payload, domain, path_trial) {
 
   # Prepare template data
   by_domain <- split(payload_dt, by = "domain")
-  connector_path <- file.path(
-    normalizePath(path_trial, winslash = "/"),
-    "_connector.yml"
-  )
+
+  connector_path_expr <- make_connector_path_expr(path_connector_config)
+
   return(list(
-    connector_path = connector_path,
+    connector_path_expr = connector_path_expr,
     domains = purrr::imap(by_domain, prepare_domain_data, .self = domain) |>
       unname()
   ))
+}
+
+#' Build connector path expression
+#'
+#' Converts a `path_connector_config` value into an R code string that resolves
+#' the `_connector.yml` path. Supports `!expr ` prefix for runtime expressions
+#' and plain directory paths.
+#'
+#' @param path_connector_config Character string. Directory path or
+#'   `!expr `-prefixed R expression.
+#'
+#' @return Character string. A `file.path()` call as R code that appends
+#'   `"_connector.yml"` to the path at runtime.
+#' @noRd
+make_connector_path_expr <- function(path_connector_config) {
+  if (startsWith(path_connector_config, "!expr ")) {
+    expr_code <- sub("^!expr ", "", path_connector_config)
+    paste0("file.path(", expr_code, ", \"_connector.yml\")")
+  } else {
+    path_connector_config <- gsub("\\\\", "/", path_connector_config)
+    paste0("file.path(\"", path_connector_config, "\", \"_connector.yml\")")
+  }
 }
 
 #' Prepare Domain-Specific Data Reading Parameters

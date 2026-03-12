@@ -117,7 +117,7 @@ library(mighty)
 results <- mighty::generate_adam_code(
   adam_specifications = \"study_dir\",
   standards_lib = \"mighty.standards\",
-  path_trial = \".\"
+  path_connector_config = \".\"
 )
 
 # Print rendered ADaM program
@@ -136,7 +136,7 @@ Here is a minimal example that demonstrates how to specify and render a simple A
 Mighty does not have any conditions on how your directory is structured. The only constraints are, there needs to be:
 
 - A location to store study-specific custom components
-- A [connector config file](https://novonordisk-opensource.github.io/connector/) that specifies where your trial data is located (SDTM, metadata, and ADaM). Mighty expects it to be located under `path_trial` with the name `_connector.yml`.
+- A [connector config file](https://novonordisk-opensource.github.io/connector/) that specifies where your trial data is located (SDTM, metadata, and ADaM). The `path_connector_config` argument to `generate_adam_code()` determines the directory path embedded in the generated programs for locating `_connector.yml` at runtime. In other words, this is where the generated ADaM programs will expect the `_connector.yml` to be found when they are executed.
 - A location where the compiled ADaM programs can be written out to
 
 ## Set up your study metadata file
@@ -219,7 +219,7 @@ Printing the rendered ADaM program yields a complete program for generating ADSL
 results <- mighty::generate_adam_code(
   adam_specifications = study_dir,
   standards_lib = "mighty.standards",
-  path_trial = study_dir
+  path_connector_config = study_dir
 )
 
 # Display the generated program with R formatting

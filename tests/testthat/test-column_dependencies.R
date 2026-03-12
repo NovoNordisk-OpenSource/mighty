@@ -8,11 +8,11 @@ test_that("No filters", {
     )
   )
 
-  path_trial <- withr::local_tempdir()
+  path_connector_config <- withr::local_tempdir()
 
   setup_testdata(
     testdata = "pharmaverse",
-    test_data_path = path_trial,
+    test_data_path = path_connector_config,
     sdtm_domains = c("dm", "dm_vaccine")
   )
   standards_lib <- "mighty.standards"
@@ -23,12 +23,12 @@ test_that("No filters", {
     adam_specifications = adam_specifications,
     standards_lib = standards_lib,
 
-    path_trial = path_trial,
+    path_connector_config = path_connector_config,
     check_cross_domain_adam_dependencies = TRUE
   )
 
-  write_adam_programs(dir = path_trial, programs = actual$programs)
-  x <- list.files(path_trial, pattern = ".R", full.names = TRUE)
+  write_adam_programs(dir = path_connector_config, programs = actual$programs)
+  x <- list.files(path_connector_config, pattern = ".R", full.names = TRUE)
 
   # EXPECT -------------------------------------------------------------------
 
@@ -87,11 +87,11 @@ test_that("No filters - external core domain dependency on col_compute action", 
     )
   )
 
-  path_trial <- withr::local_tempdir()
+  path_connector_config <- withr::local_tempdir()
 
   setup_testdata(
     testdata = "pharmaverse",
-    test_data_path = path_trial,
+    test_data_path = path_connector_config,
     sdtm_domains = c("dm", "dm_vaccine")
   )
   standards_lib <- "mighty.standards"
@@ -102,12 +102,12 @@ test_that("No filters - external core domain dependency on col_compute action", 
     adam_specifications = adam_specifications,
     standards_lib = standards_lib,
 
-    path_trial = path_trial,
+    path_connector_config = path_connector_config,
     check_cross_domain_adam_dependencies = TRUE
   )
 
-  write_adam_programs(dir = path_trial, programs = actual$programs)
-  x <- list.files(path_trial, pattern = ".R", full.names = TRUE)
+  write_adam_programs(dir = path_connector_config, programs = actual$programs)
+  x <- list.files(path_connector_config, pattern = ".R", full.names = TRUE)
 
   # EXPECT -------------------------------------------------------------------
 
@@ -178,11 +178,11 @@ test_that("No domain filters", {
     )
   )
 
-  path_trial <- withr::local_tempdir()
+  path_connector_config <- withr::local_tempdir()
 
   setup_testdata(
     testdata = "pharmaverse",
-    test_data_path = path_trial,
+    test_data_path = path_connector_config,
     sdtm_domains = c("dm", "dm_vaccine")
   )
   standards_lib <- "mighty.standards"
@@ -193,12 +193,12 @@ test_that("No domain filters", {
     adam_specifications = adam_specifications,
     standards_lib = standards_lib,
 
-    path_trial = path_trial,
+    path_connector_config = path_connector_config,
     check_cross_domain_adam_dependencies = TRUE
   )
 
-  write_adam_programs(dir = path_trial, programs = actual$programs)
-  x <- list.files(path_trial, pattern = ".R", full.names = TRUE)
+  write_adam_programs(dir = path_connector_config, programs = actual$programs)
+  x <- list.files(path_connector_config, pattern = ".R", full.names = TRUE)
 
   # EXPECT -------------------------------------------------------------------
 
@@ -264,11 +264,11 @@ test_that("No global filters", {
     )
   )
 
-  path_trial <- withr::local_tempdir()
+  path_connector_config <- withr::local_tempdir()
 
   setup_testdata(
     testdata = "pharmaverse",
-    test_data_path = path_trial,
+    test_data_path = path_connector_config,
     sdtm_domains = c("dm", "dm_vaccine")
   )
   standards_lib <- "mighty.standards"
@@ -279,12 +279,12 @@ test_that("No global filters", {
     adam_specifications = adam_specifications,
     standards_lib = standards_lib,
 
-    path_trial = path_trial,
+    path_connector_config = path_connector_config,
     check_cross_domain_adam_dependencies = TRUE
   )
 
-  write_adam_programs(dir = path_trial, programs = actual$programs)
-  x <- list.files(path_trial, pattern = ".R", full.names = TRUE)
+  write_adam_programs(dir = path_connector_config, programs = actual$programs)
+  x <- list.files(path_connector_config, pattern = ".R", full.names = TRUE)
 
   # EXPECT -------------------------------------------------------------------
 
@@ -350,11 +350,11 @@ test_that("No filters and no derivations", {
     )
   )
 
-  path_trial <- withr::local_tempdir()
+  path_connector_config <- withr::local_tempdir()
 
   setup_testdata(
     testdata = "pharmaverse",
-    test_data_path = path_trial,
+    test_data_path = path_connector_config,
     sdtm_domains = c("dm", "dm_vaccine")
   )
   standards_lib <- "mighty.standards"
@@ -365,12 +365,12 @@ test_that("No filters and no derivations", {
     adam_specifications = adam_specifications,
     standards_lib = standards_lib,
 
-    path_trial = path_trial,
+    path_connector_config = path_connector_config,
     check_cross_domain_adam_dependencies = TRUE
   )
 
-  write_adam_programs(dir = path_trial, programs = actual$programs)
-  x <- list.files(path_trial, pattern = ".R", full.names = TRUE)
+  write_adam_programs(dir = path_connector_config, programs = actual$programs)
+  x <- list.files(path_connector_config, pattern = ".R", full.names = TRUE)
 
   # EXPECT -------------------------------------------------------------------
 
@@ -421,11 +421,11 @@ test_that("Global filter and domain filter", {
     )
   )
 
-  path_trial <- withr::local_tempdir()
+  path_connector_config <- withr::local_tempdir()
 
   setup_testdata(
     testdata = "pharmaverse",
-    test_data_path = path_trial,
+    test_data_path = path_connector_config,
     sdtm_domains = c("dm", "dm_vaccine")
   )
   standards_lib <- "mighty.standards"
@@ -436,12 +436,12 @@ test_that("Global filter and domain filter", {
     adam_specifications = adam_specifications,
     standards_lib = standards_lib,
 
-    path_trial = path_trial,
+    path_connector_config = path_connector_config,
     check_cross_domain_adam_dependencies = TRUE
   )
 
-  write_adam_programs(dir = path_trial, programs = actual$programs)
-  x <- list.files(path_trial, pattern = ".R", full.names = TRUE)
+  write_adam_programs(dir = path_connector_config, programs = actual$programs)
+  x <- list.files(path_connector_config, pattern = ".R", full.names = TRUE)
 
   # EXPECT -------------------------------------------------------------------
 
@@ -502,14 +502,17 @@ test_that("Global filter and domain filter incl. adsl dependencies (lower case)"
   # SETUP -------------------------------------------------------------------
 
   adam_specifications <- setup_study_from_fixtures(
-    fixtures = list("adlb" = "column_dependencies_adlb_02.yml", "_mighty" = "_mighty_lowercase_adsl.yml"),
+    fixtures = list(
+      "adlb" = "column_dependencies_adlb_02.yml",
+      "_mighty" = "_mighty_lowercase_adsl.yml"
+    ),
     process_glue = FALSE
   )
-  path_trial <- withr::local_tempdir()
+  path_connector_config <- withr::local_tempdir()
 
   setup_testdata(
     testdata = "pharmaverse",
-    test_data_path = path_trial,
+    test_data_path = path_connector_config,
     sdtm_domains = c("lb"),
     adam_domains = c("adsl")
   )
@@ -521,12 +524,12 @@ test_that("Global filter and domain filter incl. adsl dependencies (lower case)"
     adam_specifications = adam_specifications,
     standards_lib = standards_lib,
 
-    path_trial = path_trial,
+    path_connector_config = path_connector_config,
     check_cross_domain_adam_dependencies = FALSE
   )
 
-  write_adam_programs(dir = path_trial, programs = actual$programs)
-  x <- list.files(path_trial, pattern = ".R", full.names = TRUE)
+  write_adam_programs(dir = path_connector_config, programs = actual$programs)
+  x <- list.files(path_connector_config, pattern = ".R", full.names = TRUE)
 
   # EXPECT -------------------------------------------------------------------
 
@@ -576,14 +579,17 @@ test_that("External predecessor dependencies are handled correctly in filter and
   # SETUP -------------------------------------------------------------------
 
   adam_specifications <- setup_study_from_fixtures(
-    fixtures = list("adlb" = "column_dependencies_adlb_03.yml", "_mighty" = "_mighty_lowercase_adsl.yml"),
+    fixtures = list(
+      "adlb" = "column_dependencies_adlb_03.yml",
+      "_mighty" = "_mighty_lowercase_adsl.yml"
+    ),
     process_glue = FALSE
   )
-  path_trial <- withr::local_tempdir()
+  path_connector_config <- withr::local_tempdir()
 
   setup_testdata(
     testdata = "pharmaverse",
-    test_data_path = path_trial,
+    test_data_path = path_connector_config,
     sdtm_domains = c("lb"),
     adam_domains = c("adsl")
   )
@@ -595,12 +601,12 @@ test_that("External predecessor dependencies are handled correctly in filter and
     adam_specifications = adam_specifications,
     standards_lib = standards_lib,
 
-    path_trial = path_trial,
+    path_connector_config = path_connector_config,
     check_cross_domain_adam_dependencies = FALSE
   )
 
-  write_adam_programs(dir = path_trial, programs = actual$programs)
-  x <- list.files(path_trial, pattern = ".R", full.names = TRUE)
+  write_adam_programs(dir = path_connector_config, programs = actual$programs)
+  x <- list.files(path_connector_config, pattern = ".R", full.names = TRUE)
 
   # EXPECT -------------------------------------------------------------------
 

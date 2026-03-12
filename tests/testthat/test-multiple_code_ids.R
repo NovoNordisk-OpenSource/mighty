@@ -4,7 +4,10 @@ test_that("Multiple columns using same code_id, but diff parameters errors out",
   )
   # SETUP
   adam_specifications <- setup_study_from_fixtures(
-    fixtures = list("adlb" = "multiple_code_ids.yml", "_mighty" = "_mighty.yml"),
+    fixtures = list(
+      "adlb" = "multiple_code_ids.yml",
+      "_mighty" = "_mighty.yml"
+    ),
     process_glue = FALSE
   )
   std_lib_path <- c(testthat::test_path("fixtures", "multiple_code_ids.R"))
@@ -14,7 +17,7 @@ test_that("Multiple columns using same code_id, but diff parameters errors out",
   expect_error(
     generate_adam_code(
       adam_specifications = adam_specifications,
-      path_trial = output_path
+      path_connector_config = output_path
     ),
     regexp = "Code_id `fn_AB` is used in multiple columns with different parameters"
   )

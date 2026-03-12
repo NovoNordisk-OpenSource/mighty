@@ -16,7 +16,7 @@ test_that("Error when domain keys are defined in both _mighty.yml and ADaM speci
     generate_adam_code(
       adam_specifications = adam_specifications,
       standards_lib = standards_lib,
-      path_trial = trial_path
+      path_connector_config = trial_path
     ),
     "Domains have keys defined in both _mighty.yml and domain specifications"
   )
