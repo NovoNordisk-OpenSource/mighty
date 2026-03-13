@@ -24,3 +24,8 @@ test_that("make_connector_path_expr() normalizes backslashes to forward slashes"
     'file.path("C:/Users/trial", "_connector.yml")'
   )
 })
+
+test_that("make_connector_path_expr() handles empty string path (#186)", {
+  result <- make_connector_path_expr("")
+  expect_equal(result, '"_connector.yml"')
+})

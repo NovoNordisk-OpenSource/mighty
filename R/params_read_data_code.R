@@ -71,12 +71,14 @@ params_read_data_code <- function(payload, domain, path_connector_config) {
 #' @noRd
 make_connector_path_expr <- function(path_connector_config) {
   if (startsWith(path_connector_config, "!expr ")) {
-    expr_code <- sub("^!expr ", "", path_connector_config)
-    paste0("file.path(", expr_code, ", \"_connector.yml\")")
+    dir_expr <- sub("^!expr ", "", path_connector_config)
+  } else if (nzchar(path_connector_config)) {
+    dir_expr <- paste0('"', gsub("\\\\", "/", path_connector_config), '"')
   } else {
-    path_connector_config <- gsub("\\\\", "/", path_connector_config)
-    paste0("file.path(\"", path_connector_config, "\", \"_connector.yml\")")
+    return('"_connector.yml"')
   }
+
+  sprintf('file.path(%s, "_connector.yml")', dir_expr)
 }
 
 #' Prepare Domain-Specific Data Reading Parameters
