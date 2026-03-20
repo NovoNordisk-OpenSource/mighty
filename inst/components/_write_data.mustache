@@ -18,4 +18,4 @@
 
 {{/has_keep_vars}}
 # Save ADaM table
-cnt$adam$write_cnt({{self}}, "{{self}}.parquet", overwrite = TRUE)
+cnt$adam$write_cnt({{self}}, tolower("{{self}}.parquet"), overwrite = TRUE)
