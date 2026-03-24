@@ -125,7 +125,7 @@ The `population` section has two subsections:
 
 ## Filter execution order
 
-Understanding when filters are applied is essential for writing correct specifications. The following describes how filtering is implemented in the generated programs. Application of `SRC_` columns are thus not done at specification level:
+Understanding when filters are applied is essential for writing correct specifications. The following describes how filtering is implemented in the generated programs. The `SRC_` column mentioned in step 2 is an internal implementation detail added and removed automatically by mighty — it never appears in the specification or the final dataset:
 
 1. **Read data**: Base domains are read from SDTM
 2. **Add source tracking**: A temporary `SRC_` column is added to each domain to track its origin (only when domain-specific filters are present)
@@ -402,6 +402,14 @@ Derived columns use code components to perform data transformations. A code comp
 3.  When one code component creates multiple columns and the component takes one or more parameter values, all columns **must** use identical parameter values.
 4.  Dependencies must use appropriate prefixes: `rows.` for row operations (e.g., `rows.baseline_imputation`) or `parameters.` for parameter-level operations in BDS datasets (e.g., `parameters.bmi`).
 
+## No intermediate columns
+
+The YAML specification describes only columns that appear in the final ADaM dataset and in the define.xml. There is no mechanism to declare intermediate or temporary variables — columns used during derivation but excluded from the final output. This affects two situations:
+
+**Source columns not in the final dataset.** A component may need a column from a source domain that does not belong in the output (e.g., `LBDTC` for deriving `ADT`). Declare these as `@depends` in the component's metadata header. Mighty ensures the column is read and available at execution time without it appearing in the specification. See [Handling external dependencies](code_components.html#handling-external-dependencies) for details.
+
+**Intermediate derived values shared across final columns.** In traditional ADaM programming, a temporary column might be calculated once, used by several downstream derivations, and then dropped. Mighty does not support this pattern — there is no way to declare a column that exists only during execution. Instead, either group the final columns that share the intermediate calculation into a single component (using multiple `@outputs`), or recalculate the intermediate value within each component that needs it.
+Recalculating intermediate values across multiple components may reduce computational efficiency, but this is not a primary concern. The paramount goal of ADaM programs is clarity and transparency for regulatory review. Therefore, group derivations into shared components only when it improves the logical flow and understanding of the analysis, not simply to optimize performance.
 # Row operations
 
 Row operations are specified in the `rows` section of the ADaM domain YAML as an array.

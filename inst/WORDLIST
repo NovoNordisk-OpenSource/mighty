@@ -26,6 +26,7 @@ ARMNRS
 asis
 assertthat
 ASTDT
+ASTDTF
 ASTDY
 AVAL
 AVALC
@@ -74,6 +75,7 @@ indegree
 Johnsen
 knitr
 LBCAT
+LBDTC
 LBSEQ
 LBSTNRHI
 LBSTNRLO

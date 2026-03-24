@@ -146,7 +146,7 @@ This includes primary keys in different domains that are used for joining tables
 
 For this example, we will focus on a simple ADSL table and only provide keys related to that domain.
 
-**_mighty.yml**
+**\_mighty.yml**
 
 ```{r}
 #| echo: false
@@ -160,7 +160,7 @@ cat("```")
 
 ## Set up your ADaM specification
 
-Provide a YAML file that specifies which columns to include in ADSL and how they are derived.
+Provide a YAML file that specifies which columns to include in ADSL and how they are derived. The specification **only contains columns that belong in the final dataset**; source columns needed only during derivation are handled through component dependencies instead. See `vignette("adam_specification")` for details.
 
 This ADSL table contains 6 columns: 4 simple columns from the base domain, 1 renamed column, and 1 derivation using a custom component.
 

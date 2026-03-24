@@ -107,7 +107,7 @@ Multiple outputs are listed on separate lines.
 #' @outputs COL1
 ```
 
-Mighty uses this to track what each component produces or modifies .
+Mighty uses this to track what each component produces or modifies.
 
 ### `@code`
 Marker indicating where the executable code (the component body) begins. All code must come after this tag.
@@ -326,6 +326,55 @@ columns:
         date: ASTDT
         variable: ASTDY
 ```
+
+# Handling external dependencies
+
+The YAML specification contains only columns that appear in the final ADaM dataset (see [No intermediate columns](adam_specification.html#no-intermediate-columns)). Components often need source columns that are not in the final dataset — for example, an SDTM character date used to derive an analysis date.
+
+When a component declares `@depends DOMAIN COLUMN`, mighty adds that column to the data-reading step of the generated program. The column is available inside the component's code without appearing in the YAML `columns` section. This is the intended mechanism for accessing source data that does not belong in the final output.
+
+For example, a component that derives `ASTDT` and `ASTDTF` from the SDTM character date `LBDTC`:
+
+``` r
+#' @title Convert DTC to DT
+#' @description Converts DTC to date (DT) format and computes the corresponding date flag (DTF) for the ADLB dataset.
+#' @type derivation
+#' @depends LB USUBJID
+#' @depends LB STUDYID
+#' @depends LB LBSEQ
+#' @depends LB LBDTC
+#' @depends ADLB USUBJID
+#' @depends ADLB STUDYID
+#' @depends ADLB LBSEQ
+#' @outputs ASTDT
+#' @outputs ASTDTF
+#' @code
+ADLB <- ADLB |>
+  dplyr::left_join(
+    LB |>
+      dplyr::mutate(
+        ASTDT = admiral::convert_dtc_to_dt(
+          dtc = LBDTC,
+          highest_imputation = "M",
+          date_imputation = "first"
+        ),
+        ASTDTF = admiral::compute_dtf(
+          dtc = LBDTC,
+          dt = ASTDT
+        )
+      ),
+    by = c("USUBJID", "STUDYID", "LBSEQ")
+  )
+ 
+```
+
+Mighty reads `LBDTC` from the source domain because the component declares `@depends LB LBDTC`, even though `LBDTC` has no entry in the YAML `columns` section.
+
+This approach may cause the same source column to be joined more than once across different components. This is an accepted trade-off:
+
+- Multiple columns can share a single component. If several derived columns need the same source data, group them in one component to avoid redundant reads.
+- Compute time is rarely the bottleneck in ADaM programming. Mighty optimizes for development time, not compute time.
+- Self-contained components are easier to test and reuse independently.
 
 # Standard vs. Custom Components
 
