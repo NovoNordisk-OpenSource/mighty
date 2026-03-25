@@ -49,6 +49,7 @@ assert_code_outputs_in_yaml <- function(x) {
 
   components_grouped <- components_to_check[,
     .(
+      domain = domain[1], # Preserve domain for error reporting
       yaml_outputs = list(unlist(outputs)),
       code_outputs = list(unique(unlist(outputs_from_code)))
     ),
@@ -72,28 +73,40 @@ assert_code_outputs_in_yaml <- function(x) {
 
   mismatches <- components_grouped[outputs_match == FALSE]
 
-  # Get domain from the first row (all rows should have same domain)
-  domain <- components_to_check$domain[1]
-
-  error_msg <- c("Code components declare outputs not in YAML specification:")
+  # Build error message lines
+  error_lines <- character()
 
   for (i in seq_len(nrow(mismatches))) {
+    domain <- mismatches$domain[i]
     code_id <- mismatches$code_id[i]
     code_out <- mismatches$code_outputs[[i]]
     yaml_out <- mismatches$yaml_outputs[[i]]
-    extra <- setdiff(code_out, yaml_out)
 
     # code_id is either a file path if it's a custom component, or a plain name
     display_id <- if (grepl("/", code_id)) basename(code_id) else code_id
 
-    error_msg <- c(
-      error_msg,
-      "x" = cli::format_inline(
-        "{.file {domain}} - {.code {display_id}}: YAML declares {.val {yaml_out}}, ",
-        "code declares {.val {code_out}}, extra in code: {.val {extra}}"
-      )
+    code_str <- format_list(toupper(code_out), format_column)
+    yaml_str <- format_list(toupper(yaml_out), format_column)
+    msg <- paste0(
+      format_domain(domain),
+      " - ",
+      paste0("{.file ", display_id, "}"),
+      ": ",
+      "produces ",
+      code_str,
+      ", YAML expects ",
+      yaml_str
     )
+
+    error_lines <- c(error_lines, "i" = msg)
   }
 
-  cli::cli_abort(error_msg)
+  throw_validation_error(
+    category = "Component output mismatches",
+    details = error_lines,
+    suggestions = c(
+      "Align the component's @outputs tag with the YAML specification",
+      "Remove columns from @outputs or add them to the YAML as needed"
+    )
+  )
 }

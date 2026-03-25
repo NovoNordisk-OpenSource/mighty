@@ -39,7 +39,21 @@ pre_process_generate_rename_left_join_code <- function(
   checkmate::assertTRUE(length(join_dataset) == 1)
   by_vars <- domain_keys[[toupper(join_dataset)]]
   if (is.null(by_vars)) {
-    stop("The domain keys for ", join_dataset, " are not defined")
+    keys_msg <- paste0(
+      "Domain keys for ",
+      format_domain(join_dataset),
+      " are not defined"
+    )
+
+    throw_validation_error(
+      category = "Missing domain keys",
+      details = keys_msg,
+      suggestions = c(
+        "Add key definitions to {.file _mighty.yml} for this domain",
+        "Ensure keys section includes all referenced domains",
+        "Check domain name spelling matches specification file"
+      )
+    )
   }
   # Remove the join variables from the depend_cols
   var_to_add <- setdiff(depend_columns, by_vars)

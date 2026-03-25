@@ -2,12 +2,13 @@ test_that("Validation warning occurs when component uses ADSL implicitly without
   # SETUP -------------------------------------------------------------------
   trial_path <- withr::local_tempdir()
 
-  # Custom component that uses ADSL but only declares dependency on external dataset
+  # Custom component that uses ADSL but only declares dependency on
+  # external dataset (dm). Missing dependency: ADSL.USUBJID
   component <- "
 #' @title BRDATE
 #' @description Treatment
 #' @type derivation
-#' @depends dm BRTHDTC    # Depends on column from external dataset (dm)
+#' @depends dm BRTHDTC
 #' @outputs BRDATE
 #' @code
   ADSL <- ADSL %>% dplyr::left_join(dm |> dplyr::mutate(  # Uses ADSL implicitly
@@ -47,21 +48,25 @@ test_that("Validation warning occurs when component uses ADSL implicitly without
     "adsl" = yaml_content,
     "_mighty" = mighty_yml_content
   ))
+
   # ACT ---------------------------------------------------------------------
   err <- expect_error(
     {
       actual <- generate_adam_code(
         adam_specifications = adam_specifications,
-
         path_connector_config = trial_path,
         check_cross_domain_adam_dependencies = TRUE
       )
     },
-    "1 Dependency Inconsistency Found"
+    "Specification validation errors found"
   )
-  expect_match(
-    err$body["*"],
-    "This may be caused by missing @depends annotation on the component deriving BRDATE"
+  # Check that error message contains the component derivation info
+  expect_true(
+    any(grepl("Component deriving BRDATE", err$body))
+  )
+  # Check that suggestions mention @depends annotations
+  expect_true(
+    any(grepl("@depends annotations", err$body))
   )
 })
 
@@ -119,7 +124,6 @@ test_that("Topology is generated correctly when component declares dependencies 
 
   actual <- generate_adam_code(
     adam_specifications = adam_specifications,
-
     path_connector_config = trial_path,
     check_cross_domain_adam_dependencies = TRUE
   )
@@ -210,17 +214,20 @@ test_that("Warning message lists all output columns from component with missing 
     {
       actual <- generate_adam_code(
         adam_specifications = adam_specifications,
-
         path_connector_config = trial_path,
         check_cross_domain_adam_dependencies = TRUE
       )
     },
-    "1 Dependency Inconsistency Found"
+    "Specification validation errors found"
   )
   # EXPECT ------------------------------------------------------------------
-  expect_match(
-    err$body["*"],
-    "This may be caused by missing @depends annotation on the component deriving BRDATE, BRDATE2"
+  # Check that error message contains the component derivation info for both columns
+  expect_true(
+    any(grepl("Component deriving .*BRDATE.*BRDATE2", err$body))
+  )
+  # Check that suggestions mention @depends annotations
+  expect_true(
+    any(grepl("@depends annotations", err$body))
   )
 })
 
@@ -305,17 +312,20 @@ test_that("Warn if two domains but one has component with missing depends", {
     {
       actual <- generate_adam_code(
         adam_specifications = adam_specifications,
-
         path_connector_config = trial_path,
         check_cross_domain_adam_dependencies = TRUE
       )
     },
-    "1 Dependency Inconsistency Found"
+    "Specification validation errors found"
   )
   # EXPECT ------------------------------------------------------------------
-  expect_match(
-    err$body["*"],
-    "This may be caused by missing @depends annotation on the component deriving BRDATE, BRDATE2"
+  # Check that error message contains the component derivation info for both columns
+  expect_true(
+    any(grepl("Component deriving .*BRDATE.*BRDATE2", err$body))
+  )
+  # Check that suggestions mention @depends annotations
+  expect_true(
+    any(grepl("@depends annotations", err$body))
   )
 })
 
@@ -323,12 +333,13 @@ test_that("Validation with mix of components warning when no @depends on compone
   # SETUP -------------------------------------------------------------------
   trial_path <- withr::local_tempdir()
 
-  # Custom component that uses ADSL but only declares dependency on external dataset
+  # Custom component that uses ADSL but only declares dependency on
+  # external dataset (dm). Missing dependency: ADSL.USUBJID
   component_invalid <- "
 #' @title BRDATE
 #' @description Treatment
 #' @type derivation
-#' @depends dm BRTHDTC    # Depends on column from external dataset (dm)
+#' @depends dm BRTHDTC
 #' @outputs BRDATE
 #' @code
   ADSL <- ADSL %>% dplyr::left_join(dm |> dplyr::mutate(  # Uses ADSL implicitly
@@ -346,7 +357,7 @@ test_that("Validation with mix of components warning when no @depends on compone
 #' @title BRDATEOK valid
 #' @description Treatment
 #' @type derivation
-#' @depends dm BRTHDTC    # Depends on column from external dataset (dm)
+#' @depends dm BRTHDTC
 #' @depends ADSL USUBJID
 #' @outputs BRDATEOK
 #' @code
@@ -396,20 +407,23 @@ test_that("Validation with mix of components warning when no @depends on compone
     {
       actual <- generate_adam_code(
         adam_specifications = adam_specifications,
-
         path_connector_config = trial_path,
         check_cross_domain_adam_dependencies = TRUE
       )
     },
-    "1 Dependency Inconsistency Found"
+    "Specification validation errors found"
   )
-  expect_match(
-    err$body["*"],
-    "This may be caused by missing @depends annotation on the component deriving BRDATE"
+  # Check that error message contains the component derivation info
+  expect_true(
+    any(grepl("Component deriving BRDATE", err$body))
   )
-  expect_no_match(
-    err$body["*"],
-    "This may be caused by missing @depends annotation on the component deriving BRDATEOK"
+  # Check that suggestions mention @depends annotations
+  expect_true(
+    any(grepl("@depends annotations", err$body))
+  )
+  # Check that BRDATEOK (which has proper @depends) is NOT mentioned
+  expect_false(
+    any(grepl("Component deriving BRDATEOK", err$body))
   )
 })
 
@@ -417,12 +431,13 @@ test_that("Validation with two domains throws warning when no @depends on compon
   # SETUP -------------------------------------------------------------------
   trial_path <- withr::local_tempdir()
 
-  # Custom component that uses ADSL but only declares dependency on external dataset
+  # Custom component that uses ADSL but only declares dependency on
+  # external dataset (dm). Missing dependency: ADSL.USUBJID
   component_invalid <- "
 #' @title BRDATE
 #' @description Treatment
 #' @type derivation
-#' @depends dm BRTHDTC    # Depends on column from external dataset (dm)
+#' @depends dm BRTHDTC
 #' @outputs BRDATE
 #' @code
 'not important'"
@@ -487,28 +502,22 @@ test_that("Validation with two domains throws warning when no @depends on compon
     {
       actual <- generate_adam_code(
         adam_specifications = adam_specifications,
-
         path_connector_config = trial_path,
         check_cross_domain_adam_dependencies = TRUE
       )
     },
-    "2 Dependency Inconsistencies Found"
+    "Specification validation errors found"
   )
-  expect_match(
-    err$body[3],
-    "Node ADLB-BRDATE"
+  # Check that both nodes are mentioned in the error
+  expect_true(any(grepl("Node ADLB-BRDATE", err$body)))
+  expect_true(any(grepl("Node ADSL-BRDATE", err$body)))
+  # Check that error message contains the component derivation info
+  expect_true(
+    any(grepl("Component deriving BRDATE", err$body))
   )
-  expect_match(
-    err$body[3],
-    "This may be caused by missing @depends annotation on the component deriving BRDATE"
-  )
-  expect_match(
-    err$body[4],
-    "Node ADSL-BRDATE"
-  )
-  expect_match(
-    err$body[4],
-    "This may be caused by missing @depends annotation on the component deriving BRDATE"
+  # Check that suggestions mention @depends annotations
+  expect_true(
+    any(grepl("@depends annotations", err$body))
   )
 })
 
@@ -565,10 +574,9 @@ test_that("Error when ADaM specification is missing init_domain (no population.b
   expect_error(
     generate_adam_code(
       adam_specifications = adam_specifications,
-
       path_connector_config = trial_path,
       check_cross_domain_adam_dependencies = TRUE
     ),
-    "The `init_domain` node is missing for ADSL"
+    "The init_domain node is missing for ADSL"
   )
 })

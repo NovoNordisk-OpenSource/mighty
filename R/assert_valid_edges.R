@@ -68,14 +68,23 @@ validate_init_domain_presence <- function(nodes) {
   if (no_missing_domains) {
     return(invisible(NULL))
   }
-  cli::cli_abort(c(
-    cli::col_red(cli::style_bold("Dependency Inconsistencies Found")),
-    "i" = paste(
-      "The `init_domain` node is missing for",
-      cli::col_cyan(missing_domain),
-      ". Something is wrong in your specification. Please contact the Mighty developers"
+
+  domain_msg <- paste0(
+    "The init_domain node is missing for ",
+    format_domain(missing_domain)
+  )
+
+  throw_validation_error(
+    category = "Topology errors",
+    details = c(
+      "i" = domain_msg,
+      "i" = "Something is wrong in your specification. Please contact the Mighty developers"
+    ),
+    suggestions = c(
+      "This is likely a bug in the specification processing",
+      "Contact the Mighty development team with your specification for investigation"
     )
-  ))
+  )
 }
 
 
@@ -129,19 +138,52 @@ report_issues <- function(issues) {
   # List unconnected nodes
   analyses_text <- setNames(
     unlist(node_analyses),
-    rep("*", length(node_analyses))
+    rep("i", length(node_analyses))
   )
 
   n <- nrow(issues)
 
-  cli::cli_abort(c(
-    cli::col_red(cli::style_bold(
-      "{n} Dependency Inconsistenc{?y/ies} Found"
-    )),
-    "!" = "ADaM specification{?/s} contain{?/s} {n} inconsistent declaration{?/s} of dependencies",
-    "i" = "Mighty cannot create the necessary dependency relationships",
-    analyses_text
-  ))
+  count_msg <- cli::format_inline(
+    "ADaM specification{?/s} contain{?/s} {n} inconsistent declaration{?/s} of dependencies"
+  )
+
+  # Analyze what types of nodes failed to provide contextual suggestions
+  has_col_compute <- any(issues$type == "col_compute")
+  has_unexpected_types <- any(!issues$type %in% c("col_compute"))
+
+  # Build conditional suggestions based on node types
+  suggestions <- c(
+    "Ensure all dependencies reference columns from the same domain or parent domains",
+    "Check that cross-domain dependencies are properly defined",
+    "Verify all required domains are included in your specifications",
+    "Review dependency chains to ensure they connect to domain initialization"
+  )
+
+  if (has_col_compute) {
+    suggestions <- c(
+      "Check for missing @depends annotations in components that create derived columns",
+      suggestions
+    )
+  }
+
+  if (has_unexpected_types) {
+    suggestions <- c(
+      "This likely indicates an internal bug in Mighty - please report to the developers with your specification",
+      suggestions
+    )
+  }
+
+  throw_validation_error(
+    category = "Unconnected nodes",
+    details = c(
+      "i" = count_msg,
+      "i" = "Mighty cannot create the necessary dependency relationships",
+      "",
+      "Affected nodes:",
+      analyses_text
+    ),
+    suggestions = suggestions
+  )
 }
 
 #' Analyze Individual Node Validation Issue
@@ -152,18 +194,26 @@ report_issues <- function(issues) {
 analyze_node_validation_issue <- function(node) {
   # Extract and format node information
   outputs <- extract_node_outputs(node)
-  outputs_display <- format_for_display(outputs)
+  outputs_highlighted <- format_outputs_for_display(outputs)
   depend_cols <- extract_node_dependencies(node)
+  depend_cols_highlighted <- format_dependencies_for_display(depend_cols)
+
+  component_info <- if (!is.na(node$code_id) && !is.null(node$code_id)) {
+    component_name <- basename(node$code_id)
+    paste0("via {.file ", component_name, "}")
+  } else {
+    ""
+  }
 
   # Generate specific analysis based on node type
-  issue_analysis <- generate_node_type_analysis(node, outputs_display)
+  issue_analysis <- generate_node_type_analysis(node, outputs)
 
-  # Build the node analysis message
+  # Build the node analysis message with color highlighting
   analysis_parts <- c(
-    paste0("Node ", cli::col_cyan(node$node_id)),
-    paste0("domain: ", cli::col_cyan(node$domain)),
-    paste0("outputs: ", cli::col_cyan(outputs_display)),
-    paste0("dependencies: ", cli::col_cyan(depend_cols)),
+    paste0("Node ", node$node_id),
+    paste0("domain: ", format_domain(node$domain)),
+    paste0("outputs: ", outputs_highlighted, component_info),
+    paste0("dependencies: ", depend_cols_highlighted),
     paste0("probable cause: ", issue_analysis)
   )
 
@@ -180,15 +230,23 @@ extract_node_outputs <- function(node) {
   character(0)
 }
 
-
+#' Format Outputs with Color Highlighting
 #' @noRd
-format_for_display <- function(values) {
-  no_values <- length(values) == 0
+format_outputs_for_display <- function(outputs) {
+  if (length(outputs) == 0) {
+    return(format_column("<None>"))
+  }
+  # Highlight each output column
+  format_list(outputs, format_column)
+}
 
-  if (no_values) {
+#' Format Dependencies with Color Highlighting
+#' @noRd
+format_dependencies_for_display <- function(dependencies) {
+  if (length(dependencies) == 0) {
     return("None")
   }
-  paste(values, collapse = ", ")
+  format_list(dependencies, format_column_ref)
 }
 
 #' @noRd
@@ -197,44 +255,44 @@ extract_node_dependencies <- function(node) {
     is.null(node$depend_cols[[1]])
 
   if (no_depend_cols) {
-    return("None")
+    return(character(0))
   }
 
   depend_data <- node$depend_cols[[1]]
   is_valid_dataframe <- is.data.frame(depend_data) && nrow(depend_data) > 0
   if (is_valid_dataframe) {
-    return(paste(depend_data$column_name, collapse = ", "))
+    return(qualify_column_refs(depend_data))
   }
 
-  "None"
+  character(0)
 }
 
 #' Generate Node Type Specific Analysis
 #'
 #' @param node A single row data.table representing one node
-#' @param outputs_display Character string of outputs
+#' @param outputs Character vector of output column names
 #' @return Character string with probable cause
 #' @noRd
-generate_node_type_analysis <- function(node, outputs_display) {
+generate_node_type_analysis <- function(node, outputs) {
   is_col_compute <- node$type == "col_compute"
 
   if (is_col_compute) {
-    return(paste(
-      "This may be caused by missing",
-      cli::col_green("@depends"),
-      "annotation on the component deriving",
-      cli::col_br_cyan(outputs_display)
+    if (length(outputs) > 0) {
+      outputs_str <- format_list(outputs, format_column)
+    } else {
+      outputs_str <- format_column("<None>")
+    }
+    return(paste0(
+      "Component deriving ",
+      outputs_str,
+      " is not reachable from domain initialization"
     ))
   }
 
-  # Default case for unexpected node types
+  # Default case for unexpected node types - state the fact
   paste(
-    "Node type '",
+    "Node type '{.code",
     node$type,
-    "' has no dependency edges.",
-    cli::col_red(
-      "Please report this error to the Mighty package developers"
-    ),
-    "and include an example ADaM specification"
+    "}' is not reachable from domain initialization"
   )
 }

@@ -53,7 +53,8 @@
 #'
 #' # Validate dependencies within domains only
 #' assert_valid_depend_cols(actions, ui_yml, domain_keys,
-#'                         check_cross_domain_adam_dependencies = FALSE)
+#'   check_cross_domain_adam_dependencies = FALSE
+#' )
 #' }
 #'
 #' @seealso
@@ -74,7 +75,7 @@ assert_valid_depend_cols <- function(
 
   # Split actions by domain
   actions_by_domain <- split(
-    actions[, c("domain", "depend_cols", "outputs")],
+    actions[, c("domain", "depend_cols", "outputs", "code_id")],
     by = "domain"
   )
 
@@ -99,46 +100,19 @@ assert_valid_depend_cols <- function(
       filter_dep_by_domain
     )
   } else {
-    # Only check that the are no missing internal parents per ADaM domain
-    error_msg <- c()
+    # Only check that there are no missing internal parents per ADaM domain
     for (nm in names(actions_by_domain)) {
-      error_msg <- c(
-        error_msg,
-        check_adam_dependencies_within_domain(
-          nm,
-          adam_dep_by_domain,
-          outputs,
-          actions_by_domain,
-          filter_dep_by_domain
-        )
+      check_adam_dependencies_within_domain(
+        nm,
+        adam_dep_by_domain,
+        outputs,
+        actions_by_domain,
+        filter_dep_by_domain
       )
-    }
-
-    # If there are any missing dependencies, stop execution
-    if (length(error_msg) > 0) {
-      stop(error_msg)
     }
   }
 
   return(invisible(actions))
-}
-
-#' Extract outputs across all actions
-#' @description
-#' Creates fully specified column identifiers by prefixing output columns with their domain names,
-
-#' @param x data.table containing columns 'domain', 'outputs', and 'type'
-#'
-#' @returns Character vector of domain-prefixed column names in the format "domain.column_name"
-#' @noRd
-get_outputs <- function(x) {
-  # Create fully qualified output names by prefixing with domain
-  outputs <- purrr::map2(x$domain, x$outputs, function(domain, output) {
-    paste0(domain, ".", unlist(output))
-  }) |>
-    unlist()
-
-  return(outputs)
 }
 
 #' Get Filter ADaM Dependencies
@@ -173,7 +147,6 @@ get_filter_adam_dependencies <- function(ui_yml, domain_keys) {
         external_domains <- dep_cols_i[is_external] |>
           extract_domain_prefix() |>
           unique()
-        external_domain_types <- classify_data_domains(external_domains)
 
         keys_i <- lapply(external_domains, function(j) {
           c(
@@ -233,11 +206,7 @@ get_all_adam_dependencies <- function(x, filter_dep) {
   filter_depend_cols <- filter_dep[[x$domain[[1]]]]
 
   # Find column dependencies in actions
-  depend_cols <- purrr::map2(
-    x$domain,
-    x$depend_cols,
-    get_adam_dependencies_from_actions
-  ) |>
+  depend_cols <- lapply(x$depend_cols, get_adam_dependencies_from_actions) |>
     unlist()
 
   # Combine the two sources and return set of unique column dependencies
@@ -248,31 +217,35 @@ get_all_adam_dependencies <- function(x, filter_dep) {
   depend_cols_combined[!is.na(depend_cols_combined)]
 }
 
-#' Get Column Dependencies from Actions
-#' @description Extracts column dependencies from actions within a domain,
-#' focusing on ADaM dependencies.
-#'
-#' @details Analyzes the domain and dependency columns to identify
-#' dependencies that come from ADaM domains. It checks for columns that have
-#' names starting with "AD" and constructs fully qualified column names
-#' (domain.column_name).
-#'
-#' @param domain_table Character string representing the domain table name
-#' @param depend_col Data frame containing dependency information with columns
-#'   'domain' and 'column_name'
-#'
-#' @returns A character vector of fully qualified column names
-#'   (domain.column_name) that represent dependencies from ADaM domains
+#' Get ADaM dependencies from action
 #' @noRd
-get_adam_dependencies_from_actions <- function(domain_table, depend_col) {
+get_adam_dependencies_from_actions <- function(depend_col) {
   if (all(!is.na(depend_col))) {
     # Filter for dependencies from ADaM domains
     adam_deps <- depend_col[domain_type == "adam", ]
     if (nrow(adam_deps) == 0) {
       return(character(0))
     }
-    return(adam_deps[, paste0(domain, ".", column_name)])
+    return(qualify_column_refs(adam_deps))
   }
+}
+
+#' Extract outputs across all actions
+#' @description
+#' Creates fully specified column identifiers by prefixing output columns with their domain names,
+
+#' @param x data.table containing columns 'domain', 'outputs', and 'type'
+#'
+#' @returns Character vector of domain-prefixed column names in the format "domain.column_name"
+#' @noRd
+get_outputs <- function(x) {
+  # Create fully qualified output names by prefixing with domain
+  outputs <- purrr::map2(x$domain, x$outputs, function(domain, output) {
+    paste0(domain, ".", unlist(output))
+  }) |>
+    unlist()
+
+  return(outputs)
 }
 
 #' Check for External ADaM Dependencies
@@ -293,9 +266,10 @@ get_adam_dependencies_from_actions <- function(domain_table, depend_col) {
 #'
 #' @details
 #' The function identifies missing ADaM dependencies by comparing required
-#' columns against available outputs. When dependencies are missing, it
-#' generates an informative error showing which columns are needed and
-#' which specific actions or domain filters require them.
+#' columns against available outputs. It collects information on which actions
+#' and domain filters are affected by the missing dependencies and generates
+#' an informative error message that lists the missing columns and the
+#' components that require them.
 #'
 #' @noRd
 check_adam_dependencies_cross_domain <- function(
@@ -305,7 +279,9 @@ check_adam_dependencies_cross_domain <- function(
   filter_dep_by_domain
 ) {
   # Identify missing ADaM column dependencies across domains
-  all_adam_dep <- adam_dep_by_domain |> unlist() |> as.character()
+  all_adam_dep <- adam_dep_by_domain |>
+    unlist() |>
+    as.character()
   missing_adam_deps <- setdiff(all_adam_dep, outputs)
 
   # Return early if there are no missing dependencies
@@ -313,43 +289,52 @@ check_adam_dependencies_cross_domain <- function(
     return(invisible(NULL))
   }
 
-  # Prepare error message
+  # Collect affected actions with component names
   idx <- vapply(
     actions$depend_cols,
     function(x) {
-      any(paste0(x$domain, ".", x$column_name) %in% missing_adam_deps)
+      any(qualify_column_refs(x) %in% missing_adam_deps)
     },
     logical(1)
   )
 
-  # Get outputs of actions affected by the missing dependencies
-  actions_missing_deps <- NULL
-  if (any(idx)) {
-    actions_missing_deps <- lapply(which(idx), function(i) {
-      paste0(toupper(actions$domain[[i]]), ".", unlist(actions$output[[i]]))
-    }) |>
-      unlist() |>
-      unique()
-  }
+  affected_actions <- vapply(
+    which(idx),
+    function(i) {
+      action <- actions[i, ]
+      format_action_with_component(
+        action$domain,
+        unlist(action$output),
+        action$code_id
+      )
+    },
+    character(1)
+  )
 
-  # Get filters affected by the missing dependencies
+  # Collect affected filters
   domains <- unique(actions$domain)
-  filter_missing_deps <- lapply(domains, function(nm) {
-    if (any(filter_dep_by_domain[[nm]] %in% missing_adam_deps)) {
-      paste(nm, "filter")
-    }
-  }) |>
-    unlist()
+  filter_affected <- vapply(
+    domains,
+    function(nm) {
+      any(filter_dep_by_domain[[nm]] %in% missing_adam_deps)
+    },
+    logical(1)
+  )
+  affected_filters <- vapply(
+    domains[filter_affected],
+    function(nm) {
+      paste0(format_domain(nm), " filter")
+    },
+    character(1)
+  )
 
-  # Combine all affected components
-  affected_components <- c(actions_missing_deps, filter_missing_deps)
+  # Combine affected components
+  affected_components <- c(affected_actions, affected_filters)
 
-  # Print error message
-  stop(
-    "\n\nThe following columns are missing in the ADaM spec:\n\t",
-    toupper(paste0(sort(missing_adam_deps), collapse = "\n\t")),
-    "\nto execute:\n\t",
-    paste0(sort(affected_components), collapse = "\n\t")
+  # Throw error with formatted missing dependencies
+  throw_missing_dependencies_error(
+    missing_deps = sort(missing_adam_deps),
+    affected_components = affected_components
   )
 }
 
@@ -363,30 +348,35 @@ check_adam_dependencies_cross_domain <- function(
 #' @param adam_dep_by_domain List mapping domain names to their ADaM dependencies.
 #' @param outputs Character vector of available output columns.
 #' @param actions_by_domain List of data frames split by domain containing
-#'   action dependency information.
+#'   action dependency information including code_id.
 #' @param filter_dep_by_domain List mapping domain names to their filter dependencies.
 #'
 #' @return
-#' Invisible NULL if all dependencies are satisfied, or a character string
-#' containing a detailed error message listing missing columns and affected
-#' actions/filters within the domain.
+#' Invisible NULL if all dependencies are satisfied. Stops execution with a
+#' detailed error message listing missing columns and affected actions/filters
+#' within the domain if dependencies are not met.
 #'
 #' @details
 #' The function focuses on internal dependencies within a single domain,
 #' identifying missing parent columns that are required by actions or filters
-#' in the same domain. Returns formatted error messages for integration into
-#' larger validation workflows.
+#' in the same domain. It generates an informative error message showing which
+#' columns are needed and which components or domain filters require them.
 #'
 #' @noRd
 check_adam_dependencies_within_domain <- function(
-  domain,
+  domain_name,
   adam_dep_by_domain,
   outputs,
   actions_by_domain,
   filter_dep_by_domain
 ) {
+  # Safety check: ensure domain exists in adam_dep_by_domain
+  if (is.null(adam_dep_by_domain[[domain_name]])) {
+    return(invisible(NULL))
+  }
+
   # Identify missing ADaM column dependencies for the specific domain
-  missing_adam_deps <- setdiff(adam_dep_by_domain[[domain]], outputs)
+  missing_adam_deps <- setdiff(adam_dep_by_domain[[domain_name]], outputs)
 
   # Return early if there are no missing dependencies
   if (length(missing_adam_deps) == 0) {
@@ -396,57 +386,107 @@ check_adam_dependencies_within_domain <- function(
   # Extract missing column dependencies that belong to the specific domain
   missing_adam_deps_domain <- lapply(missing_adam_deps, function(x) {
     str_split <- strsplit(x, "\\.")[[1]]
-    if (toupper(str_split[1]) == toupper(domain) & length(str_split) == 2) {
+    if (
+      toupper(str_split[1]) == toupper(domain_name) & length(str_split) == 2
+    ) {
       str_split[2]
     }
   }) |>
     unlist()
 
-  # Return early if there are no missing dependencies within the domain.
-  # Otherwise proceed by generating an error message.
+  # Return early if there are no missing dependencies within the domain
   if (length(missing_adam_deps_domain) == 0) {
     return(invisible(NULL))
   }
 
   # Find which actions are affected by the missing columns
   idx <- vapply(
-    actions_by_domain[[domain]]$depend_cols,
+    actions_by_domain[[domain_name]]$depend_cols,
     function(y) {
       any(
         y$column_name %in%
           missing_adam_deps_domain &
-          toupper(y$domain) == toupper(domain)
+          toupper(y$domain) == toupper(domain_name)
       )
     },
     logical(1)
   )
 
-  # Get outputs of actions affected by the missing dependencies
-  affected_components <- actions_by_domain[[domain]]$outputs[idx] |>
-    unlist() |>
-    unique()
-
-  # Get filters affected by the missing dependencies
-  filter_has_missing_deps <- any(
-    filter_dep_by_domain[[domain]] %in%
-      paste0(domain, ".", missing_adam_deps_domain)
+  # Collect affected actions with component names
+  domain_actions <- actions_by_domain[[domain_name]][idx, ]
+  affected_actions <- vapply(
+    seq_len(nrow(domain_actions)),
+    function(i) {
+      format_action_with_component(
+        domain_name,
+        unlist(domain_actions$outputs[[i]]),
+        domain_actions$code_id[[i]]
+      )
+    },
+    character(1)
   )
-  if (filter_has_missing_deps) {
-    affected_components <- c(affected_components, paste(domain, "filter"))
+
+  # Collect affected filters
+  has_missing_filter_dep <- any(
+    filter_dep_by_domain[[domain_name]] %in%
+      paste0(domain_name, ".", missing_adam_deps_domain)
+  )
+  affected_filters <- if (has_missing_filter_dep) {
+    paste0(format_domain(domain_name), " filter")
+  } else {
+    character()
   }
 
-  # Create error message
-  paste0(
-    "\n\nThe following columns are missing in the ",
-    toupper(domain),
-    " spec:\n\t",
-    paste0(
-      toupper(domain),
-      ".",
-      sort(missing_adam_deps_domain),
-      collapse = "\n\t"
+  # Combine affected components
+  affected_components <- c(affected_actions, affected_filters)
+
+  # Throw error with formatted missing dependencies
+  throw_missing_dependencies_error(
+    missing_deps = paste0(domain_name, ".", sort(missing_adam_deps_domain)),
+    affected_components = affected_components
+  )
+}
+
+#' Format action outputs with component name
+#' @noRd
+format_action_with_component <- function(domain, outputs, code_id) {
+  outputs_formatted <- format_list(
+    paste0(domain, ".", outputs),
+    format_qualified_column
+  )
+
+  component_str <- if (!is.na(code_id)) {
+    paste0("via {.file ", basename(code_id), "}")
+  } else {
+    ""
+  }
+
+  paste(outputs_formatted, component_str)
+}
+
+#' Throw missing dependencies error
+#' @noRd
+throw_missing_dependencies_error <- function(
+  missing_deps,
+  affected_components
+) {
+  throw_validation_error(
+    category = "Missing dependencies",
+    details = c(
+      "i" = paste0(
+        "Missing columns: ",
+        format_list(missing_deps, format_qualified_column)
+      ),
+      "i" = paste0(
+        "Required by: ",
+        format_list(unique(affected_components), identity)
+      )
     ),
-    "\nto execute:\n\t",
-    paste0(toupper(domain), ".", sort(affected_components), collapse = "\n\t")
+    suggestions = c(
+      "Add missing columns to their respective domain specifications",
+      "Remove dependencies on these columns if they're not needed",
+      "Check for typos and casing in column or domain names",
+      "Ensure all required domains are defined in your specifications"
+    )
   )
 }

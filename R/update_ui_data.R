@@ -79,8 +79,11 @@ classify_action_type <- function(
       row = "row_compute",
       cli::cli_abort(c(
         "Invalid action type {.val {type_from_code}} for code component {.val {code_id}}.",
-        "i" = "Domain: {.val {domain}}",
-        "i" = "Output column{?s}: {.val {outputs}}",
+        "i" = paste0("Domain: ", format_domain(domain)),
+        "i" = paste0(
+          cli::format_inline("{cli::qty(length(outputs))}Output column{?s}: "),
+          format_list(unlist(outputs), format_column)
+        ),
         "i" = "Expected type to be one of: {.val {c('derivation', 'predecessor', 'row')}}"
       ))
     ))
@@ -111,8 +114,11 @@ classify_action_type <- function(
 
   cli::cli_abort(c(
     "Unable to determine action type.",
-    "i" = "Domain: {.val {domain}}",
-    "i" = "Output column{?s}: {.val {outputs}}",
+    "i" = paste0("Domain: ", format_domain(domain)),
+    "i" = paste0(
+      cli::format_inline("{cli::qty(length(outputs))}Output column{?s}: "),
+      format_list(unlist(outputs), format_column)
+    ),
     "i" = "Dependencies: {.val {depend_cols}}"
   ))
 }

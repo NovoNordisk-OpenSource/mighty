@@ -52,7 +52,7 @@ add_read_data_actions <- function(actions) {
         domain = character(0),
         domain_type = character(0)
       )),
-      outputs = list(paste0(dep_cols$domain, ".", dep_cols$column_name)),
+      outputs = list(qualify_column_refs(dep_cols)),
       depend_rows = list(NA),
       parameters = list(NA),
       domain = dom

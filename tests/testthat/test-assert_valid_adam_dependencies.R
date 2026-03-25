@@ -122,11 +122,11 @@ test_that("Incomplete cross-domain ADaM spec fails when checks enabled", {
 
   # EXPECT -------------------------------------------------------------------
 
-  error_msg_clean <- gsub("\\s+", " ", gsub("\\n", "", error_msg$message))
-  expect_true(grepl(
-    ".*ADaM spec: ADSL.AGE ADSL.STUDYID ADSL.USUBJIDto execute: ADLB.AGE",
-    error_msg_clean
-  ))
+  error_text <- get_error_text(error_msg)
+  expect_match(error_text, "ADSL\\.AGE")
+  expect_match(error_text, "ADSL\\.STUDYID")
+  expect_match(error_text, "ADSL\\.USUBJID")
+  expect_match(error_text, "ADLB\\.AGE")
 })
 
 
@@ -272,11 +272,12 @@ test_that("Incomplete within and cross-domain specs fail when checks disabled", 
 
   # EXPECT -------------------------------------------------------------------
 
-  error_msg_clean <- gsub("\\s+", " ", gsub("\\n", "", error_msg$message))
-  expect_true(grepl(
-    ".*ADaM spec: ADLB.STUDYID ADLB.VISITNUM ADSL.AGE ADSL.STUDYID ADSL.USUBJIDto execute: ADLB.AGE ADLB.VISITNUM2",
-    error_msg_clean
-  ))
+  error_text <- get_error_text(error_msg)
+  expect_match(error_text, "ADLB\\.STUDYID")
+  expect_match(error_text, "ADLB\\.VISITNUM")
+  expect_match(error_text, "ADSL\\.AGE")
+  expect_match(error_text, "ADSL\\.STUDYID")
+  expect_match(error_text, "ADSL\\.USUBJID")
 })
 
 
@@ -312,11 +313,12 @@ test_that("Incomplete within and cross-domain specs fail when checks enabled", {
 
   # EXPECT -------------------------------------------------------------------
 
-  error_msg_clean <- gsub("\\s+", " ", gsub("\\n", "", error_msg$message))
-  expect_true(grepl(
-    ".*ADaM spec: ADLB.STUDYID ADLB.VISITNUM ADSL.AGE ADSL.STUDYID ADSL.USUBJIDto execute: ADLB.AGE ADLB.VISITNUM2",
-    error_msg_clean
-  ))
+  error_text <- get_error_text(error_msg)
+  expect_match(error_text, "ADLB\\.STUDYID")
+  expect_match(error_text, "ADLB\\.VISITNUM")
+  expect_match(error_text, "ADSL\\.AGE")
+  expect_match(error_text, "ADSL\\.STUDYID")
+  expect_match(error_text, "ADSL\\.USUBJID")
 })
 
 
@@ -352,11 +354,11 @@ test_that("Incomplete ADSL filter spec fails when cross-domain enabled", {
 
   # EXPECT -------------------------------------------------------------------
 
-  error_msg_clean <- gsub("\\s+", " ", gsub("\\n", "", error_msg$message))
-  expect_true(grepl(
-    ".*ADaM spec: ADSL.SEX ADSL.STUDYID ADSL.USUBJIDto execute: ADLB filter",
-    error_msg_clean
-  ))
+  error_text <- get_error_text(error_msg)
+  expect_match(error_text, "ADSL\\.SEX")
+  expect_match(error_text, "ADSL\\.STUDYID")
+  expect_match(error_text, "ADSL\\.USUBJID")
+  expect_match(error_text, "ADLB filter")
 })
 
 
@@ -437,11 +439,13 @@ test_that("Incomplete ADSL filter and actions fail when checks enabled", {
 
   # EXPECT -------------------------------------------------------------------
 
-  error_msg_clean <- gsub("\\s+", " ", gsub("\\n", "", error_msg$message))
-  expect_true(grepl(
-    ".*ADaM spec: ADSL.AGE ADSL.SEX ADSL.STUDYID ADSL.USUBJIDto execute: ADLB filter ADLB.AGE",
-    error_msg_clean
-  ))
+  error_text <- get_error_text(error_msg)
+  expect_match(error_text, "ADSL\\.AGE")
+  expect_match(error_text, "ADSL\\.SEX")
+  expect_match(error_text, "ADSL\\.STUDYID")
+  expect_match(error_text, "ADSL\\.USUBJID")
+  expect_match(error_text, "ADLB filter")
+  expect_match(error_text, "ADLB\\.AGE")
 })
 
 
@@ -523,11 +527,11 @@ test_that("Incomplete ADSL filter in two domains fails when checks enabled", {
 
   # EXPECT -------------------------------------------------------------------
 
-  error_msg_clean <- gsub("\\s+", " ", gsub("\\n", "", error_msg$message))
-  expect_true(grepl(
-    ".*ADaM spec: ADSL.AGE ADSL.SEX ADSL.STUDYID ADSL.USUBJIDto execute: ADLB filter ADLB.AGE ADVS filter",
-    error_msg_clean
-  ))
+  error_text <- get_error_text(error_msg)
+  expect_match(error_text, "ADSL\\.AGE")
+  expect_match(error_text, "ADSL\\.SEX.*ADLB filter.*ADVS filter")
+  expect_match(error_text, "ADSL\\.STUDYID.*ADLB filter.*ADVS filter")
+  expect_match(error_text, "ADSL\\.USUBJID.*ADLB filter.*ADVS filter")
 })
 
 test_that("Incomplete ADSL filter in two domains passes when checks disabled", {
@@ -608,11 +612,10 @@ test_that("Incomplete within-domain in two domains fails when checks disabled", 
 
   # EXPECT -------------------------------------------------------------------
 
-  error_msg_clean <- gsub("\\s+", " ", gsub("\\n", "", error_msg$message))
-  expect_true(grepl(
-    ".*ADLB spec: ADLB.VISITNUMto execute: ADLB.VISITNUM2.*ADVS spec: ADVS.VISITNUMto execute: ADVS.VISITNUM2",
-    error_msg_clean
-  ))
+  error_text <- get_error_text(error_msg)
+  expect_match(error_text, "ADLB\\.VISITNUM")
+  expect_match(error_text, "ADLB\\.VISITNUM2")
+  expect_match(error_text, "_col_mutate")
 })
 
 test_that("Incomplete within-domain spec w/ component fails when x-check disabled", {
@@ -642,12 +645,11 @@ test_that("Incomplete within-domain spec w/ component fails when x-check disable
 
   # EXPECT -------------------------------------------------------------------
 
-  error_msg_clean <- gsub("\\s+", " ", gsub("\\n", "", error_msg$message))
-
-  expect_true(grepl(
-    ".* ADLB spec: ADLB.LBTESTto execute: ADLB.LBTEST2 ADLB.LBTEST3 ADLB.LBTEST3_FLG",
-    error_msg_clean
-  ))
+  error_text <- get_error_text(error_msg)
+  expect_match(error_text, "ADLB\\.LBTEST")
+  expect_match(error_text, "ADLB\\.LBTEST2")
+  expect_match(error_text, "ADLB\\.LBTEST3")
+  expect_match(error_text, "ADLB\\.LBTEST3_FLG")
 })
 
 
@@ -678,11 +680,11 @@ test_that("Incomplete within-domain spec w/ component fails when x-check enabled
 
   # EXPECT -------------------------------------------------------------------
 
-  error_msg_clean <- gsub("\\s+", " ", gsub("\\n", "", error_msg$message))
-  expect_true(grepl(
-    ".*ADaM spec: ADLB.LBTESTto execute: ADLB.LBTEST2 ADLB.LBTEST3 ADLB.LBTEST3_FLG",
-    error_msg_clean
-  ))
+  error_text <- get_error_text(error_msg)
+  expect_match(error_text, "ADLB\\.LBTEST")
+  expect_match(error_text, "ADLB\\.LBTEST2")
+  expect_match(error_text, "ADLB\\.LBTEST3")
+  expect_match(error_text, "ADLB\\.LBTEST3_FLG")
 })
 
 
@@ -718,11 +720,12 @@ test_that("Incomplete filter_depend_cols fails when x-check enabled", {
 
   # EXPECT -------------------------------------------------------------------
 
-  error_msg_clean <- gsub("\\s+", " ", gsub("\\n", "", error_msg$message))
-  expect_true(grepl(
-    ".*ADaM spec: ADLB.USUBJID ADSL.AGE ADSL.SEX ADSL.STUDYID ADSL.USUBJIDto execute: ADLB filter ADLB.AGE",
-    error_msg_clean
-  ))
+  error_text <- get_error_text(error_msg)
+  expect_match(error_text, "ADLB\\.USUBJID")
+  expect_match(error_text, "ADSL\\.AGE")
+  expect_match(error_text, "ADSL\\.SEX")
+  expect_match(error_text, "ADSL\\.STUDYID")
+  expect_match(error_text, "ADSL\\.USUBJID")
 })
 
 
@@ -758,9 +761,8 @@ test_that("Incomplete filter_depend_cols fails when x-check disabled", {
 
   # EXPECT -------------------------------------------------------------------
 
-  error_msg_clean <- gsub("\\s+", " ", gsub("\\n", "", error_msg$message))
-  expect_true(grepl(
-    ".*ADLB spec: ADLB.USUBJIDto execute: ADLB.ADLB filter ADLB.AGE",
-    error_msg_clean
-  ))
+  error_text <- get_error_text(error_msg)
+  expect_match(error_text, "ADLB\\.USUBJID")
+  expect_match(error_text, "ADLB\\.AGE")
+  expect_match(error_text, "ADLB filter")
 })

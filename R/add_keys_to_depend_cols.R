@@ -101,11 +101,21 @@ add_foreign_key_as_depends_col <- function(
     dep_domain <- x[["depend_cols"]][[i]][["domain"]]
 
     if (is.null(pk[[toupper(dep_domain)]])) {
-      stop(paste0(
-        "Domain '",
-        dep_domain,
-        "' not recognized for foreign key lookup."
-      ))
+      domain_msg <- paste0(
+        "Domain ",
+        format_domain(dep_domain),
+        " not recognized for foreign key lookup"
+      )
+
+      throw_validation_error(
+        category = "Unrecognized domain",
+        details = domain_msg,
+        suggestions = c(
+          "Define the domain in your {.file _mighty.yml} keys section",
+          "Check for typos in the domain name",
+          "Ensure the domain specification file exists"
+        )
+      )
     }
 
     new_dep_cols <- lapply(pk[[toupper(dep_domain)]], function(col) {

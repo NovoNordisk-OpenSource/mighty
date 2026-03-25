@@ -18,7 +18,6 @@ test_that("No filters", {
   standards_lib <- "mighty.standards"
 
   # ACT -------------------------------------------------------------------
-
   actual <- generate_adam_code(
     adam_specifications = adam_specifications,
     standards_lib = standards_lib,

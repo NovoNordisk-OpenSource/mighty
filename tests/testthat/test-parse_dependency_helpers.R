@@ -33,3 +33,37 @@ test_that("extract_domain_prefix extracts domain from qualified deps", {
     c("adsl", "adae", "dm")
   )
 })
+
+test_that("qualify_column_refs creates qualified references", {
+  # Test with ADaM and SDTM dependencies
+  deps <- data.table::data.table(
+    domain = c("ADSL", "dm", "ADAE"),
+    column_name = c("AGE", "USUBJID", "AESTDT")
+  )
+
+  result <- qualify_column_refs(deps)
+
+  expect_equal(result, c("ADSL.AGE", "dm.USUBJID", "ADAE.AESTDT"))
+})
+
+test_that("qualify_column_refs handles empty data frames", {
+  empty_deps <- data.table::data.table(
+    domain = character(0),
+    column_name = character(0)
+  )
+
+  result <- qualify_column_refs(empty_deps)
+
+  expect_equal(result, character(0))
+})
+
+test_that("qualify_column_refs works with single row", {
+  single_dep <- data.table::data.table(
+    domain = "ADSL",
+    column_name = "USUBJID"
+  )
+
+  result <- qualify_column_refs(single_dep)
+
+  expect_equal(result, "ADSL.USUBJID")
+})

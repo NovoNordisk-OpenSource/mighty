@@ -53,7 +53,6 @@ ADSL <- ADSL |>
     "adsl" = yaml_content,
     "_mighty" = mighty_yml_content
   ))
-
   output_path <- trial_path
   # ACT & ASSERT ------------------------------------------------------------
   expect_snapshot_error(generate_adam_code(

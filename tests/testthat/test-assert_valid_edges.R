@@ -69,9 +69,14 @@ test_that("assert_valid_edges catches empty edges table", {
     )
   )
 
-  expect_error(
+  err_msg <- expect_error(
     assert_valid_edges(empty_edges, many_nodes),
-    "3 Dependency Inconsistencies Found"
+    "Specification validation errors found"
+  )
+
+  # Check that the error message mentions 3 inconsistent declarations
+  expect_true(
+    any(grepl("3 inconsistent declarations", err_msg$body))
   )
 
   no_init_nodes <- data.table::data.table(
@@ -88,12 +93,12 @@ test_that("assert_valid_edges catches empty edges table", {
   # Error when no init_domain actions are present
   err_msg <- expect_error(
     assert_valid_edges(empty_edges, no_init_nodes),
-    "Dependency Inconsistencies Found"
+    "Specification validation errors found"
   )
 
-  expect_match(
-    err_msg$body,
-    "The `init_domain` node is missing for .*ADSL"
+  # Check that the error message contains the init_domain missing information
+  expect_true(
+    any(grepl("The init_domain node is missing for .*ADSL", err_msg$body))
   )
 })
 
@@ -137,17 +142,17 @@ test_that("assert_valid_edges validates connectivity to init_domain parents", {
 
   err_msg <- expect_error(
     assert_valid_edges(bad_edges, bad_nodes),
-    "2 Dependency Inconsistencies Found"
+    "Specification validation errors found"
   )
 
-  expect_match(
-    err_msg$body[3],
-    "ADSL-orphan_parent"
+  # Check that the error message mentions 2 inconsistent declarations
+  expect_true(
+    any(grepl("2 inconsistent declarations", err_msg$body))
   )
-  expect_match(
-    err_msg$body[4],
-    "ADSL-orphan_child"
-  )
+
+  # Check that both orphaned nodes are mentioned in the error message
+  expect_true(any(grepl("ADSL-orphan_parent", err_msg$body)))
+  expect_true(any(grepl("ADSL-orphan_child", err_msg$body)))
 })
 
 test_that("assert_valid_edges handles multi-domain scenarios", {
@@ -216,9 +221,14 @@ test_that("assert_valid_edges handles multi-domain scenarios", {
     )
   )
 
-  expect_error(
+  err_msg <- expect_error(
     assert_valid_edges(bad_multi_domain_edges, bad_multi_domain_nodes),
-    "2 Dependency Inconsistencies Found"
+    "Specification validation errors found"
+  )
+
+  # Check that the error message mentions 2 inconsistent declarations
+  expect_true(
+    any(grepl("2 inconsistent declarations", err_msg$body))
   )
 })
 
@@ -236,4 +246,48 @@ test_that("assert_valid_edges returns edges invisibly on success", {
 
   result <- assert_valid_edges(valid_edges, valid_nodes)
   expect_identical(result, valid_edges)
+})
+
+test_that("extract_node_dependencies returns qualified references", {
+  # Test that dependencies are formatted as domain.column_name
+  node <- data.table::data.table(
+    node_id = "TEST-node",
+    domain = "ADLB",
+    type = "col_compute",
+    code_id = "test.R",
+    outputs = list(c("AAGE")),
+    depend_cols = list(
+      data.table::data.table(
+        domain = c("ADSL", "dm"),
+        column_name = c("AGE", "USUBJID"),
+        domain_type = c("adam", "sdtm")
+      )
+    )
+  )
+
+  result <- extract_node_dependencies(node)
+
+  # Should return character vector of qualified references (domain.column_name)
+  expect_equal(result, c("ADSL.AGE", "dm.USUBJID"))
+
+  # Test with no dependencies
+  node_no_deps <- data.table::data.table(
+    node_id = "TEST-node2",
+    depend_cols = list(NULL)
+  )
+
+  result_none <- extract_node_dependencies(node_no_deps)
+  expect_equal(result_none, character(0))
+
+  # Test with empty dataframe
+  node_empty <- data.table::data.table(
+    node_id = "TEST-node3",
+    depend_cols = list(data.table::data.table(
+      domain = character(0),
+      column_name = character(0)
+    ))
+  )
+
+  result_empty <- extract_node_dependencies(node_empty)
+  expect_equal(result_empty, character(0))
 })

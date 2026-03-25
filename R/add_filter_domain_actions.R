@@ -146,10 +146,31 @@ get_filter_join_keys_external_domains <- function(
   unknown_domains <- setdiff(toupper(ext_domains), names(domain_keys))
   if (length(unknown_domains) > 0) {
     n <- length(unknown_domains)
-    cli::cli_abort(c(
-      "Filter for {.val {target_domain}} references {n} unknown domain{?s}: {.val {unknown_domains}}",
-      "i" = "{cli::qty(n)}Ensure {?this/these} domain{?s} {?has/have} join keys specified in trial metadata"
-    ))
+    domain_list <- format_list(unknown_domains, format_domain)
+    filter_msg <- paste0(
+      "Filter for ",
+      format_domain(target_domain),
+      " references ",
+      n,
+      cli::format_inline("{cli::qty(n)} unknown domain{?s}: "),
+      domain_list
+    )
+    info_msg <- cli::format_inline(
+      "{cli::qty(n)}{?This domain/These domains} must have join keys defined to be used in filters"
+    )
+
+    throw_validation_error(
+      category = "Unknown domains in filter",
+      details = c(
+        "x" = filter_msg,
+        "i" = info_msg
+      ),
+      suggestions = c(
+        "Add key definitions to {.file _mighty.yml} for the referenced domains",
+        "Verify the domain names are spelled correctly",
+        "Ensure all domains used in filters are defined in your trial metadata"
+      )
+    )
   }
 
   keys <- domain_keys[toupper(ext_domains)]

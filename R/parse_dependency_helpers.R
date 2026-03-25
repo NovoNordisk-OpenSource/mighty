@@ -44,3 +44,25 @@ extract_dependency_id <- function(dep_string) {
   result[has_dot] <- sub("^[^.]+\\.", "", dep_string[has_dot])
   result
 }
+
+
+#' Create Qualified Column References
+#'
+#' Constructs domain-qualified column references in the format "domain.column_name"
+#' from a data structure containing domain and column_name columns.
+#'
+#' @param df Data frame or data.table with 'domain' and 'column_name' columns
+#' @return Character vector of qualified references (e.g., "ADSL.AGE", "dm.USUBJID")
+#' @noRd
+#'
+#' @examples
+#' \dontrun{
+#' deps <- data.table(domain = c("ADSL", "dm"), column_name = c("AGE", "USUBJID"))
+#' qualify_column_refs(deps)  # Returns: c("ADSL.AGE", "dm.USUBJID")
+#' }
+qualify_column_refs <- function(df) {
+  if (nrow(df) == 0) {
+    return(character(0))
+  }
+  paste0(df$domain, ".", df$column_name)
+}

@@ -1,10 +1,22 @@
 # Error when code component outputs not referenced in YML
 
-    Code components declare outputs not in YAML specification:
-    x 'ADSL' - `ady.mustache`: YAML declares "A", code declares "A" and "B", extra in code: "B"
+    Specification validation errors found:
+    
+    [Component output mismatches]
+    i ADSL - 'ady.mustache': produces A and B, YAML expects A
+    
+    Suggestions:
+    * Align the component's @outputs tag with the YAML specification
+    * Remove columns from @outputs or add them to the YAML as needed
 
 # Error when code component output has no overlap with YML
 
-    Code components declare outputs not in YAML specification:
-    x 'ADSL' - `ady.mustache`: YAML declares "A", code declares "B", extra in code: "B"
+    Specification validation errors found:
+    
+    [Component output mismatches]
+    i ADSL - 'ady.mustache': produces B, YAML expects A
+    
+    Suggestions:
+    * Align the component's @outputs tag with the YAML specification
+    * Remove columns from @outputs or add them to the YAML as needed
 

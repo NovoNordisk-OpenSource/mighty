@@ -70,3 +70,22 @@ expect_section_order <- function(start_section, end_section, section_list) {
     )
   }
 }
+
+
+#' Extract and Normalize CLI Error Text
+#'
+#' Combines `$message` and `$body` from a `cli::cli_abort()` error condition
+#' into a single whitespace-normalized string, suitable for pattern matching
+#' with `expect_match()`.
+#'
+#' @param err An error condition object (as returned by `expect_error()`)
+#' @return A single character string with collapsed whitespace
+#'
+#' @examples
+#' err <- expect_error(some_function())
+#' expect_match(get_error_text(err), "expected pattern")
+#'
+get_error_text <- function(err) {
+  full <- paste(c(err$message, err$body), collapse = " ")
+  gsub("\\s+", " ", full)
+}

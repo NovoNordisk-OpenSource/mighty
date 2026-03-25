@@ -103,7 +103,6 @@ columns:
   x <- list.files(path_connector_config, pattern = "\\.R$", full.names = TRUE)
 
   # ASSERT ------------------------------------------------------------------
-  browser()
   expect_no_error(source(x[[1]]))
   expect_gt(nrow(ADLB), 0)
 

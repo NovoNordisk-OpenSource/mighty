@@ -37,12 +37,17 @@ columns:
 
   # ACT & EXPECT ------------------------------------------------------------
 
-  expect_error(
+  error_msg <- expect_error(
     generate_adam_code(
       adam_specifications = adam_specifications,
       path_connector_config = trial_path,
       check_cross_domain_adam_dependencies = TRUE
-    ),
-    "Domain 'UNKNOWN_DOMAIN' not recognized for foreign key lookup\\."
+    )
   )
+
+  error_text <- get_error_text(error_msg)
+  expect_match(error_text, "Specification validation errors")
+  expect_match(error_text, "Unrecognized domain")
+  expect_match(error_text, "UNKNOWN_DOMAIN")
+  expect_match(error_text, "not recognized for foreign key lookup")
 })
