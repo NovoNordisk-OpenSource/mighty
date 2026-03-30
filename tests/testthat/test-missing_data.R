@@ -36,7 +36,7 @@ columns:
   setup_testdata(
     testdata = "pharmaverse",
     test_data_path = trial_path,
-    sdtm_domains = c("dm")
+    sdtm_domains = "vs"
   )
   cnt <- connector::connect(file.path(trial_path, "_connector.yml"))
 
@@ -51,7 +51,7 @@ columns:
 
   # EXPECT ------------------------------------------------------------------
 
-  # DM domain (capital letters) does not exist, hence executable status should
+  # No datasets used in ADaM specs exist, hence executable status should
   # be false for all actions
   expect_true(all(!actual$executable_program_sequence$can_execute))
 
@@ -73,7 +73,7 @@ structure: One record per subject
 keys: [USUBJID]
 population:
   base:
-    - domain: dm
+    - domain: DM
       depends:
         - NA
       filter: NA
@@ -145,7 +145,7 @@ structure: One record per subject
 keys: [USUBJID]
 population:
   base:
-    - domain: dm
+    - domain: DM
       depends:
         - SEX
       filter: '!is.na(SEX)'
@@ -193,7 +193,7 @@ columns:
   expect_false(actual$executable_program_sequence[3]$can_execute)
   expect_setequal(
     actual$executable_program_sequence$removed_outputs[[1]],
-    c("dm.SEX", "dm.AGEU")
+    c("DM.SEX", "DM.AGEU")
   )
   expect_setequal(
     actual$executable_program_sequence$removed_outputs[[2]],
@@ -237,7 +237,7 @@ structure: One record per subject
 keys: [USUBJID]
 population:
   base:
-    - domain: dm
+    - domain: DM
       depends:
         - SEX
       filter: '!is.na(SEX)'
@@ -286,7 +286,7 @@ columns:
   expect_true(actual$executable_program_sequence[3]$can_execute)
   expect_identical(
     actual$executable_program_sequence[1]$removed_outputs,
-    c("dm.AGEU")
+    c("DM.AGEU")
   )
   expect_identical(
     actual$executable_program_sequence[2]$removed_outputs,
@@ -321,26 +321,26 @@ keys:
 
 population:
   base:
-    - domain: lb
+    - domain: LB
       depends:
         - LBTESTCD
       filter: 'LBTESTCD ==\"ALB\"'
   global:
     - filter: '!is.na(SEX)'
       depends:
-        - adsl.SEX
+        - ADSL.SEX
 columns:
   - id: STUDYID
   - id: USUBJID
   - id: LBSEQ
   - id: SEX
-    method: adsl.SEX
+    method: ADSL.SEX
   - id: VISITNUM
   - id: LBTEST
   - id: LBTESTCD
 
 "
-  # Setup test data with lb and adsl domains but remove lb.LBTESTCD and adsl.SEX
+  # Setup test data with LB and ADSL domains but remove LB.LBTESTCD and ADSL.SEX
   setup_testdata(
     testdata = "pharmaverse",
     test_data_path = trial_path,
@@ -353,7 +353,7 @@ columns:
   )
   mighty_yml_content <- readLines(test_path(
     "fixtures",
-    "_mighty_lowercase_adsl.yml"
+    "_mighty_with_adsl_keys.yml"
   )) |>
     paste(collapse = "\n")
   ui_data <- setup_study_dir(list(
@@ -378,7 +378,7 @@ columns:
   expect_false(actual$executable_program_sequence[3]$can_execute)
   expect_identical(
     actual$executable_program_sequence[1]$removed_outputs[[1]],
-    c("lb.LBTESTCD", "adsl.SEX")
+    c("LB.LBTESTCD", "ADSL.SEX")
   )
   expect_identical(
     actual$executable_program_sequence[2]$removed_outputs[[1]],
@@ -423,7 +423,7 @@ structure: One record per subject
 keys: [USUBJID]
 population:
   base:
-    - domain: dm
+    - domain: DM
       depends:
         - NA
       filter: NA
@@ -477,14 +477,14 @@ columns:
   # Expect a message regarding missing column SEX
   expect_true(length(actual$executable_program_sequence[1]$lineage) > 0)
   expect_true(all(grepl(
-    "sdtm\\.dm\\.SEX",
+    "sdtm\\.DM\\.SEX",
     actual$executable_program_sequence[1]$lineage
   )))
 
   # Test programs are out commented
   expect_true(
     grepl(
-      "# Code can be executed but the following columns are not found in source data:\\n# sdtm.dm.SEX",
+      "# Code can be executed but the following columns are not found in source data:\\n# sdtm.DM.SEX",
       actual$executable_programs
     )
   )
@@ -516,11 +516,11 @@ structure: One record per subject
 keys: [USUBJID]
 population:
   base:
-    - domain: dm
+    - domain: DM
       depends:
         - NA
       filter: NA
-    - domain: dm_vaccine
+    - domain: DM_VACCINE
       depends:
         - NA
       filter: NA
@@ -569,96 +569,9 @@ columns:
 
   # Expect a message regarding missing dataset dm_vaccine
   expect_true(grepl(
-    "sdtm\\.dm_vaccine",
+    "sdtm\\.DM_VACCINE",
     actual$executable_program_sequence[1]$lineage
   ))
-
-  # Expect all program lines are blank or starts with #
-  code_lines <- strsplit(actual$executable_programs[[1]], "\\n")
-  expect_true(all(sapply(code_lines[[1]], \(x) {
-    (x == "" || substr(x, 1, 1) == "#")
-  })))
-})
-
-test_that("Missing base domain does not allow execution based on available data in other base domains", {
-  # SETUP -------------------------------------------------------------------
-  # yaml file with three base domains
-  # NOTE: More or less identical with the test
-  # "Missing domain in source data makes actions non-executable"
-  # Differs since DM domain is not available. May be a use case, if the specs
-  # are not taking casing into account
-
-  trial_path <- withr::local_tempdir()
-
-  yml <- "
-id: ADSL
-label: Subject Level Analysis Dataset
-class: SUBJECT LEVEL ANALYSIS DATASET
-structure: One record per subject
-keys: [USUBJID]
-population:
-  base:
-    - domain: dm
-      depends:
-        - NA
-      filter: NA
-    - domain: DM
-      depends:
-        - NA
-      filter: NA
-    - domain: dm_vaccine
-      depends:
-        - NA
-      filter: NA
-  global:
-    - filter: NA
-      depends:
-        - NA
-
-columns:
-  - id: STUDYID
-  - id: USUBJID
-  - id: SEX
-  - id: AGE
-  - id: AGEU
-
-"
-
-  # Setup test data with dm and dm_vaccine domains
-  setup_testdata(
-    testdata = "pharmaverse",
-    test_data_path = trial_path,
-    sdtm_domains = c("dm", "dm_vaccine")
-  )
-  mighty_yml_content <- readLines(test_path("fixtures", "_mighty_sdtm.yml")) |>
-    paste(collapse = "\n")
-  ui_data <- setup_study_dir(list(
-    "adsl" = yml,
-    "_mighty" = mighty_yml_content
-  ))
-  cnt <- connector::connect(file.path(trial_path, "_connector.yml"))
-
-  # ACT ---------------------------------------------------------------------
-
-  actual <- generate_adam_code(
-    adam_specifications = ui_data,
-
-    path_connector_config = trial_path,
-    check_cross_domain_adam_dependencies = TRUE,
-    data_context = data_context$new(cnt)
-  )
-
-  # EXPECT ------------------------------------------------------------------
-
-  # Here code will not be able to execute at all, even though dm and
-  # dm_vaccine domains are complete. A modification to the handle_read_data_action
-  # processing will be needed, if such a requirement occurs
-
-  # Expect executable status should be false for all actions
-  expect_true(all(!actual$executable_program_sequence$can_execute))
-
-  # Expect a message regarding missing dataset DM
-  expect_true(grepl("sdtm\\.DM", actual$executable_program_sequence[1]$lineage))
 
   # Expect all program lines are blank or starts with #
   code_lines <- strsplit(actual$executable_programs[[1]], "\\n")
@@ -680,15 +593,15 @@ structure: One record per subject
 keys: [USUBJID]
 population:
   base:
-    - domain: dm
+    - domain: DM
       depends:
         - NA
       filter: NA
-    - domain: sv
+    - domain: SV
       depends:
         - NA
       filter: NA
-    - domain: dm_vaccine
+    - domain: DM_VACCINE
       depends:
         - NA
       filter: NA
@@ -736,28 +649,28 @@ columns:
   expect_setequal(
     actual$executable_program_sequence[1]$removed_outputs[[1]],
     c(
-      "dm.SEX",
-      "dm.AGE",
-      "dm.AGEU",
-      "sv.SEX",
-      "sv.AGE",
-      "sv.AGEU",
-      "dm_vaccine.SEX",
-      "dm_vaccine.AGE",
-      "dm_vaccine.AGEU"
+      "DM.SEX",
+      "DM.AGE",
+      "DM.AGEU",
+      "SV.SEX",
+      "SV.AGE",
+      "SV.AGEU",
+      "DM_VACCINE.SEX",
+      "DM_VACCINE.AGE",
+      "DM_VACCINE.AGEU"
     )
   )
 
   # Check comments in executable program
   expect_true(
     grepl(
-      "# Code can be executed but the following columns are not found in source data:\\n# sdtm.sv.SEX, sdtm.sv.AGE, sdtm.sv.AGEU", # nolint: line_length_linter
+      "# Code can be executed but the following columns are not found in source data:\\n# sdtm.SV.SEX, sdtm.SV.AGE, sdtm.SV.AGEU", # nolint: line_length_linter
       actual$executable_programs
     )
   )
   expect_true(
     grepl(
-      "\\n# This impacts the following data that will be ignored:\\n# sdtm.dm.SEX, sdtm.dm.AGE, sdtm.dm.AGEU, sdtm.sv.SEX, sdtm.sv.AGE, sdtm.sv.AGEU, sdtm.dm_vaccine.SEX, sdtm.dm_vaccine.AGE, sdtm.dm_vaccine.AGEU", # nolint: line_length_linter
+      "\\n# This impacts the following data that will be ignored:\\n# sdtm.DM.SEX, sdtm.DM.AGE, sdtm.DM.AGEU, sdtm.SV.SEX, sdtm.SV.AGE, sdtm.SV.AGEU, sdtm.DM_VACCINE.SEX, sdtm.DM_VACCINE.AGE, sdtm.DM_VACCINE.AGEU", # nolint: line_length_linter
       actual$executable_programs
     )
   )
@@ -799,25 +712,25 @@ keys:
   - LBSEQ
 population:
   base:
-    - domain: lb
+    - domain: LB
       depends:
         - NA
       filter: NA
   global:
     - filter: '!is.na(SEX)'
       depends:
-        - adsl.SEX
+        - ADSL.SEX
 columns:
   - id: STUDYID
   - id: USUBJID
   - id: SEX
-    method: adsl.SEX
+    method: ADSL.SEX
   - id: LBSTRESN
   - id: LBSEQ
 
 "
 
-  # Setup test data with lb and adsl domains but remove lb.LBSTRESN
+  # Setup test data with LB and ADSL domains but remove LB.LBSTRESN
   setup_testdata(
     testdata = "pharmaverse",
     test_data_path = trial_path,
@@ -827,7 +740,7 @@ columns:
   )
   mighty_yml_content <- readLines(test_path(
     "fixtures",
-    "_mighty_lowercase_adsl.yml"
+    "_mighty_with_adsl_keys.yml"
   )) |>
     paste(collapse = "\n")
   ui_data <- setup_study_dir(list(
@@ -863,7 +776,7 @@ columns:
   # Check removed outputs from read_data and init_domain actions
   expect_identical(
     eps[node_id == "ADLB-1-read_data"]$removed_outputs[[1]],
-    "lb.LBSTRESN"
+    "LB.LBSTRESN"
   )
   expect_identical(
     eps[node_id == "ADLB-init_domain"]$removed_outputs[[1]],

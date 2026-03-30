@@ -80,7 +80,7 @@
 #'   node_id = c("init_adsl", "derive_age", "init_adae", "derive_aesev"),
 #'   domain = c("ADSL", "ADSL", "ADAE", "ADAE"),
 #'   type = c("init", "col_derive", "init", "col_derive"),
-#'   code = c("adsl <- dm", "adsl$AGE <- ...", "adae <- ae", "adae$AESEV <- ...")
+#'   code = c("ADSL <- DM", "ADSL$AGE <- ...", "ADAE <- AE", "ADAE$AESEV <- ...")
 #' )
 #'
 #' edges <- data.frame(

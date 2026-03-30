@@ -46,7 +46,7 @@ test_that("Complex test w/ missing dm_vaccine.SEX", {
     read_actions[program_id %in% 1:2]$lineage
   )))
   expect_true(all(grepl(
-    "sdtm.dm_vaccine.SEX",
+    "sdtm.DM_VACCINE.SEX",
     read_actions[program_id == 1]$lineage
   )))
   expect_true(all(grepl(
@@ -199,7 +199,7 @@ test_that("Complex test w/ missing dm_vaccine.AGE and dm.SEX", {
     read_actions[program_id %in% 1:3]$lineage
   )))
   expect_true(all(grepl(
-    "sdtm.dm.SEX, sdtm.dm_vaccine.AGE",
+    "sdtm.DM.SEX, sdtm.DM_VACCINE.AGE",
     read_actions[program_id == 1]$lineage
   )))
   expect_true(all(grepl(
@@ -406,7 +406,7 @@ test_that("Complex test w/ missing lb.LBSTRESN", {
     read_actions[program_id %in% c("2", "3")]$lineage
   )))
   expect_true(all(grepl(
-    "sdtm.lb.LBSTRESN",
+    "sdtm.LB.LBSTRESN",
     read_actions[program_id %in% c("2")]$lineage
   )))
   expect_true(all(grepl(

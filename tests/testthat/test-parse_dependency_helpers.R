@@ -1,5 +1,5 @@
 test_that("is_row_dependency identifies row/parameter references", {
-  deps <- c("rows.filter1", "parameters.p1", "SEX", "adsl.AGE")
+  deps <- c("rows.FILTER1", "parameters.P1", "SEX", "ADSL.AGE")
 
   expect_equal(
     is_row_dependency(deps),
@@ -8,7 +8,7 @@ test_that("is_row_dependency identifies row/parameter references", {
 })
 
 test_that("has_domain_prefix identifies qualified column refs", {
-  deps <- c("rows.filter1", "parameters.p1", "SEX", "adsl.AGE")
+  deps <- c("rows.FILTER1", "parameters.P1", "SEX", "ADSL.AGE")
 
   expect_equal(
     has_domain_prefix(deps),
@@ -17,33 +17,33 @@ test_that("has_domain_prefix identifies qualified column refs", {
 })
 
 test_that("extract_dependency_id extracts identifiers", {
-  deps <- c("SEX", "adsl.AGE", "rows.filter1")
+  deps <- c("SEX", "ADSL.AGE", "rows.FILTER1")
 
   expect_equal(
     extract_dependency_id(deps),
-    c("SEX", "AGE", "filter1")
+    c("SEX", "AGE", "FILTER1")
   )
 })
 
 test_that("extract_domain_prefix extracts domain from qualified deps", {
-  deps <- c("adsl.AGE", "adae.AESTDT", "dm.USUBJID")
+  deps <- c("ADSL.AGE", "ADAE.AESTDT", "DM.USUBJID")
 
   expect_equal(
     extract_domain_prefix(deps),
-    c("adsl", "adae", "dm")
+    c("ADSL", "ADAE", "DM")
   )
 })
 
 test_that("qualify_column_refs creates qualified references", {
   # Test with ADaM and SDTM dependencies
   deps <- data.table::data.table(
-    domain = c("ADSL", "dm", "ADAE"),
+    domain = c("ADSL", "DM", "ADAE"),
     column_name = c("AGE", "USUBJID", "AESTDT")
   )
 
   result <- qualify_column_refs(deps)
 
-  expect_equal(result, c("ADSL.AGE", "dm.USUBJID", "ADAE.AESTDT"))
+  expect_equal(result, c("ADSL.AGE", "DM.USUBJID", "ADAE.AESTDT"))
 })
 
 test_that("qualify_column_refs handles empty data frames", {

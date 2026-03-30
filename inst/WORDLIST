@@ -156,6 +156,7 @@ testthat
 Thomsen
 tibble
 tidyr
+tolower
 TOPICCD
 TRTSDT
 tstrsplit

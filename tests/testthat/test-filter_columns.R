@@ -22,11 +22,11 @@ structure: One record per subject
 keys: [USUBJID]
 population:
   base:
-    - domain: dm
+    - domain: DM
       depends:
         - SEX
       filter: 'SEX == \"F\"'
-    - domain: dm_vaccine
+    - domain: DM_VACCINE
       depends:
         - SEX
       filter: 'SEX == \"F\"'
@@ -66,11 +66,11 @@ structure: One record per subject per parameter per analysis visit
 keys: [USUBJID]
 population:
   base:
-    - domain: dm
+    - domain: DM
       depends:
         - NA
       filter: NA
-    - domain: dm_vaccine
+    - domain: DM_VACCINE
       depends:
         - NA
       filter: NA

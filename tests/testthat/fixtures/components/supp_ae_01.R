@@ -3,15 +3,15 @@
 #' @type derivation
 #' @depends ADAE USUBJID
 #' @depends ADAE AESEQ
-#' @depends suppae USUBJID
-#' @depends suppae IDVAR
-#' @depends suppae IDVARVAL
-#' @depends suppae QNAM
-#' @depends suppae QVAL
+#' @depends SUPPAE USUBJID
+#' @depends SUPPAE IDVAR
+#' @depends SUPPAE IDVARVAL
+#' @depends SUPPAE QNAM
+#' @depends SUPPAE QVAL
 #' @outputs AETRTEM
 #' @code
 # Collect supplementary data
-supp_data <- suppae |>
+supp_data <- SUPPAE |>
   dplyr::select(USUBJID, IDVAR, IDVARVAL, QNAM, QVAL) |>
   dplyr::filter(QNAM == "AETRTEM") |>
   tidyr::pivot_wider(names_from = QNAM, values_from = QVAL)

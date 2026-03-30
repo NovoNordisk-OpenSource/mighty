@@ -9,7 +9,7 @@ keys:
 
 population:
   base:
-    - domain: lb
+    - domain: LB
       depends:
         - NA
       filter: NA
@@ -113,26 +113,26 @@ columns:
       with:
         LBSTRESN_MINVAL: 38.0
     depends:
-      - rows.new_protein
-      - rows.new_specific_gravity
+      - rows.NEW_PROTEIN
+      - rows.NEW_SPECIFIC_GRAVITY
 
   - id: AVAL
     method: LBSTRESN
     depends:
-      - rows.new_protein
+      - rows.NEW_PROTEIN
 
   - id: AVAL_GRP
     component:
       id: "{path_base}/fixtures/components/aval_grp_01.R"
 
 rows:
-  - id: new_protein
+  - id: NEW_PROTEIN
     component:
       id: "{path_base}/fixtures/components/new_lbtest07.mustache"
       with:
         variable: Protein
 
-  - id: new_specific_gravity
+  - id: NEW_SPECIFIC_GRAVITY
     component:
       id: "{path_base}/fixtures/components/new_lbtest07.mustache"
       with:

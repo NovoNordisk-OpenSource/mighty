@@ -1,7 +1,7 @@
 test_that("!expr path produces correct connector path expression", {
   result <- params_read_data_code(
-    payload = c("dm.USUBJID"),
-    domain = "adae",
+    payload = c("DM.USUBJID"),
+    domain = "ADAE",
     path_connector_config = "!expr here::here()"
   )
 

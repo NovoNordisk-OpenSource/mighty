@@ -227,7 +227,7 @@ process_depend_cols <- function(data) {
 #'   - **data.frame** (with `domain`, `column` cols): For actions with a `code_id`
 #'     (col_compute, row_compute). Parsed from code component roxygen `@depends` tags.
 #'   - **list of strings**: For actions without a `code_id` (col_echo, col_mutate).
-#'     Comes from YAML `method` field, e.g. `"adsl.TRTSDT"` or `"TRTSDT"`.
+#'     Comes from YAML `method` field, e.g. `"ADSL.TRTSDT"` or `"TRTSDT"`.
 #'   - **NA**: For col_copy actions (dependencies are inferred from outputs).
 #' @param domain Character string specifying the current domain value to use for
 #'   elements without domain prefixes.

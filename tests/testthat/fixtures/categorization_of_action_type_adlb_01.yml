@@ -9,7 +9,7 @@ keys:
 
 population:
   base:
-    - domain: lb
+    - domain: LB
       depends:
         - NA
       filter: NA
@@ -56,6 +56,6 @@ columns:
       id: "{path_base}/fixtures/components/avalfl_01.R"
 
 rows:
-  - id: new_microcytes
+  - id: NEW_MICROCYTES
     component:
       id: "{path_base}/fixtures/components/new_lbtest_01.R"

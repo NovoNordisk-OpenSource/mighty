@@ -9,7 +9,7 @@ structure: One record per subject
 keys: [USUBJID, STUDYID]
 population:
   base:
-    - domain: dm
+    - domain: DM
       depends:
         - NA
       filter: NA
@@ -37,7 +37,7 @@ structure: One record per subject per parameter per analysis visit
 keys: [USUBJID, STUDYID]
 population:
   base:
-    - domain: lb
+    - domain: LB
       depends:
         - VISITNUM
         - LBTESTCD

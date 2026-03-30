@@ -234,7 +234,7 @@ test_that("Supp data action is placed before filter_domain when supp columns and
   adam_specifications <- setup_study_from_fixtures(
     fixtures = list(
       "adae" = "supplementary_data_adae_01.yml",
-      "_mighty" = "_mighty_lowercase_adsl.yml"
+      "_mighty" = "_mighty_with_adsl_keys.yml"
     )
   )
   path_connector_config <- withr::local_tempdir()
@@ -297,7 +297,7 @@ test_that("Col_compute and parent col_compute is placed before filter_domain whe
   adam_specifications <- setup_study_from_fixtures(
     fixtures = list(
       "adae" = "supplementary_data_adae_02.yml",
-      "_mighty" = "_mighty_lowercase_adsl.yml"
+      "_mighty" = "_mighty_with_adsl_keys.yml"
     )
   )
   path_connector_config <- withr::local_tempdir()

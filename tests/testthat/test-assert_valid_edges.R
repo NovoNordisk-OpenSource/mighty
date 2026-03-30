@@ -258,7 +258,7 @@ test_that("extract_node_dependencies returns qualified references", {
     outputs = list(c("AAGE")),
     depend_cols = list(
       data.table::data.table(
-        domain = c("ADSL", "dm"),
+        domain = c("ADSL", "DM"),
         column_name = c("AGE", "USUBJID"),
         domain_type = c("adam", "sdtm")
       )
@@ -268,7 +268,7 @@ test_that("extract_node_dependencies returns qualified references", {
   result <- extract_node_dependencies(node)
 
   # Should return character vector of qualified references (domain.column_name)
-  expect_equal(result, c("ADSL.AGE", "dm.USUBJID"))
+  expect_equal(result, c("ADSL.AGE", "DM.USUBJID"))
 
   # Test with no dependencies
   node_no_deps <- data.table::data.table(

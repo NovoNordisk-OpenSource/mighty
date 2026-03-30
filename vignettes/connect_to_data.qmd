@@ -30,7 +30,7 @@ An example of a generated program can be seen below, where the `cnt` object is
 
 *   created by reading `_connector.yml` from the directory specified by
     `path_connector_config`,
-*   used to read `dm` and `dm_vaccine`, and finally
+*   used to read `DM` and `DM_VACCINE`, and finally
 *   save the created `ADSL` data set.
 
 
@@ -39,16 +39,16 @@ An example of a generated program can be seen below, where the `cnt` object is
 
 cnt <- connector::connect(config = file.path(".", "_connector.yml"))
 
-dm <- cnt$sdtm$read_cnt("dm") |> dplyr::select(ACTARM, AGE, AGEU, ARM, COUNTRY, DOMAIN, DTHFL, RACE, SEX, STUDYID, USUBJID)
+DM <- cnt$sdtm$read_cnt(tolower("DM")) |> dplyr::select(ACTARM, AGE, AGEU, ARM, COUNTRY, DOMAIN, DTHFL, RACE, SEX, STUDYID, USUBJID)
 
-dm_vaccine <- cnt$sdtm$read_cnt("dm_vaccine") |> dplyr::select(ACTARM, AGE, AGEU, ARM, COUNTRY, DOMAIN, DTHFL, RACE, SEX, STUDYID, USUBJID)
+DM_VACCINE <- cnt$sdtm$read_cnt(tolower("DM_VACCINE")) |> dplyr::select(ACTARM, AGE, AGEU, ARM, COUNTRY, DOMAIN, DTHFL, RACE, SEX, STUDYID, USUBJID)
 
 ### Generated ADaM program code (removed for simplicity)
 
 # Save ADSL ------------------------------------------------
 
-cnt$adam$write_cnt(ADSL, "ADSL.parquet", overwrite = TRUE)
+cnt$adam$write_cnt(ADSL, "adsl.parquet", overwrite = TRUE)
 
 # Remove input tables
-rm(list = c("dm", "dm_vaccine"))
+rm(list = c("DM", "DM_VACCINE"))
 ```

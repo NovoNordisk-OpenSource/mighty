@@ -67,9 +67,9 @@ test_that("format_list validates inputs", {
 })
 
 test_that("format_dependencies_for_display handles mixed ADaM/SDTM dependencies", {
-  result <- format_dependencies_for_display(c("ADSL.AGE", "dm.USUBJID"))
+  result <- format_dependencies_for_display(c("ADSL.AGE", "DM.USUBJID"))
   expect_type(result, "character")
-  expect_match(as.character(result), "ADSL\\.AGE and dm\\.USUBJID")
+  expect_match(as.character(result), "ADSL\\.AGE and DM\\.USUBJID")
 
   expect_equal(format_dependencies_for_display(character(0)), "None")
 })

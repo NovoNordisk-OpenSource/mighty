@@ -3,19 +3,19 @@
 #' @type derivation
 #' @depends ADSL STUDYID
 #' @depends ADSL USUBJID
-#' @depends suppdm STUDYID
-#' @depends suppdm USUBJID
-#' @depends suppdm QNAM
-#' @depends suppdm QVAL
-#' @depends suppdm_vaccine STUDYID
-#' @depends suppdm_vaccine USUBJID
-#' @depends suppdm_vaccine QNAM
-#' @depends suppdm_vaccine QVAL
+#' @depends SUPPDM STUDYID
+#' @depends SUPPDM USUBJID
+#' @depends SUPPDM QNAM
+#' @depends SUPPDM QVAL
+#' @depends SUPPDM_VACCINE STUDYID
+#' @depends SUPPDM_VACCINE USUBJID
+#' @depends SUPPDM_VACCINE QNAM
+#' @depends SUPPDM_VACCINE QVAL
 #' @outputs EFFICACY
 #' @outputs SAFETY
 #' @code
 # Collect supplementary data
-data_supp <- rbind(suppdm, suppdm_vaccine) |>
+data_supp <- rbind(SUPPDM, SUPPDM_VACCINE) |>
   dplyr::select(STUDYID, USUBJID, QNAM, QVAL) |>
   dplyr::filter(QNAM %in% c("EFFICACY", "SAFETY"))
 

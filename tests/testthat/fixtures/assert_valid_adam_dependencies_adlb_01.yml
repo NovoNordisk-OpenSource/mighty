@@ -8,7 +8,7 @@ keys:
 
 population:
   base:
-    - domain: lb
+    - domain: LB
       depends:
         - NA
       filter: NA

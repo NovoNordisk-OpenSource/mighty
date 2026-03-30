@@ -8,11 +8,11 @@ keys:
 
 population:
   base:
-    - domain: dm
+    - domain: DM
       depends:
         - DTHFL
       filter: 'is.na(DTHFL)'
-    - domain: dm_vaccine
+    - domain: DM_VACCINE
       depends:
         - NA
       filter: NA

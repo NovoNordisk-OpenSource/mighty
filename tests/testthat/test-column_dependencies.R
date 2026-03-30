@@ -33,12 +33,12 @@ test_that("No filters", {
 
   # Check outputs of read_data
   expected_outputs <- c(
-    "dm.STUDYID",
-    "dm.USUBJID",
-    "dm.ARM",
-    "dm_vaccine.STUDYID",
-    "dm_vaccine.USUBJID",
-    "dm_vaccine.ARM"
+    "DM.STUDYID",
+    "DM.USUBJID",
+    "DM.ARM",
+    "DM_VACCINE.STUDYID",
+    "DM_VACCINE.USUBJID",
+    "DM_VACCINE.ARM"
   )
   expect_setequal(actual$program_sequence$outputs[[1]], expected_outputs)
 
@@ -112,14 +112,14 @@ test_that("No filters - external core domain dependency on col_compute action", 
 
   # Check outputs of read_data
   expected_outputs <- c(
-    "dm.USUBJID",
-    "dm.STUDYID",
-    "dm.ARM",
-    "dm.ACTARM",
-    "dm_vaccine.USUBJID",
-    "dm_vaccine.STUDYID",
-    "dm_vaccine.ARM",
-    "dm_vaccine.ACTARM"
+    "DM.USUBJID",
+    "DM.STUDYID",
+    "DM.ARM",
+    "DM.ACTARM",
+    "DM_VACCINE.USUBJID",
+    "DM_VACCINE.STUDYID",
+    "DM_VACCINE.ARM",
+    "DM_VACCINE.ACTARM"
   )
   expect_setequal(actual$program_sequence$outputs[[1]], expected_outputs)
 
@@ -203,14 +203,14 @@ test_that("No domain filters", {
 
   # Check external dependencies
   expected_ext_dep <- c(
-    "dm.USUBJID",
-    "dm.DOMAIN",
-    "dm.STUDYID",
-    "dm.ARM",
-    "dm_vaccine.USUBJID",
-    "dm_vaccine.DOMAIN",
-    "dm_vaccine.STUDYID",
-    "dm_vaccine.ARM"
+    "DM.USUBJID",
+    "DM.DOMAIN",
+    "DM.STUDYID",
+    "DM.ARM",
+    "DM_VACCINE.USUBJID",
+    "DM_VACCINE.DOMAIN",
+    "DM_VACCINE.STUDYID",
+    "DM_VACCINE.ARM"
   )
   expect_setequal(actual$program_sequence$outputs[[1]], expected_ext_dep)
 
@@ -289,14 +289,14 @@ test_that("No global filters", {
 
   # Check external dependencies
   expected_ext_dep <- c(
-    "dm.STUDYID",
-    "dm.USUBJID",
-    "dm.DTHFL",
-    "dm.ARM",
-    "dm_vaccine.STUDYID",
-    "dm_vaccine.USUBJID",
-    "dm_vaccine.DTHFL",
-    "dm_vaccine.ARM"
+    "DM.STUDYID",
+    "DM.USUBJID",
+    "DM.DTHFL",
+    "DM.ARM",
+    "DM_VACCINE.STUDYID",
+    "DM_VACCINE.USUBJID",
+    "DM_VACCINE.DTHFL",
+    "DM_VACCINE.ARM"
   )
   expect_setequal(actual$program_sequence$outputs[[1]], expected_ext_dep)
 
@@ -375,12 +375,12 @@ test_that("No filters and no derivations", {
 
   # Check external dependencies
   expected_ext_dep <- c(
-    "dm.STUDYID",
-    "dm.USUBJID",
-    "dm.ARM",
-    "dm_vaccine.STUDYID",
-    "dm_vaccine.USUBJID",
-    "dm_vaccine.ARM"
+    "DM.STUDYID",
+    "DM.USUBJID",
+    "DM.ARM",
+    "DM_VACCINE.STUDYID",
+    "DM_VACCINE.USUBJID",
+    "DM_VACCINE.ARM"
   )
   expect_setequal(actual$program_sequence$outputs[[1]], expected_ext_dep)
 
@@ -446,16 +446,16 @@ test_that("Global filter and domain filter", {
 
   # Check external dependencies
   expected_ext_dep <- c(
-    "dm.AGEU",
-    "dm.ARM",
-    "dm.DOMAIN",
-    "dm.STUDYID",
-    "dm.USUBJID",
-    "dm_vaccine.AGEU",
-    "dm_vaccine.ARM",
-    "dm_vaccine.DOMAIN",
-    "dm_vaccine.STUDYID",
-    "dm_vaccine.USUBJID"
+    "DM.AGEU",
+    "DM.ARM",
+    "DM.DOMAIN",
+    "DM.STUDYID",
+    "DM.USUBJID",
+    "DM_VACCINE.AGEU",
+    "DM_VACCINE.ARM",
+    "DM_VACCINE.DOMAIN",
+    "DM_VACCINE.STUDYID",
+    "DM_VACCINE.USUBJID"
   )
   expect_setequal(actual$program_sequence$outputs[[1]], expected_ext_dep)
 
@@ -497,13 +497,13 @@ test_that("Global filter and domain filter", {
   expect_equal(nrow(ADSL), 306)
 })
 
-test_that("Global filter and domain filter incl. adsl dependencies (lower case)", {
+test_that("Global filter and domain filter incl. adsl dependencies", {
   # SETUP -------------------------------------------------------------------
 
   adam_specifications <- setup_study_from_fixtures(
     fixtures = list(
       "adlb" = "column_dependencies_adlb_02.yml",
-      "_mighty" = "_mighty_lowercase_adsl.yml"
+      "_mighty" = "_mighty_with_adsl_keys.yml"
     ),
     process_glue = FALSE
   )
@@ -534,15 +534,15 @@ test_that("Global filter and domain filter incl. adsl dependencies (lower case)"
 
   # Check external dependencies
   expected_ext_dep <- c(
-    "lb.STUDYID",
-    "lb.USUBJID",
-    "lb.LBSEQ",
-    "lb.VISITNUM",
-    "lb.LBSTRESN",
-    "lb.LBSTRESU",
-    "adsl.STUDYID",
-    "adsl.USUBJID",
-    "adsl.SEX"
+    "LB.STUDYID",
+    "LB.USUBJID",
+    "LB.LBSEQ",
+    "LB.VISITNUM",
+    "LB.LBSTRESN",
+    "LB.LBSTRESU",
+    "ADSL.STUDYID",
+    "ADSL.USUBJID",
+    "ADSL.SEX"
   )
   expect_setequal(actual$program_sequence$outputs[[1]], expected_ext_dep)
 
@@ -550,27 +550,27 @@ test_that("Global filter and domain filter incl. adsl dependencies (lower case)"
   programs <- x |> lapply(readLines)
   names(programs) <- basename(x)
   expect_section_order(
-    "adlb-1-read_data",
-    "adlb-init_domain",
-    programs[["1_adlb.R"]]
+    "ADLB-1-read_data",
+    "ADLB-init_domain",
+    programs[["1_ADLB.R"]]
   )
   expect_section_order(
-    "adlb-init_domain",
-    "adlb-filter_domain",
-    programs[["1_adlb.R"]]
+    "ADLB-init_domain",
+    "ADLB-filter_domain",
+    programs[["1_ADLB.R"]]
   )
   expect_section_order(
-    "adlb-filter_domain",
-    "adlb-1-write_data",
-    programs[["1_adlb.R"]]
+    "ADLB-filter_domain",
+    "ADLB-1-write_data",
+    programs[["1_ADLB.R"]]
   )
   # Check generated ADLB
   x[[1]] |> source()
   expect_setequal(
-    names(adlb),
+    names(ADLB),
     c("USUBJID", "STUDYID", "LBSEQ", "VISITNUM", "LBSTRESN", "LBSTRESU")
   )
-  expect_equal(nrow(adlb), 1790)
+  expect_equal(nrow(ADLB), 1790)
 })
 
 
@@ -580,7 +580,7 @@ test_that("External predecessor dependencies are handled correctly in filter and
   adam_specifications <- setup_study_from_fixtures(
     fixtures = list(
       "adlb" = "column_dependencies_adlb_03.yml",
-      "_mighty" = "_mighty_lowercase_adsl.yml"
+      "_mighty" = "_mighty_with_adsl_keys.yml"
     ),
     process_glue = FALSE
   )
@@ -611,16 +611,16 @@ test_that("External predecessor dependencies are handled correctly in filter and
 
   # Check external dependencies
   expected_ext_dep <- c(
-    "lb.STUDYID",
-    "lb.USUBJID",
-    "lb.LBSEQ",
-    "lb.VISITNUM",
-    "lb.LBSTRESN",
-    "lb.LBSTRESU",
-    "adsl.STUDYID",
-    "adsl.USUBJID",
-    "adsl.SEX",
-    "adsl.AGE"
+    "LB.STUDYID",
+    "LB.USUBJID",
+    "LB.LBSEQ",
+    "LB.VISITNUM",
+    "LB.LBSTRESN",
+    "LB.LBSTRESU",
+    "ADSL.STUDYID",
+    "ADSL.USUBJID",
+    "ADSL.SEX",
+    "ADSL.AGE"
   )
   expect_setequal(actual$program_sequence$outputs[[1]], expected_ext_dep)
 

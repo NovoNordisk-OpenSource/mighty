@@ -9,14 +9,14 @@ keys:
 
 population:
   base:
-    - domain: lb
+    - domain: LB
       depends:
         - LBSTRESN
       filter: '!is.na(LBSTRESN)'
   global:
     - filter: '!is.na(SEX)' 
       depends:
-        - adsl.SEX
+        - ADSL.SEX
     - filter: 'LBSTRESU == "fL"'
       depends:
         - LBSTRESU
@@ -36,4 +36,4 @@ columns:
   - id: LBSTRESU
 
   - id: AGE
-    method: adsl.AGE
+    method: ADSL.AGE

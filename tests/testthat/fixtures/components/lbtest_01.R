@@ -4,18 +4,18 @@
 #' @depends ADLB USUBJID
 #' @depends ADLB LBSEQ
 #' @depends ADLB AVAL
-#' @depends lb USUBJID
-#' @depends lb LBSEQ
-#' @depends lb LBTEST
+#' @depends LB USUBJID
+#' @depends LB LBSEQ
+#' @depends LB LBTEST
 #' @depends ADSL USUBJID
 #' @depends ADSL PLANNED_ARM
 #' @outputs LBTEST
 #' @code
-# join with adsl, only derive lbtest if adsl.planned_arm != "" and
-# if aval is na them lbtest = "Invalid"
+# Join with ADSL, only derive LBTEST if ADSL.PLANNED_ARM != "" and
+# if AVAL is NA then LBTEST = "Invalid"
 ADLB <- ADLB |>
   dplyr::left_join(
-    lb |> dplyr::select(USUBJID, LBSEQ, LBTEST),
+    LB |> dplyr::select(USUBJID, LBSEQ, LBTEST),
     by = c("USUBJID" = "USUBJID", "LBSEQ" = "LBSEQ")
   ) |>
   dplyr::left_join(

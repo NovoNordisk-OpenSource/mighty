@@ -32,7 +32,7 @@ test_that("Validation warning occurs when component uses ADSL implicitly without
     - USUBJID
   population:
     base:
-      - domain: dm
+      - domain: DM
         depends: NA
         filter: NA
   columns:
@@ -104,7 +104,7 @@ test_that("Topology is generated correctly when component declares dependencies 
     - USUBJID
   population:
     base:
-      - domain: dm
+      - domain: DM
         depends: NA
         filter: NA
   columns:
@@ -179,7 +179,7 @@ test_that("Warning message lists all output columns from component with missing 
   keys: ['USUBJID', 'AVISITN', 'PARAMCD']
   population:
     base:
-      - domain: lb
+      - domain: LB
         depends: NA
         filter: NA
   columns:
@@ -265,7 +265,7 @@ test_that("Warn if two domains but one has component with missing depends", {
   keys: ['USUBJID', 'AVISITN', 'PARAMCD']
   population:
     base:
-      - domain: lb
+      - domain: LB
         depends: NA
         filter: NA
   columns:
@@ -382,7 +382,7 @@ test_that("Validation with mix of components warning when no @depends on compone
     - USUBJID
   population:
     base:
-      - domain: dm
+      - domain: DM
         depends: NA
         filter: NA
   columns:
@@ -457,7 +457,7 @@ test_that("Validation with two domains throws warning when no @depends on compon
     - USUBJID
   population:
     base:
-      - domain: dm
+      - domain: DM
         depends: NA
         filter: NA
   columns:
@@ -478,7 +478,7 @@ test_that("Validation with two domains throws warning when no @depends on compon
   keys: ['USUBJID', 'AVISITN', 'PARAMCD']
   population:
     base:
-      - domain: lb
+      - domain: LB
         depends: NA
         filter: NA
   columns:
@@ -553,7 +553,7 @@ test_that("Error when ADaM specification is missing init_domain (no population.b
     - BRDATE
   population:
     base:
-      - domain: dm
+      - domain: DM
         depends: NA
         filter: NA
   columns:

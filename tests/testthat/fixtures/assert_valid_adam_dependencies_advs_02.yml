@@ -7,7 +7,7 @@ keys:
 
 population:
   base:
-    - domain: vs
+    - domain: VS
       depends:
         - NA
       filter: NA

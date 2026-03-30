@@ -24,12 +24,12 @@
 #' \dontrun{
 #' # Write programs without styling
 #' programs <-  list(
-#'   adsl = c("library(dplyr)", "adsl <- dm |> select(USUBJID)"),
-#'   adae = c("library(dplyr)", "adae <-  ae |> filter(!is.na(AEDECOD))")
+#'   ADSL = c("library(dplyr)", "ADSL <- DM |> select(USUBJID)"),
+#'   ADAE = c("library(dplyr)", "ADAE <- AE |> filter(!is.na(AEDECOD))")
 #' )
 #'
 #' write_adam_programs(programs, dir = "output/adam")
-#' # Creates: output/adam/adsl.R, output/adam/adae.R
+#' # Creates: output/adam/ADSL.R, output/adam/ADAE.R
 #'
 #' # Write with styling
 #' write_adam_programs(programs, dir = "output/adam", style = TRUE)

@@ -45,7 +45,7 @@ test_that("Check that action types are classified correctly", {
     "col_compute"
   )
   expect_equal(
-    ps[ps$node_id == "ADLB-new_microcytes", ][["type"]],
+    ps[ps$node_id == "ADLB-NEW_MICROCYTES", ][["type"]],
     "row_compute"
   )
   expect_equal(ps[ps$node_id == "ADLB-2-write_data", ][["type"]], "write_data")

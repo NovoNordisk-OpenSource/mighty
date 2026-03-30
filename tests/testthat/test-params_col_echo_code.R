@@ -98,7 +98,7 @@ test_that("pre_process_generate_rename_left_join_code returns correct structure"
 test_that("pre_process_generate_rename_left_join_code handles duplicate domains", {
   result <- pre_process_generate_rename_left_join_code(
     depend_columns = c("STUDYID", "USUBJID", "AGE"),
-    depend_domains = c("adlb", "adsl", "adsl"), # duplicate adsl
+    depend_domains = c("adlb", "adsl", "adsl"), # duplicate ADSL
     outputs = "AGE",
     domain = "adlb",
     domain_keys = list(

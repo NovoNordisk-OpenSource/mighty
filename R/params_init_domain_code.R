@@ -4,14 +4,14 @@
 #' ADaM domains. It handles the complexities of multi-domain binding, column
 #' selection, and SRC_ variable creation for use in code generation templates.
 #'
-#' @param .self Character. The target ADaM domain name (e.g., "adsl", "adae").
+#' @param .self Character. The target ADaM domain name (e.g., "ADSL", "ADAE").
 #'   Used as the variable name for the initialized data set and converted to
 #'   uppercase for data set labels and references.
 #' @param keep_columns Character vector. Column names to retain in the initialized
 #'   ADaM domain. If "SRC_" is included, source domain tracking variables will
 #'   be generated for each contributing SDTM domain.
 #' @param source_domains Character vector. Names of source SDTM domains to combine
-#'   (e.g., c("dm", "vs", "lb")). These domains will be row-bound together to
+#'   (e.g., c("DM", "VS", "LB")). These domains will be row-bound together to
 #'   create the initial ADaM data set structure.
 #'
 #' @return A named list containing template parameters for code generation:
@@ -46,7 +46,7 @@
 #' The returned parameters are designed to integrate with code generation
 #' templates that produce initialization blocks like:
 #' \preformatted{
-#' adsl <-  dm |>
+#' ADSL <- DM |>
 #'   select(keep_columns) |>
 #'   mutate(SRC_= "DM")
 #' }
@@ -65,30 +65,30 @@
 #' \dontrun{
 #' # Single source domain initialization
 #' params_single <-  params_init_domain_code(
-#'   .self = "adsl",
+#'   .self = "ADSL",
 #'   keep_columns = c("USUBJID", "AGE", "SEX"),
-#'   source_domains = "dm"
+#'   source_domains = "DM"
 #' )
 #'
 #' # Multiple source domains with SRC_ tracking
 #' params_multi <- params_init_domain_code(
-#'   .self = "adlb",
+#'   .self = "ADLB",
 #'   keep_columns = c("USUBJID", "PARAMCD", "AVAL", "SRC_"),
-#'   source_domains = c("lb", "vs")
+#'   source_domains = c("LB", "VS")
 #' )
 #'
 #' # Examine the formatted rbind expression
 #' cat(params_multi$source_domain_rbind)
-#' # rbind(lb,
-#' #       vs)
+#' # rbind(LB,
+#' #       VS)
 #'
 #' # Check SRC_ mutations
 #' str(params_multi$src_mutations)
 #' # List of 2
 #' #  $ :List of 1
-#' #   ..$ domain: chr "lb"
+#' #   ..$ domain: chr "LB"
 #' #  $ :List of 1
-#' #   ..$ domain: chr "vs"
+#' #   ..$ domain: chr "VS"
 #' }
 #'
 #' @seealso

@@ -21,7 +21,7 @@ has_domain_prefix <- function(dep_string) {
 
 #' Extract domain prefix from dependency strings
 #'
-#' Only works on domain-prefixed strings (e.g., "adsl.AGE"). Use after
+#' Only works on domain-prefixed strings (e.g., "ADSL.AGE"). Use after
 #' filtering with `has_domain_prefix()`.
 #'
 #' @param dep_string Character vector of domain-qualified dependency strings
@@ -52,13 +52,13 @@ extract_dependency_id <- function(dep_string) {
 #' from a data structure containing domain and column_name columns.
 #'
 #' @param df Data frame or data.table with 'domain' and 'column_name' columns
-#' @return Character vector of qualified references (e.g., "ADSL.AGE", "dm.USUBJID")
+#' @return Character vector of qualified references (e.g., "ADSL.AGE", "DM.USUBJID")
 #' @noRd
 #'
 #' @examples
 #' \dontrun{
-#' deps <- data.table(domain = c("ADSL", "dm"), column_name = c("AGE", "USUBJID"))
-#' qualify_column_refs(deps)  # Returns: c("ADSL.AGE", "dm.USUBJID")
+#' deps <- data.table(domain = c("ADSL", "DM"), column_name = c("AGE", "USUBJID"))
+#' qualify_column_refs(deps)  # Returns: c("ADSL.AGE", "DM.USUBJID")
 #' }
 qualify_column_refs <- function(df) {
   if (nrow(df) == 0) {

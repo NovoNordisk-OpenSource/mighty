@@ -8,14 +8,14 @@ keys:
 
 population:
   base:
-    - domain: ae
+    - domain: AE
       depends:
         - AEBODSYS
       filter: '!is.na(AEBODSYS)'
   global:
     - filter: '!is.na(SEX)'
       depends:
-        - adsl.SEX
+        - ADSL.SEX
     - filter: 'AETRTEM == "Y"'
       depends:
         - AETRTEM
@@ -32,7 +32,7 @@ columns:
   - id: AEBODSYS
 
   - id: AGE
-    method: adsl.AGE
+    method: ADSL.AGE
 
   - id: AETRTEM
     component:

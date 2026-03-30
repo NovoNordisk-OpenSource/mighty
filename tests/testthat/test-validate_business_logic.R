@@ -1,121 +1,3 @@
-test_that("Column depends with wrong prefix should fail", {
-  # SETUP ----------------------------------------------------------------------
-
-  yaml_content <- "
-id: ADLB
-label: Laboratory Analysis Dataset
-class: BASIC DATA STRUCTURE
-structure: One record per subject per parameter per analysis visit
-keys: [USUBJID]
-population:
-  base:
-    - domain: LB
-      depends:
-        - NA
-      filter: NA
-  global:
-    - filter: 'SAFFL == \"Y\"'
-      depends:
-        - SAFFL
-columns:
-  - id: USUBJID
-  - id: VAR1
-    depends:
-      parameter.row_action_00
-  - id: VAR2
-    depends:
-      row.row_action_99
-rows:
-  - id: row_action_99
-    component:
-      id: row_action_99
-parameters:
-  - id: row_action_00
-    component:
-      id: row_action_00
-"
-  adam_specifications <- setup_study_dir(list("adlb" = yaml_content))
-  study <- mighty.metadata::mighty_study(adam_specifications)
-  # ACT / ASSERT ---------------------------------------------------------------
-
-  expect_snapshot_error(process_adam_domain(study$ADLB, "ADLB"))
-})
-
-test_that("Row depends with wrong prefix should fail", {
-  # SETUP ----------------------------------------------------------------------
-
-  yaml_content <- "
-id: ADLB
-label: Laboratory Analysis Dataset
-class: BASIC DATA STRUCTURE
-structure: One record per subject per parameter per analysis visit
-keys: [USUBJID]
-population:
-  base:
-    - domain: LB
-      depends:
-        - NA
-      filter: NA
-  global:
-    - filter: 'SAFFL == \"Y\"'
-      depends:
-        - SAFFL
-columns:
-  - id: USUBJID
-rows:
-  - id: row_action_99
-    component:
-      id: row_action_99
-    depends: parameter_action_00
-parameters:
-  - id: parameter_action_00
-    component:
-      id: parameter_action_00
-"
-  adam_specifications <- setup_study_dir(list("adlb" = yaml_content))
-  study <- mighty.metadata::mighty_study(adam_specifications)
-  # ACT / ASSERT ---------------------------------------------------------------
-
-  expect_snapshot_error(process_adam_domain(study$ADLB, "ADLB"))
-})
-
-test_that("Parameter depends with wrong prefix should fail", {
-  # SETUP ----------------------------------------------------------------------
-
-  yaml_content <- "
-id: ADLB
-label: Laboratory Analysis Dataset
-class: BASIC DATA STRUCTURE
-structure: One record per subject per parameter per analysis visit
-keys: [USUBJID]
-population:
-  base:
-    - domain: LB
-      depends:
-        - NA
-      filter: NA
-  global:
-    - filter: 'SAFFL == \"Y\"'
-      depends:
-        - SAFFL
-columns:
-  - id: USUBJID
-rows:
-  - id: row_action_99
-    component:
-      id: row_action_99
-parameters:
-  - id: parameter_action_00
-    component:
-      id: parameter_action_00
-    depends: row_action_99
-"
-  adam_specifications <- setup_study_dir(list("adlb" = yaml_content))
-  study <- mighty.metadata::mighty_study(adam_specifications)
-  # ACT / ASSERT ---------------------------------------------------------------
-  expect_snapshot_error(process_adam_domain(study$ADLB, "ADLB"))
-})
-
 test_that("Dependencies with correct prefix should pass", {
   # SETUP ----------------------------------------------------------------------
 
@@ -139,26 +21,26 @@ columns:
   - id: USUBJID
   - id: VAR1
     depends: 
-    -  parameters.parameter_action_00
+    -  parameters.PARAMETER_ACTION_00
   - id: VAR2
     depends: 
-    -  rows.row_action_99
+    -  rows.ROW_ACTION_99
 rows:
-  - id: row_action_99
+  - id: ROW_ACTION_99
     component:
-      id: row_action_99
+      id: ROW_ACTION_99
     depends: 
-    -  parameters.parameter_action_00
-    -  parameters.parameter_action_01
+    -  parameters.PARAMETER_ACTION_00
+    -  parameters.PARAMETER_ACTION_01
 parameters:    
-  - id: parameter_action_00
+  - id: PARAMETER_ACTION_00
     component:
-      id: parameter_action_00
-  - id: parameter_action_01
+      id: PARAMETER_ACTION_00
+  - id: PARAMETER_ACTION_01
     component:
-      id: parameter_action_01
+      id: PARAMETER_ACTION_01
     depends: 
-    -  parameters.parameter_action_00
+    -  parameters.PARAMETER_ACTION_00
 "
   adam_specifications <- setup_study_dir(list("adlb" = yaml_content))
   study <- mighty.metadata::mighty_study(adam_specifications)
@@ -231,19 +113,19 @@ population:
 columns:
   - id: VAR1
     depends:
-      - rows.row_action_1
+      - rows.ROW_ACTION_1
   - id: VAR2
     depends:
-      - rows.row_action_99
+      - rows.ROW_ACTION_99
 rows:
-  - id: row_action_99
+  - id: ROW_ACTION_99
     component:
-      id: row_action_99
+      id: ROW_ACTION_99
 
 parameters:
-  - id: row_action_00
+  - id: ROW_ACTION_00
     component:
-      id: row_action_00
+      id: ROW_ACTION_00
 
 "
   adam_specifications <- setup_study_dir(list("adlb" = yaml_content))
@@ -255,7 +137,7 @@ parameters:
       "The following row actions are not defined, but are listed as row dependencies for either a column or another row action" # nolint: line_length_linter
     )
   # Row action not defined:
-  expect_match(err_$body, "- row_action_1", all = FALSE)
+  expect_match(err_$body, "- ROW_ACTION_1", all = FALSE)
   # Keys defined but not defined as column
   expect_match(
     err_$body,
@@ -400,11 +282,11 @@ columns:
   - id: USUBJID
   - id: PARAM
 rows:
-  - id: duplicate_row_id
+  - id: DUPLICATE_ROW_ID
     component:
       id: first_component
 parameters:    
-  - id: duplicate_row_id
+  - id: DUPLICATE_ROW_ID
     component:
       id: second_component
 "
@@ -417,7 +299,7 @@ parameters:
     expect_error(
       "The following row or parameter id\\(s\\) are defined multiple times:"
     )
-  expect_match(err_$body, "- duplicate_row_id", all = FALSE)
+  expect_match(err_$body, "- DUPLICATE_ROW_ID", all = FALSE)
 })
 
 test_that("missing population section fails validation", {

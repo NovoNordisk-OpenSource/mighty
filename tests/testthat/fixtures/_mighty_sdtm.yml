@@ -1,10 +1,10 @@
 keys:
-  dm:
+  DM:
     - STUDYID
     - USUBJID
-  sv:
+  SV:
     - STUDYID
     - USUBJID
-  dm_vaccine:
+  DM_VACCINE:
     - STUDYID
     - USUBJID

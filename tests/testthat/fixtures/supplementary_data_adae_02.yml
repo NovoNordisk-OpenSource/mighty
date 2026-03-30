@@ -7,7 +7,7 @@ keys:
 
 population:
   base:
-    - domain: ae
+    - domain: AE
       depends:
         - AEBODSYS_GRP
       filter: 'AEBODSYS_GRP == "MILD DISORDER"'
@@ -26,7 +26,7 @@ columns:
   - id: AEBODSYS
 
   - id: AGE
-    method: adsl.AGE
+    method: ADSL.AGE
 
   - id: AESEV_GRP
     component:

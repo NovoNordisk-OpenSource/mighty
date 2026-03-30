@@ -14,8 +14,8 @@ test_that("data_context provides metadata from sdtm.dm testdata", {
   # EXPECT ------------------------------------------------------------------
 
   # Test default table names (datasource = "sdtm")
-  expect_equal(names(dc$get_table_names()), c("sdtm.dm"))
-  expect_equal(dc$get_table_names()[[1]], "dm")
+  expect_equal(names(dc$get_table_names()), c("sdtm.DM"))
+  expect_equal(dc$get_table_names()[[1]], "DM")
 
   dm_columns <- c(
     "STUDYID",
@@ -45,12 +45,12 @@ test_that("data_context provides metadata from sdtm.dm testdata", {
     "DMDY"
   )
   expect_true(all(
-    dm_columns %in% names(dc$get_table_variables(table_name = "dm"))
+    dm_columns %in% names(dc$get_table_variables(table_name = "DM"))
   ))
-  expect_false(dc$has_variables(table_name = "dm", variable_name = "TOPICCD"))
+  expect_false(dc$has_variables(table_name = "DM", variable_name = "TOPICCD"))
   # Test variable from non-existing data set
   expect_false(dc$has_variables(
-    table_name = "dm_vaccine",
+    table_name = "DM_VACCINE",
     variable_name = "USUBJID"
   ))
 })
@@ -79,76 +79,75 @@ test_that("data_context provides metadata from sdtm and adam", {
   metadata <- dc$get_tables(datasources = c("metadata"))
   sdtmdata <- dc$get_tables()
   # EXPECT ------------------------------------------------------------------
-
   # Test default table names (datasource = "sdtm")
   expect_equal(
     sort(names(dc$get_table_names())),
     c(
-      "sdtm.ae",
-      "sdtm.dm",
-      "sdtm.dm_vaccine",
-      "sdtm.lb",
-      "sdtm.suppdm",
-      "sdtm.sv"
+      "sdtm.AE",
+      "sdtm.DM",
+      "sdtm.DM_VACCINE",
+      "sdtm.LB",
+      "sdtm.SUPPDM",
+      "sdtm.SV"
     )
   )
   expect_equal(
     sort(as.character(dc$get_table_names())),
-    c("ae", "dm", "dm_vaccine", "lb", "suppdm", "sv")
+    c("AE", "DM", "DM_VACCINE", "LB", "SUPPDM", "SV")
   )
 
   # Test table names in both SDTM and ADAM
   expect_equal(
     sort(names(dc$get_table_names(c("sdtm", "adam")))),
     c(
-      "adam.adsl",
-      "sdtm.ae",
-      "sdtm.dm",
-      "sdtm.dm_vaccine",
-      "sdtm.lb",
-      "sdtm.suppdm",
-      "sdtm.sv"
+      "adam.ADSL",
+      "sdtm.AE",
+      "sdtm.DM",
+      "sdtm.DM_VACCINE",
+      "sdtm.LB",
+      "sdtm.SUPPDM",
+      "sdtm.SV"
     )
   )
   expect_equal(
     sort(as.character(dc$get_table_names(c("sdtm", "adam")))),
-    c("adsl", "ae", "dm", "dm_vaccine", "lb", "suppdm", "sv")
+    c("ADSL", "AE", "DM", "DM_VACCINE", "LB", "SUPPDM", "SV")
   )
 
   expect_equal(
     dc$get_table_names(datasources = c("adam"), prefix_datasource = TRUE)[[1]],
-    c("adam.adsl")
+    c("adam.ADSL")
   )
   expect_equal(
     dc$get_table_names(datasources = c("adam"), prefix_datasource = TRUE)[[
-      "adam.adsl"
+      "adam.ADSL"
     ]],
-    c("adam.adsl")
+    c("adam.ADSL")
   )
   expect_equal(
     dc$get_table_names(datasources = c("adam"), prefix_datasource = FALSE)[[
-      "adam.adsl"
+      "adam.ADSL"
     ]],
-    c("adsl")
+    c("ADSL")
   )
 
   expect_true(dc$has_variables(
-    table_name = "dm",
+    table_name = "DM",
     variable_name = c("STUDYID", "USUBJID")
   ))
   expect_false(dc$has_variables(
-    table_name = "dm",
+    table_name = "DM",
     variable_name = "NONEXISTING"
   ))
   expect_true(dc$has_variables(
     datasource = "metadata",
-    table_name = "mdvisit",
+    table_name = "MDVISIT",
     variable_name = "STUDYID"
   ))
 
   expect_equal(
-    dc$get_table_variables(table_name = "sv"),
-    dc$get_table_variables(datasource = "metadata", table_name = "mdvisit")
+    dc$get_table_variables(table_name = "SV"),
+    dc$get_table_variables(datasource = "metadata", table_name = "MDVISIT")
   )
 })
 
@@ -167,15 +166,15 @@ test_that("data_context provide column metadata", {
   dc <- data_context$new(cnt)
   # EXPECT ------------------------------------------------------------------
 
-  expect_equal(dc$get_variable_type("adsl", "USUBJID", "adam"), "character")
-  expect_equal(dc$get_variable_type("adsl", "AGE", "adam"), "numeric")
+  expect_equal(dc$get_variable_type("ADSL", "USUBJID", "adam"), "character")
+  expect_equal(dc$get_variable_type("ADSL", "AGE", "adam"), "numeric")
 
   expect_equal(
-    dc$get_variable_label("dm", "USUBJID"),
+    dc$get_variable_label("DM", "USUBJID"),
     "Unique Subject Identifier"
   )
   expect_equal(
-    dc$get_variable_label("adsl", "USUBJID", "adam"),
-    dc$get_variable_label("dm", "USUBJID")
+    dc$get_variable_label("ADSL", "USUBJID", "adam"),
+    dc$get_variable_label("DM", "USUBJID")
   )
 })

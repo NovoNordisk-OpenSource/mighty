@@ -16,7 +16,7 @@ keys:
 
 population:
   base:
-    - domain: lb
+    - domain: LB
       depends:
         - LBSTRESN
       filter: '!is.na(LBSTRESN)'
@@ -59,8 +59,8 @@ test_that("No filter_domain actions when no domains have filter dependencies", {
     code_id = NA_character_,
     type = "col_copy",
     depend_cols = list(
-      data.table(column_name = "USUBJID", domain = "lb", domain_type = "sdtm"),
-      data.table(column_name = "PARAMCD", domain = "lb", domain_type = "sdtm")
+      data.table(column_name = "USUBJID", domain = "LB", domain_type = "sdtm"),
+      data.table(column_name = "PARAMCD", domain = "LB", domain_type = "sdtm")
     ),
     outputs = list("USUBJID", "PARAMCD"),
     depend_rows = list(NA),
@@ -89,8 +89,8 @@ test_that("Self-referential filter dependency creates filter_domain action", {
     code_id = NA_character_,
     type = "col_copy",
     depend_cols = list(
-      data.table(column_name = "USUBJID", domain = "lb", domain_type = "sdtm"),
-      data.table(column_name = "PARAMCD", domain = "lb", domain_type = "sdtm")
+      data.table(column_name = "USUBJID", domain = "LB", domain_type = "sdtm"),
+      data.table(column_name = "PARAMCD", domain = "LB", domain_type = "sdtm")
     ),
     outputs = list("USUBJID", "PARAMCD"),
     depend_rows = list(NA),
@@ -126,8 +126,8 @@ test_that("External domain dependency includes join keys", {
     code_id = NA_character_,
     type = "col_copy",
     depend_cols = list(
-      data.table(column_name = "USUBJID", domain = "lb", domain_type = "sdtm"),
-      data.table(column_name = "PARAMCD", domain = "lb", domain_type = "sdtm")
+      data.table(column_name = "USUBJID", domain = "LB", domain_type = "sdtm"),
+      data.table(column_name = "PARAMCD", domain = "LB", domain_type = "sdtm")
     ),
     outputs = list("USUBJID", "PARAMCD"),
     depend_rows = list(NA),
@@ -173,8 +173,8 @@ test_that("Mixed self and external dependencies handled correctly", {
     code_id = NA_character_,
     type = "col_copy",
     depend_cols = list(
-      data.table(column_name = "USUBJID", domain = "lb", domain_type = "sdtm"),
-      data.table(column_name = "PARAMCD", domain = "lb", domain_type = "sdtm")
+      data.table(column_name = "USUBJID", domain = "LB", domain_type = "sdtm"),
+      data.table(column_name = "PARAMCD", domain = "LB", domain_type = "sdtm")
     ),
     outputs = list("USUBJID", "PARAMCD"),
     depend_rows = list(NA),
@@ -224,8 +224,8 @@ test_that("Multiple external domain dependencies include all join keys", {
     code_id = NA_character_,
     type = "col_copy",
     depend_cols = list(
-      data.table(column_name = "USUBJID", domain = "lb", domain_type = "sdtm"),
-      data.table(column_name = "PARAMCD", domain = "lb", domain_type = "sdtm")
+      data.table(column_name = "USUBJID", domain = "LB", domain_type = "sdtm"),
+      data.table(column_name = "PARAMCD", domain = "LB", domain_type = "sdtm")
     ),
     outputs = list("USUBJID", "PARAMCD"),
     depend_rows = list(NA),
@@ -276,10 +276,10 @@ test_that("Multiple domains with filters each get filter_domain action", {
     code_id = NA_character_,
     type = "col_copy",
     depend_cols = list(
-      data.table(column_name = "USUBJID", domain = "lb", domain_type = "sdtm"),
-      data.table(column_name = "PARAMCD", domain = "lb", domain_type = "sdtm"),
-      data.table(column_name = "USUBJID", domain = "vs", domain_type = "sdtm"),
-      data.table(column_name = "PARAMCD", domain = "vs", domain_type = "sdtm")
+      data.table(column_name = "USUBJID", domain = "LB", domain_type = "sdtm"),
+      data.table(column_name = "PARAMCD", domain = "LB", domain_type = "sdtm"),
+      data.table(column_name = "USUBJID", domain = "VS", domain_type = "sdtm"),
+      data.table(column_name = "PARAMCD", domain = "VS", domain_type = "sdtm")
     ),
     outputs = list("USUBJID", "PARAMCD", "USUBJID", "PARAMCD"),
     depend_rows = list(NA),
@@ -320,8 +320,8 @@ test_that("Filter dependency on col_compute includes compute output", {
     code_id = c(NA_character_, NA_character_, "der_saffl.mustache"),
     type = c("col_copy", "col_copy", "col_compute"),
     depend_cols = list(
-      data.table(column_name = "USUBJID", domain = "lb", domain_type = "sdtm"),
-      data.table(column_name = "PARAMCD", domain = "lb", domain_type = "sdtm"),
+      data.table(column_name = "USUBJID", domain = "LB", domain_type = "sdtm"),
+      data.table(column_name = "PARAMCD", domain = "LB", domain_type = "sdtm"),
       data.table(column_name = "USUBJID", domain = "ADLB", domain_type = "adam")
     ),
     outputs = list("USUBJID", "PARAMCD", "SAFFL"),
@@ -353,8 +353,8 @@ test_that("External domain with multi-column keys includes all keys", {
     code_id = NA_character_,
     type = "col_copy",
     depend_cols = list(
-      data.table(column_name = "USUBJID", domain = "lb", domain_type = "sdtm"),
-      data.table(column_name = "PARAMCD", domain = "lb", domain_type = "sdtm")
+      data.table(column_name = "USUBJID", domain = "LB", domain_type = "sdtm"),
+      data.table(column_name = "PARAMCD", domain = "LB", domain_type = "sdtm")
     ),
     outputs = list("USUBJID", "PARAMCD"),
     depend_rows = list(NA),
@@ -393,8 +393,8 @@ test_that("Domain filter present adds SRC_ to depend_cols", {
     code_id = NA_character_,
     type = "col_copy",
     depend_cols = list(
-      data.table(column_name = "USUBJID", domain = "lb", domain_type = "sdtm"),
-      data.table(column_name = "PARAMCD", domain = "lb", domain_type = "sdtm")
+      data.table(column_name = "USUBJID", domain = "LB", domain_type = "sdtm"),
+      data.table(column_name = "PARAMCD", domain = "LB", domain_type = "sdtm")
     ),
     outputs = list("USUBJID", "PARAMCD"),
     depend_rows = list(NA),
@@ -428,8 +428,8 @@ test_that("Multiple domains with col_copy filter dependencies", {
     code_id = NA_character_,
     type = "col_copy",
     depend_cols = list(
-      data.table(column_name = "DOMAIN", domain = "dm", domain_type = "sdtm"),
-      data.table(column_name = "LBSEQ", domain = "lb", domain_type = "sdtm")
+      data.table(column_name = "DOMAIN", domain = "DM", domain_type = "sdtm"),
+      data.table(column_name = "LBSEQ", domain = "LB", domain_type = "sdtm")
     ),
     outputs = list("DOMAIN", "LBSEQ"),
     depend_rows = list(NA),
@@ -468,8 +468,8 @@ test_that("Multiple domains with col_compute filter dependencies", {
     code_id = c("der_flag1.mustache", "der_flag2.mustache"),
     type = "col_compute",
     depend_cols = list(
-      data.table(column_name = "X", domain = "dm", domain_type = "sdtm"),
-      data.table(column_name = "Y", domain = "lb", domain_type = "sdtm")
+      data.table(column_name = "X", domain = "DM", domain_type = "sdtm"),
+      data.table(column_name = "Y", domain = "LB", domain_type = "sdtm")
     ),
     outputs = list("FLAG1", "FLAG2"),
     depend_rows = list(NA),
@@ -505,8 +505,8 @@ test_that("Domain filter absent does not add SRC_ to depend_cols", {
     code_id = NA_character_,
     type = "col_copy",
     depend_cols = list(
-      data.table(column_name = "USUBJID", domain = "lb", domain_type = "sdtm"),
-      data.table(column_name = "PARAMCD", domain = "lb", domain_type = "sdtm")
+      data.table(column_name = "USUBJID", domain = "LB", domain_type = "sdtm"),
+      data.table(column_name = "PARAMCD", domain = "LB", domain_type = "sdtm")
     ),
     outputs = list("USUBJID", "PARAMCD"),
     depend_rows = list(NA),

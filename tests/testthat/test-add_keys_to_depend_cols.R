@@ -11,7 +11,7 @@ structure: One record per subject
 keys: [USUBJID, STUDYID]
 population:
   base:
-    - domain: dm
+    - domain: DM
       depends:
         - NA
       filter: NA

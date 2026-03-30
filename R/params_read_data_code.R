@@ -4,7 +4,7 @@
 #'  data sets and selects required columns based on payload specifications.
 #'
 #' @param payload Character vector. Variable specifications in "domain.variable"
-#'   format (e.g., c("dm.USUBJID", "vs.VSTESTCD", "adsl.AGE")).
+#'   format (e.g., c("DM.USUBJID", "VS.VSTESTCD", "ADSL.AGE")).
 #' @param domain Character. Target ADaM domain name for self-reference detection.
 #' @param path_connector_config Character string. Path to the directory
 #'   containing the connector configuration file (`_connector.yml`).
@@ -31,7 +31,7 @@
 #'
 #' Generated code typically follows this pattern:
 #' \preformatted{
-#' dm <-  read_domain(file.path(path_connector_config, "sdtm", "dm.xpt")) |>
+#' DM <- read_domain(file.path(path_connector_config, "sdtm", "dm.xpt")) |>
 #'   select(USUBJID, AGE, SEX)
 #' }
 #' @noRd

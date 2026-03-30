@@ -9,7 +9,7 @@ keys:
 
 population:
   base:
-    - domain: lb
+    - domain: LB
       depends:
         - NA
       filter: NA
@@ -49,95 +49,95 @@ columns:
     component:
       id: "{path_base}/fixtures/components/lbtest_01.R"
     depends:
-      - rows.new_aval_01
+      - rows.NEW_AVAL_01
 
   - id: AVAL_GRP
     component:
       id: "{path_base}/fixtures/components/aval_grp_01.R"
     depends:
-      - rows.new_microcytes
+      - rows.NEW_MICROCYTES
 
   - id: AVAL_GRP2
     component:
       id: "{path_base}/fixtures/components/aval_grp_02.R"
     depends:
-      - rows.new_microcytes
+      - rows.NEW_MICROCYTES
 
 rows:
-  - id: new_microcytes
+  - id: NEW_MICROCYTES
     component:
       id: "{path_base}/fixtures/components/new_lbtest_01.R"
 
-  - id: new_macrocytes
+  - id: NEW_MACROCYTES
     component:
       id: "{path_base}/fixtures/components/new_lbtest_02.R"
 
-  - id: new_microcytes2
+  - id: NEW_MICROCYTES2
     component:
       id: "{path_base}/fixtures/components/new_lbtest_03.R"
     depends:
-      - rows.new_microcytes
+      - rows.NEW_MICROCYTES
 
-  - id: new_macrocytes2
+  - id: NEW_MACROCYTES2
     component:
       id: "{path_base}/fixtures/components/new_lbtest_04.R"
     depends:
-      - rows.new_macrocytes
+      - rows.NEW_MACROCYTES
 
-  - id: new_microcytes2_macrocytes2
+  - id: NEW_MICROCYTES2_MACROCYTES2
     component:
       id: "{path_base}/fixtures/components/new_lbtest_05.R"
     depends:
-      - rows.new_microcytes
-      - rows.new_macrocytes
+      - rows.NEW_MICROCYTES
+      - rows.NEW_MACROCYTES
 
-  - id: new_microcytes34
+  - id: NEW_MICROCYTES34
     component:
       id: "{path_base}/fixtures/components/new_lbtest_06.R"
     depends:
-      - rows.new_microcytes2
+      - rows.NEW_MICROCYTES2
 
 parameters:
-  - id: new_aval_01
+  - id: NEW_AVAL_01
     component:
       id: "{path_base}/fixtures/components/new_aval_01.R"
 
-  - id: new_aval_02
+  - id: NEW_AVAL_02
     component:
       id: "{path_base}/fixtures/components/new_aval_02.R"
     depends:
-      - parameters.new_aval_01
+      - parameters.NEW_AVAL_01
 
-  - id: new_aval_03
+  - id: NEW_AVAL_03
     component:
       id: "{path_base}/fixtures/components/new_aval_03.R"
 
-  - id: new_aval_04
+  - id: NEW_AVAL_04
     component:
       id: "{path_base}/fixtures/components/new_aval_04.R"
 
-  - id: new_visitnum_01
+  - id: NEW_VISITNUM_01
     component:
       id: "{path_base}/fixtures/components/new_visitnum_01.R"
 
-  - id: new_visitnum_02
+  - id: NEW_VISITNUM_02
     component:
       id: "{path_base}/fixtures/components/new_visitnum_02.R"
     depends:
-      - parameters.new_visitnum_01
+      - parameters.NEW_VISITNUM_01
 
-  - id: new_protein
+  - id: NEW_PROTEIN
     component:
       id: "{path_base}/fixtures/components/new_lbtest07.mustache"
       with:
         variable: Protein
 
-  - id: new_specific_gravity
+  - id: NEW_SPECIFIC_GRAVITY
     component:
       id: "{path_base}/fixtures/components/new_lbtest07.mustache"
       with:
         variable: Specific Gravity
 
-  - id: new_phosphate
+  - id: NEW_PHOSPHATE
     component:
       id: "{path_base}/fixtures/components/new_lbtest_09.R"

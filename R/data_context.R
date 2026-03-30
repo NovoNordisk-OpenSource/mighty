@@ -44,15 +44,15 @@
 #' tables <- dc$get_table_names(c("sdtm", "adam"))
 #'
 #' # Inspect table structure
-#' dm_vars <- dc$get_table_variables("dm", "sdtm")
+#' dm_vars <- dc$get_table_variables("DM", "sdtm")
 #' ```
 #'
 #' **Variable validation:**
 #' ```r
 #' # Check variable existence and properties
-#' has_age <- dc$has_variables("dm", "AGE", "sdtm")
-#' age_type <- dc$get_variable_type("dm", "AGE", "sdtm")
-#' age_label <- dc$get_variable_label("dm", "AGE", "sdtm")
+#' has_age <- dc$has_variables("DM", "AGE", "sdtm")
+#' age_type <- dc$get_variable_type("DM", "AGE", "sdtm")
+#' age_label <- dc$get_variable_label("DM", "AGE", "sdtm")
 #' ```
 #'
 #' @examples
@@ -65,9 +65,9 @@
 #' sdtm_tables <- dc$get_table_names("sdtm")
 #'
 #' # Variable inspection
-#' has_age <- dc$has_variables("dm", "AGE", "sdtm")
-#' age_type <- dc$get_variable_type("dm", "AGE", "sdtm")
-#' age_label <- dc$get_variable_label("dm", "AGE", "sdtm")
+#' has_age <- dc$has_variables("DM", "AGE", "sdtm")
+#' age_type <- dc$get_variable_type("DM", "AGE", "sdtm")
+#' age_label <- dc$get_variable_label("DM", "AGE", "sdtm")
 #'
 #' # Get overview
 #' dc$print()
@@ -157,7 +157,7 @@ data_context <- R6::R6Class(
     #' sdtm_tables <- dc$get_tables("sdtm")
     #'
     #' # Access specific table
-    #' dm_table <- sdtm_tables[["sdtm.dm"]]
+    #' dm_table <- sdtm_tables[["sdtm.DM"]]
     #'
     #' # Get tables from multiple datasources
     #' all_tables <- dc$get_tables(c("sdtm", "adam"))
@@ -178,7 +178,7 @@ data_context <- R6::R6Class(
     #' @examples
     #' \dontrun{
     #' # Get DM table variables
-    #' dm_vars <- dc$get_table_variables("dm", "sdtm")
+    #' dm_vars <- dc$get_table_variables("DM", "sdtm")
     #'
     #' # Inspect variable types
     #' sapply(dm_vars, class)
@@ -200,10 +200,10 @@ data_context <- R6::R6Class(
     #' @examples
     #' \dontrun{
     #' # Check if AGE exists in DM table
-    #' has_age <- dc$has_variables("dm", "AGE", "sdtm")
+    #' has_age <- dc$has_variables("DM", "AGE", "sdtm")
     #'
     #' # Check multiple variables
-    #' variables_exist <- dc$has_variables("dm", c("AGE", "SEX", "RACE"), "sdtm")
+    #' variables_exist <- dc$has_variables("DM", c("AGE", "SEX", "RACE"), "sdtm")
     #' }
     has_variables = function(table_name, variable_name, datasource = "sdtm") {
       dc_has_variables(table_name, variable_name, datasource, private)
@@ -222,12 +222,12 @@ data_context <- R6::R6Class(
     #' @examples
     #' \dontrun{
     #' # Get AGE variable type
-    #' age_type <- dc$get_variable_type("dm", "AGE", "sdtm")
+    #' age_type <- dc$get_variable_type("DM", "AGE", "sdtm")
     #' print(age_type)  # e.g., "numeric"
     #'
     #' # Check types for multiple variables
     #' var_types <- sapply(c("AGE", "SEX", "USUBJID"),
-    #'                    function(var) dc$get_variable_type("dm", var, "sdtm"))
+    #'                    function(var) dc$get_variable_type("DM", var, "sdtm"))
     #' }
     get_variable_type = function(
       table_name,
@@ -251,12 +251,12 @@ data_context <- R6::R6Class(
     #' @examples
     #' \dontrun{
     #' # Get AGE variable label
-    #' age_label <- dc$get_variable_label("dm", "AGE", "sdtm")
+    #' age_label <- dc$get_variable_label("DM", "AGE", "sdtm")
     #' print(age_label)  # e.g., "Age"
     #'
     #' # Get labels for multiple variables
     #' var_labels <- sapply(c("AGE", "SEX", "RACE"),
-    #'                     function(var) dc$get_variable_label("dm", var, "sdtm"))
+    #'                     function(var) dc$get_variable_label("DM", var, "sdtm"))
     #' }
     get_variable_label = function(
       table_name,
@@ -318,7 +318,7 @@ dc_init_tables <- function(datasourcename, private) {
           zephyr::msg_debug(paste0("No data in ", ds))
         } else {
           for (domain in datasets) {
-            domain_name <- sub("\\.[^.]+$", "", domain)
+            domain_name <- toupper(sub("\\.[^.]+$", "", domain))
             variables <- tbl$tbl_cnt(domain) |>
               utils::head(0) |>
               dplyr::collect()

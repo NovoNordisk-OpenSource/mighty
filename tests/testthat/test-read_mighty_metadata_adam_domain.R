@@ -8,7 +8,7 @@ structure: One record per subject
 keys: [USUBJID]
 population:
   base:
-    - domain: dm
+    - domain: DM
       depends:
         - NA
       filter: NA
