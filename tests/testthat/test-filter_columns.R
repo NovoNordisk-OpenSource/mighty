@@ -1,11 +1,12 @@
 test_that("Global filter and domain filter are equivalent when same filter use on each domain", {
   # ARRANGE -----------------------------------------------------------------
   path_connector_config <- withr::local_tempdir()
-  mighty_yml <- "keys:
-  dm:
-    - USUBJID
-  dm_vaccine:
-    - USUBJID"
+  mighty_yml <- "study_id: test_study
+external_data:
+  - id: DM
+    keys: [USUBJID]
+  - id: DM_VACCINE
+    keys: [USUBJID]"
 
   setup_testdata(
     testdata = "pharmaverse",

@@ -166,7 +166,7 @@ get_filter_join_keys_external_domains <- function(
         "i" = info_msg
       ),
       suggestions = c(
-        "Add key definitions to {.file _mighty.yml} for the referenced domains",
+        "Add key definitions to {.file _mighty.yml} {.field /external_data} for the referenced domains",
         "Verify the domain names are spelled correctly",
         "Ensure all domains used in filters are defined in your trial metadata"
       )

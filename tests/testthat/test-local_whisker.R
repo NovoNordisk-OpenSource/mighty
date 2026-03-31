@@ -51,7 +51,7 @@ columns:
     yml,
     data = list(ady_custom = tmp_file)
   )
-  mighty_yml_content <- "keys: {}"
+  mighty_yml_content <- "study_id: test_study"
   adam_specifications <- setup_study_dir(list(
     "adsl" = yaml_content,
     "_mighty" = mighty_yml_content

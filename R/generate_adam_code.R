@@ -136,7 +136,7 @@ generate_adam_code <- function(
 
   domain_keys <- collate_primary_keys(
     ui_yml,
-    study@info$keys
+    study@info$external_data
   )
   ui_init <- purrr::list_transpose(ui_yml)[["init"]]
   ui_init_t <- purrr::list_transpose(ui_init, simplify = FALSE)

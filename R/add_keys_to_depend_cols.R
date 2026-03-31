@@ -111,7 +111,7 @@ add_foreign_key_as_depends_col <- function(
         category = "Unrecognized domain",
         details = domain_msg,
         suggestions = c(
-          "Define the domain in your {.file _mighty.yml} keys section",
+          "Define the domain in {.file _mighty.yml} {.field /external_data}",
           "Check for typos in the domain name",
           "Ensure the domain specification file exists"
         )

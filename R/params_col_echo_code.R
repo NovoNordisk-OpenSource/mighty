@@ -49,8 +49,8 @@ pre_process_generate_rename_left_join_code <- function(
       category = "Missing domain keys",
       details = keys_msg,
       suggestions = c(
-        "Add key definitions to {.file _mighty.yml} for this domain",
-        "Ensure keys section includes all referenced domains",
+        "Add key definitions to {.file _mighty.yml} {.field /external_data} for this domain",
+        "Ensure {.field external_data} includes all referenced domains",
         "Check domain name spelling matches specification file"
       )
     )

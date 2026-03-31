@@ -147,44 +147,6 @@ parameters:
   expect_match(err_$body, "- USUBJID", all = FALSE)
 })
 
-test_that("duplicate column IDs cause validation error", {
-  # SETUP ----------------------------------------------------------------------
-  # This test verifies that duplicate column IDs are now caught by validation
-  # before transformations can silently deduplicate them
-
-  yaml_content <- "
-id: ADLB
-label: Laboratory Analysis Dataset
-class: BASIC DATA STRUCTURE
-structure: One record per subject per parameter per analysis visit
-keys: [USUBJID]
-population:
-  base:
-    - domain: LB
-      depends:
-        - NA
-      filter: NA
-columns:
-  - id: USUBJID
-  - id: VAR1
-    component:
-      id: first_component
-  - id: VAR1
-    component:
-      id: second_component
-"
-  adam_specifications <- setup_study_dir(list("adlb" = yaml_content))
-
-  # ACT / ASSERT ---------------------------------------------------------------
-  # Test that validation error is caught: Rule "val_no_duplicate_columns"
-  study <- mighty.metadata::mighty_study(adam_specifications)
-  err_ <- process_adam_domain(study$ADLB, "ADLB") |>
-    expect_error(
-      "The following columns are defined multiple times"
-    )
-  expect_match(err_$body, "VAR1", all = FALSE)
-})
-
 test_that("keys not defined in columns fail validation checks", {
   # SETUP ----------------------------------------------------------------------
 
@@ -222,42 +184,6 @@ columns:
       "The following columns are specified as keys but are not defined in the columns section"
     )
   expect_match(err_$body, "STUDYID", all = FALSE)
-})
-
-test_that("unique column IDs pass validation", {
-  # SETUP ----------------------------------------------------------------------
-  # This test verifies that when columns have unique IDs, val_no_duplicate_columns()
-  # returns list(valid = True, errors = character(0))
-
-  yaml_content <- "
-id: ADLB
-label: Laboratory Analysis Dataset
-class: BASIC DATA STRUCTURE
-structure: One record per subject per parameter per analysis visit
-keys: [USUBJID]
-population:
-  base:
-    - domain: LB
-      depends:
-        - NA
-      filter: NA
-columns:
-  - id: USUBJID
-  - id: VAR1
-    component:
-      id: first_component
-  - id: VAR2
-    component:
-      id: second_component
-"
-  adam_specifications <- setup_study_dir(list("adlb" = yaml_content))
-  study <- mighty.metadata::mighty_study(adam_specifications)
-
-  # ACT / ASSERT ---------------------------------------------------------------
-  # Should pass validation without error
-  expect_no_error(
-    process_adam_domain(study$ADLB, "ADLB")
-  )
 })
 
 test_that("duplicate row IDs cause validation error", {

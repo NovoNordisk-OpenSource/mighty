@@ -22,10 +22,13 @@ dir.create(study_dir, showWarnings = FALSE, recursive = TRUE)
 assign("study_dir", study_dir, envir = .GlobalEnv)
 
 
-# Create _mighty.yml with key specifications
-mighty_yaml <- 'keys:
-  DM: [USUBJID, STUDYID]
-  LB: [USUBJID, STUDYID, LBSEQ]
+# Create _mighty.yml with external data specifications
+mighty_yaml <- 'study_id: example_study
+external_data:
+  - id: DM
+    keys: [USUBJID, STUDYID]
+  - id: LB
+    keys: [USUBJID, STUDYID, LBSEQ]
 '
 writeLines(mighty_yaml, file.path(study_dir, "_mighty.yml"))
 assign("mighty_yaml", mighty_yaml, envir = .GlobalEnv)

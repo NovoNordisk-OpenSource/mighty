@@ -10,9 +10,9 @@ vignette: >
 
 The `_mighty.yml` file provides study-level metadata that spans across all ADaM domains. This file should be placed in the study directory alongside individual ADaM domain specification files.
 
-# Primary key mappings
+# External data
 
-The `keys` section specifies primary keys for all datasets that will be available at runtime. This includes:
+The `external_data` section specifies primary keys for all external datasets that will be available at runtime. This includes:
 
 - **SDTM domains** (e.g., DM, EX, LB)
 - **Metadata datasets** (e.g., MDPARAM, MDVISIT)
@@ -25,9 +25,13 @@ The `keys` section specifies primary keys for all datasets that will be availabl
 ### Example:
 
 ```yml
-keys:
-  DM: [USUBJID, STUDYID]
-  EX: [USUBJID]
-  MDPARAM: [STUDYID, TOPICCD]
+study_id: my_study
+external_data:
+  - id: DM
+    keys: [USUBJID, STUDYID]
+  - id: EX
+    keys: [USUBJID]
+  - id: MDPARAM
+    keys: [STUDYID, TOPICCD]
 ```
 

@@ -73,23 +73,6 @@ val_no_duplicate_ids <- function(
   )
 }
 
-#' Validate that column names are unique
-#'
-#' This rule checks that no column names are duplicated within the
-#' columns section of the raw YAML data.
-#'
-#' @param yaml_content Raw YAML content structure from mighty_metadata
-#' @param context Validation context (yaml_file, ruleset_name, etc.)
-#' @return List with 'valid' (logical) and 'errors' (character vector)
-#' @noRd
-val_no_duplicate_columns <- function(yaml_content, context = list()) {
-  val_no_duplicate_ids(
-    sections = list(yaml_content$columns),
-    error_msg_template = "columns",
-    context = context
-  )
-}
-
 #' Validate that row/parameter action IDs are unique
 #'
 #' This rule checks that no row action IDs are duplicated within the

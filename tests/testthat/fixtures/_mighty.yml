@@ -1,15 +1,12 @@
-keys:
-  EX:
-    - USUBJID
-  DS:
-    - USUBJID
-  MDPARAM:
-    - STUDYID
-    - TOPICCD
-  MDVISIT:
-    - STUDYID
-    - AVISITN
-  MDFLOW:
-    - STUDYID
-    - AVISITN
-    - TOPICCD
+study_id: test_study
+external_data:
+  - id: EX
+    keys: USUBJID
+  - id: DS
+    keys: [USUBJID]
+  - id: MDPARAM
+    keys: [STUDYID, TOPICCD]
+  - id: MDVISIT
+    keys: [STUDYID, AVISITN]
+  - id: MDFLOW
+    keys: [STUDYID, AVISITN, TOPICCD]

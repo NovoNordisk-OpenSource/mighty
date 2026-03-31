@@ -1,10 +1,8 @@
-keys:
-  DM:
-    - STUDYID
-    - USUBJID
-  SV:
-    - STUDYID
-    - USUBJID
-  DM_VACCINE:
-    - STUDYID
-    - USUBJID
+study_id: test_study
+external_data:
+  - id: DM
+    keys: [STUDYID, USUBJID]
+  - id: SV
+    keys: [STUDYID, USUBJID]
+  - id: DM_VACCINE
+    keys: [STUDYID, USUBJID]

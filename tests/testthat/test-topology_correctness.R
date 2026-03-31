@@ -43,7 +43,7 @@ test_that("Validation warning occurs when component uses ADSL implicitly without
     component_file
   )
 
-  mighty_yml_content <- "keys: {}"
+  mighty_yml_content <- "study_id: test_study"
   adam_specifications <- setup_study_dir(list(
     "adsl" = yaml_content,
     "_mighty" = mighty_yml_content
@@ -115,7 +115,7 @@ test_that("Topology is generated correctly when component declares dependencies 
     component_file
   )
 
-  mighty_yml_content <- "keys: {}"
+  mighty_yml_content <- "study_id: test_study"
   adam_specifications <- setup_study_dir(list(
     "adsl" = yaml_content,
     "_mighty" = mighty_yml_content
@@ -203,7 +203,7 @@ test_that("Warning message lists all output columns from component with missing 
   # edges are created for ADSL, this does not make the topology for ADSL invalid as this
   # is per design of the \code{make_edges()}
   # In this test case, there are no edges in the dependency graph.
-  mighty_yml_content <- "keys: {}"
+  mighty_yml_content <- "study_id: test_study"
   adam_specifications <- setup_study_dir(list(
     "adsl" = readLines(test_path("fixtures", "skeleton_adsl.yml")),
     "adlb" = yaml_content,
@@ -300,7 +300,7 @@ test_that("Warn if two domains but one has component with missing depends", {
   ))
 
   # ADLB content has no glue placeholders, use directly
-  mighty_yml_content <- "keys: {}"
+  mighty_yml_content <- "study_id: test_study"
   adam_specifications <- setup_study_dir(list(
     "adsl" = adsl_processed,
     "adlb" = yaml_content,
@@ -397,7 +397,7 @@ test_that("Validation with mix of components warning when no @depends on compone
           id: ",
     component_valid_file
   )
-  mighty_yml_content <- "keys: {}"
+  mighty_yml_content <- "study_id: test_study"
   adam_specifications <- setup_study_dir(list(
     "adsl" = yaml_content,
     "_mighty" = mighty_yml_content
@@ -491,7 +491,7 @@ test_that("Validation with two domains throws warning when no @depends on compon
           id: ",
     component_invalid_file
   )
-  mighty_yml_content <- "keys: {}"
+  mighty_yml_content <- "study_id: test_study"
   adam_specifications <- setup_study_dir(list(
     "adsl" = yaml_content_ADSL,
     "adlb" = yaml_content_ADLB,
@@ -563,7 +563,7 @@ test_that("Error when ADaM specification is missing init_domain (no population.b
     component_file
   )
 
-  mighty_yml_content <- "keys: {}"
+  mighty_yml_content <- "study_id: test_study"
   adam_specifications <- setup_study_dir(list(
     "adsl" = yaml_content,
     "_mighty" = mighty_yml_content

@@ -12,7 +12,7 @@
       i These domains must have join keys defined to be used in filters
       
       Suggestions:
-      * Add key definitions to '_mighty.yml' for the referenced domains
+      * Add key definitions to '_mighty.yml' /external_data for the referenced domains
       * Verify the domain names are spelled correctly
       * Ensure all domains used in filters are defined in your trial metadata
 

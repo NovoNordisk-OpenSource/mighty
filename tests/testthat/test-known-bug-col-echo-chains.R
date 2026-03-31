@@ -62,7 +62,7 @@ columns:
     method: ADSL.STUDYID2 
 
 "
-  mighty_yml_content <- "keys: {}"
+  mighty_yml_content <- "study_id: test_study"
   adam_specifications <- setup_study_dir(list(
     "adsl" = yaml_content_adsl,
     "adlb" = yaml_content_adlb,

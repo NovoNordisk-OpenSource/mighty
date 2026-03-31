@@ -29,9 +29,9 @@ Additionally (and optional), mighty can render programs that are executable, bas
 
 The `_mighty.yml` file serves as the central repository for study-level metadata required by mighty. It contains:
 
-- **Primary keys**: Key variables for all tables relevant to ADaM domains, including SDTM, metadata (MD data sets), and ADaM tables
+- **External data**: Key variables for all external datasets relevant to ADaM domains, including SDTM, metadata (MD data sets), and ADaM tables
 
-The primary keys specified for each dataset establish the relationships between tables by defining the columns used for joining operations. When mighty needs to combine data from multiple sources, it uses these primary keys to determine the appropriate join logic across SDTM, metadata, and ADaM data sets. See `vignette("trial_metadata")` for more details.
+The primary keys specified for each external dataset establish the relationships between tables by defining the columns used for joining operations. When mighty needs to combine data from multiple sources, it uses these primary keys to determine the appropriate join logic across SDTM, metadata, and ADaM data sets. See `vignette("trial_metadata")` for more details.
 
 ## ADaM Specification
 

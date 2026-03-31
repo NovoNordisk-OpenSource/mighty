@@ -103,7 +103,6 @@ get_business_rules <- function(ruleset_name) {
         val_method_and_component_id_not_both_populated
       ),
       collect_errors = register_rules(
-        val_no_duplicate_columns,
         val_no_duplicate_row_parameter_ids,
         val_depend_rows,
         val_keys_included_as_columns
@@ -114,7 +113,6 @@ get_business_rules <- function(ruleset_name) {
     list(stop_on_error = list(), collect_errors = list())
 }
 
-# Update your handle_business_logic_errors function
 handle_business_logic_errors <- function(all_errors, domain_name) {
   error_messages <- unlist(all_errors, use.names = FALSE)
   names(error_messages) <- rep("*", length(error_messages))

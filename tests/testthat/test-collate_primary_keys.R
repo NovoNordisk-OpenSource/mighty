@@ -25,10 +25,10 @@ test_that("Error when domain keys are defined in both _mighty.yml and ADaM speci
 test_that("collate_primary_keys combines keys from both sources when no duplicates", {
   # SETUP -------------------------------------------------------------------
   ui_yml <- list(adlb = list(keys = c("USUBJID", "PARAMCD")))
-  keys <- list(EX = c("USUBJID"))
+  external_data <- list(list(id = "EX", keys = c("USUBJID")))
 
   # ACT ---------------------------------------------------------------------
-  result <- collate_primary_keys(ui_yml, keys)
+  result <- collate_primary_keys(ui_yml, external_data)
 
   # EXPECT ------------------------------------------------------------------
   expect_length(result, 2)
@@ -42,13 +42,13 @@ test_that("collate_primary_keys converts domain names to uppercase", {
     adsl = list(keys = c("USUBJID"))
   )
 
-  keys <- list(
-    ex = c("USUBJID"),
-    DM = c("USUBJID")
+  external_data <- list(
+    list(id = "ex", keys = c("USUBJID")),
+    list(id = "DM", keys = c("USUBJID"))
   )
 
   # ACT ---------------------------------------------------------------------
-  result <- collate_primary_keys(ui_yml, keys)
+  result <- collate_primary_keys(ui_yml, external_data)
 
   # EXPECT ------------------------------------------------------------------
   expect_length(result, 3)
