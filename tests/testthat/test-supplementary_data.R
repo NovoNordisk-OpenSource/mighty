@@ -21,8 +21,7 @@ test_that("Supplementary data action is placed after filter_domain when no suppl
   actual <- generate_adam_code(
     adam_specifications = adam_specifications,
     standards_lib = standards_lib,
-
-    path_connector_config = path_connector_config,
+    path_connector_config = get_connector_config_path(path_connector_config),
     check_cross_domain_adam_dependencies = TRUE
   )
 
@@ -96,8 +95,7 @@ test_that("Supp data action is placed before filter_domain when supp columns are
   actual <- generate_adam_code(
     adam_specifications = adam_specifications,
     standards_lib = standards_lib,
-
-    path_connector_config = path_connector_config,
+    path_connector_config = get_connector_config_path(path_connector_config),
     check_cross_domain_adam_dependencies = TRUE
   )
 
@@ -173,8 +171,7 @@ test_that("Supp data action is placed before filter_domain when supp columns are
   actual <- generate_adam_code(
     adam_specifications = adam_specifications,
     standards_lib = standards_lib,
-
-    path_connector_config = path_connector_config,
+    path_connector_config = get_connector_config_path(path_connector_config),
     check_cross_domain_adam_dependencies = TRUE
   )
 
@@ -252,8 +249,7 @@ test_that("Supp data action is placed before filter_domain when supp columns and
   actual <- generate_adam_code(
     adam_specifications = adam_specifications,
     standards_lib = standards_lib,
-
-    path_connector_config = path_connector_config,
+    path_connector_config = get_connector_config_path(path_connector_config),
     check_cross_domain_adam_dependencies = FALSE
   )
 
@@ -315,8 +311,7 @@ test_that("Col_compute and parent col_compute is placed before filter_domain whe
   actual <- generate_adam_code(
     adam_specifications = adam_specifications,
     standards_lib = standards_lib,
-
-    path_connector_config = path_connector_config,
+    path_connector_config = get_connector_config_path(path_connector_config),
     check_cross_domain_adam_dependencies = FALSE
   )
 

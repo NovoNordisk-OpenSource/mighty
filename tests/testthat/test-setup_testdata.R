@@ -4,7 +4,7 @@ testthat::test_that("SDTM test data is available", {
 
   # ACT ---------------------------------------------------------------------
   setup_testdata(testdata = "pharmaverse", test_data_path = output_path)
-  cnt <- connector::connect(config = file.path(output_path, "_connector.yml"))
+  cnt <- connector::connect(config = get_connector_config_path(output_path))
   dm <- cnt$sdtm$tbl_cnt("dm.parquet")
 
   # EXPECT ------------------------------------------------------------------
@@ -26,7 +26,7 @@ testthat::test_that("ADaM test data is available", {
     sdtm_domains = c(),
     adam_domains = c("adsl", "adae", "adlb")
   )
-  cnt <- connector::connect(config = file.path(output_path, "_connector.yml"))
+  cnt <- connector::connect(config = get_connector_config_path(output_path))
   adsl <- cnt$adam$tbl_cnt("adsl.parquet")
 
   # EXPECT ------------------------------------------------------------------
@@ -47,7 +47,7 @@ testthat::test_that("SDTM and ADaM test data is available", {
     sdtm_domains = c("dm"),
     adam_domains = c("adsl")
   )
-  cnt <- connector::connect(config = file.path(output_path, "_connector.yml"))
+  cnt <- connector::connect(config = get_connector_config_path(output_path))
   dm <- cnt$sdtm$tbl_cnt("dm.parquet")
   adsl <- cnt$adam$tbl_cnt("adsl.parquet")
 
@@ -126,7 +126,7 @@ testthat::test_that("Removing variables when setting up test data", {
       columns = c("SEX", "AGE")
     )
   )
-  cnt <- connector::connect(file.path(output_path, "_connector.yml"))
+  cnt <- connector::connect(get_connector_config_path(output_path))
   dm <- cnt$sdtm$tbl_cnt("dm.parquet")
   dc <- data_context$new(cnt)
   expect_false(dc$has_variables("DM", "SEX"))

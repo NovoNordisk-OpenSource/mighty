@@ -22,8 +22,7 @@ test_that("Complete spec passes when cross-domain disabled", {
   actual <- generate_adam_code(
     adam_specifications = adam_specifications,
     standards_lib = standards_lib,
-
-    path_connector_config = path_connector_config,
+    path_connector_config = get_connector_config_path(path_connector_config),
     check_cross_domain_adam_dependencies = FALSE
   ) |>
     expect_no_error()
@@ -68,8 +67,7 @@ test_that("Complete spec passes when cross-domain enabled", {
   actual <- generate_adam_code(
     adam_specifications = adam_specifications,
     standards_lib = standards_lib,
-
-    path_connector_config = path_connector_config,
+    path_connector_config = get_connector_config_path(path_connector_config),
     check_cross_domain_adam_dependencies = TRUE
   ) |>
     expect_no_error()
@@ -114,8 +112,7 @@ test_that("Incomplete cross-domain ADaM spec fails when checks enabled", {
   error_msg <- generate_adam_code(
     adam_specifications = adam_specifications,
     standards_lib = standards_lib,
-
-    path_connector_config = path_connector_config,
+    path_connector_config = get_connector_config_path(path_connector_config),
     check_cross_domain_adam_dependencies = TRUE
   ) |>
     expect_error()
@@ -154,8 +151,7 @@ test_that("Incomplete cross-domain ADaM spec passes when checks disabled", {
   actual <- generate_adam_code(
     adam_specifications = adam_specifications,
     standards_lib = standards_lib,
-
-    path_connector_config = path_connector_config,
+    path_connector_config = get_connector_config_path(path_connector_config),
     check_cross_domain_adam_dependencies = FALSE
   ) |>
     expect_no_error()
@@ -200,8 +196,7 @@ test_that("Incomplete within-domain ADaM spec fails when checks disabled", {
   generate_adam_code(
     adam_specifications = adam_specifications,
     standards_lib = standards_lib,
-
-    path_connector_config = path_connector_config,
+    path_connector_config = get_connector_config_path(path_connector_config),
     check_cross_domain_adam_dependencies = FALSE
   ) |>
     expect_snapshot_error()
@@ -232,8 +227,7 @@ test_that("Incomplete within-domain ADaM spec fails when checks enabled", {
   error_msg <- generate_adam_code(
     adam_specifications = adam_specifications,
     standards_lib = standards_lib,
-
-    path_connector_config = path_connector_config,
+    path_connector_config = get_connector_config_path(path_connector_config),
     check_cross_domain_adam_dependencies = TRUE
   ) |>
     expect_snapshot_error()
@@ -264,8 +258,7 @@ test_that("Incomplete within and cross-domain specs fail when checks disabled", 
   error_msg <- generate_adam_code(
     adam_specifications = adam_specifications,
     standards_lib = standards_lib,
-
-    path_connector_config = path_connector_config,
+    path_connector_config = get_connector_config_path(path_connector_config),
     check_cross_domain_adam_dependencies = TRUE
   ) |>
     expect_error()
@@ -305,8 +298,7 @@ test_that("Incomplete within and cross-domain specs fail when checks enabled", {
   error_msg <- generate_adam_code(
     adam_specifications = adam_specifications,
     standards_lib = standards_lib,
-
-    path_connector_config = path_connector_config,
+    path_connector_config = get_connector_config_path(path_connector_config),
     check_cross_domain_adam_dependencies = TRUE
   ) |>
     expect_error()
@@ -346,8 +338,7 @@ test_that("Incomplete ADSL filter spec fails when cross-domain enabled", {
   error_msg <- generate_adam_code(
     adam_specifications = adam_specifications,
     standards_lib = standards_lib,
-
-    path_connector_config = path_connector_config,
+    path_connector_config = get_connector_config_path(path_connector_config),
     check_cross_domain_adam_dependencies = TRUE
   ) |>
     expect_error()
@@ -386,8 +377,7 @@ test_that("Incomplete ADSL filter spec passes when cross-domain disabled", {
   actual <- generate_adam_code(
     adam_specifications = adam_specifications,
     standards_lib = standards_lib,
-
-    path_connector_config = path_connector_config,
+    path_connector_config = get_connector_config_path(path_connector_config),
     check_cross_domain_adam_dependencies = FALSE
   ) |>
     expect_no_error()
@@ -431,8 +421,7 @@ test_that("Incomplete ADSL filter and actions fail when checks enabled", {
   error_msg <- generate_adam_code(
     adam_specifications = adam_specifications,
     standards_lib = standards_lib,
-
-    path_connector_config = path_connector_config,
+    path_connector_config = get_connector_config_path(path_connector_config),
     check_cross_domain_adam_dependencies = TRUE
   ) |>
     expect_error()
@@ -473,8 +462,7 @@ test_that("Incomplete ADSL filter and actions pass when checks disabled", {
   actual <- generate_adam_code(
     adam_specifications = adam_specifications,
     standards_lib = standards_lib,
-
-    path_connector_config = path_connector_config,
+    path_connector_config = get_connector_config_path(path_connector_config),
     check_cross_domain_adam_dependencies = FALSE
   ) |>
     expect_no_error()
@@ -519,8 +507,7 @@ test_that("Incomplete ADSL filter in two domains fails when checks enabled", {
   error_msg <- generate_adam_code(
     adam_specifications = adam_specifications,
     standards_lib = standards_lib,
-
-    path_connector_config = path_connector_config,
+    path_connector_config = get_connector_config_path(path_connector_config),
     check_cross_domain_adam_dependencies = TRUE
   ) |>
     expect_error()
@@ -559,8 +546,7 @@ test_that("Incomplete ADSL filter in two domains passes when checks disabled", {
   actual <- generate_adam_code(
     adam_specifications = adam_specifications,
     standards_lib = standards_lib,
-
-    path_connector_config = path_connector_config,
+    path_connector_config = get_connector_config_path(path_connector_config),
     check_cross_domain_adam_dependencies = FALSE
   ) |>
     expect_no_error()
@@ -604,8 +590,7 @@ test_that("Incomplete within-domain in two domains fails when checks disabled", 
   error_msg <- generate_adam_code(
     adam_specifications = adam_specifications,
     standards_lib = standards_lib,
-
-    path_connector_config = path_connector_config,
+    path_connector_config = get_connector_config_path(path_connector_config),
     check_cross_domain_adam_dependencies = FALSE
   ) |>
     expect_error()
@@ -637,8 +622,7 @@ test_that("Incomplete within-domain spec w/ component fails when x-check disable
   error_msg <- generate_adam_code(
     adam_specifications = adam_specifications,
     standards_lib = standards_lib,
-
-    path_connector_config = path_connector_config,
+    path_connector_config = get_connector_config_path(path_connector_config),
     check_cross_domain_adam_dependencies = FALSE
   ) |>
     expect_error()
@@ -672,8 +656,7 @@ test_that("Incomplete within-domain spec w/ component fails when x-check enabled
   error_msg <- generate_adam_code(
     adam_specifications = adam_specifications,
     standards_lib = standards_lib,
-
-    path_connector_config = path_connector_config,
+    path_connector_config = get_connector_config_path(path_connector_config),
     check_cross_domain_adam_dependencies = TRUE
   ) |>
     expect_error()
@@ -712,8 +695,7 @@ test_that("Incomplete filter_depend_cols fails when x-check enabled", {
   error_msg <- generate_adam_code(
     adam_specifications = adam_specifications,
     standards_lib = standards_lib,
-
-    path_connector_config = path_connector_config,
+    path_connector_config = get_connector_config_path(path_connector_config),
     check_cross_domain_adam_dependencies = TRUE
   ) |>
     expect_error()
@@ -753,8 +735,7 @@ test_that("Incomplete filter_depend_cols fails when x-check disabled", {
   error_msg <- generate_adam_code(
     adam_specifications = adam_specifications,
     standards_lib = standards_lib,
-
-    path_connector_config = path_connector_config,
+    path_connector_config = get_connector_config_path(path_connector_config),
     check_cross_domain_adam_dependencies = FALSE
   ) |>
     expect_error()

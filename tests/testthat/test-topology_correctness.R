@@ -1,6 +1,5 @@
 test_that("Validation warning occurs when component uses ADSL implicitly without declaring @depends on ADSL", {
   # SETUP -------------------------------------------------------------------
-  trial_path <- withr::local_tempdir()
 
   # Custom component that uses ADSL but only declares dependency on
   # external dataset (dm). Missing dependency: ADSL.USUBJID
@@ -54,7 +53,7 @@ test_that("Validation warning occurs when component uses ADSL implicitly without
     {
       actual <- generate_adam_code(
         adam_specifications = adam_specifications,
-        path_connector_config = trial_path,
+        path_connector_config = get_temp_connector_config_path(),
         check_cross_domain_adam_dependencies = TRUE
       )
     },
@@ -124,7 +123,7 @@ test_that("Topology is generated correctly when component declares dependencies 
 
   actual <- generate_adam_code(
     adam_specifications = adam_specifications,
-    path_connector_config = trial_path,
+    path_connector_config = get_connector_config_path(trial_path),
     check_cross_domain_adam_dependencies = TRUE
   )
 
@@ -147,7 +146,6 @@ test_that("Topology is generated correctly when component declares dependencies 
 
 test_that("Warning message lists all output columns from component with missing ADLB dependency", {
   # SETUP -------------------------------------------------------------------
-  trial_path <- withr::local_tempdir()
 
   # Custom component that uses ADLB without declaring dependency on ADLB
   component <- "
@@ -214,7 +212,7 @@ test_that("Warning message lists all output columns from component with missing 
     {
       actual <- generate_adam_code(
         adam_specifications = adam_specifications,
-        path_connector_config = trial_path,
+        path_connector_config = get_temp_connector_config_path(),
         check_cross_domain_adam_dependencies = TRUE
       )
     },
@@ -233,7 +231,6 @@ test_that("Warning message lists all output columns from component with missing 
 
 test_that("Warn if two domains but one has component with missing depends", {
   # SETUP -------------------------------------------------------------------
-  trial_path <- withr::local_tempdir()
 
   # Custom component that uses ADLB without declaring dependency on ADLB
   component <- "
@@ -312,7 +309,7 @@ test_that("Warn if two domains but one has component with missing depends", {
     {
       actual <- generate_adam_code(
         adam_specifications = adam_specifications,
-        path_connector_config = trial_path,
+        path_connector_config = get_temp_connector_config_path(),
         check_cross_domain_adam_dependencies = TRUE
       )
     },
@@ -331,7 +328,6 @@ test_that("Warn if two domains but one has component with missing depends", {
 
 test_that("Validation with mix of components warning when no @depends on component", {
   # SETUP -------------------------------------------------------------------
-  trial_path <- withr::local_tempdir()
 
   # Custom component that uses ADSL but only declares dependency on
   # external dataset (dm). Missing dependency: ADSL.USUBJID
@@ -407,7 +403,7 @@ test_that("Validation with mix of components warning when no @depends on compone
     {
       actual <- generate_adam_code(
         adam_specifications = adam_specifications,
-        path_connector_config = trial_path,
+        path_connector_config = get_temp_connector_config_path(),
         check_cross_domain_adam_dependencies = TRUE
       )
     },
@@ -429,7 +425,6 @@ test_that("Validation with mix of components warning when no @depends on compone
 
 test_that("Validation with two domains throws warning when no @depends on component", {
   # SETUP -------------------------------------------------------------------
-  trial_path <- withr::local_tempdir()
 
   # Custom component that uses ADSL but only declares dependency on
   # external dataset (dm). Missing dependency: ADSL.USUBJID
@@ -502,7 +497,7 @@ test_that("Validation with two domains throws warning when no @depends on compon
     {
       actual <- generate_adam_code(
         adam_specifications = adam_specifications,
-        path_connector_config = trial_path,
+        path_connector_config = get_temp_connector_config_path(),
         check_cross_domain_adam_dependencies = TRUE
       )
     },
@@ -527,7 +522,6 @@ test_that("Error when ADaM specification is missing init_domain (no population.b
   #  validate_init_domain_presence() check as a defensive programming against introducing
   #  errors later when refactoring.
   # SETUP -------------------------------------------------------------------
-  trial_path <- withr::local_tempdir()
 
   # Component that has no dependencies - creates orphaned node
   component_brdate <- "
@@ -574,7 +568,7 @@ test_that("Error when ADaM specification is missing init_domain (no population.b
   expect_error(
     generate_adam_code(
       adam_specifications = adam_specifications,
-      path_connector_config = trial_path,
+      path_connector_config = get_temp_connector_config_path(),
       check_cross_domain_adam_dependencies = TRUE
     ),
     "The init_domain node is missing for ADSL"

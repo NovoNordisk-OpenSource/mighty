@@ -1,6 +1,5 @@
 test_that("Error when domain keys are defined in both _mighty.yml and ADaM specification", {
   # SETUP -------------------------------------------------------------------
-  trial_path <- withr::local_tempdir()
   adam_specifications <- setup_study_from_fixtures(
     fixtures = list(
       "adsl" = "skeleton_adsl.yml",
@@ -16,7 +15,7 @@ test_that("Error when domain keys are defined in both _mighty.yml and ADaM speci
     generate_adam_code(
       adam_specifications = adam_specifications,
       standards_lib = standards_lib,
-      path_connector_config = trial_path
+      path_connector_config = get_temp_connector_config_path()
     ),
     "Domains have keys defined in both.*_mighty.yml.*and domain specifications"
   )

@@ -20,10 +20,11 @@
 #'   columns for data operations.
 #' @param ui_data List containing domain-specific UI data including initialization
 #'   metadata and configuration parameters.
-#' @param path_connector_config Character string. Path to the directory
-#'   containing the connector configuration file (`_connector.yml`).
+#' @param path_connector_config Character string. File path to the connector
+#'   configuration file (e.g., `"_connector.yml"`). This path is embedded
+#'   verbatim into the generated programs.
 #'   Prefix with `!expr ` to embed an R expression that is evaluated at
-#'   runtime by the generated program (e.g., `'!expr Sys.getenv("TRIAL_PATH")'`).
+#'   runtime by the generated program (e.g., `'!expr here::here("_connector.yml")'`).
 #' @param available_data Optional parameter containing information about
 #'   available data sources, defaults to NULL.
 #'
@@ -130,10 +131,11 @@ render_code <- function(
 #'
 #' @param node_id Identifier for the current processing node.
 #'
-#' @param path_connector_config Character string. Path to the directory
-#'   containing the connector configuration file (`_connector.yml`).
+#' @param path_connector_config Character string. File path to the connector
+#'   configuration file (e.g., `"_connector.yml"`). This path is embedded
+#'   verbatim into the generated programs.
 #'   Prefix with `!expr ` to embed an R expression that is evaluated at
-#'   runtime by the generated program (e.g., `'!expr Sys.getenv("TRIAL_PATH")'`).
+#'   runtime by the generated program (e.g., `'!expr here::here("_connector.yml")'`).
 #'
 #' @param domain_ui_data List containing UI-related domain metadata, including
 #'   initialization metadata accessed via `domain_ui_data$init`.

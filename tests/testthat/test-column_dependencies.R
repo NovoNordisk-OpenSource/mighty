@@ -21,8 +21,7 @@ test_that("No filters", {
   actual <- generate_adam_code(
     adam_specifications = adam_specifications,
     standards_lib = standards_lib,
-
-    path_connector_config = path_connector_config,
+    path_connector_config = get_connector_config_path(path_connector_config),
     check_cross_domain_adam_dependencies = TRUE
   )
 
@@ -100,8 +99,7 @@ test_that("No filters - external core domain dependency on col_compute action", 
   actual <- generate_adam_code(
     adam_specifications = adam_specifications,
     standards_lib = standards_lib,
-
-    path_connector_config = path_connector_config,
+    path_connector_config = get_connector_config_path(path_connector_config),
     check_cross_domain_adam_dependencies = TRUE
   )
 
@@ -191,8 +189,7 @@ test_that("No domain filters", {
   actual <- generate_adam_code(
     adam_specifications = adam_specifications,
     standards_lib = standards_lib,
-
-    path_connector_config = path_connector_config,
+    path_connector_config = get_connector_config_path(path_connector_config),
     check_cross_domain_adam_dependencies = TRUE
   )
 
@@ -277,8 +274,7 @@ test_that("No global filters", {
   actual <- generate_adam_code(
     adam_specifications = adam_specifications,
     standards_lib = standards_lib,
-
-    path_connector_config = path_connector_config,
+    path_connector_config = get_connector_config_path(path_connector_config),
     check_cross_domain_adam_dependencies = TRUE
   )
 
@@ -363,8 +359,7 @@ test_that("No filters and no derivations", {
   actual <- generate_adam_code(
     adam_specifications = adam_specifications,
     standards_lib = standards_lib,
-
-    path_connector_config = path_connector_config,
+    path_connector_config = get_connector_config_path(path_connector_config),
     check_cross_domain_adam_dependencies = TRUE
   )
 
@@ -434,8 +429,7 @@ test_that("Global filter and domain filter", {
   actual <- generate_adam_code(
     adam_specifications = adam_specifications,
     standards_lib = standards_lib,
-
-    path_connector_config = path_connector_config,
+    path_connector_config = get_connector_config_path(path_connector_config),
     check_cross_domain_adam_dependencies = TRUE
   )
 
@@ -522,8 +516,7 @@ test_that("Global filter and domain filter incl. adsl dependencies", {
   actual <- generate_adam_code(
     adam_specifications = adam_specifications,
     standards_lib = standards_lib,
-
-    path_connector_config = path_connector_config,
+    path_connector_config = get_connector_config_path(path_connector_config),
     check_cross_domain_adam_dependencies = FALSE
   )
 
@@ -599,8 +592,7 @@ test_that("External predecessor dependencies are handled correctly in filter and
   actual <- generate_adam_code(
     adam_specifications = adam_specifications,
     standards_lib = standards_lib,
-
-    path_connector_config = path_connector_config,
+    path_connector_config = get_connector_config_path(path_connector_config),
     check_cross_domain_adam_dependencies = FALSE
   )
 

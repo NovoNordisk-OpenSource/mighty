@@ -20,13 +20,14 @@ configuration file with study-level metadata and dataset keys.}
 \item{standards_lib}{Optional list or environment containing standard code
 components and templates. If \code{NULL}, uses default standards library.}
 
-\item{path_connector_config}{Character string. Path to the directory
-containing the connector configuration file (\verb{_connector.yml}).
-This path is embedded into the generated programs, which use it to
-locate \verb{_connector.yml} at execution time — mighty itself does not
-read the connector configuration.
+\item{path_connector_config}{Character string. File path to the connector
+configuration file (e.g., \code{"_connector.yml"}).
+This path is inserted exactly as written into the generated programs
+(no validation or transformation is performed). The generated programs
+use this path to connect to data when they execute - mighty itself
+does not read or validate the connector configuration file.
 Prefix with \code{!expr } to embed an R expression that is evaluated at
-runtime by the generated program (e.g., \code{'!expr here::here()'}).}
+runtime by the generated program (e.g., \code{'!expr here::here("_connector.yml")'}).}
 
 \item{check_cross_domain_adam_dependencies}{Logical. If \code{TRUE} (default),
 validates dependencies across different ADaM domains. If \code{FALSE}, only
@@ -108,7 +109,8 @@ provided specifications.
 \item ADaM specification file must be a valid YAML file with ADaM
 specifications following the schema defined in mighty.metadata
 \item Trial metadata file must contain valid study configuration
-\item Connector configuration directory must be accessible for file operations
+\item Connector configuration file path must be valid for the generated
+programs to execute
 }
 }
 
@@ -128,7 +130,7 @@ invalid
 # Generate ADaM programs with full dependency checking
 result <- generate_adam_code(
   adam_specifications = "path/to/yaml_specs_directory",
-  path_connector_config = "path/to/trial_directory",
+  path_connector_config = "path/to/trial_directory/_connector.yml",
   check_cross_domain_adam_dependencies = TRUE
 )
 
@@ -140,7 +142,7 @@ executable_programs <- result$executable_programs
 result_custom <- generate_adam_code(
   adam_specifications = "yaml_specs/",
   standards_lib = my_custom_standards,
-  path_connector_config = "trial_data/",
+  path_connector_config = "trial_data/_connector.yml",
   check_cross_domain_adam_dependencies = FALSE
 )
 }

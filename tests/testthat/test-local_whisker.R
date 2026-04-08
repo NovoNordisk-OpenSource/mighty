@@ -45,7 +45,6 @@ columns:
   dplyr::mutate(U2={{depends_var}})
  " |>
     writeLines(con = tmp_file)
-  trial_path <- withr::local_tempdir()
 
   yaml_content <- whisker::whisker.render(
     yml,
@@ -57,12 +56,11 @@ columns:
     "_mighty" = mighty_yml_content
   ))
 
-  output_path <- trial_path
   # ACT ------------------------------------------------------------
 
   actual <- generate_adam_code(
     adam_specifications = adam_specifications,
-    path_connector_config = trial_path,
+    path_connector_config = get_temp_connector_config_path(),
     check_cross_domain_adam_dependencies = FALSE
   )
 

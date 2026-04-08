@@ -1,6 +1,5 @@
 test_that("filter deps to multiple keyless domains error when cross-domain check disabled", {
   # SETUP -------------------------------------------------------------------
-  trial_path <- withr::local_tempdir()
 
   # YAML spec that references both ADVS and ADAE domains in filter dependencies
   # Neither ADVS nor ADAE are present in _mighty.yml
@@ -45,7 +44,7 @@ columns:
   expect_snapshot(
     generate_adam_code(
       adam_specifications = adam_specifications,
-      path_connector_config = trial_path,
+      path_connector_config = get_temp_connector_config_path(),
       check_cross_domain_adam_dependencies = FALSE
     ),
     error = TRUE

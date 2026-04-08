@@ -2,7 +2,8 @@
 
     Code
       generate_adam_code(adam_specifications = adam_specifications,
-        path_connector_config = trial_path, check_cross_domain_adam_dependencies = FALSE)
+        path_connector_config = get_temp_connector_config_path(),
+        check_cross_domain_adam_dependencies = FALSE)
     Condition
       Error:
       ! Specification validation errors found:

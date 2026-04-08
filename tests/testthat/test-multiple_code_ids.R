@@ -17,7 +17,7 @@ test_that("Multiple columns using same code_id, but diff parameters errors out",
   expect_error(
     generate_adam_code(
       adam_specifications = adam_specifications,
-      path_connector_config = output_path
+      path_connector_config = get_connector_config_path(output_path)
     ),
     regexp = "Code_id `fn_AB` is used in multiple columns with different parameters"
   )

@@ -47,7 +47,7 @@ columns:
 
   actual <- generate_adam_code(
     adam_specifications = adam_specifications,
-    path_connector_config = path_connector_config,
+    path_connector_config = get_connector_config_path(path_connector_config),
     check_cross_domain_adam_dependencies = FALSE
   )
   write_adam_programs(
@@ -91,7 +91,7 @@ columns:
 
   actual <- generate_adam_code(
     adam_specifications = adam_specifications,
-    path_connector_config = path_connector_config,
+    path_connector_config = get_connector_config_path(path_connector_config),
     check_cross_domain_adam_dependencies = FALSE
   )
   write_adam_programs(

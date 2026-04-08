@@ -18,17 +18,16 @@ will use the
 [`connector`](https://github.com/NovoNordisk-OpenSource/connector/tree/main?tab=readme-ov-file#readme)
 package to connect to study data.
 
-The `path_connector_config` argument to `generate_adam_code()` controls which
-directory path gets embedded in the generated programs for locating
-`_connector.yml`. Mighty does not read `_connector.yml` itself — it only
-embeds the path into the generated code. The file is read later when the
-generated program runs. The value can be a literal directory path or an
-`!expr`-prefixed R expression for runtime evaluation (e.g.,
-`!expr here::here()`).
+The `path_connector_config` argument to `generate_adam_code()` is the file
+path to the connector config file, embedded verbatim into the generated
+programs. Mighty does not read the file itself — it only embeds the path into
+the generated code. The file is read later when the generated program runs.
+The value can be a literal file path or an `!expr`-prefixed R expression for
+runtime evaluation (e.g., `!expr here::here("_connector.yml")`).
 
 An example of a generated program can be seen below, where the `cnt` object is
 
-*   created by reading `_connector.yml` from the directory specified by
+*   created by reading the connector config file at the path specified by
     `path_connector_config`,
 *   used to read `DM` and `DM_VACCINE`, and finally
 *   save the created `ADSL` data set.
@@ -37,7 +36,7 @@ An example of a generated program can be seen below, where the `cnt` object is
 ```r
 # LOAD all external datasets needed ------------------------------------------------
 
-cnt <- connector::connect(config = file.path(".", "_connector.yml"))
+cnt <- connector::connect(config = "_connector.yml")
 
 DM <- cnt$sdtm$read_cnt(tolower("DM")) |> dplyr::select(ACTARM, AGE, AGEU, ARM, COUNTRY, DOMAIN, DTHFL, RACE, SEX, STUDYID, USUBJID)
 

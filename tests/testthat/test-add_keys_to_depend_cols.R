@@ -1,6 +1,5 @@
 test_that("Throws error when external domain not found in _mighty.yml", {
   # SETUP -------------------------------------------------------------------
-  trial_path <- withr::local_tempdir()
 
   # UNKNOWN_DOMAIN is not in _mighty.yml
   yaml_content <- "
@@ -40,7 +39,7 @@ columns:
   error_msg <- expect_error(
     generate_adam_code(
       adam_specifications = adam_specifications,
-      path_connector_config = trial_path,
+      path_connector_config = get_temp_connector_config_path(),
       check_cross_domain_adam_dependencies = TRUE
     )
   )

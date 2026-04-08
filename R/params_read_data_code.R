@@ -6,16 +6,17 @@
 #' @param payload Character vector. Variable specifications in "domain.variable"
 #'   format (e.g., c("DM.USUBJID", "VS.VSTESTCD", "ADSL.AGE")).
 #' @param domain Character. Target ADaM domain name for self-reference detection.
-#' @param path_connector_config Character string. Path to the directory
-#'   containing the connector configuration file (`_connector.yml`).
+#' @param path_connector_config Character string. File path to the connector
+#'   configuration file (e.g., `_connector.yml`). This path is embedded
+#'   verbatim into the generated programs.
 #'   Prefix with `!expr ` to embed an R expression that is evaluated at
-#'   runtime by the generated program (e.g., `'!expr Sys.getenv("TRIAL_PATH")'`).
+#'   runtime by the generated program (e.g., `'!expr here::here("_connector.yml")'`).
 #'
 #' @return Named list with template parameters:
 #'   \describe{
-#'     \item{connector_path_expr}{Character. A `file.path()` call as R code that
-#'       resolves the connector config path. The first argument is either a quoted
-#'       literal directory path or an R expression.}
+#'     \item{connector_path_expr}{Character. An R code expression that evaluates
+#'       to the connector config file path. Either a quoted literal path or an
+#'       R expression.}
 #'     \item{domains}{List. Domain specifications with elements:
 #'       \code{is_self_domain}, \code{domain_name}, \code{data_type}, \code{keep_vars}}
 #'   }
@@ -60,25 +61,27 @@ params_read_data_code <- function(payload, domain, path_connector_config) {
 #' Build connector path expression
 #'
 #' Converts a `path_connector_config` value into an R code string that resolves
-#' the `_connector.yml` path. Supports `!expr ` prefix for runtime expressions
-#' and plain directory paths.
+#' the connector config file path. Supports `!expr ` prefix for runtime
+#' expressions and plain file paths.
 #'
-#' @param path_connector_config Character string. Directory path or
+#' @param path_connector_config Character string. File path or
 #'   `!expr `-prefixed R expression.
 #'
-#' @return Character string. A `file.path()` call as R code that appends
-#'   `"_connector.yml"` to the path at runtime.
+#' @return Character string. An R expression as code that evaluates to the
+#'   connector config file path.
 #' @noRd
 make_connector_path_expr <- function(path_connector_config) {
-  if (startsWith(path_connector_config, "!expr ")) {
-    dir_expr <- sub("^!expr ", "", path_connector_config)
-  } else if (nzchar(path_connector_config)) {
-    dir_expr <- paste0('"', gsub("\\\\", "/", path_connector_config), '"')
-  } else {
-    return('"_connector.yml"')
+  if (!nzchar(path_connector_config)) {
+    cli::cli_abort(
+      "{.arg path_connector_config} must be a non-empty file path."
+    )
   }
 
-  sprintf('file.path(%s, "_connector.yml")', dir_expr)
+  if (startsWith(path_connector_config, "!expr ")) {
+    sub("^!expr ", "", path_connector_config)
+  } else {
+    paste0('"', gsub("\\\\", "/", path_connector_config), '"')
+  }
 }
 
 #' Prepare Domain-Specific Data Reading Parameters

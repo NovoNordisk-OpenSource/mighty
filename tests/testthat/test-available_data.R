@@ -6,7 +6,7 @@ test_that("data_context provides metadata from sdtm.dm testdata", {
     test_data_path = output_path,
     sdtm_domains = c("dm")
   )
-  cnt <- connector::connect(file.path(output_path, "_connector.yml"))
+  cnt <- connector::connect(get_connector_config_path(output_path))
 
   # ACT ---------------------------------------------------------------------
   dc <- data_context$new(cnt)
@@ -69,7 +69,7 @@ test_that("data_context provides metadata from sdtm and adam", {
     file.path(output_path, "data", "metadata", "mdvisit.parquet")
   )
 
-  cnt <- connector::connect(file.path(output_path, "_connector.yml"))
+  cnt <- connector::connect(get_connector_config_path(output_path))
 
   # ACT ---------------------------------------------------------------------
 
@@ -160,7 +160,7 @@ test_that("data_context provide column metadata", {
     adam_domains = c("adsl"),
     test_data_path = output_path
   )
-  cnt <- connector::connect(file.path(output_path, "_connector.yml"))
+  cnt <- connector::connect(get_connector_config_path(output_path))
 
   # ACT ---------------------------------------------------------------------
   dc <- data_context$new(cnt)

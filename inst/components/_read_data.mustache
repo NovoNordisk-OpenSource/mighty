@@ -1,7 +1,7 @@
 #' @title Read data
 #' @description Template description here
 #' @type derivation
-#' @param connector_path_expr Character string. A `file.path()` call as R code that resolves the connector configuration file path. The first argument is either a quoted literal directory path or an R expression (that is evaluated at runtime).
+#' @param connector_path_expr Character string. An R expression as code that evaluates to the connector configuration file path. Either a quoted literal file path or an R expression (that is evaluated at runtime).
 #' @param domains List of lists. Each element represents a domain/dataset to be read, containing the following components:
 #'   \describe{
 #'     \item{is_self_domain}{Logical. Whether to read the entire dataset (TRUE) or apply variable selection (FALSE). Is generally only true for an "update" program - e.g. ADSL "update"}

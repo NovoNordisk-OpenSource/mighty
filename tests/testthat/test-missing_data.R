@@ -38,13 +38,13 @@ columns:
     test_data_path = trial_path,
     sdtm_domains = "vs"
   )
-  cnt <- connector::connect(file.path(trial_path, "_connector.yml"))
+  cnt <- connector::connect(get_connector_config_path(trial_path))
 
   # ACT ---------------------------------------------------------------------
 
   actual <- generate_adam_code(
     adam_specifications = ui_data,
-    path_connector_config = trial_path,
+    path_connector_config = get_connector_config_path(trial_path),
     check_cross_domain_adam_dependencies = TRUE,
     data_context = data_context$new(cnt)
   )
@@ -101,13 +101,13 @@ columns:
     test_data_path = trial_path,
     sdtm_domains = c("dm")
   )
-  cnt <- connector::connect(file.path(trial_path, "_connector.yml"))
+  cnt <- connector::connect(get_connector_config_path(trial_path))
 
   # ACT ---------------------------------------------------------------------
 
   actual <- generate_adam_code(
     adam_specifications = ui_data,
-    path_connector_config = trial_path,
+    path_connector_config = get_connector_config_path(trial_path),
     check_cross_domain_adam_dependencies = TRUE,
     data_context = data_context$new(cnt)
   )
@@ -175,14 +175,13 @@ columns:
     "adsl" = yml,
     "_mighty" = mighty_yml_content
   ))
-  cnt <- connector::connect(file.path(trial_path, "_connector.yml"))
+  cnt <- connector::connect(get_connector_config_path(trial_path))
 
   # ACT ---------------------------------------------------------------------
 
   actual <- generate_adam_code(
     adam_specifications = ui_data,
-
-    path_connector_config = trial_path,
+    path_connector_config = get_connector_config_path(trial_path),
     check_cross_domain_adam_dependencies = TRUE,
     data_context = data_context$new(cnt)
   )
@@ -268,14 +267,13 @@ columns:
     "adsl" = yml,
     "_mighty" = mighty_yml_content
   ))
-  cnt <- connector::connect(file.path(trial_path, "_connector.yml"))
+  cnt <- connector::connect(get_connector_config_path(trial_path))
 
   # ACT ---------------------------------------------------------------------
 
   actual <- generate_adam_code(
     adam_specifications = ui_data,
-
-    path_connector_config = trial_path,
+    path_connector_config = get_connector_config_path(trial_path),
     check_cross_domain_adam_dependencies = TRUE,
     data_context = data_context$new(cnt)
   )
@@ -360,14 +358,13 @@ columns:
     "adlb" = yml,
     "_mighty" = mighty_yml_content
   ))
-  cnt <- connector::connect(file.path(trial_path, "_connector.yml"))
+  cnt <- connector::connect(get_connector_config_path(trial_path))
 
   # ACT ---------------------------------------------------------------------
 
   actual <- generate_adam_code(
     adam_specifications = ui_data,
-
-    path_connector_config = trial_path,
+    path_connector_config = get_connector_config_path(trial_path),
     check_cross_domain_adam_dependencies = FALSE,
     data_context = data_context$new(cnt)
   )
@@ -454,14 +451,13 @@ columns:
     "adsl" = yml,
     "_mighty" = mighty_yml_content
   ))
-  cnt <- connector::connect(file.path(trial_path, "_connector.yml"))
+  cnt <- connector::connect(get_connector_config_path(trial_path))
 
   # ACT ---------------------------------------------------------------------
 
   actual <- generate_adam_code(
     adam_specifications = ui_data,
-
-    path_connector_config = trial_path,
+    path_connector_config = get_connector_config_path(trial_path),
     check_cross_domain_adam_dependencies = TRUE,
     data_context = data_context$new(cnt)
   )
@@ -550,14 +546,13 @@ columns:
     "adsl" = yml,
     "_mighty" = mighty_yml_content
   ))
-  cnt <- connector::connect(file.path(trial_path, "_connector.yml"))
+  cnt <- connector::connect(get_connector_config_path(trial_path))
 
   # ACT ---------------------------------------------------------------------
 
   actual <- generate_adam_code(
     adam_specifications = ui_data,
-
-    path_connector_config = trial_path,
+    path_connector_config = get_connector_config_path(trial_path),
     check_cross_domain_adam_dependencies = TRUE,
     data_context = data_context$new(cnt)
   )
@@ -631,14 +626,13 @@ columns:
     "adsl" = yml,
     "_mighty" = mighty_yml_content
   ))
-  cnt <- connector::connect(file.path(trial_path, "_connector.yml"))
+  cnt <- connector::connect(get_connector_config_path(trial_path))
 
   # ACT ---------------------------------------------------------------------
 
   actual <- generate_adam_code(
     adam_specifications = ui_data,
-
-    path_connector_config = trial_path,
+    path_connector_config = get_connector_config_path(trial_path),
     check_cross_domain_adam_dependencies = TRUE,
     data_context = data_context$new(cnt)
   )
@@ -747,14 +741,13 @@ columns:
     "adlb" = yml,
     "_mighty" = mighty_yml_content
   ))
-  cnt <- connector::connect(file.path(trial_path, "_connector.yml"))
+  cnt <- connector::connect(get_connector_config_path(trial_path))
 
   # ACT ---------------------------------------------------------------------
 
   actual <- generate_adam_code(
     adam_specifications = ui_data,
-
-    path_connector_config = trial_path,
+    path_connector_config = get_connector_config_path(trial_path),
     check_cross_domain_adam_dependencies = FALSE,
     data_context = data_context$new(cnt)
   )

@@ -17,7 +17,7 @@ test_that("Complex test w/ missing dm_vaccine.SEX", {
     sdtm_domains = c("dm", "dm_vaccine", "lb", "sv"),
     remove_cols = data.table(domain = c("dm_vaccine"), columns = c("SEX"))
   )
-  cnt <- connector::connect(file.path(path_connector_config, "_connector.yml"))
+  cnt <- connector::connect(get_connector_config_path(path_connector_config))
   standards_lib <- "mighty.standards"
 
   # ACT ---------------------------------------------------------------------
@@ -25,7 +25,7 @@ test_that("Complex test w/ missing dm_vaccine.SEX", {
   actual <- generate_adam_code(
     adam_specifications = adam_specifications,
     standards_lib = standards_lib,
-    path_connector_config = path_connector_config,
+    path_connector_config = get_connector_config_path(path_connector_config),
     check_cross_domain_adam_dependencies = TRUE,
     data_context = data_context$new(cnt)
   )
@@ -170,7 +170,7 @@ test_that("Complex test w/ missing dm_vaccine.AGE and dm.SEX", {
       columns = c("AGE", "SEX")
     )
   )
-  cnt <- connector::connect(file.path(path_connector_config, "_connector.yml"))
+  cnt <- connector::connect(get_connector_config_path(path_connector_config))
   standards_lib <- "mighty.standards"
 
   # ACT ---------------------------------------------------------------------
@@ -178,7 +178,7 @@ test_that("Complex test w/ missing dm_vaccine.AGE and dm.SEX", {
   actual <- generate_adam_code(
     adam_specifications = adam_specifications,
     standards_lib = standards_lib,
-    path_connector_config = path_connector_config,
+    path_connector_config = get_connector_config_path(path_connector_config),
     check_cross_domain_adam_dependencies = TRUE,
     data_context = data_context$new(cnt)
   )
@@ -376,7 +376,7 @@ test_that("Complex test w/ missing lb.LBSTRESN", {
     sdtm_domains = c("dm", "dm_vaccine", "lb", "sv"),
     remove_cols = data.table(domain = c("lb"), columns = c("LBSTRESN"))
   )
-  cnt <- connector::connect(file.path(path_connector_config, "_connector.yml"))
+  cnt <- connector::connect(get_connector_config_path(path_connector_config))
   standards_lib <- "mighty.standards"
 
   # ACT ---------------------------------------------------------------------
@@ -384,7 +384,7 @@ test_that("Complex test w/ missing lb.LBSTRESN", {
   actual <- generate_adam_code(
     adam_specifications = adam_specifications,
     standards_lib = standards_lib,
-    path_connector_config = path_connector_config,
+    path_connector_config = get_connector_config_path(path_connector_config),
     check_cross_domain_adam_dependencies = TRUE,
     data_context = data_context$new(cnt)
   )

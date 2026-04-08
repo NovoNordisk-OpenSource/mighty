@@ -89,3 +89,13 @@ get_error_text <- function(err) {
   full <- paste(c(err$message, err$body), collapse = " ")
   gsub("\\s+", " ", full)
 }
+
+get_temp_connector_config_path <- function(
+  env = parent.frame()
+) {
+  get_connector_config_path(withr::local_tempdir(.local_envir = env))
+}
+
+get_connector_config_path <- function(path) {
+  file.path(path, "_connector.yml")
+}
