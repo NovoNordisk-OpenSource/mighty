@@ -105,7 +105,7 @@ convert_yml_to_data_table_ <- function(nested_list, domain) {
       list(NA_character_)
     }
     parameters[[i]] <- if (all(!is.na(parent_data$parameters))) {
-      list(as.list(unlist(parent_data$parameters)))
+      list(unlist(parent_data$parameters, recursive = FALSE))
     } else {
       list(NA_character_)
     }
