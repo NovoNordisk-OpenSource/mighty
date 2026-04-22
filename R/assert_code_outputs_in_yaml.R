@@ -26,52 +26,20 @@
 #'   or throws an error with detailed information about components with extra outputs
 #' @noRd
 assert_code_outputs_in_yaml <- function(x) {
-  # Only derivation types have outputs defined in both YAML and code
-  components_to_check <- x[
-    type_from_code %in% c("derivation"),
-    .(domain, code_id, outputs, outputs_from_code, parameters)
-  ]
+  components <- get_derivation_components(
+    x,
+    c("domain", "code_id", "outputs", "outputs_from_code")
+  )
 
-  if (nrow(components_to_check) == 0) {
+  if (nrow(components) == 0) {
     return(invisible(TRUE))
   }
 
-  # Group by code_id + parameters to handle component reuse: the same component
-  # can be used multiple times with different parameter values, and each unique
-  # combination should be validated independently
-  components_to_check[,
-    parameters_str := vapply(
-      parameters,
-      \(p) paste(p, collapse = ","),
-      character(1)
-    )
-  ]
+  mismatches <- find_mismatching_outputs(components)
 
-  components_grouped <- components_to_check[,
-    .(
-      domain = domain[1], # Preserve domain for error reporting
-      yaml_outputs = list(unlist(outputs)),
-      code_outputs = list(unique(unlist(outputs_from_code)))
-    ),
-    by = .(code_id, parameters_str)
-  ]
-
-  components_grouped[,
-    outputs_match := purrr::map2_lgl(
-      yaml_outputs,
-      code_outputs,
-      \(yaml_out, code_out) {
-        extra_in_code <- setdiff(code_out, yaml_out)
-        length(extra_in_code) == 0
-      }
-    )
-  ]
-
-  if (all(components_grouped$outputs_match)) {
+  if (nrow(mismatches) == 0) {
     return(invisible(TRUE))
   }
-
-  mismatches <- components_grouped[outputs_match == FALSE]
 
   # Build error message lines
   error_lines <- character()
@@ -82,11 +50,10 @@ assert_code_outputs_in_yaml <- function(x) {
     code_out <- mismatches$code_outputs[[i]]
     yaml_out <- mismatches$yaml_outputs[[i]]
 
-    # code_id is either a file path if it's a custom component, or a plain name
-    display_id <- if (grepl("/", code_id)) basename(code_id) else code_id
+    display_id <- display_component_id(code_id)
 
-    code_str <- format_list(toupper(code_out), format_column)
-    yaml_str <- format_list(toupper(yaml_out), format_column)
+    code_str <- format_list(code_out, format_column)
+    yaml_str <- format_list(yaml_out, format_column)
     msg <- paste0(
       format_domain(domain),
       " - ",
@@ -109,4 +76,33 @@ assert_code_outputs_in_yaml <- function(x) {
       "Remove columns from @outputs or add them to the YAML as needed"
     )
   )
+}
+
+#' Find components with outputs not declared in YAML
+#'
+#' For each `(code_id, parameters_hashed)` group, identifies code outputs that are
+#' not present in the YAML specification. Returns only groups with mismatches.
+#'
+#' @param components A `data.table` returned by [get_derivation_components()]
+#'   with at least `domain`, `code_id`, `outputs`, `outputs_from_code`, and
+#'   `parameters_hashed`.
+#' @return A `data.table` with columns `domain`, `code_id`, `yaml_outputs`,
+#'   `code_outputs`, and `extra_outputs` (list columns). Only rows with
+#'   non-empty extra_outputs are returned.
+#' @noRd
+find_mismatching_outputs <- function(components) {
+  components_grouped <- components[,
+    .(
+      domain = domain[1], # Preserve domain for error reporting
+      yaml_outputs = list(unlist(outputs)),
+      code_outputs = list(unique(unlist(outputs_from_code))),
+      extra_outputs = list(setdiff(
+        unique(unlist(outputs_from_code)),
+        unlist(outputs)
+      ))
+    ),
+    by = .(code_id, parameters_hashed)
+  ]
+
+  components_grouped[lengths(extra_outputs) > 0]
 }

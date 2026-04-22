@@ -13,7 +13,6 @@ knitr:
 ```{r}
 #| include: false
 #| eval: true
-
 library(mighty)
 
 # Create study directory structure
@@ -22,9 +21,11 @@ dir.create(study_dir, showWarnings = FALSE, recursive = TRUE)
 assign("study_dir", study_dir, envir = .GlobalEnv)
 
 
+# Create _study.yml with study-level properties
+writeLines("study_id: example_study", file.path(study_dir, "_study.yml"))
+
 # Create _mighty.yml with external data specifications
-mighty_yaml <- 'study_id: example_study
-external_data:
+mighty_yaml <- 'external_data:
   - id: DM
     keys: [USUBJID, STUDYID]
   - id: LB
@@ -136,16 +137,25 @@ Here is a minimal example that demonstrates how to specify and render a simple A
 
 ## Study directory guidelines
 
-Mighty does not have any conditions on how your directory is structured. The only constraints are, there needs to be:
+The only constraints mighty has on the directory structure is the presence of a directory that contains **only** the following YAML specification files:
 
-- A location to store study-specific custom components
+- Domain specifications (e.g., `adsl.yml`, `adae.yml`, `adlb.yml`)
+- `_mighty.yml` — [framework configuration](mighty_config.qmd) (external dataset keys)
+- `_study.yml` — study-level properties (optional, used by mighty.toolbox for define.xml)
+
+
+All `.yml`/`.yaml` files in this directory (except `_mighty.yml` and `_study.yml`) are parsed as domain specifications. Placing non-specification YAML files (such as a connector config) in the specifications directory will cause validation errors.
+
+Other files should live outside the specifications directory:
+
 - A [connector config file](https://novonordisk-opensource.github.io/connector/) that specifies where your trial data is located (SDTM, metadata, and ADaM). The `path_connector_config` argument to `generate_adam_code()` is the file path to the connector config file, embedded verbatim into the generated programs.
+- Study-specific custom components
 - A location where the compiled ADaM programs can be written out to
 
-## Set up your study metadata file
+## Set up your framework configuration file
 
-The `_mighty.yml` file contains study-level metadata that spans across all ADaM domains.
-This includes primary keys in different domains that are used for joining tables.
+The `_mighty.yml` file provides framework configuration that spans across all ADaM domains.
+This includes primary keys for external datasets that are used for joining tables.
 
 For this example, we will focus on a simple ADSL table and only provide keys related to that domain.
 
@@ -155,7 +165,6 @@ For this example, we will focus on a simple ADSL table and only provide keys rel
 #| echo: false
 #| eval: true
 #| results: asis
-
 cat("```yml\n")
 cat(mighty_yaml)
 cat("```")
@@ -173,7 +182,6 @@ This ADSL table contains 6 columns: 4 simple columns from the base domain, 1 ren
 #| echo: false
 #| eval: true
 #| results: asis
-
 cat("```yml\n")
 cat(adsl_yaml)
 cat("```")
@@ -189,7 +197,6 @@ The column `AGE_GRP1` in ADSL is derived by using a custom component that contai
 #| echo: false
 #| eval: true
 #| results: asis
-
 cat("```r\n")
 cat(component_code)
 cat("```")
@@ -205,7 +212,6 @@ Call mighty to consolidate, analyze and render your ADSL program:
 #| echo: false
 #| eval: true
 #| results: asis
-
 cat("```r\n")
 cat(main_script_content)
 cat("\n```")
@@ -217,7 +223,6 @@ Printing the rendered ADaM program yields a complete program for generating ADSL
 #| echo: false
 #| eval: true
 #| results: asis
-
 # Execute the code generation
 results <- mighty::generate_adam_code(
   adam_specifications = study_dir,

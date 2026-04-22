@@ -182,6 +182,7 @@ merge_ui_with_component_metadata <- function(ui_data, code_id_data) {
     all.x = TRUE
   )
 
+  assert_consistent_component_params(merged_data)
   assert_code_outputs_in_yaml(merged_data)
 
   # Code metadata is source of truth. Column dependencies specified in YAML is prohibited per mighty.json schema

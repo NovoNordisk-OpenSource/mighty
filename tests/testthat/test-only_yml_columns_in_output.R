@@ -73,10 +73,8 @@ columns:
     component_file
   )
 
-  mighty_yml_content <- "study_id: test_study"
   adam_specifications <- setup_study_dir(list(
-    "adlb" = yaml_content_adlb,
-    "_mighty" = mighty_yml_content
+    "adlb" = yaml_content_adlb
   ))
 
   path_connector_config <- withr::local_tempdir()

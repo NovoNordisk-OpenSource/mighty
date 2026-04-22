@@ -27,11 +27,8 @@ columns:
     method: UNKNOWN_DOMAIN.SOME_COLUMN
 "
 
-  mighty_yml_content <- "study_id: test_study"
-
   adam_specifications <- setup_study_dir(list(
-    "adsl" = yaml_content,
-    "_mighty" = mighty_yml_content
+    "adsl" = yaml_content
   ))
 
   # ACT & EXPECT ------------------------------------------------------------

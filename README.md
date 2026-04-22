@@ -169,7 +169,7 @@ into structured, production-ready ADaM programs.
 > (processed via mighty.component) or defined as custom user components,
 > depending on project requirements.
 
-See `vignette("trial_metadata")` and `vignette("adam_specification")`
+See `vignette("mighty_config")` and `vignette("adam_specification")`
 for more details on ADaM specifications, and
 `vignette("connect_to_data")` for more details on how source data is
 retrieved in the rendered programs.

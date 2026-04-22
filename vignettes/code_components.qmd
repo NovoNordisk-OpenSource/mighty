@@ -327,6 +327,8 @@ columns:
         variable: ASTDY
 ```
 
+For the full rules on how mighty handles component reuse in ADaM specifications — including restrictions on overlapping outputs — see [Component reuse rules](adam_specification.html#component-reuse-rules).
+
 # Handling external dependencies
 
 The YAML specification contains only columns that appear in the final ADaM dataset (see [No intermediate columns](adam_specification.html#no-intermediate-columns)). Components often need source columns that are not in the final dataset — for example, an SDTM character date used to derive an analysis date.

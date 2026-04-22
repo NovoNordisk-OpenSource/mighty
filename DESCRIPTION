@@ -1,6 +1,6 @@
 Package: mighty
 Title: ADaM Program Generation Through Declarative Specifications
-Version: 0.0.0.9023
+Version: 0.0.0.9024
 Authors@R: c(
     person("Matthew", "Phelps", , "mewp@novonordisk.com", role = c("aut", "cre")),
     person("Nicolai", "Skov Johnsen", , "nosj@novonordisk.com", role = "aut"),
@@ -28,7 +28,7 @@ Imports:
     glue,
     purrr,
     mighty.component (>= 0.0.0.9017),
-    mighty.metadata (>= 0.0.0.9014),
+    mighty.metadata (>= 0.0.0.9024),
     visNetwork,
     zephyr,
     rlang,

@@ -67,12 +67,13 @@ utils::globalVariables(c(
   "group",
   "color",
 
-  # assert_code_outputs_in_yaml variables
+  # assert_code_outputs_in_yaml / assert_consistent_component_params variables
   "type_from_code",
-  "parameters_str",
+  "parameters_hashed",
   "outputs_match",
   "yaml_outputs",
-  "code_outputs"
+  "code_outputs",
+  "overlapping"
 ))
 
 # Also declare the dot function and setNames if they're causing issues

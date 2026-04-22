@@ -15,7 +15,7 @@ generate_adam_code(
 \arguments{
 \item{adam_specifications}{Character string. Directory path containing ADaM
 specification YAML files (one per domain) and optionally a \verb{_mighty.yml}
-configuration file with study-level metadata and dataset keys.}
+framework configuration file with external dataset definitions and keys.}
 
 \item{standards_lib}{Optional list or environment containing standard code
 components and templates. If \code{NULL}, uses default standards library.}

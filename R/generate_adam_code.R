@@ -7,7 +7,7 @@
 #'
 #' @param adam_specifications Character string. Directory path containing ADaM
 #'   specification YAML files (one per domain) and optionally a `_mighty.yml`
-#'   configuration file with study-level metadata and dataset keys.
+#'   framework configuration file with external dataset definitions and keys.
 #' @param standards_lib Optional list or environment containing standard code
 #'   components and templates. If `NULL`, uses default standards library.
 #' @param path_connector_config Character string. File path to the connector
@@ -138,7 +138,7 @@ generate_adam_code <- function(
 
   domain_keys <- collate_primary_keys(
     ui_yml,
-    study@info$external_data
+    study@mighty$external_data
   )
   ui_init <- purrr::list_transpose(ui_yml)[["init"]]
   ui_init_t <- purrr::list_transpose(ui_init, simplify = FALSE)

@@ -1,14 +1,17 @@
 ---
-title: "Study Metadata (_mighty.yml)"
-output: rmarkdown::html_vignette
+title: "Framework configuration (_mighty.yml)"
 vignette: >
-  %\VignetteIndexEntry{Study Metadata (_mighty.yml)}
-  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteIndexEntry{Framework configuration (_mighty.yml)}
+  %\VignetteEngine{quarto::html}
   %\VignetteEncoding{UTF-8}
+knitr:
+  opts_chunk:
+    collapse: true
+    comment: '#>'
 ---
 # Overview
 
-The `_mighty.yml` file provides study-level metadata that spans across all ADaM domains. This file should be placed in the study directory alongside individual ADaM domain specification files.
+The `_mighty.yml` file provides framework configuration that spans across all ADaM domains. This file should be placed in the study directory alongside individual ADaM domain specification files.
 
 # External data
 
@@ -25,7 +28,6 @@ The `external_data` section specifies primary keys for all external datasets tha
 ### Example:
 
 ```yml
-study_id: my_study
 external_data:
   - id: DM
     keys: [USUBJID, STUDYID]
@@ -34,4 +36,3 @@ external_data:
   - id: MDPARAM
     keys: [STUDYID, TOPICCD]
 ```
-

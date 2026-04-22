@@ -7,7 +7,7 @@ articles:
   navbar: Articles
   contents:
   - inputs_overview
-  - trial_metadata
+  - mighty_config
   - adam_specification
   - code_components
   - connect_to_data
