@@ -1,6 +1,6 @@
 Package: mighty
 Title: ADaM Program Generation Through Declarative Specifications
-Version: 0.0.0.9024
+Version: 0.0.0.9025
 Authors@R: c(
     person("Matthew", "Phelps", , "mewp@novonordisk.com", role = c("aut", "cre")),
     person("Nicolai", "Skov Johnsen", , "nosj@novonordisk.com", role = "aut"),
@@ -54,7 +54,7 @@ VignetteBuilder:
     quarto
 Remotes: 
     NovoNordisk-OpenSource/mighty.component,
-    NN-OpenSource/mighty.metadata
+    NovoNordisk-OpenSource/mighty.metadata
 Config/testthat/edition: 3
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
