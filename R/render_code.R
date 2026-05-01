@@ -109,6 +109,7 @@ render_code <- function(
 #'     \item `"_read_data.mustache"` - Parameters for data reading operations
 #'     \item `"_init_domain.mustache"` - Parameters for domain initialization
 #'     \item `"_filter_domain.mustache"` - Parameters for domain filtering
+#'     \item `"_col_rename.mustache"` - Parameters for column renaming
 #'     \item `"_col_mutate.mustache"` - Parameters for column mutation
 #'     \item `"_col_echo.mustache"` - Parameters for column echoing
 #'     \item `"_write_data.mustache"` - Parameters for data writing operations
@@ -206,6 +207,12 @@ define_params <- function(
         unique(),
       keep_columns = output_cols,
       domain_keys = domain_keys
+    ),
+    "_col_rename.mustache" = params_mutate_code(
+      .self = .self,
+      rename_var = output_cols,
+      source_var = depend_columns,
+      node_id = node_id
     ),
     "_col_mutate.mustache" = params_mutate_code(
       .self = .self,

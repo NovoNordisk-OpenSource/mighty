@@ -19,5 +19,6 @@ population:
 columns:
   - id: USUBJID
 
-  - id: VISITNUM2
-    method: VISITNUM
+  - id: LBTEST2
+    component:
+      id: "{path_base}/fixtures/components/lbtest_02.R"

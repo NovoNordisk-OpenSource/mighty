@@ -1,0 +1,48 @@
+# Based on categorization_of_action_type_adlb_01.yml, without cross-domain
+# columns to keep the integration test self-contained
+id: ADLB
+label: Laboratory Analysis Dataset
+class: BASIC DATA STRUCTURE
+structure: One record per subject per parameter per analysis visit
+keys:
+  - USUBJID
+  - STUDYID
+
+population:
+  base:
+    - domain: LB
+      depends:
+        - NA
+      filter: NA
+  global:
+    - filter: NA
+      depends:
+        - NA
+
+columns:
+  - id: USUBJID
+
+  - id: STUDYID
+
+  - id: SRCSEQ 
+    method: LBSEQ
+
+  - id: LBSTRESN
+
+  - id: AVAL
+    method: LBSTRESN
+
+  - id: AVAL_GRP
+    component:
+      id: "{path_base}/fixtures/components/aval_grp_01.R"
+
+  - id: AVAL2
+    method: AVAL
+
+  - id: AVALFL
+    component:
+      id: "{path_base}/fixtures/components/avalfl_01.R"
+
+  - id: AVALREA
+    component:
+      id: "{path_base}/fixtures/components/avalfl_01.R"

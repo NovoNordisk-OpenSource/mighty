@@ -1,0 +1,8 @@
+#' @title Col rename
+#' @description Renames a source column to a target column
+#' @type derivation
+#' @param self Character string. The name of the dataset being modified.
+#' @param rename_var_upper Character string. The new column name after rename.
+#' @param source_var_upper Character string. The existing column to be renamed.
+#' @code
+{{self}} <- {{self}} |> dplyr::rename({{rename_var_upper}} = {{source_var_upper}})

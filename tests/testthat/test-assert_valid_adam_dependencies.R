@@ -179,39 +179,7 @@ test_that("Incomplete within-domain ADaM spec fails when checks disabled", {
     fixtures = list(
       "adlb" = "assert_valid_adam_dependencies_adlb_03.yml",
       "_mighty" = "_mighty_with_adsl_keys.yml"
-    ),
-    process_glue = FALSE
-  )
-  path_connector_config <- withr::local_tempdir()
-
-  setup_testdata(
-    testdata = "pharmaverse",
-    test_data_path = path_connector_config,
-    sdtm_domains = c("lb")
-  )
-  standards_lib <- "mighty.standards"
-
-  # ACT -------------------------------------------------------------------
-
-  generate_adam_code(
-    adam_specifications = adam_specifications,
-    standards_lib = standards_lib,
-    path_connector_config = get_connector_config_path(path_connector_config),
-    check_cross_domain_adam_dependencies = FALSE
-  ) |>
-    expect_snapshot_error()
-})
-
-
-test_that("Incomplete within-domain ADaM spec fails when checks enabled", {
-  # SETUP -------------------------------------------------------------------
-
-  adam_specifications <- setup_study_from_fixtures(
-    fixtures = list(
-      "adlb" = "assert_valid_adam_dependencies_adlb_03.yml",
-      "_mighty" = "_mighty_with_adsl_keys.yml"
-    ),
-    process_glue = FALSE
+    )
   )
   path_connector_config <- withr::local_tempdir()
 
@@ -228,21 +196,26 @@ test_that("Incomplete within-domain ADaM spec fails when checks enabled", {
     adam_specifications = adam_specifications,
     standards_lib = standards_lib,
     path_connector_config = get_connector_config_path(path_connector_config),
-    check_cross_domain_adam_dependencies = TRUE
+    check_cross_domain_adam_dependencies = FALSE
   ) |>
-    expect_snapshot_error()
+    expect_error()
+
+  # EXPECT -------------------------------------------------------------------
+
+  error_text <- get_error_text(error_msg)
+  expect_match(error_text, "ADLB\\.LBTEST")
+  expect_match(error_text, "ADLB\\.LBTEST2")
 })
 
 
-test_that("Incomplete within and cross-domain specs fail when checks disabled", {
+test_that("Incomplete within-domain ADaM spec fails when checks enabled", {
   # SETUP -------------------------------------------------------------------
 
   adam_specifications <- setup_study_from_fixtures(
     fixtures = list(
-      "adlb" = "assert_valid_adam_dependencies_adlb_04.yml",
+      "adlb" = "assert_valid_adam_dependencies_adlb_03.yml",
       "_mighty" = "_mighty_with_adsl_keys.yml"
-    ),
-    process_glue = FALSE
+    )
   )
   path_connector_config <- withr::local_tempdir()
 
@@ -266,8 +239,44 @@ test_that("Incomplete within and cross-domain specs fail when checks disabled", 
   # EXPECT -------------------------------------------------------------------
 
   error_text <- get_error_text(error_msg)
+  expect_match(error_text, "ADLB\\.LBTEST")
+  expect_match(error_text, "ADLB\\.LBTEST2")
+})
+
+
+test_that("Incomplete within and cross-domain specs fail when checks disabled", {
+  # SETUP -------------------------------------------------------------------
+
+  adam_specifications <- setup_study_from_fixtures(
+    fixtures = list(
+      "adlb" = "assert_valid_adam_dependencies_adlb_04.yml",
+      "_mighty" = "_mighty_with_adsl_keys.yml"
+    )
+  )
+  path_connector_config <- withr::local_tempdir()
+
+  setup_testdata(
+    testdata = "pharmaverse",
+    test_data_path = path_connector_config,
+    sdtm_domains = c("lb")
+  )
+  standards_lib <- "mighty.standards"
+
+  # ACT -------------------------------------------------------------------
+
+  error_msg <- generate_adam_code(
+    adam_specifications = adam_specifications,
+    standards_lib = standards_lib,
+    path_connector_config = get_connector_config_path(path_connector_config),
+    check_cross_domain_adam_dependencies = TRUE
+  ) |>
+    expect_error()
+
+  # EXPECT -------------------------------------------------------------------
+
+  error_text <- get_error_text(error_msg)
+  expect_match(error_text, "ADLB\\.LBTEST")
   expect_match(error_text, "ADLB\\.STUDYID")
-  expect_match(error_text, "ADLB\\.VISITNUM")
   expect_match(error_text, "ADSL\\.AGE")
   expect_match(error_text, "ADSL\\.STUDYID")
   expect_match(error_text, "ADSL\\.USUBJID")
@@ -281,8 +290,7 @@ test_that("Incomplete within and cross-domain specs fail when checks enabled", {
     fixtures = list(
       "adlb" = "assert_valid_adam_dependencies_adlb_04.yml",
       "_mighty" = "_mighty_with_adsl_keys.yml"
-    ),
-    process_glue = FALSE
+    )
   )
   path_connector_config <- withr::local_tempdir()
 
@@ -306,8 +314,8 @@ test_that("Incomplete within and cross-domain specs fail when checks enabled", {
   # EXPECT -------------------------------------------------------------------
 
   error_text <- get_error_text(error_msg)
+  expect_match(error_text, "ADLB\\.LBTEST")
   expect_match(error_text, "ADLB\\.STUDYID")
-  expect_match(error_text, "ADLB\\.VISITNUM")
   expect_match(error_text, "ADSL\\.AGE")
   expect_match(error_text, "ADSL\\.STUDYID")
   expect_match(error_text, "ADSL\\.USUBJID")
@@ -573,8 +581,7 @@ test_that("Incomplete within-domain in two domains fails when checks disabled", 
       "adlb" = "assert_valid_adam_dependencies_adlb_03.yml",
       "advs" = "assert_valid_adam_dependencies_advs_02.yml",
       "_mighty" = "_mighty_with_adsl_keys.yml"
-    ),
-    process_glue = FALSE
+    )
   )
   path_connector_config <- withr::local_tempdir()
 
@@ -598,9 +605,8 @@ test_that("Incomplete within-domain in two domains fails when checks disabled", 
   # EXPECT -------------------------------------------------------------------
 
   error_text <- get_error_text(error_msg)
-  expect_match(error_text, "ADLB\\.VISITNUM")
-  expect_match(error_text, "ADLB\\.VISITNUM2")
-  expect_match(error_text, "_col_mutate")
+  expect_match(error_text, "ADLB\\.LBTEST")
+  expect_match(error_text, "ADLB\\.LBTEST2")
 })
 
 test_that("Incomplete within-domain spec w/ component fails when x-check disabled", {

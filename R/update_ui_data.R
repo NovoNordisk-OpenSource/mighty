@@ -52,10 +52,41 @@ consolidate_metadata <- function(code_component_metadata, ui_data) {
     ui_data_updated$type == "col_echo",
     "code_id" := "_col_echo.mustache"
   ]
-  ui_data_updated[
-    ui_data_updated$type == "col_mutate",
-    "code_id" := "_col_mutate.mustache"
+
+  # Determine col_rename vs col_mutate based on whether source is also a col_copy
+  col_copy_rows <- ui_data_updated[ui_data_updated$type == "col_copy"]
+  if (nrow(col_copy_rows) > 0) {
+    col_copy_by_domain <- col_copy_rows[,
+      .(col = unlist(outputs)),
+      by = domain
+    ]
+  } else {
+    col_copy_by_domain <- data.table::data.table(
+      domain = character(0),
+      col = character(0)
+    )
+  }
+  all_outputs_by_domain <- ui_data_updated[,
+    .(col = unlist(outputs)),
+    by = domain
   ]
+  rename_rows <- which(ui_data_updated$type == "col_rename")
+  for (i in rename_rows) {
+    source_col <- unlist(ui_data_updated$depend_cols[[i]])
+    domain_i <- ui_data_updated$domain[[i]]
+    source_is_col_copy <- source_col %in%
+      col_copy_by_domain[domain == domain_i]$col
+    # Also downgrade if the source column is itself a declared output — a
+    # destructive rename would remove it, but it is still needed downstream
+    source_is_also_output <- source_col %in%
+      all_outputs_by_domain[domain == domain_i]$col
+    if (source_is_col_copy || source_is_also_output) {
+      data.table::set(ui_data_updated, i, "type", "col_mutate")
+      data.table::set(ui_data_updated, i, "code_id", "_col_mutate.mustache")
+    } else {
+      data.table::set(ui_data_updated, i, "code_id", "_col_rename.mustache")
+    }
+  }
 
   # Process dependent columns
   processed_data <- process_depend_cols(ui_data_updated)
@@ -99,9 +130,9 @@ classify_action_type <- function(
   is_local <- !has_domain_prefix(dependency)
   is_different_column <- dependency != unlist(outputs)
 
-  # Depends on a different local column -> mutation
+  # Depends on a different local column -> rename (or mutate if conflict)
   if (is_local && is_different_column) {
-    return("col_mutate")
+    return("col_rename")
   }
 
   # Depends on column from another domain -> echo
@@ -270,8 +301,8 @@ process_action_depend_cols <- function(type, depend_cols, domain, outputs) {
     ))
   }
 
-  # Only col_echo and col_mutate reach here - their depend_cols comes from
-  # the YAML method field, which is always a single value
+  # Only col_echo, col_rename, and col_mutate reach here - their depend_cols
+  # comes from the YAML method field, which is always a single value
   elements <- unlist(depend_cols)
   checkmate::assert_character(elements, len = 1L, any.missing = FALSE)
 

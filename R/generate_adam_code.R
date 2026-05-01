@@ -53,8 +53,8 @@
 #'     \item{actions}{*For debugging only*. Data.table containing base action configurations
 #'       before code rendering and program organization. Each row represents a single action with
 #'       columns: `node_id` (unique action identifier), `domain` (ADaM domain name), `code_id`
-#'       (reference to code component or NA), `type` (action type: col_copy, col_mutate, col_echo,
-#'       col_compute, row_compute, init_domain, or filter_domain), `outputs` (list column of
+#'       (reference to code component or NA), `type` (action type: col_copy, col_rename, col_mutate,
+#'       col_echo, col_compute, row_compute, init_domain, or filter_domain), `outputs` (list column of
 #'       character vectors showing columns produced), `depend_cols` (nested data.table with
 #'       column_name, domain, and domain_type showing column dependencies), `depend_rows` (list
 #'       of node_ids this action depends on for row operations), and `parameters` (named list of

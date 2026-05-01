@@ -92,6 +92,18 @@ assert_valid_depend_cols <- function(
   is_column_action <- substr(actions$type, 1, 3) == "col"
   outputs <- get_outputs(actions[is_column_action])
 
+  # col_rename source columns are provided by init_domain (from SDTM), so
+  # they count as available outputs for dependency validation
+  col_rename_actions <- actions[actions$type == "col_rename"]
+  if (nrow(col_rename_actions) > 0) {
+    rename_source_outputs <- purrr::map2(
+      col_rename_actions$domain,
+      col_rename_actions$depend_cols,
+      function(domain, dc) paste0(domain, ".", dc$column_name)
+    ) |> unlist()
+    outputs <- c(outputs, rename_source_outputs) |> unique()
+  }
+
   if (check_cross_domain_adam_dependencies) {
     check_adam_dependencies_cross_domain(
       actions,

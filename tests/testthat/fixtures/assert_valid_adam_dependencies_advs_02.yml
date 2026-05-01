@@ -22,4 +22,5 @@ columns:
   - id: USUBJID
 
   - id: VISITNUM2
-    method: VISITNUM
+    component:
+      id: "{path_base}/fixtures/components/visitnum_02.R"
