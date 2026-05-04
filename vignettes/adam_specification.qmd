@@ -288,7 +288,17 @@ When using `component`, it has these subfields:
         method: LBSTRESN
     ```
 
-    Creates a new column AVAL by copying the content of LBSTRESN from the base domain. Note that LBSTRESN must already be specified in the columns section. Both columns will exist in the resulting dataset.
+    Creates a new column AVAL by copying the content of LBSTRESN from the base domain. Note that LBSTRESN must also be specified in the columns section. Both columns will exist in the resulting dataset.
+
+5.  Renaming a column from the base domain
+
+    ``` yml
+    columns:
+      - id: AVAL
+        method: LBSTRESN
+    ```
+
+    Renames `LBSTRESN` from the base domain to `AVAL`. Unlike copying (example 4), the source column `LBSTRESN` is **not** listed separately in `columns`, so only the renamed column `AVAL` appears in the final dataset.
 
 ### Derived columns
 
@@ -300,7 +310,7 @@ Derived columns use code components to perform data transformations. A code comp
 
 #### Examples (continued):
 
-5.  Adding a derived column using a standard code component
+6.  Adding a derived column using a standard code component
 
     ``` yml
     columns:
@@ -311,7 +321,7 @@ Derived columns use code components to perform data transformations. A code comp
 
     Creates `ARM_GRP1` using the standard code component `arm_group_01`. The component's metadata defines which columns it depends on.
 
-6.  Adding a derived column using a custom code component (plain R script)
+7.  Adding a derived column using a custom code component (plain R script)
 
     ``` yml
     columns:
@@ -322,7 +332,7 @@ Derived columns use code components to perform data transformations. A code comp
 
     For custom code components, provide the file path. Custom R scripts should contain the data manipulation code directly as executable script code, and metadata to declare dependencies and columns created by the component. For details, see `vignette("code_components")`.
 
-7.  Adding a derived column using a custom code component (Mustache template)
+8.  Adding a derived column using a custom code component (Mustache template)
 
     ``` yml
     columns:
@@ -331,9 +341,9 @@ Derived columns use code components to perform data transformations. A code comp
           id: path/to/code_component/arm_group_01.mustache
     ```
 
-    Custom Mustache templates allow parameterization (see example 9).
+    Custom Mustache templates allow parameterization (see example 10).
 
-8.  Adding multiple derived columns with a single standard code component
+9.  Adding multiple derived columns with a single standard code component
 
     ``` yml
     columns:
@@ -347,7 +357,7 @@ Derived columns use code components to perform data transformations. A code comp
 
     Adds both `NEWFL01` and `NEWREA01` columns by calling the standard code component `newfl_01`. The component must be designed to output both variables.
 
-9.  Adding a derived column using a parameterized code component
+10. Adding a derived column using a parameterized code component
 
     ``` yml
     columns:
@@ -360,7 +370,7 @@ Derived columns use code components to perform data transformations. A code comp
 
     Creates `AGE_GRP1` using `age_group_01` code component with custom parameters. Parameters can only be passed to Mustache templates (standard components and custom Mustache components), not to plain R script components.
 
-10. Adding multiple derived columns with a single, parameterized code component
+11. Adding multiple derived columns with a single, parameterized code component
 
     ``` yml
     columns:
@@ -382,7 +392,7 @@ Derived columns use code components to perform data transformations. A code comp
 
     Adds columns `A` and `B` using the same parameterized code component `fn_AB`. When one code component creates multiple columns, all columns **must** use identical parameter values.
 
-11. Adding a derived column that has a row dependency
+12. Adding a derived column that has a row dependency
 
     ``` yml
     columns:
@@ -407,7 +417,7 @@ Components can appear more than once in a domain's `columns` section. There are 
 
 ### One component, multiple output columns
 
-A component with multiple `@outputs` appears under several column entries in the YAML. Because mighty calls the component once, all entries must use **identical** `with:` values. See examples 8 and 10 above for this pattern.
+A component with multiple `@outputs` appears under several column entries in the YAML. Because mighty calls the component once, all entries must use **identical** `with:` values. See examples 9 and 11 above for this pattern.
 
 ### Same component, different parameters
 
