@@ -22,7 +22,7 @@ columns:
   - id: USUBJID
   - id: A
     component:
-      id: {{ady_custom}}
+      id: {{{ady_custom}}}
 "
 
   tmp_file <- withr::local_tempdir() |>
@@ -83,7 +83,7 @@ columns:
   - id: USUBJID
   - id: A
     component:
-      id: {{ady_custom}}
+      id: {{{ady_custom}}}
 "
 
   tmp_file <- withr::local_tempdir() |>

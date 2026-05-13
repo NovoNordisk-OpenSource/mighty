@@ -247,15 +247,15 @@ Mustache templates use double curly braces `{{{variable}}}` as placeholders that
 #' @param variable Name of new variable to create
 #' @param date Name of date variable to use
 #' @type derivation
-#' @depends {{domain}} {{date}}
-#' @depends {{domain}} TRTSDT
-#' @outputs {{variable}}
+#' @depends {{{domain}}} {{{date}}}
+#' @depends {{{domain}}} TRTSDT
+#' @outputs {{{variable}}}
 #' @code
-{{domain}} <- {{domain}} |>
+{{{domain}}} <- {{{domain}}} |>
   dplyr::mutate(
-    {{variable}} = admiral::compute_duration(
+    {{{variable}}} = admiral::compute_duration(
       start_date = TRTSDT,
-      end_date = {{date}},
+      end_date = {{{date}}},
       in_unit = "days",
       out_unit = "days",
       add_one = TRUE
