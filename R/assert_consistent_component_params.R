@@ -32,7 +32,7 @@
 #'   whose message contains "different parameter values".
 #' @noRd
 assert_consistent_component_params <- function(x) {
-  components <- get_derivation_components(
+  components <- get_column_components(
     x,
     c("domain", "code_id", "outputs_from_code")
   )
@@ -65,7 +65,7 @@ assert_consistent_component_params <- function(x) {
 }
 
 
-#' Get derivation-type components
+#' Get column-type components
 #'
 #' Shared helper used by [assert_consistent_component_params()] and
 #' [assert_code_outputs_in_yaml()]. Filters to rows with a non-NA `code_id`
@@ -76,9 +76,9 @@ assert_consistent_component_params <- function(x) {
 #' @param cols Character vector of column names to keep (in addition to
 #'   `parameters`, which is always included).
 #' @return A `data.table` with the selected columns and `parameters_hashed`.
-#'   Returns a zero-row table when no derivation components are present.
+#'   Returns a zero-row table when no column-type components are present.
 #' @noRd
-get_derivation_components <- function(x, cols) {
+get_column_components <- function(x, cols) {
   components <- x[
     !is.na(code_id) & type_from_code == "column",
     .SD,
@@ -100,7 +100,7 @@ get_derivation_components <- function(x, cols) {
 #' parameter values, identifies output columns that appear under multiple
 #' parameter values. Cross-domain reuse is not flagged.
 #'
-#' @param components A `data.table` returned by [get_derivation_components()]
+#' @param components A `data.table` returned by [get_column_components()]
 #'   with at least `domain`, `code_id`, `outputs_from_code`, and
 #'   `parameters_hashed`.
 #' @return A `data.table` with columns `domain`, `code_id`, and `overlapping`

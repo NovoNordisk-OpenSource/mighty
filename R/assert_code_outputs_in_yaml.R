@@ -27,7 +27,7 @@
 #'   or throws an error with detailed information about components with extra outputs
 #' @noRd
 assert_code_outputs_in_yaml <- function(x) {
-  components <- get_derivation_components(
+  components <- get_column_components(
     x,
     c("domain", "code_id", "outputs", "outputs_from_code")
   )
@@ -84,7 +84,7 @@ assert_code_outputs_in_yaml <- function(x) {
 #' For each `(code_id, parameters_hashed)` group, identifies code outputs that are
 #' not present in the YAML specification. Returns only groups with mismatches.
 #'
-#' @param components A `data.table` returned by [get_derivation_components()]
+#' @param components A `data.table` returned by [get_column_components()]
 #'   with at least `domain`, `code_id`, `outputs`, `outputs_from_code`, and
 #'   `parameters_hashed`.
 #' @return A `data.table` with columns `domain`, `code_id`, `yaml_outputs`,
