@@ -2,9 +2,9 @@
 #' @description Test function that assigns a new variable to the value of an existing variable. The names of the two variables are specified by two parameters.
 #' @param old_variable `character` Name of the existing variable
 #' @param new_variable `character` Name of the new variable
-#' @depends ADLB {{{old_variable}}}
+#' @depends ADLB {{old_variable}}
 #' @type column
-#' @outputs {{{new_variable}}}
+#' @outputs {{new_variable}}
 #' @code
 ADLB <- ADLB |>
   dplyr::mutate({{{new_variable}}} = {{{old_variable}}})

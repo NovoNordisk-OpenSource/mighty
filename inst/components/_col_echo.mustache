@@ -12,5 +12,5 @@
 #' @code
 {{{self}}} <- {{{self}}} |>
     dplyr::left_join({{{join_dataset}}} |> dplyr::select({{{select_expr}}}),
-by = c({{{{by_vars_str}}}})){{#needs_rename}} |>
+by = c({{{by_vars_str}}})){{#needs_rename}} |>
                      dplyr::rename({{{output_var}}} = {{{var_to_add}}}){{/needs_rename}}

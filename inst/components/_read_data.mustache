@@ -28,7 +28,7 @@
 #'   )
 #'   }
 #' @code
-cnt <- connector::connect(config = {{{{connector_path_expr}}}})
+cnt <- connector::connect(config = {{{connector_path_expr}}})
 {{#domains}}
   {{#is_self_domain}}
   {{{domain_name}}} <-  cnt${{{data_type}}}$read_cnt(tolower('{{{domain_name}}}'))

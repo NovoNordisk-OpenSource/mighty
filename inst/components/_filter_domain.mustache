@@ -19,18 +19,18 @@
 {{#joins}}
 {{{self}}} <- {{{self}}} |>
   dplyr::left_join({{{table}}} |> dplyr::select({{{cols}}}),
-                   by = c({{{{keys}}}}))
+                   by = c({{{keys}}}))
 
 {{/joins}}
 {{#has_domain_filter}}
 {{{self}}} <-  {{{self}}} |>
-  dplyr::filter({{{{domain_filter}}}}) |>
+  dplyr::filter({{{domain_filter}}}) |>
   dplyr::select(-SRC_)
 
 {{/has_domain_filter}}
 {{#has_global_filter}}
 {{{self}}} <-  {{{self}}} |>
-  dplyr::filter({{{{global_filter}}}})
+  dplyr::filter({{{global_filter}}})
 
 {{/has_global_filter}}
 {{#has_keep_columns}}
