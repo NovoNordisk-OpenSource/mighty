@@ -1,6 +1,6 @@
 #' @title aesev grouping 01
 #' @description A description
-#' @type derivation
+#' @type column
 #' @depends ADAE AESEV
 #' @outputs AESEV_GRP
 #' @code

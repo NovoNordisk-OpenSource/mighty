@@ -1,6 +1,6 @@
 #' @title Min aval 01
 #' @description A description
-#' @type derivation
+#' @type column
 #' @depends ADSL USUBJID
 #' @depends ADLB USUBJID
 #' @depends ADLB AVAL

@@ -1,6 +1,6 @@
 #' @title Age diff 01
 #' @description A description
-#' @type derivation
+#' @type column
 #' @depends ADSL AGE
 #' @depends ADSL AGE2
 #' @outputs AGE_DIFF1

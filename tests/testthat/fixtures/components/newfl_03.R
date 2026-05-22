@@ -1,6 +1,6 @@
 #' @title Newfl 03
 #' @description A description
-#' @type derivation
+#' @type column
 #' @depends ADSL NEWFL01
 #' @depends ADSL NEWFL02
 #' @outputs NEWFL03

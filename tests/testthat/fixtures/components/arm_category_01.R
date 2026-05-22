@@ -1,6 +1,6 @@
 #' @title Arm category 01
 #' @description A description
-#' @type derivation
+#' @type column
 #' @depends ADSL ARM_GRP1
 #' @outputs ARM_CAT1
 #' @code

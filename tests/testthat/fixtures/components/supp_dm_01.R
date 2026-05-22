@@ -1,6 +1,6 @@
 #' @title supp_dm_01
 #' @description A description
-#' @type derivation
+#' @type column
 #' @depends ADSL STUDYID
 #' @depends ADSL USUBJID
 #' @depends SUPPDM STUDYID

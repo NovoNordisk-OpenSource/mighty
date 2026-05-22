@@ -1,6 +1,6 @@
 #' @title Arm group 01
 #' @description A description
-#' @type derivation
+#' @type column
 #' @depends ADSL PLANNED_ARM
 #' @outputs ARM_GRP1
 #' @code

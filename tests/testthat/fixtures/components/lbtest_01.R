@@ -1,6 +1,6 @@
 #' @title Lbtest 01
 #' @description A description
-#' @type derivation
+#' @type column
 #' @depends ADLB USUBJID
 #' @depends ADLB LBSEQ
 #' @depends ADLB AVAL
