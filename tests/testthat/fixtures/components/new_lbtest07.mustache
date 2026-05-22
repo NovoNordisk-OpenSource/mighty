@@ -6,6 +6,6 @@
 #' @outputs LBTEST
 #' @code
 new_lbtest <- ADLB |>
-  dplyr::filter(LBTEST == "{{variable}}") |>
-  dplyr::mutate(LBTEST = paste0("{{variable}}", "_new"))
+  dplyr::filter(LBTEST == "{{{variable}}}") |>
+  dplyr::mutate(LBTEST = paste0("{{{variable}}}", "_new"))
 ADLB <- rbind(ADLB, new_lbtest)

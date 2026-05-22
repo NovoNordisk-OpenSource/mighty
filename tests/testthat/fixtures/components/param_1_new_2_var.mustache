@@ -4,9 +4,9 @@
 #' @param in_variable2 `character` Name of the input variable 2
 #' @param new_variable `character` Name of the output variable
 #' @type column
-#' @depends ADLB {{in_variable1}}
-#' @depends ADLB {{in_variable2}}
-#' @outputs {{new_variable}}
+#' @depends ADLB {{{in_variable1}}}
+#' @depends ADLB {{{in_variable2}}}
+#' @outputs {{{new_variable}}}
 #' @code
 ADLB <- ADLB |>
-  dplyr::mutate({{new_variable}} = {{in_variable1}} + {{in_variable2}})
+  dplyr::mutate({{{new_variable}}} = {{{in_variable1}}} + {{{in_variable2}}})

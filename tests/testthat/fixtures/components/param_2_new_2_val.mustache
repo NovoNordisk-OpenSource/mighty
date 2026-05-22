@@ -3,9 +3,9 @@
 #' @param new_variable1 `character` Name of new variable 1
 #' @param new_variable2 `character` Name of new variable 2
 #' @type column
-#' @outputs {{new_variable1}}
-#' @outputs {{new_variable2}}
+#' @outputs {{{new_variable1}}}
+#' @outputs {{{new_variable2}}}
 #' @code
 ADLB <- ADLB |>
-  dplyr::mutate({{new_variable1}} = "A",
-                {{new_variable2}} = "B")
+  dplyr::mutate({{{new_variable1}}} = "A",
+                {{{new_variable2}}} = "B")

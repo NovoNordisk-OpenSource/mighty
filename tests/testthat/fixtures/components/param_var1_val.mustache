@@ -5,4 +5,4 @@
 #' @outputs PARAM_VAR1
 #' @code
 ADLB <- ADLB |>
-  dplyr::mutate(PARAM_VAR1 = "{{value}}")
+  dplyr::mutate(PARAM_VAR1 = "{{{value}}}")

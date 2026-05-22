@@ -5,11 +5,11 @@
 #' @param new_variable1 `character` Name of new variable 1
 #' @param new_variable2 `character` Name of new variable 2
 #' @type column
-#' @depends ADLB {{in_variable1}}
-#' @depends ADLB {{in_variable2}}
-#' @outputs {{new_variable1}}
-#' @outputs {{new_variable2}}
+#' @depends ADLB {{{in_variable1}}}
+#' @depends ADLB {{{in_variable2}}}
+#' @outputs {{{new_variable1}}}
+#' @outputs {{{new_variable2}}}
 #' @code
 ADLB <- ADLB |>
-  dplyr::mutate({{new_variable1}} = {{in_variable1}},
-                {{new_variable2}} = {{in_variable2}})
+  dplyr::mutate({{{new_variable1}}} = {{{in_variable1}}},
+                {{{new_variable2}}} = {{{in_variable2}}})

@@ -6,4 +6,4 @@
 #' @outputs LBSTRESN_CROP
 #' @code
 ADLB <- ADLB |>
-  dplyr::mutate(LBSTRESN_CROP = ifelse(LBSTRESN <= {{LBSTRESN_MINVAL}}, NA, LBSTRESN))
+  dplyr::mutate(LBSTRESN_CROP = ifelse(LBSTRESN <= {{{LBSTRESN_MINVAL}}}, NA, LBSTRESN))

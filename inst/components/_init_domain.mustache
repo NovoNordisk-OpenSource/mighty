@@ -8,10 +8,10 @@
 #' @param src_mutations List of lists. Each element contains mutation specifications for source domains, where each sub-list has a `domain` element specifying the dataset name to be modified with a source identifier column. For example: `list(list(domain = "dm"), list(domain = "dm_vaccine"))`.
 #' @code
 {{#src_mutations}}
-{{domain}} <- {{domain}} |>
-  dplyr::mutate(SRC_ = "{{domain}}")
+{{{domain}}} <- {{{domain}}} |>
+  dplyr::mutate(SRC_ = "{{{domain}}}")
 
 {{/src_mutations}}
-{{self}} <-  {{source_domain_rbind}} |>
-    dplyr::select({{keep_columns}}) |>
+{{{self}}} <-  {{{source_domain_rbind}}} |>
+    dplyr::select({{{keep_columns}}}) |>
     admiral::convert_blanks_to_na()
