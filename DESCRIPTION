@@ -12,7 +12,7 @@ Description: Provides tools for generating ADaM programs in clinical trials usin
   code. The package handles dependency tracking between columns and rows, orchestrates code components, and automatically 
   generates executable R programs for ADaM dataset creation.
 License: Apache License (>= 2)
-URL: https://nn-opensource.github.io/mighty/
+URL: https://novonordisk-opensource.github.io/mighty/
 Depends: 
     R (>= 4.1)
 Imports: 
@@ -58,4 +58,4 @@ Remotes:
 Config/testthat/edition: 3
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.3
+Config/roxygen2/version: 8.0.0
