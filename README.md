@@ -114,11 +114,11 @@ adhere to a few simple rules. See `vignette("code_components")` for more
 details.
 
 As mighty matures, more of these components will be pre-defined and
-ready for use, so fewer components would need to be defined by the
-user. Standard components are provided by
-[`mighty.standards`](https://github.com/NN-OpenSource/mighty.standards),
+ready for use, so fewer components would need to be defined by the user.
+Standard components are provided by
+[`mighty.standards`](https://github.com/NovoNordisk-OpenSource/mighty.standards),
 while
-[`mighty.component`](https://github.com/NN-OpenSource/mighty.component)
+[`mighty.component`](https://github.com/NovoNordisk-OpenSource/mighty.component)
 provides utilities for rendering both standard and custom components.
 
 See `vignette("adam_specification")` for more details on the ADaM
@@ -169,26 +169,26 @@ into structured, production-ready ADaM programs.
 > (processed via mighty.component) or defined as custom user components,
 > depending on project requirements.
 
-See `vignette("mighty_config")` and `vignette("adam_specification")`
-for more details on ADaM specifications, and
-`vignette("connect_to_data")` for more details on how source data is
-retrieved in the rendered programs.
+See `vignette("adam_specification")` for more details on ADaM
+specifications, `vignette("mighty_config")` for study metadata
+configuration, and `vignette("connect_to_data")` for more details on how
+source data is retrieved in the rendered programs.
 
 ## The mighty ecosystem
 
 The mighty framework consists of these complementary packages:
 
-- **[mighty](https://github.com/NN-OpenSource/mighty)** - Core orchestration engine (this package)
-- **[mighty.metadata](https://github.com/NN-OpenSource/mighty.metadata?tab=readme-ov-file#mightymetadata)** - ADaM metadata management in YAML format
-- **[mighty.component](https://github.com/NN-OpenSource/mighty.component?tab=readme-ov-file#mightycomponent)** - Utilities enabling mighty to handle code
+- **mighty** - Core orchestration engine
+- **mighty.metadata** - ADaM metadata management in YAML format
+- **mighty.component** - Utilities enabling mighty to handle code
   components
-- **[mighty.standards](https://github.com/NN-OpenSource/mighty.standards?tab=readme-ov-file#mightystandards)** - Standard component library with pre-built,
+- **mighty.standards** - Standard component library with pre-built,
   validated derivations (coming later)
-- **[mighty.ai](https://github.com/NN-OpenSource/mighty.ai?tab=readme-ov-file#mightyai)** - AI-powered helper for the mighty ecosystem (coming
+- **mighty.ai** - AI-powered helper for the mighty ecosystem (coming
   later)
-- **[mighty.editor](https://github.com/NN-OpenSource/mighty.editor?tab=readme-ov-file#mightyeditor)** - An enhanced editor for handling ADaM
+- **mighty.editor** - An enhanced editor for handling ADaM
   specifications and components (coming later)
-- **[mighty.toolbox](https://github.com/NN-OpenSource/mighty.toolbox?tab=readme-ov-file#mightytoolbox)** - A toolbox for define.xml generation and
+- **mighty.toolbox** - A toolbox for define.xml generation and
   validation of ADaM related deliverables according to CDISC and
   regulatory requirements
 
@@ -202,5 +202,5 @@ Install the development version from GitHub:
 
 ``` r
 # Using pak (recommended)
-pak::pak("NN-OpenSource/mighty")
+pak::pak("NovoNordisk-OpenSource/mighty")
 ```
