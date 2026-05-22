@@ -21,7 +21,7 @@ Code components are the building blocks that implement the actual derivations, t
 # Column vs Row components
 Beyond their technical format, components are classified by what they do to your data:
 
-**Column components** (`@type derivation`) create new columns in your dataset. They take existing columns as inputs and derive new variables. For example, calculating an age group from age, or computing a relative day from two dates. Column components:
+**Column components** (`@type column`) create new columns in your dataset. They take existing columns as inputs and derive new variables. For example, calculating an age group from age, or computing a relative day from two dates. Column components:
 
 - Always create one or more new columns (specified in `@outputs`)
 - Can depend on columns from multiple datasets
@@ -78,10 +78,10 @@ Detailed explanation of what the component does.
 
 
 ### `@type`
-Component type, either "derivation" or "row".
+Component type, either `"column"` or `"row"`.
 
 ```r
-#' @type derivation
+#' @type column
 ```
 
 ### `@depends`
@@ -144,7 +144,7 @@ Use R script components when:
 ```r
 #' @title Age Group Classification
 #' @description Categorizes subjects into age groups based on AGE variable
-#' @type derivation
+#' @type column
 #' @depends ADSL AGE
 #' @outputs AGE_GRP1
 #' @code
@@ -168,7 +168,7 @@ Components can depend on other derived columns:
 ```r
 #' @title Age Category Classification
 #' @description Further categorizes age groups into expected vs unexpected ranges
-#' @type derivation
+#' @type column
 #' @depends ADSL AGE_GRP1
 #' @outputs AGE_CAT1
 #' @code
@@ -189,7 +189,7 @@ Components can depend on multiple columns from multiple datasets:
 ```r
 #' @title Minimum AVAL per Subject
 #' @description Derives the minimum lab value for each subject from ADLB
-#' @type derivation
+#' @type column
 #' @depends ADSL USUBJID
 #' @depends ADLB USUBJID
 #' @depends ADLB AVAL
@@ -222,7 +222,7 @@ Use Mustache template components when:
 
 ## Template Syntax
 
-Mustache templates use double curly braces `{{{variable}}}` as placeholders that get replaced with actual values when mighty renders the component:
+Mustache templates use triple curly braces `{{{{variable}}}}` as placeholders that get replaced with actual values when mighty renders the component. Triple braces avoid HTML escaping, which would corrupt R operators such as `<-` and `>` in generated code. See [Template syntax](special_components.html#template-syntax) in the special components vignette for a full explanation of double vs. triple mustache syntax.
 
 - Parameters are specified in the `with:` section of your YAML specification
 - Both metadata and code sections can contain placeholders
@@ -246,7 +246,7 @@ Mustache templates use double curly braces `{{{variable}}}` as placeholders that
 #' @param domain Name of ADaM domain
 #' @param variable Name of new variable to create
 #' @param date Name of date variable to use
-#' @type derivation
+#' @type column
 #' @depends {{{domain}}} {{{date}}}
 #' @depends {{{domain}}} TRTSDT
 #' @outputs {{{variable}}}
@@ -286,7 +286,7 @@ columns:
 #' @param domain Name of ADaM domain
 #' @param variable Name of new variable to create
 #' @param date Name of date variable to use
-#' @type derivation
+#' @type column
 #' @depends ADVS ADT
 #' @depends ADVS TRTSDT
 #' @outputs ADYDT
@@ -340,7 +340,7 @@ For example, a component that derives `ASTDT` and `ASTDTF` from the SDTM charact
 ``` r
 #' @title Convert DTC to DT
 #' @description Converts DTC to date (DT) format and computes the corresponding date flag (DTF) for the ADLB dataset.
-#' @type derivation
+#' @type column
 #' @depends LB USUBJID
 #' @depends LB STUDYID
 #' @depends LB LBSEQ
