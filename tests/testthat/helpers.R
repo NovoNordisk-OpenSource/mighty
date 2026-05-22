@@ -86,6 +86,7 @@ expect_section_order <- function(start_section, end_section, section_list) {
 #' expect_match(get_error_text(err), "expected pattern")
 #'
 get_error_text <- function(err) {
+  if (inherits(err, "purrr_error_indexed")) err <- err$parent
   full <- paste(c(err$message, err$body), collapse = " ")
   gsub("\\s+", " ", full)
 }

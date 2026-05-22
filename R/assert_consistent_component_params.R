@@ -15,14 +15,16 @@
 #' specific "different parameter values" error is raised instead of a generic
 #' YAML/code mismatch.
 #'
-#' Only components of type `"derivation"` are checked, consistent with
-#' [assert_code_outputs_in_yaml()].
+#' Only components of type `"column"` are checked, consistent with
+#' [assert_code_outputs_in_yaml()]. Row and parameter components are excluded
+#' because their `@outputs` tag names an existing column they operate on, not a
+#' new column — so overlapping output names across parameter sets are intentional.
 #'
 #' @param x A `data.table` produced by `merge()` inside
 #'   `merge_ui_with_component_metadata()`, containing at least:
 #'   - `domain`: character
 #'   - `code_id`: character (NA for non-component actions)
-#'   - `type_from_code`: character (`"derivation"`, `"predecessor"`, `"row"`)
+#'   - `type_from_code`: character (`"column"`, `"row"`, `"parameter"`, `"internal"`)
 #'   - `outputs_from_code`: list column of character vectors
 #'   - `parameters`: list column of named lists
 #'
@@ -35,11 +37,15 @@ assert_consistent_component_params <- function(x) {
     c("domain", "code_id", "outputs_from_code")
   )
 
-  if (nrow(components) == 0) return(invisible(TRUE))
+  if (nrow(components) == 0) {
+    return(invisible(TRUE))
+  }
 
   violations <- find_overlapping_outputs(components)
 
-  if (nrow(violations) == 0) return(invisible(TRUE))
+  if (nrow(violations) == 0) {
+    return(invisible(TRUE))
+  }
 
   error_details <- vapply(
     seq_len(nrow(violations)),
@@ -63,7 +69,7 @@ assert_consistent_component_params <- function(x) {
 #'
 #' Shared helper used by [assert_consistent_component_params()] and
 #' [assert_code_outputs_in_yaml()]. Filters to rows with a non-NA `code_id`
-#' and `type_from_code == "derivation"`, selects the requested columns plus
+#' and `type_from_code == "column"`, selects the requested columns plus
 #' `parameters`, and adds a `parameters_hashed` column for grouping by unique parameter values.
 #'
 #' @param x A `data.table` produced by `merge_ui_with_component_metadata()`.
@@ -74,11 +80,13 @@ assert_consistent_component_params <- function(x) {
 #' @noRd
 get_derivation_components <- function(x, cols) {
   components <- x[
-    !is.na(code_id) & type_from_code %in% "derivation",
+    !is.na(code_id) & type_from_code == "column",
     .SD,
     .SDcols = unique(c(cols, "parameters"))
   ]
-  if (nrow(components) == 0) return(components)
+  if (nrow(components) == 0) {
+    return(components)
+  }
   components[,
     parameters_hashed := vapply(parameters, rlang::hash, character(1))
   ]

@@ -4,8 +4,9 @@
 #'
 #' @details This function checks for consistency between the outputs declared in
 #' YAML specifications and those declared by the component metadata. It only
-#' validates components with type "derivation" (which become col_compute),
-#' since these are the only types where outputs are defined in both places.
+#' validates components with type `"column"`. Row and parameter components are
+#' excluded because their `@outputs` tag names an existing column they operate
+#' on, not a new column declared in the YAML spec.
 #'
 #' The validation is unidirectional: code outputs must be a subset of YAML
 #' outputs. Extra outputs in the code component (not declared in YAML) will
@@ -16,7 +17,7 @@
 #' can be used with different parameter values.
 #'
 #' @param x A data.table containing code components with columns:
-#'   - type_from_code: The type of the component ("derivation", "predecessor", or "row")
+#'   - type_from_code: The type of the component (`"column"`, `"row"`, `"parameter"`, or `"internal"`)
 #'   - code_id: Unique identifier for the code component
 #'   - outputs: List column containing outputs defined in YAML specs
 #'   - outputs_from_code: List column containing outputs detected from code

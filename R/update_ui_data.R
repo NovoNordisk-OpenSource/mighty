@@ -105,8 +105,10 @@ classify_action_type <- function(
   if (!is.na(code_id)) {
     return(switch(
       type_from_code,
+      column = ,
       derivation = ,
       predecessor = "col_compute",
+      parameter = ,
       row = "row_compute",
       cli::cli_abort(c(
         "Invalid action type {.val {type_from_code}} for code component {.val {code_id}}.",
@@ -115,7 +117,7 @@ classify_action_type <- function(
           cli::format_inline("{cli::qty(length(outputs))}Output column{?s}: "),
           format_list(unlist(outputs), format_column)
         ),
-        "i" = "Expected type to be one of: {.val {c('derivation', 'predecessor', 'row')}}"
+        "i" = "Expected type to be one of: {.val {c('column', 'row', 'parameter', 'internal')}}"
       ))
     ))
   }
