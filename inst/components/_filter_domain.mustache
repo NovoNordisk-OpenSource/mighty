@@ -1,40 +1,40 @@
-#' @title Filter domain
-#' @description Template description here
+#' @title Filter ADaM domain
+#' @description Applies joins needed for filter evaluation, domain-specific row
+#'   filters (via the internal `SRC_` column), global row filters, and final
+#'   column selection. Rendered after `_init_domain`.
 #' @type internal
-#' @param self Character string. The name of the primary dataset being filtered and modified.
-#' @param joins List of join specifications. Each element is a list containing:
+#' @param self Character string. Name of the ADaM domain being filtered (e.g. `"ADLB"`).
+#' @param joins List of join specifications used to bring in columns required for
+#'   filter evaluation. Each element is a list containing:
 #'   \describe{
-#'     \item{table}{Character string. Name of the dataset to join with}
-#'     \item{cols}{Named character vector. Column names to select from the join dataset, where names indicate the source dataset}
-#'     \item{keys}{Character string. Comma-separated list of quoted column names used as join keys}
+#'     \item{table}{Character string. Name of the dataset to join with.}
+#'     \item{select_expr}{Character string. Comma-separated column names to select from the join dataset.}
+#'     \item{keys}{Character string. Comma-separated quoted column names used as join keys (e.g. `"\"STUDYID\", \"USUBJID\""`).}
 #'   }
-#'   Example: `list(list(table = "ADSL", cols = c(ADSL = "SEX", ADSL1 = "USUBJID"), keys = "\"USUBJID\""))`
-#' @param has_domain_filter Logical. Whether to apply domain-specific filtering to the dataset.
-#' @param domain_filter Character string or NULL. Filter expression for domain-specific filtering, typically involving SRC_ column conditions. Only used when `has_domain_filter` is `TRUE`.
-#' @param has_global_filter Logical. Whether to apply global filtering to the dataset.
-#' @param global_filter Character vector or NULL. One or more filter expressions to apply globally to the dataset. Multiple expressions are applied sequentially.
-#' @param has_keep_columns Logical. Whether to select only specific columns from the final dataset.
-#' @param keep_columns Character string or NULL. Comma-separated list of column names to retain in the final dataset. Only used when `has_keep_columns` is `TRUE`.
+#'   Empty list when no filter depends on an external dataset.
+#' @param domain_filter Character string or `NULL`. Pre-formatted R expression filtering on `SRC_` (e.g. `"(SRC_ == 'LB') | (SRC_ == 'XL' & LBCAT == 'CHEMISTRY')"`). `NULL` when no domain-specific filter is defined — the filter block is skipped.
+#' @param global_filter Character string or `NULL`. Raw filter expression from the YAML spec (e.g. `"!is.na(SEX)"`). `NULL` when no global filter is defined — the filter block is skipped.
+#' @param keep_vars Character string or `NULL`. Comma-separated column names to retain. `NULL` when no selection is needed — the select block is skipped. `SRC_` is excluded automatically.
 #' @code
 {{#joins}}
 {{{self}}} <- {{{self}}} |>
-  dplyr::left_join({{{table}}} |> dplyr::select({{{cols}}}),
+  dplyr::left_join({{{table}}} |> dplyr::select({{{select_expr}}}),
                    by = c({{{keys}}}))
 
 {{/joins}}
-{{#has_domain_filter}}
+{{#domain_filter}}
 {{{self}}} <-  {{{self}}} |>
   dplyr::filter({{{domain_filter}}}) |>
   dplyr::select(-SRC_)
 
-{{/has_domain_filter}}
-{{#has_global_filter}}
+{{/domain_filter}}
+{{#global_filter}}
 {{{self}}} <-  {{{self}}} |>
   dplyr::filter({{{global_filter}}})
 
-{{/has_global_filter}}
-{{#has_keep_columns}}
+{{/global_filter}}
+{{#keep_vars}}
 {{{self}}} <-  {{{self}}} |>
-  dplyr::select({{{keep_columns}}})
+  dplyr::select({{{keep_vars}}})
 
-{{/has_keep_columns}}
+{{/keep_vars}}
