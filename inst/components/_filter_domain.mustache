@@ -17,24 +17,24 @@
 #' @param keep_columns Character string or NULL. Comma-separated list of column names to retain in the final dataset. Only used when `has_keep_columns` is `TRUE`.
 #' @code
 {{#joins}}
-{{self}} <- {{self}} |>
-  dplyr::left_join({{table}} |> dplyr::select({{cols}}),
+{{{self}}} <- {{{self}}} |>
+  dplyr::left_join({{{table}}} |> dplyr::select({{{cols}}}),
                    by = c({{{keys}}}))
 
 {{/joins}}
 {{#has_domain_filter}}
-{{self}} <-  {{self}} |>
+{{{self}}} <-  {{{self}}} |>
   dplyr::filter({{{domain_filter}}}) |>
   dplyr::select(-SRC_)
 
 {{/has_domain_filter}}
 {{#has_global_filter}}
-{{self}} <-  {{self}} |>
+{{{self}}} <-  {{{self}}} |>
   dplyr::filter({{{global_filter}}})
 
 {{/has_global_filter}}
 {{#has_keep_columns}}
-{{self}} <-  {{self}} |>
-  dplyr::select({{keep_columns}})
+{{{self}}} <-  {{{self}}} |>
+  dplyr::select({{{keep_columns}}})
 
 {{/has_keep_columns}}

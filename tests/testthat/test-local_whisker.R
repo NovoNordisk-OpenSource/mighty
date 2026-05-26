@@ -22,7 +22,7 @@ columns:
   - id: USUBJID
   - id: A
     component:
-      id: {{ady_custom}}
+      id: {{{ady_custom}}}
       with:
         depends_var: 'USUBJID'
         output_var: 'A'
@@ -38,11 +38,11 @@ columns:
 #' @param depends_var depends variable
 #' @param output_var output variable
 #' @type column
-#' @depends ADSL {{depends_var}}
-#' @outputs {{output_var}}
+#' @depends ADSL {{{depends_var}}}
+#' @outputs {{{output_var}}}
 #' @code
-{{output_var}} <- {{output_var}} |>
-  dplyr::mutate(U2={{depends_var}})
+{{{output_var}}} <- {{{output_var}}} |>
+  dplyr::mutate(U2={{{depends_var}}})
  " |>
     writeLines(con = tmp_file)
 

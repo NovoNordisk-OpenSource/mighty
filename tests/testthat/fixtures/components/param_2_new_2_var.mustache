@@ -11,5 +11,5 @@
 #' @outputs {{new_variable2}}
 #' @code
 ADLB <- ADLB |>
-  dplyr::mutate({{new_variable1}} = {{in_variable1}},
-                {{new_variable2}} = {{in_variable2}})
+  dplyr::mutate({{{new_variable1}}} = {{{in_variable1}}},
+                {{{new_variable2}}} = {{{in_variable2}}})

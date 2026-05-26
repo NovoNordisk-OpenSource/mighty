@@ -6,4 +6,4 @@
 #' @outputs {{new_variable}}
 #' @code
 ADLB <- ADLB |>
-  dplyr::mutate({{new_variable}} = {{value}})
+  dplyr::mutate({{{new_variable}}} = {{{value}}})

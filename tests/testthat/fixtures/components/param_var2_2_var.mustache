@@ -8,4 +8,4 @@
 #' @outputs PARAM_VAR2
 #' @code
 ADLB <- ADLB |>
-  dplyr::mutate(PARAM_VAR2 = {{in_variable1}} + {{in_variable2}})
+  dplyr::mutate(PARAM_VAR2 = {{{in_variable1}}} + {{{in_variable2}}})

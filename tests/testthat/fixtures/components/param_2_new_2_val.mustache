@@ -7,5 +7,5 @@
 #' @outputs {{new_variable2}}
 #' @code
 ADLB <- ADLB |>
-  dplyr::mutate({{new_variable1}} = "A",
-                {{new_variable2}} = "B")
+  dplyr::mutate({{{new_variable1}}} = "A",
+                {{{new_variable2}}} = "B")

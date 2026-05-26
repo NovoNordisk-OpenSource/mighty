@@ -445,13 +445,13 @@ writeLines(
 #' @param dtf_var Name of the output date flag variable
 #' @type derivation
 #' @depends ADLB USUBJID
-#' @outputs {{dt_var}}
-#' @outputs {{dtf_var}}
+#' @outputs {{{dt_var}}}
+#' @outputs {{{dtf_var}}}
 #' @code
 ADLB <- ADLB |>
   dplyr::mutate(
-    {{dt_var}} = as.Date({{dtc_var}}),
-    {{dtf_var}} = ifelse(is.na({{dtc_var}}), 'Y', NA_character_)
+    {{{dt_var}}} = as.Date({{{dtc_var}}}),
+    {{{dtf_var}}} = ifelse(is.na({{{dtc_var}}}), 'Y', NA_character_)
   )
 ",
   con = component_file

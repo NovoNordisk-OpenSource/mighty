@@ -9,13 +9,13 @@
 #' @code
 {{#has_row_order}}
 # Sort rows by primary key
-{{self}} <- {{self}} |> dplyr::arrange({{row_order_vars}})
+{{{self}}} <- {{{self}}} |> dplyr::arrange({{{row_order_vars}}})
 
 {{/has_row_order}}
 {{#has_keep_vars}}
 # Sort columns
-{{self}} <- {{self}} |> dplyr::select({{keep_vars}})
+{{{self}}} <- {{{self}}} |> dplyr::select({{{keep_vars}}})
 
 {{/has_keep_vars}}
 # Save ADaM table
-cnt$adam$write_cnt({{self}}, tolower("{{self}}.parquet"), overwrite = TRUE)
+cnt$adam$write_cnt({{{self}}}, tolower("{{{self}}}.parquet"), overwrite = TRUE)

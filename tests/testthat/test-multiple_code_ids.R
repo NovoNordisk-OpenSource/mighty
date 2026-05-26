@@ -38,13 +38,13 @@ columns:
   - id: USUBJID
   - id: A
     component:
-      id: {{component_file}}
+      id: {{{component_file}}}
       with:
         param_1: '1'
         param_2: '2'
   - id: B
     component:
-      id: {{component_file}}
+      id: {{{component_file}}}
       with:
         param_1: x
         param_2: y
@@ -74,10 +74,10 @@ test_that("Same component with different parameters and disjoint outputs succeed
 #' @param value `character` The value to assign
 #' @param new_variable `character` Name of the new variable
 #' @type column
-#' @outputs {{new_variable}}
+#' @outputs {{{new_variable}}}
 #' @code
 ADLB <- ADLB |>
-  dplyr::mutate({{new_variable}} = {{value}})
+  dplyr::mutate({{{new_variable}}} = {{{value}}})
 ",
     con = component_file
   )
@@ -103,13 +103,13 @@ columns:
   - id: USUBJID
   - id: A
     component:
-      id: {{component_file}}
+      id: {{{component_file}}}
       with:
         new_variable: A
         value: '1'
   - id: B
     component:
-      id: {{component_file}}
+      id: {{{component_file}}}
       with:
         new_variable: B
         value: '2'
@@ -141,11 +141,11 @@ test_that("Within-domain parameter conflicts are reported for every affected dom
 #' @param param_2 `character` A test parameter
 #' @param domain `character` The domain name
 #' @type column
-#' @depends {{domain}} USUBJID
+#' @depends {{{domain}}} USUBJID
 #' @outputs A
 #' @outputs B
 #' @code
-{{domain}} <- {{domain}} |>
+{{{domain}}} <- {{{domain}}} |>
   dplyr::mutate(A = USUBJID, B = USUBJID)
 ",
     con = component_file
@@ -172,14 +172,14 @@ columns:
   - id: USUBJID
   - id: A
     component:
-      id: {{component_file}}
+      id: {{{component_file}}}
       with:
         param_1: '1'
         param_2: '2'
         domain: ADSL
   - id: B
     component:
-      id: {{component_file}}
+      id: {{{component_file}}}
       with:
         param_1: x
         param_2: y
@@ -209,14 +209,14 @@ columns:
   - id: USUBJID
   - id: A
     component:
-      id: {{component_file}}
+      id: {{{component_file}}}
       with:
         param_1: '1'
         param_2: '2'
         domain: ADLB
   - id: B
     component:
-      id: {{component_file}}
+      id: {{{component_file}}}
       with:
         param_1: x
         param_2: y
@@ -251,10 +251,10 @@ test_that("Same component reused across domains with different parameters succee
 #' @param param_2 `character` A test parameter
 #' @param domain `character` The domain name
 #' @type column
-#' @depends {{domain}} USUBJID
+#' @depends {{{domain}}} USUBJID
 #' @outputs A
 #' @code
-{{domain}} <- {{domain}} |>
+{{{domain}}} <- {{{domain}}} |>
   dplyr::mutate(A = USUBJID)
 ",
     con = component_file
@@ -281,7 +281,7 @@ columns:
   - id: USUBJID
   - id: A
     component:
-      id: {{component_file}}
+      id: {{{component_file}}}
       with:
         param_1: '1'
         param_2: '2'
@@ -311,7 +311,7 @@ columns:
   - id: USUBJID
   - id: A
     component:
-      id: {{component_file}}
+      id: {{{component_file}}}
       with:
         param_1: x
         param_2: y
@@ -375,13 +375,13 @@ columns:
   - id: USUBJID
   - id: A
     component:
-      id: {{component_file}}
+      id: {{{component_file}}}
       with:
         param_1: '1'
         param_2: '2'
   - id: B
     component:
-      id: {{component_file}}
+      id: {{{component_file}}}
       with:
         param_1: '1'
         param_2: '2'
