@@ -64,6 +64,5 @@ test_that("final program with three or fewer columns prefixes unavailable column
     available_data = available_data
   )
 
-  expect_match(result$keep_vars, "# AGE")
-  expect_match(result$keep_vars, "USUBJID")
+  expect_equal(result$keep_vars, "\nUSUBJID\n# AGE\n")
 })
