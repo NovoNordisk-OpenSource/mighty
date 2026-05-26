@@ -105,9 +105,7 @@ classify_action_type <- function(
   if (!is.na(code_id)) {
     return(switch(
       type_from_code,
-      column = ,
-      derivation = ,
-      predecessor = "col_compute",
+      column = "col_compute",
       parameter = ,
       row = "row_compute",
       cli::cli_abort(c(
