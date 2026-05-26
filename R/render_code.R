@@ -203,9 +203,7 @@ define_params <- function(
     "_filter_domain.mustache" = params_domain_filter_code(
       .self = .self,
       init_metadata = init_metadata,
-      source_domains = depend_domains |>
-        unique(),
-      keep_columns = output_cols,
+      keep_vars = output_cols,
       domain_keys = domain_keys
     ),
     "_col_rename.mustache" = params_mutate_code(
