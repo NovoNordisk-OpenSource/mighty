@@ -4,7 +4,7 @@ test_that("Only YAML-defined columns appear in the final dataset", {
   component <- "
 #' @title Convert DTC to DT
 #' @description Converts DTC to date (DT) format and computes the corresponding date flag (DTF) for the ADLB dataset.
-#' @type derivation
+#' @type column
 #' @depends LB USUBJID
 #' @depends LB STUDYID
 #' @depends LB LBSEQ

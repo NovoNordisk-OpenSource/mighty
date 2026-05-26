@@ -1,7 +1,7 @@
 #' @title ACTARM
 #' @description A description
 #'
-#' @type derivation
+#' @type column
 #' @depends DM STUDYID
 #' @depends DM USUBJID
 #' @depends DM ACTARM

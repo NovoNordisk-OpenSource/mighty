@@ -6,7 +6,7 @@ test_that("Validation warning occurs when component uses ADSL implicitly without
   component <- "
 #' @title BRDATE
 #' @description Treatment
-#' @type derivation
+#' @type column
 #' @depends dm BRTHDTC
 #' @outputs BRDATE
 #' @code
@@ -75,7 +75,7 @@ test_that("Topology is generated correctly when component declares dependencies 
   component <- "
 #' @title BRDATE
 #' @description Treatment
-#' @type derivation
+#' @type column
 #' @depends dm BRTHDTC
 #' @depends ADSL USUBJID
 #' @outputs BRDATE
@@ -147,7 +147,7 @@ test_that("Warning message lists all output columns from component with missing 
   component <- "
 #' @title BRDATE
 #' @description Treatment
-#' @type derivation
+#' @type column
 #' @depends dm BRTHDTC
 #' @outputs BRDATE
 #' @outputs BRDATE2
@@ -230,7 +230,7 @@ test_that("Warn if two domains but one has component with missing depends", {
   component <- "
 #' @title BRDATE
 #' @description Treatment
-#' @type derivation
+#' @type column
 #' @depends dm BRTHDTC
 #' @outputs BRDATE
 #' @outputs BRDATE2
@@ -326,7 +326,7 @@ test_that("Validation with mix of components warning when no @depends on compone
   component_invalid <- "
 #' @title BRDATE
 #' @description Treatment
-#' @type derivation
+#' @type column
 #' @depends dm BRTHDTC
 #' @outputs BRDATE
 #' @code
@@ -344,7 +344,7 @@ test_that("Validation with mix of components warning when no @depends on compone
   component_valid <- "
 #' @title BRDATEOK valid
 #' @description Treatment
-#' @type derivation
+#' @type column
 #' @depends dm BRTHDTC
 #' @depends ADSL USUBJID
 #' @outputs BRDATEOK
@@ -421,7 +421,7 @@ test_that("Validation with two domains throws warning when no @depends on compon
   component_invalid <- "
 #' @title BRDATE
 #' @description Treatment
-#' @type derivation
+#' @type column
 #' @depends dm BRTHDTC
 #' @outputs BRDATE
 #' @code
@@ -515,7 +515,7 @@ test_that("Error when ADaM specification is missing init_domain (no population.b
   component_brdate <- "
 #' @title BRDATE
 #' @description Birth date derivation with no dependencies
-#' @type derivation
+#' @type column
 #' @outputs BRDATE
 #' @code
   ADSL <- ADSL %>% dplyr::mutate(BRDATE = NA_character_)

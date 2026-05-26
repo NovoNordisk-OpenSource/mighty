@@ -1,6 +1,6 @@
 #' @title Aval grp 01
 #' @description A description
-#' @type derivation
+#' @type column
 #' @depends ADLB AVAL
 #' @outputs AVAL_GRP
 #' @code

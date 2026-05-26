@@ -1,6 +1,6 @@
 #' @title Age group 01
 #' @description A description
-#' @type derivation
+#' @type column
 #' @depends ADSL AGE2
 #' @outputs AGE_GRP1
 #' @code

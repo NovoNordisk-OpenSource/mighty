@@ -1,6 +1,6 @@
 #' @title Arm match 01
 #' @description A description
-#' @type derivation
+#' @type column
 #' @depends ADSL PLANNED_ARM
 #' @depends ADSL ACTARM
 #' @outputs ARM_MATCH

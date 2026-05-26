@@ -29,7 +29,7 @@ test_that("passes when all code_id values are NA", {
   dt <- data.table::data.table(
     domain = "ADSL",
     code_id = NA_character_,
-    type_from_code = "derivation",
+    type_from_code = "column",
     outputs_from_code = list("A"),
     parameters = list(list())
   )
@@ -41,14 +41,14 @@ test_that("passes with a single parameter set", {
     list(
       domain = "ADLB",
       code_id = "comp1",
-      type_from_code = "derivation",
+      type_from_code = "column",
       outputs_from_code = c("A", "B"),
       parameters = list(p = "1")
     ),
     list(
       domain = "ADLB",
       code_id = "comp1",
-      type_from_code = "derivation",
+      type_from_code = "column",
       outputs_from_code = c("A", "B"),
       parameters = list(p = "1")
     )
@@ -61,21 +61,21 @@ test_that("passes when different parameter sets have disjoint outputs", {
     list(
       domain = "ADLB",
       code_id = "comp1",
-      type_from_code = "derivation",
+      type_from_code = "column",
       outputs_from_code = "A",
       parameters = list(p = "1")
     ),
     list(
       domain = "ADLB",
       code_id = "comp1",
-      type_from_code = "derivation",
+      type_from_code = "column",
       outputs_from_code = "B",
       parameters = list(p = "2")
     ),
     list(
       domain = "ADLB",
       code_id = "comp1",
-      type_from_code = "derivation",
+      type_from_code = "column",
       outputs_from_code = c("D", "C"),
       parameters = list(p = "2")
     )
@@ -91,21 +91,21 @@ test_that("repeated rows within a param group don't false-positive with a disjoi
     list(
       domain = "ADLB",
       code_id = "comp1",
-      type_from_code = "derivation",
+      type_from_code = "column",
       outputs_from_code = c("A", "B"),
       parameters = list(p = "1")
     ),
     list(
       domain = "ADLB",
       code_id = "comp1",
-      type_from_code = "derivation",
+      type_from_code = "column",
       outputs_from_code = c("A", "B"),
       parameters = list(p = "1")
     ),
     list(
       domain = "ADLB",
       code_id = "comp1",
-      type_from_code = "derivation",
+      type_from_code = "column",
       outputs_from_code = c("D", "C"),
       parameters = list(p = "2")
     )
@@ -118,14 +118,14 @@ test_that("errors when overlapping outputs have different parameters", {
     list(
       domain = "ADLB",
       code_id = "comp1",
-      type_from_code = "derivation",
+      type_from_code = "column",
       outputs_from_code = c("A", "B"),
       parameters = list(p = "1")
     ),
     list(
       domain = "ADLB",
       code_id = "comp1",
-      type_from_code = "derivation",
+      type_from_code = "column",
       outputs_from_code = c("A", "B"),
       parameters = list(p = "2")
     )
@@ -141,28 +141,28 @@ test_that("error message mentions every affected domain", {
     list(
       domain = "ADSL",
       code_id = "comp1",
-      type_from_code = "derivation",
+      type_from_code = "column",
       outputs_from_code = "X",
       parameters = list(p = "a")
     ),
     list(
       domain = "ADSL",
       code_id = "comp1",
-      type_from_code = "derivation",
+      type_from_code = "column",
       outputs_from_code = "X",
       parameters = list(p = "b")
     ),
     list(
       domain = "ADLB",
       code_id = "comp1",
-      type_from_code = "derivation",
+      type_from_code = "column",
       outputs_from_code = "X",
       parameters = list(p = "a")
     ),
     list(
       domain = "ADLB",
       code_id = "comp1",
-      type_from_code = "derivation",
+      type_from_code = "column",
       outputs_from_code = "X",
       parameters = list(p = "b")
     )
@@ -178,14 +178,14 @@ test_that("different components in the same domain are checked independently", {
     list(
       domain = "ADSL",
       code_id = "comp1",
-      type_from_code = "derivation",
+      type_from_code = "column",
       outputs_from_code = "A",
       parameters = list(p = "1")
     ),
     list(
       domain = "ADSL",
       code_id = "comp2",
-      type_from_code = "derivation",
+      type_from_code = "column",
       outputs_from_code = "B",
       parameters = list(p = "2")
     )
@@ -197,14 +197,14 @@ test_that("same component and parameters across different domains is allowed", {
     list(
       domain = "ADSL",
       code_id = "comp1",
-      type_from_code = "derivation",
+      type_from_code = "column",
       outputs_from_code = "AGE",
       parameters = list(p = "1")
     ),
     list(
       domain = "ADLB",
       code_id = "comp1",
-      type_from_code = "derivation",
+      type_from_code = "column",
       outputs_from_code = "AGE",
       parameters = list(p = "1")
     )
@@ -217,14 +217,14 @@ test_that("same component with different parameters across domains is allowed ev
     list(
       domain = "ADSL",
       code_id = "comp1",
-      type_from_code = "derivation",
+      type_from_code = "column",
       outputs_from_code = "AGE",
       parameters = list(p = "1")
     ),
     list(
       domain = "ADLB",
       code_id = "comp1",
-      type_from_code = "derivation",
+      type_from_code = "column",
       outputs_from_code = "AGE",
       parameters = list(p = "2")
     )

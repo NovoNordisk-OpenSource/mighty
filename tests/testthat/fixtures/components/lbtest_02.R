@@ -1,6 +1,6 @@
 #' @title lbtest_02
 #' @description A description
-#' @type derivation
+#' @type column
 #' @depends ADLB LBTEST
 #' @outputs LBTEST2
 #' @code

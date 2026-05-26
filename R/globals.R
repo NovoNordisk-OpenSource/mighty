@@ -73,6 +73,7 @@ utils::globalVariables(c(
   "outputs_match",
   "yaml_outputs",
   "code_outputs",
+  "extra_outputs",
   "overlapping"
 ))
 

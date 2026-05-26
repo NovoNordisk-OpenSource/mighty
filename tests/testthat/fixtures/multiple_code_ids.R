@@ -1,6 +1,6 @@
 #' Fn AB
 #' @param .self `data.frame` Input data set
-#' @type derivation
+#' @type column
 #' @depends .self USUBJID
 #' @outputs A
 #' @outputs B
@@ -12,7 +12,7 @@ fn_AB <- function(.self, params = list(param_1 = NULL, param_2 = NULL)) {
 
 #' Fn C
 #' @param .self `data.frame` Input data set
-#' @type derivation
+#' @type column
 #' @depends .self USUBJID
 #' @outputs C
 #' @returns `.self`

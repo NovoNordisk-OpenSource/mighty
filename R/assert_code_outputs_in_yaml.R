@@ -4,8 +4,9 @@
 #'
 #' @details This function checks for consistency between the outputs declared in
 #' YAML specifications and those declared by the component metadata. It only
-#' validates components with type "derivation" (which become col_compute),
-#' since these are the only types where outputs are defined in both places.
+#' validates components with type `"column"`. Row and parameter components are
+#' excluded because their `@outputs` tag names an existing column they operate
+#' on, not a new column declared in the YAML spec.
 #'
 #' The validation is unidirectional: code outputs must be a subset of YAML
 #' outputs. Extra outputs in the code component (not declared in YAML) will
@@ -16,7 +17,7 @@
 #' can be used with different parameter values.
 #'
 #' @param x A data.table containing code components with columns:
-#'   - type_from_code: The type of the component ("derivation", "predecessor", or "row")
+#'   - type_from_code: The type of the component (`"column"`, `"row"`, `"parameter"`, or `"internal"`)
 #'   - code_id: Unique identifier for the code component
 #'   - outputs: List column containing outputs defined in YAML specs
 #'   - outputs_from_code: List column containing outputs detected from code
@@ -26,7 +27,7 @@
 #'   or throws an error with detailed information about components with extra outputs
 #' @noRd
 assert_code_outputs_in_yaml <- function(x) {
-  components <- get_derivation_components(
+  components <- get_column_components(
     x,
     c("domain", "code_id", "outputs", "outputs_from_code")
   )
@@ -83,7 +84,7 @@ assert_code_outputs_in_yaml <- function(x) {
 #' For each `(code_id, parameters_hashed)` group, identifies code outputs that are
 #' not present in the YAML specification. Returns only groups with mismatches.
 #'
-#' @param components A `data.table` returned by [get_derivation_components()]
+#' @param components A `data.table` returned by [get_column_components()]
 #'   with at least `domain`, `code_id`, `outputs`, `outputs_from_code`, and
 #'   `parameters_hashed`.
 #' @return A `data.table` with columns `domain`, `code_id`, `yaml_outputs`,

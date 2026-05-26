@@ -6,7 +6,7 @@ test_that("Multiple columns using same code_id, but diff parameters errors out",
 #' @description Multi-output parameterized test component
 #' @param param_1 `character` A test parameter
 #' @param param_2 `character` A test parameter
-#' @type derivation
+#' @type column
 #' @depends ADLB USUBJID
 #' @outputs A
 #' @outputs B
@@ -73,7 +73,7 @@ test_that("Same component with different parameters and disjoint outputs succeed
 #' @description Assigns a new variable with name and value from parameters.
 #' @param value `character` The value to assign
 #' @param new_variable `character` Name of the new variable
-#' @type derivation
+#' @type column
 #' @outputs {{new_variable}}
 #' @code
 ADLB <- ADLB |>
@@ -140,7 +140,7 @@ test_that("Within-domain parameter conflicts are reported for every affected dom
 #' @param param_1 `character` A test parameter
 #' @param param_2 `character` A test parameter
 #' @param domain `character` The domain name
-#' @type derivation
+#' @type column
 #' @depends {{domain}} USUBJID
 #' @outputs A
 #' @outputs B
@@ -250,7 +250,7 @@ test_that("Same component reused across domains with different parameters succee
 #' @param param_1 `character` A test parameter
 #' @param param_2 `character` A test parameter
 #' @param domain `character` The domain name
-#' @type derivation
+#' @type column
 #' @depends {{domain}} USUBJID
 #' @outputs A
 #' @code
@@ -343,7 +343,7 @@ test_that("Same component with identical parameters across invocations passes", 
 #' @description Multi-output parameterized test component
 #' @param param_1 `character` A test parameter
 #' @param param_2 `character` A test parameter
-#' @type derivation
+#' @type column
 #' @depends ADLB USUBJID
 #' @outputs A
 #' @outputs B

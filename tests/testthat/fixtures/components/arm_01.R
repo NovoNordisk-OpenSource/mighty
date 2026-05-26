@@ -1,6 +1,6 @@
 #' @title Arm 01
 #' @description A description
-#' @type derivation
+#' @type column
 #' @depends ADSL PLANNED_ARM
 #' @depends ADSL USUBJID
 #' @outputs NEW_ARM

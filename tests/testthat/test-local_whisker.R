@@ -37,7 +37,7 @@ columns:
 #'
 #' @param depends_var depends variable
 #' @param output_var output variable
-#' @type derivation
+#' @type column
 #' @depends ADSL {{depends_var}}
 #' @outputs {{output_var}}
 #' @code
