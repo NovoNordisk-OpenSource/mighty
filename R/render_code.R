@@ -27,6 +27,9 @@
 #'   runtime by the generated program (e.g., `'!expr here::here("_connector.yml")'`).
 #' @param available_data Optional parameter containing information about
 #'   available data sources, defaults to NULL.
+#' @param file_ext Character string. File extension for the written dataset,
+#'   defaults to `"parquet"`. Will be overridable via `_mighty.yml` and
+#'   per-domain YAML in a future release.
 #'
 #' @return
 #' The input actions data table with an additional 'code' column containing
@@ -38,7 +41,8 @@ render_code <- function(
   domain_keys,
   ui_data,
   path_connector_config,
-  available_data = NULL
+  available_data = NULL,
+  file_ext = "parquet"
 ) {
   actions_program_summary <- actions |>
     dplyr::group_by(domain) |>
@@ -75,7 +79,8 @@ render_code <- function(
       domain_ui_data = ui_data[[action_i$domain]],
       domain_keys = domain_keys,
       is_final_pgm = is_final_pgm,
-      available_data = available_data
+      available_data = available_data,
+      file_ext = file_ext
     )
 
     code <- mighty.component::get_rendered_component(
@@ -149,6 +154,8 @@ render_code <- function(
 #'
 #' @param available_data Object or list containing information about currently
 #'   available data sources and their status.
+#' @param file_ext Character string. File extension passed through to
+#'   `params_write_domain_code()`. Defaults to `"parquet"`.
 #'
 #' @return
 #' Returns a list or object containing the formatted parameters appropriate
@@ -184,7 +191,8 @@ define_params <- function(
   domain_ui_data,
   domain_keys,
   is_final_pgm,
-  available_data
+  available_data,
+  file_ext = "parquet"
 ) {
   init_metadata <- domain_ui_data$init
 
@@ -197,7 +205,7 @@ define_params <- function(
     ),
     "_init_domain.mustache" = params_init_domain_code(
       .self = .self,
-      keep_columns = output_cols,
+      keep_vars = output_cols,
       source_domains = depend_domains |> unique()
     ),
     "_filter_domain.mustache" = params_domain_filter_code(
@@ -209,14 +217,12 @@ define_params <- function(
     "_col_rename.mustache" = params_mutate_code(
       .self = .self,
       rename_var = output_cols,
-      source_var = depend_columns,
-      node_id = node_id
+      source_var = depend_columns
     ),
     "_col_mutate.mustache" = params_mutate_code(
       .self = .self,
       rename_var = output_cols,
-      source_var = depend_columns,
-      node_id = node_id
+      source_var = depend_columns
     ),
     "_col_echo.mustache" = params_col_echo_code(
       .self = .self,
@@ -230,7 +236,8 @@ define_params <- function(
       is_final_pgm = is_final_pgm,
       domain_keys = domain_keys,
       domain_ui_data = domain_ui_data,
-      available_data = available_data
+      available_data = available_data,
+      file_ext = file_ext
     ),
     # Default case for col_compute/row_compute
     format_col_compute_params(action_parameters = action_parameters)

@@ -1,26 +1,30 @@
-#' @title Read data
-#' @description Template description here
+#' @title Read source data
+#' @description Opens a connector and reads each source dataset into memory,
+#'   retaining only the columns needed downstream. Rendered once at the top of
+#'   every generated ADaM program.
 #' @type internal
-#' @param connector_path_expr Character string. An R expression as code that evaluates to the connector configuration file path. Either a quoted literal file path or an R expression (that is evaluated at runtime).
+#' @param connector_path_expr Character string. R expression that evaluates to
+#'   the connector configuration file path. Either a quoted literal path or a
+#'   bare R expression evaluated at runtime (e.g. `here::here("_connector.yml")`).
 #' @param domains List of lists. Each element represents a domain/dataset to be read, containing the following components:
 #'   \describe{
-#'     \item{is_self_domain}{Logical. Whether to read the entire dataset (TRUE) or apply variable selection (FALSE). Is generally only true for an "update" program - e.g. ADSL "update"}
-#'     \item{domain_name}{Character string. The name of the domain/dataset to read.}
-#'     \item{data_type}{Character string. The type of data connector to use (e.g., "sdtm", "adam").}
-#'     \item{keep_vars}{Character string. Comma-separated list of variable names to select when is_self_domain is FALSE. Ignored when is_self_domain is TRUE.}
+#'     \item{is_current_domain}{Logical. `TRUE` to read the entire dataset (e.g. an ADSL update program reading its own earlier output); `FALSE` to apply column selection.}
+#'     \item{domain_name}{Character string. Name of the domain to read, uppercase (e.g. `"DM"`, `"ADSL"`).}
+#'     \item{data_type}{Character string. Connector data source to use: `"sdtm"`, `"adam"`, or `"metadata"`.}
+#'     \item{keep_vars}{Character string. Comma-separated column names to select. Ignored when `is_current_domain` is `TRUE`.}
 #'   }
 #'
 #'   Example:
 #'   \preformatted{
 #'   domains <- list(
 #'     list(
-#'       is_self_domain = TRUE,
+#'       is_current_domain = TRUE,
 #'       domain_name = "ADSL",
 #'       data_type = "adam",
 #'       keep_vars = "ARM_MATCH, COUNTRY, NEWFL01, USUBJID"
 #'     ),
 #'     list(
-#'       is_self_domain = FALSE,
+#'       is_current_domain = FALSE,
 #'       domain_name = "ADLB",
 #'       data_type = "adam",
 #'       keep_vars = "AVAL, LBTEST, USUBJID"
@@ -30,11 +34,11 @@
 #' @code
 cnt <- connector::connect(config = {{{connector_path_expr}}})
 {{#domains}}
-  {{#is_self_domain}}
+  {{#is_current_domain}}
   {{{domain_name}}} <-  cnt${{{data_type}}}$read_cnt(tolower('{{{domain_name}}}'))
-  {{/is_self_domain}}
-  {{^is_self_domain}}
+  {{/is_current_domain}}
+  {{^is_current_domain}}
   {{{domain_name}}} <-  cnt${{{data_type}}}$read_cnt(tolower('{{{domain_name}}}')) |>
   dplyr::select({{{keep_vars}}})
-  {{/is_self_domain}}
+  {{/is_current_domain}}
   {{/domains}}

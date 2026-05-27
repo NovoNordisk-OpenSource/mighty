@@ -71,11 +71,7 @@ params_domain_filter_code <- function(
 
   # SRC_ is only used for domain filters, no longer relevant for the keep step
   keep_vars <- setdiff(keep_vars, "SRC_")
-  keep_vars <- if (length(keep_vars) > 0) {
-    paste(keep_vars, collapse = ", ")
-  } else {
-    NULL
-  }
+  keep_vars <- if (length(keep_vars) > 0) paste(keep_vars, collapse = ", ") else NULL
 
   return(list(
     self = .self,
