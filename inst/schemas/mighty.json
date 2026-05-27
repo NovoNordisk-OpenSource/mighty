@@ -1,5 +1,5 @@
 {
-  "$id": "https://raw.githubusercontent.com/NN-OpenSource/mighty/main/inst/schemas/mighty.json",
+  "$id": "https://raw.githubusercontent.com/NovoNordisk-OpenSource/mighty/main/inst/schemas/mighty.json",
   "title": "Mighty-specific strict validation overlay",
   "description": "Strict validation rules specific to mighty package, applied after base adam.json validation",
   "type": "object",
