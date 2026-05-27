@@ -70,7 +70,8 @@ component_detail <- function(name, params = NULL, renders = NULL) {
 # Three stages of code generation
 
 Mighty produces ADaM programs through three distinct stages, each with its own
-environment:
+environment. Knowing which stage you're looking at tells you what values are
+available and what the parameters mean.
 
 1. **Mighty pipeline** — mighty reads YAML specs, resolves dependencies, and
    decides which components to use and in what order. This is where the
@@ -79,13 +80,15 @@ environment:
 
 2. **Template rendering** — mighty.component renders each Mustache template by
    substituting parameters into `{{placeholders}}`. The template sees only the
-   named list that mighty passes to it. **This vignette documents what those
-   lists contain.**
+   named list that mighty passes to it.
 
 3. **ADaM program execution** — the rendered R code runs later, in the user's
    own R session, as a standalone script. It has access to the `connector`
    package, `dplyr`, and whatever the user's project loads — but not to mighty
    or mighty.component.
+
+This vignette documents the named lists that mighty passes at the Template
+rendering stage.
 
 # Template syntax
 
