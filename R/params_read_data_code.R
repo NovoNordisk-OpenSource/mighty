@@ -18,7 +18,7 @@
 #'       to the connector config file path. Either a quoted literal path or an
 #'       R expression.}
 #'     \item{domains}{List. Domain specifications with elements:
-#'       \code{is_self_domain}, \code{domain_name}, \code{data_type}, \code{keep_vars}}
+#'       \code{is_current_domain}, \code{domain_name}, \code{data_type}, \code{keep_vars}}
 #'   }
 #'
 #' @details
@@ -110,7 +110,7 @@ prepare_domain_data <- function(domain_data, domain_name, .self) {
   )
 
   list(
-    is_self_domain = domain_name == .self,
+    is_current_domain = domain_name == .self,
     domain_name = domain_name,
     data_type = data_type,
     keep_vars = keep_vars

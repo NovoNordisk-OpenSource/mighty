@@ -105,6 +105,7 @@ NOCB
 nomatch
 Nordisk
 notboth
+nzchar
 OCCDS
 PARAMCD
 PARAMVAL
@@ -132,6 +133,7 @@ Roxygen
 Roxygenize
 ruleset
 SAFFL
+sapply
 sdtm
 SDTM
 sdtmdata
@@ -163,6 +165,7 @@ TOPICCD
 TRTSDT
 tstrsplit
 ungroup
+uppercased
 upstr
 usethis
 USUBJID
