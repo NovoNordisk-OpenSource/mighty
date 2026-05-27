@@ -10,10 +10,10 @@ articles:
   - mighty_config
   - adam_specification
   - code_components
-  - special_components
   - connect_to_data
   - missing_data_analysis
 - title: "Technical stuff"
   navbar: Technical stuff
   contents:
   - dev_documentation
+  - special_components
