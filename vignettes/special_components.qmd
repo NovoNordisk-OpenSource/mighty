@@ -92,6 +92,9 @@ rendering stage.
 
 # Template syntax
 
+The parameter examples in later sections show values that get substituted into
+Mustache placeholders. Here's how interpolation works in these templates.
+
 Mustache has two interpolation forms:
 
 | Syntax | Behavior |
