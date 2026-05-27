@@ -108,6 +108,9 @@ The only exception is **section tags** (`{{{#condition}}}`, `{{{/condition}}}`, 
 
 # The `keep_vars` pipeline
 
+Before diving into each template, it helps to understand one parameter that
+appears in four of them with different contents each time.
+
 `keep_vars` appears in the four structural templates (`_read_data`,
 `_init_domain`, `_filter_domain`, `_write_data`) but not in the column-level
 templates (`_col_mutate`, `_col_rename`, `_col_echo`). It carries a different
