@@ -62,39 +62,6 @@
 #'   \item Assign result to the target ADaM domain variable
 #' }
 #'
-#' @examples
-#' \dontrun{
-#' # Single source domain initialization
-#' params_single <-  params_init_domain_code(
-#'   .self = "ADSL",
-#'   keep_vars = c("USUBJID", "AGE", "SEX"),
-#'   source_domains = "DM"
-#' )
-#'
-#' # Multiple source domains with SRC_ tracking
-#' params_multi <- params_init_domain_code(
-#'   .self = "ADLB",
-#'   keep_vars = c("USUBJID", "PARAMCD", "AVAL", "SRC_"),
-#'   source_domains = c("LB", "VS")
-#' )
-#'
-#' # Examine the formatted rbind expression
-#' cat(params_multi$source_domain_rbind)
-#' # rbind(LB,
-#' #       VS)
-#'
-#' # Check SRC_ mutations
-#' str(params_multi$src_mutations)
-#' # List of 2
-#' #  $ :List of 1
-#' #   ..$ domain: chr "LB"
-#' #  $ :List of 1
-#' #   ..$ domain: chr "VS"
-#' }
-#'
-#' @seealso
-#' [define_params()] for the parent function that prepare the parameters for all
-#' actions
 #' @noRd
 params_init_domain_code <- function(.self, keep_vars, source_domains) {
   # Initialize ADaM table by row binding source domain(s) and selecting
