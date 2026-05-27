@@ -74,7 +74,6 @@ render_code <- function(
       depend_domains = action_i$depend_cols[[1]]$domain,
       depend_columns = action_i$depend_cols[[1]]$column_name,
       action_parameters = action_i$parameters,
-      node_id = action_i$node_id,
       path_connector_config = path_connector_config,
       domain_ui_data = ui_data[[action_i$domain]],
       domain_keys = domain_keys,
@@ -135,8 +134,6 @@ render_code <- function(
 #'   the action being performed. Used for compute operations when no specific
 #'   template match is found.
 #'
-#' @param node_id Identifier for the current processing node.
-#'
 #' @param path_connector_config Character string. File path to the connector
 #'   configuration file (e.g., `"_connector.yml"`). This path is embedded
 #'   verbatim into the generated programs.
@@ -186,7 +183,6 @@ define_params <- function(
   depend_domains,
   depend_columns,
   action_parameters,
-  node_id,
   path_connector_config,
   domain_ui_data,
   domain_keys,
