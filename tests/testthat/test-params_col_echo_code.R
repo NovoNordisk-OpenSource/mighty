@@ -17,7 +17,7 @@ test_that("params_col_echo_code returns expected structure", {
       "self",
       "join_dataset",
       "select_expr",
-      "by_vars_str",
+      "by_vars",
       "needs_rename",
       "output_var",
       "var_to_add"
@@ -31,8 +31,8 @@ test_that("params_col_echo_code returns expected structure", {
   expect_match(result$select_expr, "STUDYID")
   expect_match(result$select_expr, "USUBJID")
   expect_match(result$select_expr, "AGE")
-  expect_match(result$by_vars_str, '"STUDYID"')
-  expect_match(result$by_vars_str, '"USUBJID"')
+  expect_match(result$by_vars, '"STUDYID"')
+  expect_match(result$by_vars, '"USUBJID"')
 })
 
 test_that("params_col_echo_code handles rename case", {

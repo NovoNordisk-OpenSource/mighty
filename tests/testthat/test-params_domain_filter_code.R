@@ -1,7 +1,4 @@
-domain_keys <- list(
-  ADSL = c("STUDYID", "USUBJID"),
-  ADLB = c("STUDYID", "USUBJID", "PARAMCD")
-)
+domain_keys <- list(ADSL = c("STUDYID", "USUBJID"), ADLB = c("STUDYID", "USUBJID", "PARAMCD"))
 init_metadata_simple <- list(
   filter_domain = list(LB = NA_character_),
   filter_global = NA_character_,

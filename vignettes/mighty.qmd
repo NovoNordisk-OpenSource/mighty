@@ -90,7 +90,7 @@ assign("adsl_yaml", adsl_yaml, envir = .GlobalEnv)
 
 component_code <- "#' @title Age group 01
 #' @description Grouping of age
-#' @type derivation
+#' @type column
 #' @depends ADSL AGE
 #' @outputs AGE_GRP1
 #' @returns `ADSL`

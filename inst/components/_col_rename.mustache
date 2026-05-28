@@ -1,8 +1,11 @@
-#' @title Col rename
-#' @description Renames a source column to a target column
+#' @title Rename column
+#' @description Renames an existing column in-place using `dplyr::rename()`,
+#'   leaving no extra column behind. Used when the source column has no
+#'   independent entry in the YAML spec; see `_col_mutate` when the source
+#'   column is also retained in the output.
 #' @type internal
-#' @param self Character string. The name of the dataset being modified.
-#' @param rename_var_upper Character string. The new column name after rename.
-#' @param source_var_upper Character string. The existing column to be renamed.
+#' @param self Character string. Name of the dataset being modified (e.g. `"ADLB"`).
+#' @param rename_var Character string. New column name after renaming (e.g. `"SRCSEQ"`).
+#' @param source_var Character string. Existing column to rename (e.g. `"LBSEQ"`).
 #' @code
-{{{self}}} <- {{{self}}} |> dplyr::rename({{{rename_var_upper}}} = {{{source_var_upper}}})
+{{{self}}} <- {{{self}}} |> dplyr::rename({{{rename_var}}} = {{{source_var}}})

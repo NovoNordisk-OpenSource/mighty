@@ -7,9 +7,10 @@
 #' @param .self Character. The target ADaM domain name (e.g., "ADSL", "ADAE").
 #'   Used as the variable name for the initialized data set and converted to
 #'   uppercase for data set labels and references.
-#' @param keep_columns Character vector. Column names to retain in the initialized
-#'   ADaM domain. If "SRC_" is included, source domain tracking variables will
-#'   be generated for each contributing SDTM domain.
+#' @param keep_vars Character vector. Column names to retain in the initialized
+#'   ADaM domain. If `"SRC_"` is included, source domain tracking variables will
+#'   be generated for each contributing SDTM domain. Formatted as a
+#'   comma-separated string in the returned list.
 #' @param source_domains Character vector. Names of source SDTM domains to combine
 #'   (e.g., c("DM", "VS", "LB")). These domains will be row-bound together to
 #'   create the initial ADaM data set structure.
@@ -17,13 +18,13 @@
 #' @return A named list containing template parameters for code generation:
 #'   \describe{
 #'     \item{self}{Character. The target ADaM domain name (same as `.self`)}
-#'     \item{self_upper}{Character. Uppercase version of the domain name for labels}
-#'     \item{keep_columns}{Character vector. Columns to retain (same as input)}
+#'     \item{keep_vars}{Character string. Comma-separated column names to retain,
+#'       formatted for direct use in the template.}
 #'     \item{source_domain_rbind}{Character. Formatted R expression for combining
 #'       source domains. Single domain returns the domain name; multiple domains
 #'       return a formatted `rbind()` call}
 #'     \item{src_mutations}{List. Source domain mutation specifications for SRC_
-#'       variable creation. Empty list if "SRC_" not in `keep_columns`}
+#'       variable creation. Empty list if "SRC_" not in `keep_vars`}
 #'   }
 #'
 #' @details
@@ -37,7 +38,7 @@
 #' }
 #'
 #' \subsection{SRC_ Variable Handling}{
-#' If "SRC_" appears in `keep_columns`, the function prepares mutation specifications
+#' If "SRC_" appears in `keep_vars`, the function prepares mutation specifications
 #' for each source domain. This enables tracking which source domain contributed
 #' each record in the final ADaM dataset.
 #' }
@@ -47,7 +48,7 @@
 #' templates that produce initialization blocks like:
 #' \preformatted{
 #' ADSL <- DM |>
-#'   select(keep_columns) |>
+#'   select(keep_vars) |>
 #'   mutate(SRC_= "DM")
 #' }
 #' }
@@ -56,52 +57,19 @@
 #' The parameters typically generate initialization code following this pattern:
 #' \itemize{
 #'   \item Combine source domains using rbind if multiple domains
-#'   \item Select specified columns using `keep_columns`
+#'   \item Select specified columns using `keep_vars`
 #'   \item Add SRC_ tracking variables if requested
 #'   \item Assign result to the target ADaM domain variable
 #' }
 #'
-#' @examples
-#' \dontrun{
-#' # Single source domain initialization
-#' params_single <-  params_init_domain_code(
-#'   .self = "ADSL",
-#'   keep_columns = c("USUBJID", "AGE", "SEX"),
-#'   source_domains = "DM"
-#' )
-#'
-#' # Multiple source domains with SRC_ tracking
-#' params_multi <- params_init_domain_code(
-#'   .self = "ADLB",
-#'   keep_columns = c("USUBJID", "PARAMCD", "AVAL", "SRC_"),
-#'   source_domains = c("LB", "VS")
-#' )
-#'
-#' # Examine the formatted rbind expression
-#' cat(params_multi$source_domain_rbind)
-#' # rbind(LB,
-#' #       VS)
-#'
-#' # Check SRC_ mutations
-#' str(params_multi$src_mutations)
-#' # List of 2
-#' #  $ :List of 1
-#' #   ..$ domain: chr "LB"
-#' #  $ :List of 1
-#' #   ..$ domain: chr "VS"
-#' }
-#'
-#' @seealso
-#' [define_params()] for the parent function that prepare the parameters for all
-#' actions
 #' @noRd
-params_init_domain_code <- function(.self, keep_columns, source_domains) {
+params_init_domain_code <- function(.self, keep_vars, source_domains) {
   # Initialize ADaM table by row binding source domain(s) and selecting
   # predecessors from source domain(s).
 
   # Data preparation for SRC_ mutations
   src_mutations <- list()
-  if ("SRC_" %in% keep_columns) {
+  if ("SRC_" %in% keep_vars) {
     src_mutations <- source_domains |>
       lapply(function(domain) {
         list(domain = domain)
@@ -120,8 +88,7 @@ params_init_domain_code <- function(.self, keep_columns, source_domains) {
 
   return(list(
     self = .self,
-    self_upper = toupper(.self),
-    keep_columns = keep_columns,
+    keep_vars = paste(keep_vars, collapse = ", "),
     source_domain_rbind = source_domain_rbind,
     src_mutations = src_mutations
   ))

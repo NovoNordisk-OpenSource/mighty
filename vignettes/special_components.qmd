@@ -1,0 +1,704 @@
+---
+title: "Special components"
+vignette: >
+  %\VignetteIndexEntry{Special components}
+  %\VignetteEngine{quarto::html}
+  %\VignetteEncoding{UTF-8}
+knitr:
+  opts_chunk:
+    collapse: true
+    comment: '#>'
+---
+
+Special components are Mustache templates prefixed with `_` that mighty inserts
+automatically into every generated ADaM program. Users never reference them in
+YAML specs. This vignette documents the parameter contract for each special
+component so that template authors can understand (and modify) the templates.
+
+```{r}
+#| label: setup
+#| include: false
+library(mighty.component)
+
+component_path <- function(name) {
+  p <- system.file(paste0("components/", name), package = "mighty")
+  if (nzchar(p)) p else file.path("..", "inst", "components", name)
+}
+
+.html_escape <- function(x) {
+  x <- gsub("&", "&amp;", x, fixed = TRUE)
+  x <- gsub("<", "&lt;", x, fixed = TRUE)
+  x <- gsub(">", "&gt;", x, fixed = TRUE)
+  x
+}
+
+component_detail <- function(name, params = NULL, renders = NULL) {
+  template_html <- .html_escape(paste(readLines(component_path(name)), collapse = "\n"))
+
+  if (is.null(renders)) {
+    render_html <- paste0(
+      "<p><strong>Rendered output</strong></p>\n",
+      "<pre><code class=\"language-r\">",
+      get_rendered_component(component_path(name), params)$code |>
+        paste(collapse = "\n") |>
+        .html_escape(),
+      "</code></pre>\n"
+    )
+  } else {
+    render_html <- paste(sapply(renders, function(r) {
+      paste0(
+        "<p><strong>", r$label, "</strong></p>\n",
+        "<pre><code class=\"language-r\">",
+        get_rendered_component(component_path(name), r$params)$code |>
+          paste(collapse = "\n") |>
+          .html_escape(),
+        "</code></pre>\n"
+      )
+    }), collapse = "")
+  }
+
+  knitr::asis_output(paste0(
+    "<details><summary>Standard template and rendered output</summary>\n",
+    "<p><strong>Template</strong></p>\n",
+    "<pre><code>", template_html, "</code></pre>\n",
+    render_html,
+    "</details>\n"
+  ))
+}
+```
+
+# Three stages of code generation
+
+Mighty produces ADaM programs through three distinct stages, each with its own
+environment. Knowing which stage you're looking at tells you what values are
+available and what the parameters mean.
+
+1. **Mighty pipeline** — mighty reads YAML specs, resolves dependencies, and
+   decides which components to use and in what order. This is where the
+   parameter lists described below get built. The environment is mighty's own R
+   session with full access to mighty internals.
+
+2. **Template rendering** — mighty.component renders each Mustache template by
+   substituting parameters into `{{placeholders}}`. The template sees only the
+   named list that mighty passes to it.
+
+3. **ADaM program execution** — the rendered R code runs later, in the user's
+   own R session, as a standalone script. It has access to the `connector`
+   package, `dplyr`, and whatever the user's project loads — but not to mighty
+   or mighty.component.
+
+This vignette documents the named lists that mighty passes at the Template
+rendering stage.
+
+# Template syntax
+
+The parameter examples in later sections show values that get substituted into
+Mustache placeholders. Here's how interpolation works in these templates.
+
+Mustache has two interpolation forms:
+
+| Syntax | Behavior |
+|--------|-----------|
+| `{{{variable}}}` | Inserts the value with HTML escaping — `"` becomes `&quot;`, `<` becomes `&lt;`, etc. |
+| `{{{{variable}}}}` | Inserts the value verbatim — no escaping |
+
+All variable interpolations in these templates use triple-mustache `{{{{variable}}}}`, in both `@code` sections and documentation headers (`@title`, `@description`, `@param`, `@depends`, `@outputs`). This avoids HTML escaping in generated code and defers any format-specific rendering to mighty.component.
+
+The only exception is **section tags** (`{{{#condition}}}`, `{{{/condition}}}`, `{{{^condition}}}`), which are always double-mustache — this is a Mustache language requirement.
+
+# The `keep_vars` pipeline
+
+Before diving into each template, it helps to understand one parameter that
+appears in four of them with different contents each time.
+
+`keep_vars` appears in the four structural templates (`_read_data`,
+`_init_domain`, `_filter_domain`, `_write_data`) but not in the column-level
+templates (`_col_mutate`, `_col_rename`, `_col_echo`). It carries a different
+set of columns at each stage:
+
+| Template | `keep_vars` contains | Purpose |
+|---|---|---|
+| `_read_data` | All columns needed by any downstream step, per source domain | Limits memory footprint on read |
+| `_init_domain` | Same list as `_read_data` | Selects columns after row binding |
+| `_filter_domain` | Columns surviving after filtering, minus `SRC_` and filter-only columns | Drops columns no longer needed post-filter |
+| `_write_data` | Final output columns in YAML spec order | Controls what is persisted and in what order |
+
+`keep_vars` in `_read_data` is the origin: every column referenced in later
+templates must have been loaded there first. If a column appears in
+`_init_domain`, `_filter_domain`, or `_write_data` but was not included in
+`_read_data`, the generated program will fail at execution time with a column
+not found error. Mighty computes all four lists from the same YAML specification
+so this is guaranteed automatically — but it matters when modifying templates or
+building custom pipelines.
+
+# _read_data
+
+Rendered at the top of every ADaM program. Opens a connector and reads each
+source dataset, selecting only the columns needed downstream.
+
+## Example
+
+Given this YAML specification:
+
+```yaml
+id: ADSL
+keys:
+  - USUBJID
+  - STUDYID
+population:
+  base:
+    - domain: DM
+      depends: [NA]
+      filter: NA
+    - domain: DM_VACCINE
+      depends: [NA]
+      filter: NA
+columns:
+  - id: USUBJID
+  - id: STUDYID
+  - id: ARM
+```
+
+Mighty builds the following parameter list and passes it to the template:
+
+```r
+list(
+  connector_path_expr = '"_connector.yml"',
+  domains = list(
+    list(
+      is_current_domain = FALSE,
+      domain_name = "DM",
+      data_type = "sdtm",
+      keep_vars = "ARM, STUDYID, USUBJID"
+    ),
+    list(
+      is_current_domain = FALSE,
+      domain_name = "DM_VACCINE",
+      data_type = "sdtm",
+      keep_vars = "ARM, STUDYID, USUBJID"
+    )
+  )
+)
+```
+
+The standard template and a rendered version using the parameter list above can be expanded below.
+
+```{r}
+#| echo: false
+component_detail("_read_data.mustache", list(
+  connector_path_expr = '"_connector.yml"',
+  domains = list(
+    list(is_current_domain = FALSE, domain_name = "DM", data_type = "sdtm", keep_vars = "ARM, STUDYID, USUBJID"),
+    list(is_current_domain = FALSE, domain_name = "DM_VACCINE", data_type = "sdtm", keep_vars = "ARM, STUDYID, USUBJID")
+  )
+))
+```
+
+## Parameters
+
+### `connector_path_expr`
+
+A string containing an R expression that resolves to the connector config file
+path at runtime. Two forms are possible:
+
+| Config value | `connector_path_expr` |
+|---|---|
+| `_connector.yml` | `'"_connector.yml"'` (quoted literal) |
+| `!expr here::here("_connector.yml")` | `'here::here("_connector.yml")'` (bare expression) |
+
+The `!expr` prefix in the mighty config strips the prefix and passes the
+remaining expression through verbatim. Plain paths are wrapped in double quotes
+so they evaluate as character literals in the generated R code.
+
+### `domains`
+
+A list where each element represents one source dataset to read. Each element
+is a named list with the following fields:
+
+| Field | Type | Meaning |
+|-------|------|---------|
+| `domain_name` | character | Source dataset name, uppercase (e.g. `"DM"`, `"ADSL"`). |
+| `data_type` | character | Which connector data source to use: `"sdtm"`, `"adam"`, or `"metadata"`. |
+| `keep_vars` | character | Comma-separated column names to select, sorted alphabetically and uppercased. Only used when `is_current_domain` is `FALSE`. Column order in the final dataset is controlled by `keep_vars` in `_write_data`, not by this field. |
+| `is_current_domain` | logical | `TRUE` when the domain being read is the same one being built. When `TRUE`, `keep_vars` should be ignored. |
+
+#### How `data_type` is determined
+
+Domain names are classified using these rules:
+
+| Pattern | `data_type` |
+|---------|-------------|
+| Two-character names (`DM`, `LB`, `VS`, ...), `RELREC`, `DM_*`, `SUPP*` | `"sdtm"` |
+| Names starting with `AD` (`ADSL`, `ADLB`, ...) | `"adam"` |
+| Names starting with `MD` | `"metadata"` |
+
+#### When `is_current_domain` is `TRUE`
+
+This happens in multi-program domains where a later program reads the output of
+an earlier program for the same domain (e.g. an ADSL "update" program). When
+`is_current_domain` is `TRUE`, `keep_vars` should be ignored.
+
+# _init_domain
+
+Rendered once per program, after `_read_data`. Combines one or more source
+datasets by row binding and selects the columns needed for the domain.
+
+## Example
+
+Using the same ADSL specification from `_read_data`:
+
+```r
+list(
+  self = "ADSL",
+  keep_vars = "ARM, STUDYID, USUBJID",
+  source_domain_rbind = "rbind(DM,\nDM_VACCINE)",
+  src_mutations = list()
+)
+```
+
+`src_mutations` is empty here because both source domains have `filter: NA`.
+When domain-specific filters are defined, mighty populates it so that a
+temporary `SRC_` column can be added before row binding (see
+[ADaM specification — filter execution order](adam_specification.html#filter-execution-order)):
+
+```r
+src_mutations = list(
+  list(domain = "DM"),
+  list(domain = "DM_VACCINE")
+)
+```
+
+The standard template and a rendered version using the parameter list above can be expanded below.
+
+```{r}
+#| echo: false
+component_detail("_init_domain.mustache", list(
+  self = "ADSL",
+  keep_vars = "ARM, STUDYID, USUBJID",
+  source_domain_rbind = "rbind(DM,\nDM_VACCINE)",
+  src_mutations = list()
+))
+```
+
+## Parameters
+
+### `self`
+
+The name of the ADaM domain being built (e.g. `"ADSL"`, `"ADLB"`). Used as
+the variable name on the left-hand side of the assignment.
+
+### `keep_vars`
+
+Comma-separated column names to retain after row binding. Pre-formatted in R
+before being passed to the template.
+
+### `source_domain_rbind`
+
+A pre-formatted R expression that combines source datasets. A single source
+domain is passed as its name directly; multiple domains are wrapped in an
+`rbind()` call with line breaks for readability.
+
+### `src_mutations`
+
+A list of per-domain mutation specifications used to add a `SRC_` tracking
+column before row binding. Each element has a single field:
+
+| Field | Type | Meaning |
+|-------|------|---------|
+| `domain` | character | Name of the source domain to tag with `SRC_`. |
+
+`src_mutations` is empty when `SRC_` is not in `keep_vars`.
+
+`SRC_` is an internal column that mighty adds and removes automatically to
+support domain-specific row filters. See the
+[ADaM specification vignette](adam_specification.html#filter-execution-order) for a
+full explanation of how filtering works across source domains.
+
+# _filter_domain
+
+Rendered after `_init_domain`. Applies joins, domain-specific filters, global
+filters, and column selection to the initialized dataset.
+
+## Example
+
+Given this YAML specification:
+
+```yaml
+id: ADLB
+keys:
+  - USUBJID
+  - STUDYID
+population:
+  base:
+    - domain: LB
+      depends: [NA]
+      filter: NA
+    - domain: XL
+      depends: [LBCAT]
+      filter: "LBCAT == 'CHEMISTRY'"
+  global:
+    - filter: "!is.na(SEX)"
+      depends: [ADSL.SEX]
+columns:
+  - id: USUBJID
+  - id: STUDYID
+  - id: PARAMCD
+  - id: LBCAT
+  - id: SEX
+    method: ADSL.SEX
+```
+
+Mighty builds the following parameter list and passes it to the template:
+
+```r
+list(
+  self = "ADLB",
+  joins = list(
+    list(
+      table = "ADSL",
+      select_expr = "SEX, STUDYID, USUBJID",
+      keys = '"STUDYID", "USUBJID"'
+    )
+  ),
+  domain_filter = "(SRC_ == 'LB') | (SRC_ == 'XL' & LBCAT == 'CHEMISTRY')",
+  global_filter = "!is.na(SEX)",
+  keep_vars = "LBCAT, PARAMCD, STUDYID, USUBJID"
+)
+```
+
+::: {.callout-note}
+`SEX` appears in the global filter (`!is.na(SEX)`) and is declared in the YAML
+spec, but it is absent from `keep_vars`. This is intentional: `SEX` originates
+from `ADSL` (via `method: ADSL.SEX`) and is not present in the LB or XL source
+data. It is joined in temporarily to evaluate the filter, then dropped. A
+subsequent `_col_echo` step re-adds `SEX` to ADLB permanently via a left join
+with ADSL.
+:::
+
+The standard template and a rendered version using the parameter list above can be expanded below.
+
+```{r}
+#| echo: false
+component_detail("_filter_domain.mustache", list(
+  self = "ADLB",
+  joins = list(
+    list(table = "ADSL", select_expr = "SEX, STUDYID, USUBJID", keys = '"STUDYID", "USUBJID"')
+  ),
+  domain_filter = "(SRC_ == 'LB') | (SRC_ == 'XL' & LBCAT == 'CHEMISTRY')",
+  global_filter = "!is.na(SEX)",
+  keep_vars = "LBCAT, PARAMCD, STUDYID, USUBJID"
+))
+```
+
+## Parameters
+
+### `self`
+
+The name of the ADaM domain being filtered.
+
+### `joins`
+
+A list of join specifications. Each element is a named list:
+
+| Field | Type | Meaning |
+|-------|------|---------|
+| `table` | character | Name of the dataset to join with. |
+| `select_expr` | character | Comma-separated column names to select from the join dataset. |
+| `keys` | character | Comma-separated quoted column names used as join keys. |
+
+`joins` is empty when no filter depends on an external dataset.
+
+### `domain_filter`
+
+Pre-formatted R expression filtering on `SRC_` (e.g.
+`"(SRC_ == 'LB') | (SRC_ == 'XL' & LBCAT == 'CHEMISTRY')"`). `NULL` when no
+domain-specific filter is defined — whisker treats `NULL` as falsy so the filter
+block is suppressed.
+
+### `global_filter`
+
+Raw filter expression string from the YAML spec (e.g. `"!is.na(SEX)"`). `NULL`
+when no global filter is defined — the filter block is suppressed.
+
+### `keep_vars`
+
+A comma-separated string of column names to retain. `NULL` when no selection
+is needed — whisker treats `NULL` as falsy so the `dplyr::select()` call is
+suppressed. `SRC_` is excluded because it is only used during filtering.
+
+# _col_mutate
+
+Rendered for each `col_copy` action — variables copied verbatim from one column
+to another, typically with an ADaM-standard rename (e.g. `LBSTRESN` → `AVAL`).
+
+## Example
+
+Consider the following YAML specification snippet. `AVAL` is defined with
+`method: LBSTRESN`, and `LBSTRESN` is also listed as its own column. Mighty
+copies the values rather than renaming because the source column is retained
+in the output:
+
+```yaml
+columns:
+  - id: LBSTRESN
+  - id: AVAL
+    method: LBSTRESN
+```
+
+Mighty builds the following parameter list and passes it to the template:
+
+```r
+list(
+  self = "ADLB",
+  rename_var = "AVAL",
+  source_var = "LBSTRESN"
+)
+```
+
+The standard template and a rendered version using the parameter list above can be expanded below.
+
+```{r}
+#| echo: false
+component_detail("_col_mutate.mustache",
+  list(self = "ADLB", rename_var = "AVAL", source_var = "LBSTRESN")
+)
+```
+
+## Parameters
+
+### `self`
+
+The name of the dataset being modified.
+
+### `rename_var`
+
+The name of the new column to create.
+
+### `source_var`
+
+The name of the existing column whose values are copied.
+
+# _col_rename
+
+Rendered for each `col_rename` action — renames an existing column in-place without copying values. Unlike `_col_mutate`, which creates a new column via `dplyr::mutate()`, this template uses `dplyr::rename()` and leaves no extra column behind.
+
+Both templates share the same parameter list and are served by the same internal function (`params_mutate_code`). They differ only in the R verb the template emits.
+
+## Example
+
+Consider the following YAML specification snippet. `SRCSEQ` is defined with
+`method: LBSEQ`, and `LBSEQ` is **not** listed as its own column. Because
+the source column has no independent entry, mighty renames it rather than
+copying it:
+
+```yaml
+columns:
+  - id: SRCSEQ
+    method: LBSEQ
+```
+
+Mighty builds the following parameter list and passes it to the template:
+
+```r
+list(
+  self = "ADLB",
+  rename_var = "SRCSEQ",
+  source_var = "LBSEQ"
+)
+```
+
+The standard template and a rendered version using the parameter list above can be expanded below.
+
+```{r}
+#| echo: false
+component_detail("_col_rename.mustache",
+  list(self = "ADLB", rename_var = "SRCSEQ", source_var = "LBSEQ")
+)
+```
+
+## Parameters
+
+### `self`
+
+The name of the dataset being modified.
+
+### `rename_var`
+
+The new column name after renaming.
+
+### `source_var`
+
+The existing column to rename.
+
+# _col_echo
+
+Rendered for each `col_echo` action — variables pulled in from a different
+domain via a left join.
+
+## Example
+
+Consider the following YAML specification snippet. The dot notation `ADSL.SEX`
+in `method:` tells mighty the column originates from another domain, which
+triggers a left join rather than a direct copy:
+
+```yaml
+columns:
+  - id: SEX
+    method: ADSL.SEX
+```
+
+Mighty builds the following parameter list and passes it to the template:
+
+```r
+list(
+  self = "ADLB",
+  join_dataset = "ADSL",
+  select_expr = "STUDYID, USUBJID, SEX",
+  by_vars = '"STUDYID", "USUBJID"',
+  needs_rename = FALSE,
+  output_var = "SEX",
+  var_to_add = "SEX"
+)
+```
+
+This is the step that permanently adds `SEX` to ADLB — the same column that
+`_filter_domain` joined in temporarily to evaluate the global filter.
+
+The standard template and a rendered version using the parameter list above can be expanded below.
+
+```{r}
+#| echo: false
+component_detail("_col_echo.mustache", list(
+  self = "ADLB",
+  join_dataset = "ADSL",
+  select_expr = "STUDYID, USUBJID, SEX",
+  by_vars = '"STUDYID", "USUBJID"',
+  needs_rename = FALSE,
+  output_var = "SEX",
+  var_to_add = "SEX"
+))
+```
+
+## Parameters
+
+### `self`
+
+The name of the primary dataset being modified.
+
+### `join_dataset`
+
+The name of the dataset to join with (right-hand side of the join).
+
+### `select_expr`
+
+Comma-separated column names to select from `join_dataset` before joining.
+Includes both the join keys and the variable being added.
+
+### `by_vars`
+
+Comma-separated quoted column names used as join keys, ready for use in
+`dplyr::left_join(by = c(...))`.
+
+### `needs_rename`
+
+`TRUE` when the variable name in the source domain differs from the desired
+output name. When `TRUE`, a `dplyr::rename()` call is appended.
+
+### `output_var` / `var_to_add`
+
+`var_to_add` is the column name as it exists in `join_dataset`. `output_var` is
+the desired column name in `self`. When `needs_rename` is `FALSE` they are
+equal.
+
+# _write_data
+
+Rendered at the end of every ADaM program. Sorts rows, selects columns in
+specification order, and persists the dataset via the connector.
+
+## Example
+
+For the ADSL specification from the `_read_data` example, mighty builds:
+
+```r
+list(
+  self = "ADSL",
+  file_ext = "parquet",
+  row_order_vars = "USUBJID,\nSTUDYID",
+  keep_vars = "USUBJID,\nSTUDYID,\nARM"
+)
+```
+
+`keep_vars` is always pre-formatted as a `,\n`-separated string.
+
+::: {.callout-note}
+When mighty is run with source data available for validation, columns that
+cannot be derived due to missing source data are prefixed with `# ` in the
+formatted string, commenting them out of the `dplyr::select()` call. This
+allows the generated program to run and produce a partial dataset rather than
+failing outright. This behaviour is part of mighty's missing data handling and
+does not affect the template itself.
+:::
+
+
+```r
+list(
+  self = "ADLB",
+  file_ext = "parquet",
+  row_order_vars = "USUBJID,\nSTUDYID",
+  keep_vars = "USUBJID,\nSTUDYID,\nPARAMCD,\nAVAL"
+)
+```
+
+The template and two rendered versions — one with a short column list and one with a longer list — can be expanded below.
+
+```{r}
+#| echo: false
+component_detail("_write_data.mustache",
+  renders = list(
+    list(
+      label = "Rendered output — short column list",
+      params = list(
+        self = "ADSL",
+        file_ext = "parquet",
+        row_order_vars = "USUBJID,\nSTUDYID",
+        keep_vars = "USUBJID,\nSTUDYID,\nARM"
+      )
+    ),
+    list(
+      label = "Rendered output — long column list",
+      params = list(
+        self = "ADLB",
+        file_ext = "parquet",
+        row_order_vars = "USUBJID,\nSTUDYID",
+        keep_vars = "USUBJID,\nSTUDYID,\nPARAMCD,\nAVAL"
+      )
+    )
+  )
+)
+```
+
+## Parameters
+
+### `self`
+
+The name of the domain being built (e.g. `"ADSL"`, `"ADLB"`).
+
+### `file_ext`
+
+File extension for the persisted dataset. Defaults to `"parquet"`. Will be
+configurable via `_mighty.yml` (global default) and per-domain YAML
+(`table_metadata`) in a future release.
+
+### `row_order_vars`
+
+The domain's primary keys, formatted as a `,\n`-separated string. `NULL` when
+the domain has no primary keys — whisker treats `NULL` as falsy so the sort
+block is suppressed.
+
+### `keep_vars`
+
+The output columns in specification order. `NULL` for intermediate programs in
+multi-program domains — the template uses `keep_vars` directly as the section
+condition, so a `NULL` value suppresses the `dplyr::select()` call. Always
+passed as a `,\n`-separated string. See the callout above regarding columns that
+may be prefixed with `# `.

@@ -443,7 +443,7 @@ writeLines(
 #' @param dtc_var Name of the source DTC variable
 #' @param dt_var Name of the output date variable
 #' @param dtf_var Name of the output date flag variable
-#' @type derivation
+#' @type column
 #' @depends ADLB USUBJID
 #' @outputs {{{dt_var}}}
 #' @outputs {{{dtf_var}}}
