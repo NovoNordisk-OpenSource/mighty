@@ -6,7 +6,6 @@
 \usage{
 generate_adam_code(
   adam_specifications,
-  standards_lib = NULL,
   path_connector_config,
   check_cross_domain_adam_dependencies = TRUE,
   data_context = NULL
@@ -16,9 +15,6 @@ generate_adam_code(
 \item{adam_specifications}{Character string. Directory path containing ADaM
 specification YAML files (one per domain) and optionally a \verb{_mighty.yml}
 framework configuration file with external dataset definitions and keys.}
-
-\item{standards_lib}{Optional list or environment containing standard code
-components and templates. If \code{NULL}, uses default standards library.}
 
 \item{path_connector_config}{Character string. File path to the connector
 configuration file (e.g., \code{"_connector.yml"}).
@@ -67,8 +63,8 @@ Used for debugging action execution order and dependency resolution.}
 \item{actions}{\emph{For debugging only}. Data.table containing base action configurations
 before code rendering and program organization. Each row represents a single action with
 columns: \code{node_id} (unique action identifier), \code{domain} (ADaM domain name), \code{code_id}
-(reference to code component or NA), \code{type} (action type: col_copy, col_mutate, col_echo,
-col_compute, row_compute, init_domain, or filter_domain), \code{outputs} (list column of
+(reference to code component or NA), \code{type} (action type: col_copy, col_rename, col_mutate,
+col_echo, col_compute, row_compute, init_domain, or filter_domain), \code{outputs} (list column of
 character vectors showing columns produced), \code{depend_cols} (nested data.table with
 column_name, domain, and domain_type showing column dependencies), \code{depend_rows} (list
 of node_ids this action depends on for row operations), and \code{parameters} (named list of
@@ -137,14 +133,6 @@ result <- generate_adam_code(
 # Access generated programs
 adsl_program <- result$programs$ADSL
 executable_programs <- result$executable_programs
-
-# Generate with custom standards library
-result_custom <- generate_adam_code(
-  adam_specifications = "yaml_specs/",
-  standards_lib = my_custom_standards,
-  path_connector_config = "trial_data/_connector.yml",
-  check_cross_domain_adam_dependencies = FALSE
-)
 }
 
 }

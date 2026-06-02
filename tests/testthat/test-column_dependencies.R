@@ -15,12 +15,10 @@ test_that("No filters", {
     test_data_path = path_connector_config,
     sdtm_domains = c("dm", "dm_vaccine")
   )
-  standards_lib <- "mighty.standards"
 
   # ACT -------------------------------------------------------------------
   actual <- generate_adam_code(
     adam_specifications = adam_specifications,
-    standards_lib = standards_lib,
     path_connector_config = get_connector_config_path(path_connector_config),
     check_cross_domain_adam_dependencies = TRUE
   )
@@ -92,13 +90,11 @@ test_that("No filters - external core domain dependency on col_compute action", 
     test_data_path = path_connector_config,
     sdtm_domains = c("dm", "dm_vaccine")
   )
-  standards_lib <- "mighty.standards"
 
   # ACT -------------------------------------------------------------------
 
   actual <- generate_adam_code(
     adam_specifications = adam_specifications,
-    standards_lib = standards_lib,
     path_connector_config = get_connector_config_path(path_connector_config),
     check_cross_domain_adam_dependencies = TRUE
   )
@@ -182,13 +178,11 @@ test_that("No domain filters", {
     test_data_path = path_connector_config,
     sdtm_domains = c("dm", "dm_vaccine")
   )
-  standards_lib <- "mighty.standards"
 
   # ACT -------------------------------------------------------------------
 
   actual <- generate_adam_code(
     adam_specifications = adam_specifications,
-    standards_lib = standards_lib,
     path_connector_config = get_connector_config_path(path_connector_config),
     check_cross_domain_adam_dependencies = TRUE
   )
@@ -267,13 +261,11 @@ test_that("No global filters", {
     test_data_path = path_connector_config,
     sdtm_domains = c("dm", "dm_vaccine")
   )
-  standards_lib <- "mighty.standards"
 
   # ACT -------------------------------------------------------------------
 
   actual <- generate_adam_code(
     adam_specifications = adam_specifications,
-    standards_lib = standards_lib,
     path_connector_config = get_connector_config_path(path_connector_config),
     check_cross_domain_adam_dependencies = TRUE
   )
@@ -352,13 +344,11 @@ test_that("No filters and no derivations", {
     test_data_path = path_connector_config,
     sdtm_domains = c("dm", "dm_vaccine")
   )
-  standards_lib <- "mighty.standards"
 
   # ACT -------------------------------------------------------------------
 
   actual <- generate_adam_code(
     adam_specifications = adam_specifications,
-    standards_lib = standards_lib,
     path_connector_config = get_connector_config_path(path_connector_config),
     check_cross_domain_adam_dependencies = TRUE
   )
@@ -422,13 +412,11 @@ test_that("Global filter and domain filter", {
     test_data_path = path_connector_config,
     sdtm_domains = c("dm", "dm_vaccine")
   )
-  standards_lib <- "mighty.standards"
 
   # ACT -------------------------------------------------------------------
 
   actual <- generate_adam_code(
     adam_specifications = adam_specifications,
-    standards_lib = standards_lib,
     path_connector_config = get_connector_config_path(path_connector_config),
     check_cross_domain_adam_dependencies = TRUE
   )
@@ -509,13 +497,11 @@ test_that("Global filter and domain filter incl. adsl dependencies", {
     sdtm_domains = c("lb"),
     adam_domains = c("adsl")
   )
-  standards_lib <- "mighty.standards"
 
   # ACT -------------------------------------------------------------------
 
   actual <- generate_adam_code(
     adam_specifications = adam_specifications,
-    standards_lib = standards_lib,
     path_connector_config = get_connector_config_path(path_connector_config),
     check_cross_domain_adam_dependencies = FALSE
   )
@@ -585,13 +571,11 @@ test_that("External predecessor dependencies are handled correctly in filter and
     sdtm_domains = c("lb"),
     adam_domains = c("adsl")
   )
-  standards_lib <- "mighty.standards"
 
   # ACT -------------------------------------------------------------------
 
   actual <- generate_adam_code(
     adam_specifications = adam_specifications,
-    standards_lib = standards_lib,
     path_connector_config = get_connector_config_path(path_connector_config),
     check_cross_domain_adam_dependencies = FALSE
   )

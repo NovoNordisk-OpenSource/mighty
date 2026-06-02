@@ -30,6 +30,9 @@
 #' @param file_ext Character string. File extension for the written dataset,
 #'   defaults to `"parquet"`. Will be overridable via `_mighty.yml` and
 #'   per-domain YAML in a future release.
+#' @param repos Character vector of repository paths used to resolve standard
+#'   component references. Passed through to
+#'   [mighty.component::get_rendered_component()]. May be `NULL`.
 #'
 #' @return
 #' The input actions data table with an additional 'code' column containing
@@ -42,7 +45,8 @@ render_code <- function(
   ui_data,
   path_connector_config,
   available_data = NULL,
-  file_ext = "parquet"
+  file_ext = "parquet",
+  repos = NULL
 ) {
   actions_program_summary <- actions |>
     dplyr::group_by(domain) |>
@@ -84,7 +88,8 @@ render_code <- function(
 
     code <- mighty.component::get_rendered_component(
       component = action_i$code_id |> format_internal_code_id(),
-      params = params
+      params = params,
+      repos = repos
     )$code |>
       paste0(collapse = "\n")
     code_i <- paste0(

@@ -1,4 +1,3 @@
-
 test_that("col_rename uses dplyr::rename for base domain source in ADLB", {
   # SETUP -------------------------------------------------------------------
 
@@ -65,7 +64,6 @@ test_that("col_rename falls back to col_mutate when source is a col_copy", {
 
   actual <- generate_adam_code(
     adam_specifications = adam_specifications,
-    standards_lib = "mighty.standards",
     path_connector_config = get_connector_config_path(path_connector_config),
     check_cross_domain_adam_dependencies = FALSE
   )

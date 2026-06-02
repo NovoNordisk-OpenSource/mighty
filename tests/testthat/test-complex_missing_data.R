@@ -18,13 +18,11 @@ test_that("Complex test w/ missing dm_vaccine.SEX", {
     remove_cols = data.table(domain = c("dm_vaccine"), columns = c("SEX"))
   )
   cnt <- connector::connect(get_connector_config_path(path_connector_config))
-  standards_lib <- "mighty.standards"
 
   # ACT ---------------------------------------------------------------------
 
   actual <- generate_adam_code(
     adam_specifications = adam_specifications,
-    standards_lib = standards_lib,
     path_connector_config = get_connector_config_path(path_connector_config),
     check_cross_domain_adam_dependencies = TRUE,
     data_context = data_context$new(cnt)
@@ -171,13 +169,11 @@ test_that("Complex test w/ missing dm_vaccine.AGE and dm.SEX", {
     )
   )
   cnt <- connector::connect(get_connector_config_path(path_connector_config))
-  standards_lib <- "mighty.standards"
 
   # ACT ---------------------------------------------------------------------
 
   actual <- generate_adam_code(
     adam_specifications = adam_specifications,
-    standards_lib = standards_lib,
     path_connector_config = get_connector_config_path(path_connector_config),
     check_cross_domain_adam_dependencies = TRUE,
     data_context = data_context$new(cnt)
@@ -377,13 +373,11 @@ test_that("Complex test w/ missing lb.LBSTRESN", {
     remove_cols = data.table(domain = c("lb"), columns = c("LBSTRESN"))
   )
   cnt <- connector::connect(get_connector_config_path(path_connector_config))
-  standards_lib <- "mighty.standards"
 
   # ACT ---------------------------------------------------------------------
 
   actual <- generate_adam_code(
     adam_specifications = adam_specifications,
-    standards_lib = standards_lib,
     path_connector_config = get_connector_config_path(path_connector_config),
     check_cross_domain_adam_dependencies = TRUE,
     data_context = data_context$new(cnt)

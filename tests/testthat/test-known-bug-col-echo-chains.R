@@ -69,20 +69,16 @@ columns:
 
   path_connector_config <- withr::local_tempdir()
 
-  standards_lib <- "mighty.standards"
-
   setup_testdata(
     testdata = "pharmaverse",
     test_data_path = path_connector_config,
     sdtm_domains = c("dm", "lb")
   )
-  standards_lib <- "mighty.standards"
 
   # ACT ---------------------------------------------------------------------
 
   actual <- generate_adam_code(
     adam_specifications = adam_specifications,
-    standards_lib = standards_lib,
     path_connector_config = get_connector_config_path(path_connector_config),
     check_cross_domain_adam_dependencies = TRUE
   )
