@@ -1,0 +1,90 @@
+# Missing Data Analysis
+
+## Overview
+
+Defining an ADaM specification is something that will happen from very
+early in a project, where a project specification can be created. Based
+on this, a trial ADaM specification can be derived and prepared even
+before first patient first visit (FPFV). The ADaM specification is
+usually being work in progress throughout trial conduct, and
+implementations of certain rules may only be defined at a very high
+level. As a trial progresses, collected data in SDTM will evolve.
+Typically some domains will be well-defined very early, but others may
+be lacking out either because the setup is not finalized or data is not
+collected yet. There may be other reasons for SDTM changing during the
+lifetime of a trial, such as protocol amendments or changes to SDTM
+version.
+
+While specifying ADaM, certain assumptions on data can be made. When
+SDTM data is not available, or if some ADaM derivations can only be
+carried out when specific data is collected and reported in SDTM, the
+specifications should still be valid.
+
+In other words, there may be a mismatch between what is specified in the
+ADaM specifications, and what is possible to derive with the SDTM data
+available at any given point in time.
+
+The above are typical scenarios where ADaM template programs fail to
+work during conduct. On the same time, output programming relies on a
+stable set of ADaM data. Keeping template programs aligned with
+specifications and current state of data, is a tedious and time
+consuming task.
+
+The need to be able to execute ADaM programs even though they may not
+comply with the ADaM specification and the available data, is evident.
+Therefore Mighty offers two sets of programs to the end user
+
+- Complete programs that will be working if all data is collected. These
+  are typically those that will be run after DBL
+- Temporary programs that will work on the current available data. These
+  will include commented out code chunks, in case a code component
+  cannot be executed due to missing data. They will also contain
+  descriptions on why they are not included such that an end user can
+  get an easy explanation of missing ADaM data.
+
+## Types of missing data
+
+There are 3 types of missing data:
+
+1.  Missing SDTM/ADaM/metadata domains
+2.  Missing columns inside existing domains
+3.  Missing/incomplete values inside columns
+
+Scenarios 1 and 2 will be handled by the mighty framework, but scenario
+3 needs to be handled by the code components (e.g. within a standard
+component or custom component).
+
+## Workflow
+
+To handle missing domains and missing columns, mighty.metadata will
+extract available domains and columns from SDTM and metadata. ADaM is
+not in scope as this will be build, based on the specification yaml
+file. The list of available data is then passed to mighty, which will
+detect discrepancies from the specification and available data, create
+programs that satisfies with the specification (which will not be
+executable (or contain errors) due to missing data) along with programs
+that can be executed based on existing data, and a discrepancies list
+highlighting which parts of the specification cannot be implemented with
+the current data. Mighty.metadata may be able to incorporate this file
+in the specification UI to display to the user which parts of the spec
+can be implemented currently.
+
+Steps to Handle Missing Data:
+
+1.  Wish-List Specification: Users create an ADaM specification
+    containing all desired columns and row operations, regardless of
+    data availability.
+2.  Available Data: mighty.metadata supplies a
+    [`Connector`](https://github.com/NovoNordisk-OpenSource/connector)
+    object to mighty by which available data (SDTM and metadata) can be
+    extracted.
+3.  Dependency Generation: mighty combines the wish-list specification,
+    and available data with corresponding code components to identify
+    dependencies (via ancestor nodes in the topology).
+4.  Code Generation: mighty generates programs in two versions:
+    1.  (Complete) programs based on the specification
+    2.  (Executable) programs based on the available data and the parts
+        of the specification that supports the available data. In the
+        code, derivations that cannot be done, are still included in the
+        program but are out commented. Before the out commented code is
+        a sentence describing why the code is out commented.

@@ -1,0 +1,50 @@
+# Developers Documentation
+
+## Types of nodes
+
+- **col_copy**: These are absorbed by the domain_init node and do not
+  exist as an independent node in our internal data model. Example:
+
+  ``` yml
+  columns:
+    - id: USUBJID
+  ```
+
+- **col_mutate**: col_mutates exist as an independent node in our data
+  model and their source is an output of the domain_init node. In other
+  words, a mutate node MUST have the domain_init as a direct parent.
+  Example:
+
+  ``` yml
+  columns:
+    - id: PLANNED_ARM
+      method: ARM
+  ```
+
+- **col_echo**: An echo can have a col_compute, col_echo, col_mutate, or
+  a col_copy as parents. The depend_cols of echo’s ARE used when
+  constructing the “external” nodes. Example:
+
+  ``` yml
+  columns:
+    - id: PLANNED_ARM2
+      method: ADSL.PLANNED_ARM
+  ```
+
+- **row_compute**: Row operations cannot create a new column in the
+  dataset, but they can operate on any existing column(s). They can have
+  as parents a col_compute, col_mutate, col_echo, row_compute, col_copy,
+  or domain_init
+
+- **col_compute**: col_computes are always derivations in CDISC
+  terminology and exist as independent nodes in our internal data model.
+  They can have as parents rows, col_echos, col_mutates, col_copies, or
+  domain_inits. Compute MUST reference a component in the YAML domain
+  specification. Example:
+
+  ``` yml
+  columns:
+    - id: AGE_GRP
+      component:
+        id: age_group_01
+  ```
