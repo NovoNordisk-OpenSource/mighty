@@ -10,20 +10,19 @@ knitr:
     comment: '#>'
 ---
 
-Special components are Mustache templates prefixed with `_` that mighty inserts
-automatically into every generated ADaM program. Users never reference them in
-YAML specs. This vignette documents the parameter contract for each special
-component so that template authors can understand (and modify) the templates.
+Special components are Mustache templates (prefixed with `mighty_`) that mighty
+inserts automatically into every generated ADaM program. They live in
+mighty.standards and are resolved via the `repos` mechanism. Users never
+reference them in YAML specs. This vignette documents the parameter contract for
+each special component so that template authors can understand (and modify) the
+templates.
 
 ```{r}
 #| label: setup
 #| include: false
 library(mighty.component)
 
-component_path <- function(name) {
-  p <- system.file(paste0("components/", name), package = "mighty")
-  if (nzchar(p)) p else file.path("..", "inst", "components", name)
-}
+repos <- "NovoNordisk-OpenSource/mighty.standards/components@dev/internal-components"
 
 .html_escape <- function(x) {
   x <- gsub("&", "&amp;", x, fixed = TRUE)
@@ -33,23 +32,26 @@ component_path <- function(name) {
 }
 
 component_detail <- function(name, params = NULL, renders = NULL) {
-  template_html <- .html_escape(paste(readLines(component_path(name)), collapse = "\n"))
+  component <- get_component(name, repos = repos)
+  template_html <- .html_escape(paste(component$template, collapse = "\n"))
 
   if (is.null(renders)) {
+    rendered <- get_rendered_component(name, params, repos = repos)
     render_html <- paste0(
       "<p><strong>Rendered output</strong></p>\n",
       "<pre><code class=\"language-r\">",
-      get_rendered_component(component_path(name), params)$code |>
+      rendered$code |>
         paste(collapse = "\n") |>
         .html_escape(),
       "</code></pre>\n"
     )
   } else {
     render_html <- paste(sapply(renders, function(r) {
+      rendered <- get_rendered_component(name, r$params, repos = repos)
       paste0(
         "<p><strong>", r$label, "</strong></p>\n",
         "<pre><code class=\"language-r\">",
-        get_rendered_component(component_path(name), r$params)$code |>
+        rendered$code |>
           paste(collapse = "\n") |>
           .html_escape(),
         "</code></pre>\n"
