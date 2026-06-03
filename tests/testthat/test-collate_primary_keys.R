@@ -7,14 +7,12 @@ test_that("Error when domain keys are defined in both _mighty.yml and ADaM speci
     ),
     process_glue = FALSE
   )
-  standards_lib <- "mighty.standards"
 
   # ACT & EXPECT ------------------------------------------------------------
 
   expect_error(
     generate_adam_code(
       adam_specifications = adam_specifications,
-      standards_lib = standards_lib,
       path_connector_config = get_temp_connector_config_path()
     ),
     "Domains have keys defined in both.*_mighty.yml.*and domain specifications"

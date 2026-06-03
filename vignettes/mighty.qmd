@@ -120,7 +120,6 @@ library(mighty)
 # Generate ADaM program
 results <- mighty::generate_adam_code(
   adam_specifications = \"study_dir\",
-  standards_lib = \"mighty.standards\",
   path_connector_config = \"_connector.yml\"
 )
 
@@ -226,7 +225,6 @@ Printing the rendered ADaM program yields a complete program for generating ADSL
 # Execute the code generation
 results <- mighty::generate_adam_code(
   adam_specifications = study_dir,
-  standards_lib = "mighty.standards",
   path_connector_config = file.path(study_dir, "_connector.yml")
 )
 

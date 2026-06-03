@@ -8,8 +8,6 @@
 #' @param adam_specifications Character string. Directory path containing ADaM
 #'   specification YAML files (one per domain) and optionally a `_mighty.yml`
 #'   framework configuration file with external dataset definitions and keys.
-#' @param standards_lib Optional list or environment containing standard code
-#'   components and templates. If `NULL`, uses default standards library.
 #' @param path_connector_config Character string. File path to the connector
 #'   configuration file (e.g., `"_connector.yml"`).
 #'   This path is inserted exactly as written into the generated programs
@@ -113,26 +111,18 @@
 #' # Access generated programs
 #' adsl_program <- result$programs$ADSL
 #' executable_programs <- result$executable_programs
-#'
-#' # Generate with custom standards library
-#' result_custom <- generate_adam_code(
-#'   adam_specifications = "yaml_specs/",
-#'   standards_lib = my_custom_standards,
-#'   path_connector_config = "trial_data/_connector.yml",
-#'   check_cross_domain_adam_dependencies = FALSE
-#' )
 #' }
 #'
 #' @import data.table
 #' @export
 generate_adam_code <- function(
   adam_specifications,
-  standards_lib = NULL,
   path_connector_config,
   check_cross_domain_adam_dependencies = TRUE,
   data_context = NULL
 ) {
   study <- mighty.metadata::mighty_study(adam_specifications)
+  repos <- study@mighty$repos
   ui_yml <- study |>
     purrr::imap(process_adam_domain)
 
@@ -148,7 +138,8 @@ generate_adam_code <- function(
     ui_yml = ui_yml,
     ui_init_t = ui_init_t,
     check_cross_domain_adam_dependencies,
-    domain_keys
+    domain_keys,
+    repos = repos
   )
 
   actions_01_base <- actions_configuration$actions
@@ -181,14 +172,16 @@ generate_adam_code <- function(
     actions = actions_06_write,
     domain_keys = domain_keys,
     ui_data = ui_yml,
-    path_connector_config = path_connector_config
+    path_connector_config = path_connector_config,
+    repos = repos
   )
   actions_08_available_data <- render_code(
     actions = actions_07_check$actions,
     domain_keys = domain_keys,
     ui_data = ui_yml,
     path_connector_config = path_connector_config,
-    available_data = actions_07_check$available_columns
+    available_data = actions_07_check$available_columns,
+    repos = repos
   )
   return(
     list(

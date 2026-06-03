@@ -1,4 +1,4 @@
-render_components <- function(actions) {
+render_components <- function(actions, repos = NULL) {
   code_component_ids <- actions[!is.na(code_id), ]
 
   rendered_components <- list()
@@ -11,7 +11,8 @@ render_components <- function(actions) {
     }
     rendered_components[[node_id]] <- mighty.component::get_rendered_component(
       component = code_id,
-      params = params
+      params = params,
+      repos = repos
     )
   }
   rendered_components

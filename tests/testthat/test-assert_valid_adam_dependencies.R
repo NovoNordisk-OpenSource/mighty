@@ -15,13 +15,11 @@ test_that("Complete spec passes when cross-domain disabled", {
     test_data_path = path_connector_config,
     sdtm_domains = c("lb")
   )
-  standards_lib <- "mighty.standards"
 
   # EXPECT -------------------------------------------------------------------
 
   actual <- generate_adam_code(
     adam_specifications = adam_specifications,
-    standards_lib = standards_lib,
     path_connector_config = get_connector_config_path(path_connector_config),
     check_cross_domain_adam_dependencies = FALSE
   ) |>
@@ -60,13 +58,11 @@ test_that("Complete spec passes when cross-domain enabled", {
     test_data_path = path_connector_config,
     sdtm_domains = c("lb")
   )
-  standards_lib <- "mighty.standards"
 
   # EXPECT -------------------------------------------------------------------
 
   actual <- generate_adam_code(
     adam_specifications = adam_specifications,
-    standards_lib = standards_lib,
     path_connector_config = get_connector_config_path(path_connector_config),
     check_cross_domain_adam_dependencies = TRUE
   ) |>
@@ -105,13 +101,11 @@ test_that("Incomplete cross-domain ADaM spec fails when checks enabled", {
     test_data_path = path_connector_config,
     sdtm_domains = c("lb")
   )
-  standards_lib <- "mighty.standards"
 
   # ACT -------------------------------------------------------------------
 
   error_msg <- generate_adam_code(
     adam_specifications = adam_specifications,
-    standards_lib = standards_lib,
     path_connector_config = get_connector_config_path(path_connector_config),
     check_cross_domain_adam_dependencies = TRUE
   ) |>
@@ -144,13 +138,11 @@ test_that("Incomplete cross-domain ADaM spec passes when checks disabled", {
     test_data_path = path_connector_config,
     sdtm_domains = c("lb")
   )
-  standards_lib <- "mighty.standards"
 
   # EXPECT -------------------------------------------------------------------
 
   actual <- generate_adam_code(
     adam_specifications = adam_specifications,
-    standards_lib = standards_lib,
     path_connector_config = get_connector_config_path(path_connector_config),
     check_cross_domain_adam_dependencies = FALSE
   ) |>
@@ -188,13 +180,11 @@ test_that("Incomplete within-domain ADaM spec fails when checks disabled", {
     test_data_path = path_connector_config,
     sdtm_domains = c("lb")
   )
-  standards_lib <- "mighty.standards"
 
   # ACT -------------------------------------------------------------------
 
   error_msg <- generate_adam_code(
     adam_specifications = adam_specifications,
-    standards_lib = standards_lib,
     path_connector_config = get_connector_config_path(path_connector_config),
     check_cross_domain_adam_dependencies = FALSE
   ) |>
@@ -224,13 +214,11 @@ test_that("Incomplete within-domain ADaM spec fails when checks enabled", {
     test_data_path = path_connector_config,
     sdtm_domains = c("lb")
   )
-  standards_lib <- "mighty.standards"
 
   # ACT -------------------------------------------------------------------
 
   error_msg <- generate_adam_code(
     adam_specifications = adam_specifications,
-    standards_lib = standards_lib,
     path_connector_config = get_connector_config_path(path_connector_config),
     check_cross_domain_adam_dependencies = TRUE
   ) |>
@@ -260,13 +248,11 @@ test_that("Incomplete within and cross-domain specs fail when checks disabled", 
     test_data_path = path_connector_config,
     sdtm_domains = c("lb")
   )
-  standards_lib <- "mighty.standards"
 
   # ACT -------------------------------------------------------------------
 
   error_msg <- generate_adam_code(
     adam_specifications = adam_specifications,
-    standards_lib = standards_lib,
     path_connector_config = get_connector_config_path(path_connector_config),
     check_cross_domain_adam_dependencies = TRUE
   ) |>
@@ -299,13 +285,11 @@ test_that("Incomplete within and cross-domain specs fail when checks enabled", {
     test_data_path = path_connector_config,
     sdtm_domains = c("lb")
   )
-  standards_lib <- "mighty.standards"
 
   # ACT -------------------------------------------------------------------
 
   error_msg <- generate_adam_code(
     adam_specifications = adam_specifications,
-    standards_lib = standards_lib,
     path_connector_config = get_connector_config_path(path_connector_config),
     check_cross_domain_adam_dependencies = TRUE
   ) |>
@@ -339,13 +323,11 @@ test_that("Incomplete ADSL filter spec fails when cross-domain enabled", {
     test_data_path = path_connector_config,
     sdtm_domains = c("lb")
   )
-  standards_lib <- "mighty.standards"
 
   # ACT -------------------------------------------------------------------
 
   error_msg <- generate_adam_code(
     adam_specifications = adam_specifications,
-    standards_lib = standards_lib,
     path_connector_config = get_connector_config_path(path_connector_config),
     check_cross_domain_adam_dependencies = TRUE
   ) |>
@@ -378,13 +360,11 @@ test_that("Incomplete ADSL filter spec passes when cross-domain disabled", {
     test_data_path = path_connector_config,
     sdtm_domains = c("lb")
   )
-  standards_lib <- "mighty.standards"
 
   # EXPECT -------------------------------------------------------------------
 
   actual <- generate_adam_code(
     adam_specifications = adam_specifications,
-    standards_lib = standards_lib,
     path_connector_config = get_connector_config_path(path_connector_config),
     check_cross_domain_adam_dependencies = FALSE
   ) |>
@@ -422,13 +402,11 @@ test_that("Incomplete ADSL filter and actions fail when checks enabled", {
     test_data_path = path_connector_config,
     sdtm_domains = c("lb")
   )
-  standards_lib <- "mighty.standards"
 
   # ACT -------------------------------------------------------------------
 
   error_msg <- generate_adam_code(
     adam_specifications = adam_specifications,
-    standards_lib = standards_lib,
     path_connector_config = get_connector_config_path(path_connector_config),
     check_cross_domain_adam_dependencies = TRUE
   ) |>
@@ -463,13 +441,11 @@ test_that("Incomplete ADSL filter and actions pass when checks disabled", {
     test_data_path = path_connector_config,
     sdtm_domains = c("lb")
   )
-  standards_lib <- "mighty.standards"
 
   # EXPECT -------------------------------------------------------------------
 
   actual <- generate_adam_code(
     adam_specifications = adam_specifications,
-    standards_lib = standards_lib,
     path_connector_config = get_connector_config_path(path_connector_config),
     check_cross_domain_adam_dependencies = FALSE
   ) |>
@@ -509,12 +485,10 @@ test_that("Incomplete ADSL filter in two domains fails when checks enabled", {
     test_data_path = path_connector_config,
     sdtm_domains = c("lb")
   )
-  standards_lib <- "mighty.standards"
 
   # ACT -------------------------------------------------------------------
   error_msg <- generate_adam_code(
     adam_specifications = adam_specifications,
-    standards_lib = standards_lib,
     path_connector_config = get_connector_config_path(path_connector_config),
     check_cross_domain_adam_dependencies = TRUE
   ) |>
@@ -547,13 +521,11 @@ test_that("Incomplete ADSL filter in two domains passes when checks disabled", {
     test_data_path = path_connector_config,
     sdtm_domains = c("lb")
   )
-  standards_lib <- "mighty.standards"
 
   # EXPECT -------------------------------------------------------------------
 
   actual <- generate_adam_code(
     adam_specifications = adam_specifications,
-    standards_lib = standards_lib,
     path_connector_config = get_connector_config_path(path_connector_config),
     check_cross_domain_adam_dependencies = FALSE
   ) |>
@@ -590,13 +562,11 @@ test_that("Incomplete within-domain in two domains fails when checks disabled", 
     test_data_path = path_connector_config,
     sdtm_domains = c("lb")
   )
-  standards_lib <- "mighty.standards"
 
   # ACT -------------------------------------------------------------------
 
   error_msg <- generate_adam_code(
     adam_specifications = adam_specifications,
-    standards_lib = standards_lib,
     path_connector_config = get_connector_config_path(path_connector_config),
     check_cross_domain_adam_dependencies = FALSE
   ) |>
@@ -621,13 +591,11 @@ test_that("Incomplete within-domain spec w/ component fails when x-check disable
     test_data_path = path_connector_config,
     sdtm_domains = c("lb")
   )
-  standards_lib <- "mighty.standards"
 
   # ACT -------------------------------------------------------------------
 
   error_msg <- generate_adam_code(
     adam_specifications = adam_specifications,
-    standards_lib = standards_lib,
     path_connector_config = get_connector_config_path(path_connector_config),
     check_cross_domain_adam_dependencies = FALSE
   ) |>
@@ -655,13 +623,11 @@ test_that("Incomplete within-domain spec w/ component fails when x-check enabled
     test_data_path = path_connector_config,
     sdtm_domains = c("lb")
   )
-  standards_lib <- "mighty.standards"
 
   # ACT -------------------------------------------------------------------
 
   error_msg <- generate_adam_code(
     adam_specifications = adam_specifications,
-    standards_lib = standards_lib,
     path_connector_config = get_connector_config_path(path_connector_config),
     check_cross_domain_adam_dependencies = TRUE
   ) |>
@@ -694,13 +660,11 @@ test_that("Incomplete filter_depend_cols fails when x-check enabled", {
     test_data_path = path_connector_config,
     sdtm_domains = c("lb")
   )
-  standards_lib <- "mighty.standards"
 
   # ACT -------------------------------------------------------------------
 
   error_msg <- generate_adam_code(
     adam_specifications = adam_specifications,
-    standards_lib = standards_lib,
     path_connector_config = get_connector_config_path(path_connector_config),
     check_cross_domain_adam_dependencies = TRUE
   ) |>
@@ -734,13 +698,11 @@ test_that("Incomplete filter_depend_cols fails when x-check disabled", {
     test_data_path = path_connector_config,
     sdtm_domains = c("lb")
   )
-  standards_lib <- "mighty.standards"
 
   # ACT -------------------------------------------------------------------
 
   error_msg <- generate_adam_code(
     adam_specifications = adam_specifications,
-    standards_lib = standards_lib,
     path_connector_config = get_connector_config_path(path_connector_config),
     check_cross_domain_adam_dependencies = FALSE
   ) |>

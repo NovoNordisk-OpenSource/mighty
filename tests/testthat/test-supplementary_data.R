@@ -14,13 +14,11 @@ test_that("Supplementary data action is placed after filter_domain when no suppl
     test_data_path = path_connector_config,
     sdtm_domains = c("dm", "dm_vaccine", "suppdm", "suppdm_vaccine")
   )
-  standards_lib <- "mighty.standards"
 
   # ACT ---------------------------------------------------------------------
 
   actual <- generate_adam_code(
     adam_specifications = adam_specifications,
-    standards_lib = standards_lib,
     path_connector_config = get_connector_config_path(path_connector_config),
     check_cross_domain_adam_dependencies = TRUE
   )
@@ -88,13 +86,11 @@ test_that("Supp data action is placed before filter_domain when supp columns are
     test_data_path = path_connector_config,
     sdtm_domains = c("dm", "dm_vaccine", "suppdm", "suppdm_vaccine")
   )
-  standards_lib <- "mighty.standards"
 
   # ACT ---------------------------------------------------------------------
 
   actual <- generate_adam_code(
     adam_specifications = adam_specifications,
-    standards_lib = standards_lib,
     path_connector_config = get_connector_config_path(path_connector_config),
     check_cross_domain_adam_dependencies = TRUE
   )
@@ -164,13 +160,11 @@ test_that("Supp data action is placed before filter_domain when supp columns are
     test_data_path = path_connector_config,
     sdtm_domains = c("dm", "dm_vaccine", "suppdm", "suppdm_vaccine")
   )
-  standards_lib <- "mighty.standards"
 
   # ACT ---------------------------------------------------------------------
 
   actual <- generate_adam_code(
     adam_specifications = adam_specifications,
-    standards_lib = standards_lib,
     path_connector_config = get_connector_config_path(path_connector_config),
     check_cross_domain_adam_dependencies = TRUE
   )
@@ -242,13 +236,11 @@ test_that("Supp data action is placed before filter_domain when supp columns and
     sdtm_domains = c("ae", "suppae"),
     adam_domains = c("adsl")
   )
-  standards_lib <- "mighty.standards"
 
   # ACT ---------------------------------------------------------------------
 
   actual <- generate_adam_code(
     adam_specifications = adam_specifications,
-    standards_lib = standards_lib,
     path_connector_config = get_connector_config_path(path_connector_config),
     check_cross_domain_adam_dependencies = FALSE
   )
@@ -304,13 +296,11 @@ test_that("Col_compute and parent col_compute is placed before filter_domain whe
     sdtm_domains = c("ae", "suppae"),
     adam_domains = c("adsl")
   )
-  standards_lib <- "mighty.standards"
 
   # ACT ---------------------------------------------------------------------
 
   actual <- generate_adam_code(
     adam_specifications = adam_specifications,
-    standards_lib = standards_lib,
     path_connector_config = get_connector_config_path(path_connector_config),
     check_cross_domain_adam_dependencies = FALSE
   )
