@@ -50,7 +50,7 @@ consolidate_metadata <- function(code_component_metadata, ui_data) {
   # Assign internal code_id for predecessor action types
   ui_data_updated[
     ui_data_updated$type == "col_echo",
-    "code_id" := "_col_echo.mustache"
+    "code_id" := "mighty_col_echo"
   ]
 
   # Determine col_rename vs col_mutate based on whether source is also a col_copy
@@ -82,9 +82,9 @@ consolidate_metadata <- function(code_component_metadata, ui_data) {
       all_outputs_by_domain[domain == domain_i]$col
     if (source_is_col_copy || source_is_also_output) {
       data.table::set(ui_data_updated, i, "type", "col_mutate")
-      data.table::set(ui_data_updated, i, "code_id", "_col_mutate.mustache")
+      data.table::set(ui_data_updated, i, "code_id", "mighty_col_mutate")
     } else {
-      data.table::set(ui_data_updated, i, "code_id", "_col_rename.mustache")
+      data.table::set(ui_data_updated, i, "code_id", "mighty_col_rename")
     }
   }
 

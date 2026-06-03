@@ -87,7 +87,7 @@ render_code <- function(
     )
 
     code <- mighty.component::get_rendered_component(
-      component = action_i$code_id |> format_internal_code_id(),
+      component = action_i$code_id,
       params = params,
       repos = repos
     )$code |>
@@ -115,13 +115,13 @@ render_code <- function(
 #' @param code_id Character string specifying the template identifier.
 #'   Supported values include:
 #'   \itemize{
-#'     \item `"_read_data.mustache"` - Parameters for data reading operations
-#'     \item `"_init_domain.mustache"` - Parameters for domain initialization
-#'     \item `"_filter_domain.mustache"` - Parameters for domain filtering
-#'     \item `"_col_rename.mustache"` - Parameters for column renaming
-#'     \item `"_col_mutate.mustache"` - Parameters for column mutation
-#'     \item `"_col_echo.mustache"` - Parameters for column echoing
-#'     \item `"_write_data.mustache"` - Parameters for data writing operations
+#'     \item `"mighty_read_data"` - Parameters for data reading operations
+#'     \item `"mighty_init_domain"` - Parameters for domain initialization
+#'     \item `"mighty_filter_domain"` - Parameters for domain filtering
+#'     \item `"mighty_col_rename"` - Parameters for column renaming
+#'     \item `"mighty_col_mutate"` - Parameters for column mutation
+#'     \item `"mighty_col_echo"` - Parameters for column echoing
+#'     \item `"mighty_write_data"` - Parameters for data writing operations
 #'   }
 #'   Any other value defaults to column compute parameter formatting.
 #'
@@ -199,40 +199,40 @@ define_params <- function(
 
   switch(
     code_id,
-    "_read_data.mustache" = params_read_data_code(
+    "mighty_read_data" = params_read_data_code(
       payload = output_cols,
       domain = .self,
       path_connector_config = path_connector_config
     ),
-    "_init_domain.mustache" = params_init_domain_code(
+    "mighty_init_domain" = params_init_domain_code(
       .self = .self,
       keep_vars = output_cols,
       source_domains = depend_domains |> unique()
     ),
-    "_filter_domain.mustache" = params_domain_filter_code(
+    "mighty_filter_domain" = params_domain_filter_code(
       .self = .self,
       init_metadata = init_metadata,
       keep_vars = output_cols,
       domain_keys = domain_keys
     ),
-    "_col_rename.mustache" = params_mutate_code(
+    "mighty_col_rename" = params_mutate_code(
       .self = .self,
       rename_var = output_cols,
       source_var = depend_columns
     ),
-    "_col_mutate.mustache" = params_mutate_code(
+    "mighty_col_mutate" = params_mutate_code(
       .self = .self,
       rename_var = output_cols,
       source_var = depend_columns
     ),
-    "_col_echo.mustache" = params_col_echo_code(
+    "mighty_col_echo" = params_col_echo_code(
       .self = .self,
       depend_cols = depend_columns,
       depend_domains = depend_domains,
       outputs = output_cols,
       domain_keys = domain_keys
     ),
-    "_write_data.mustache" = params_write_domain_code(
+    "mighty_write_data" = params_write_domain_code(
       .self = .self,
       is_final_pgm = is_final_pgm,
       domain_keys = domain_keys,
@@ -273,28 +273,6 @@ add_hash <- function(text) {
   return(result)
 }
 
-#' Format Internal Code ID for Mustache Components
-#'
-#' @description
-#' Transforms internal code IDs (prefixed with "_") into relative paths for
-#' mustache components stored in the mighty package, enabling proper file
-#' sourcing by get_rendered_component.
-#'
-#' @param code_id Character string representing the code ID. Internal components
-#'   should be prefixed with "_".
-#'
-#' @return
-#' Character string containing the full system path to the component file for
-#' internal code IDs, or the original code_id for external components.
-#'
-#' @noRd
-format_internal_code_id <- function(code_id) {
-  if (!startsWith(code_id, "_")) {
-    return(code_id)
-  }
-  file.path("components", code_id) |>
-    system.file(package = "mighty")
-}
 
 compile_into_programs <- function(actions) {
   program_blocs <- actions |>
