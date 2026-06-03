@@ -164,7 +164,7 @@ generating ADSL based on the specifications
 ``` r
 
 # ADSL-1-read_data -------------------------------------------------------------
-cnt <- connector::connect(config = "/tmp/RtmpglowWR/mighty_example_study/_connector.yml")
+cnt <- connector::connect(config = "/tmp/RtmpVhuz8B/mighty_example_study/_connector.yml")
   DM <-  cnt$sdtm$read_cnt(tolower('DM')) |>
   dplyr::select(AGE, ARM, STUDYID, USUBJID)
 
