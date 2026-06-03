@@ -28,7 +28,7 @@ Imports:
     glue,
     purrr,
     mighty.component (>= 0.1.0.9000),
-    mighty.metadata (>= 0.1.0.9001),
+    mighty.metadata (>= 0.1.0.9003),
     visNetwork,
     zephyr,
     rlang,
