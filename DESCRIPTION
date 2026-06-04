@@ -34,19 +34,21 @@ Imports:
     rlang,
     utils,
     S7schema
-Suggests: 
+Suggests:
     admiral,
     arrow,
+    gh,
     knitr,
     pharmaverseadam,
     pharmaversesdtm (>= 0.2.0),
     quarto,
+    remotes,
     rmarkdown,
     testthat (>= 3.0.0),
     withr,
     roxygen2,
     connector,
-    labelled,    
+    labelled,
     tools,
     whisker
 VignetteBuilder: 
