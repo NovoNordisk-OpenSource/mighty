@@ -16,7 +16,7 @@
 #'   \item Identifies all outputs from actions (excluding read_data actions)
 #'   \item Creates column dependencies for the write_data action
 #'   \item Adds a write_data action with rank = max(existing_ranks) + 1
-#'   \item Uses the "mighty_write_data" code template
+#'   \item Uses the `mighty_write_data` code template
 #' }
 #'
 #' @examples
