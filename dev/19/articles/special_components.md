@@ -824,7 +824,7 @@ list(
 > `#` in the formatted string, commenting them out of the
 > [`dplyr::select()`](https://dplyr.tidyverse.org/reference/select.html)
 > call. This allows the generated program to run and produce a partial
-> dataset rather than failing outright. This behaviour is part of
+> dataset rather than failing outright. This behavior is part of
 > mighty’s missing data handling and does not affect the template
 > itself.
 
