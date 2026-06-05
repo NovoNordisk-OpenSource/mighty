@@ -164,57 +164,81 @@ results$programs$`1_ADSL` |> cat()
 Printing the rendered ADaM program yields a complete program for
 generating ADSL based on the specifications
 
-``` r
+    #> → Downloading repo "NovoNordisk-OpenSource/mighty.standards@dev/internal-components"
+    #> → Successfully downloaded and cached "NovoNordisk-OpenSource/mighty.standards@dev/internal-components"
+    #> → Found "/tmp/RtmpSwi4dz/mighty_example_study/age_group_01.R" in "NovoNordisk-OpenSource/mighty.standards/components@dev/internal-components"
+    #> → Using cached repo "NovoNordisk-OpenSource/mighty.standards@dev/internal-components"
+    #> → Found "mighty_read_data" in "NovoNordisk-OpenSource/mighty.standards/components@dev/internal-components"
+    #> → Using cached repo "NovoNordisk-OpenSource/mighty.standards@dev/internal-components"
+    #> → Found "mighty_init_domain" in "NovoNordisk-OpenSource/mighty.standards/components@dev/internal-components"
+    #> → Using cached repo "NovoNordisk-OpenSource/mighty.standards@dev/internal-components"
+    #> → Found "mighty_filter_domain" in "NovoNordisk-OpenSource/mighty.standards/components@dev/internal-components"
+    #> → Using cached repo "NovoNordisk-OpenSource/mighty.standards@dev/internal-components"
+    #> → Found "/tmp/RtmpSwi4dz/mighty_example_study/age_group_01.R" in "NovoNordisk-OpenSource/mighty.standards/components@dev/internal-components"
+    #> → Using cached repo "NovoNordisk-OpenSource/mighty.standards@dev/internal-components"
+    #> → Found "mighty_col_mutate" in "NovoNordisk-OpenSource/mighty.standards/components@dev/internal-components"
+    #> → Using cached repo "NovoNordisk-OpenSource/mighty.standards@dev/internal-components"
+    #> → Found "mighty_write_data" in "NovoNordisk-OpenSource/mighty.standards/components@dev/internal-components"
+    #> → Using cached repo "NovoNordisk-OpenSource/mighty.standards@dev/internal-components"
+    #> → Found "mighty_read_data" in "NovoNordisk-OpenSource/mighty.standards/components@dev/internal-components"
+    #> → Using cached repo "NovoNordisk-OpenSource/mighty.standards@dev/internal-components"
+    #> → Found "mighty_init_domain" in "NovoNordisk-OpenSource/mighty.standards/components@dev/internal-components"
+    #> → Using cached repo "NovoNordisk-OpenSource/mighty.standards@dev/internal-components"
+    #> → Found "mighty_filter_domain" in "NovoNordisk-OpenSource/mighty.standards/components@dev/internal-components"
+    #> → Using cached repo "NovoNordisk-OpenSource/mighty.standards@dev/internal-components"
+    #> → Found "/tmp/RtmpSwi4dz/mighty_example_study/age_group_01.R" in "NovoNordisk-OpenSource/mighty.standards/components@dev/internal-components"
+    #> → Using cached repo "NovoNordisk-OpenSource/mighty.standards@dev/internal-components"
+    #> → Found "mighty_col_mutate" in "NovoNordisk-OpenSource/mighty.standards/components@dev/internal-components"
+    #> → Using cached repo "NovoNordisk-OpenSource/mighty.standards@dev/internal-components"
+    #> → Found "mighty_write_data" in "NovoNordisk-OpenSource/mighty.standards/components@dev/internal-components"
+    # ADSL-1-read_data -------------------------------------------------------------
+    cnt <- connector::connect(config = "/tmp/RtmpSwi4dz/mighty_example_study/_connector.yml")
+      DM <- cnt$sdtm$read_cnt(tolower('DM')) |>
+      dplyr::select(AGE, ARM, STUDYID, USUBJID)
 
-# ADSL-1-read_data -------------------------------------------------------------
-cnt <- connector::connect(config = "/tmp/RtmpCMAflt/mighty_example_study/_connector.yml")
-  DM <- cnt$sdtm$read_cnt(tolower('DM')) |>
-  dplyr::select(AGE, ARM, STUDYID, USUBJID)
+    # ADSL-init_domain -------------------------------------------------------------
+    DM <- DM |>
+      dplyr::mutate(SRC_ = "DM")
 
-# ADSL-init_domain -------------------------------------------------------------
-DM <- DM |>
-  dplyr::mutate(SRC_ = "DM")
+    ADSL <- DM |>
+        dplyr::select(AGE, ARM, STUDYID, USUBJID, SRC_) |>
+        admiral::convert_blanks_to_na()
 
-ADSL <- DM |>
-    dplyr::select(AGE, ARM, STUDYID, USUBJID, SRC_) |>
-    admiral::convert_blanks_to_na()
+    # ADSL-filter_domain -----------------------------------------------------------
+    ADSL <- ADSL |>
+      dplyr::filter((SRC_ == 'DM' & !is.na(AGE))) |>
+      dplyr::select(-SRC_)
 
-# ADSL-filter_domain -----------------------------------------------------------
-ADSL <- ADSL |>
-  dplyr::filter((SRC_ == 'DM' & !is.na(AGE))) |>
-  dplyr::select(-SRC_)
-
-ADSL <- ADSL |>
-  dplyr::select(AGE, ARM, STUDYID, USUBJID)
+    ADSL <- ADSL |>
+      dplyr::select(AGE, ARM, STUDYID, USUBJID)
 
 
-# ADSL-AGE_GRP1 ----------------------------------------------------------------
-ADSL <- ADSL |>
-  dplyr::mutate(
-    AGE_GRP1 = cut(
-      AGE,
-      breaks = c(-Inf, 18, 65, 75, Inf),
-      labels = c("< 18 years", "18 - 64 years", "65 - 74 years", ">= 75 years"),
-      right = FALSE
-    )
-  )
+    # ADSL-AGE_GRP1 ----------------------------------------------------------------
+    ADSL <- ADSL |>
+      dplyr::mutate(
+        AGE_GRP1 = cut(
+          AGE,
+          breaks = c(-Inf, 18, 65, 75, Inf),
+          labels = c("< 18 years", "18 - 64 years", "65 - 74 years", ">= 75 years"),
+          right = FALSE
+        )
+      )
 
-# ADSL-PLANNED_ARM -------------------------------------------------------------
-ADSL <- ADSL |> dplyr::mutate(PLANNED_ARM = ARM)
+    # ADSL-PLANNED_ARM -------------------------------------------------------------
+    ADSL <- ADSL |> dplyr::mutate(PLANNED_ARM = ARM)
 
-# ADSL-1-write_data ------------------------------------------------------------
-# Sort rows by primary key
-ADSL <- ADSL |> dplyr::arrange(USUBJID,
-STUDYID)
+    # ADSL-1-write_data ------------------------------------------------------------
+    # Sort rows by primary key
+    ADSL <- ADSL |> dplyr::arrange(USUBJID,
+    STUDYID)
 
-# Sort columns
-ADSL <- ADSL |> dplyr::select(USUBJID,
-STUDYID,
-ARM,
-PLANNED_ARM,
-AGE,
-AGE_GRP1)
+    # Sort columns
+    ADSL <- ADSL |> dplyr::select(USUBJID,
+    STUDYID,
+    ARM,
+    PLANNED_ARM,
+    AGE,
+    AGE_GRP1)
 
-# Save ADaM table
-cnt$adam$write_cnt(ADSL, tolower("ADSL.parquet"), overwrite = TRUE)
-```
+    # Save ADaM table
+    cnt$adam$write_cnt(ADSL, tolower("ADSL.parquet"), overwrite = TRUE)

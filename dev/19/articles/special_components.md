@@ -136,6 +136,12 @@ list(
 The standard template and a rendered version using the parameter list
 above can be expanded below.
 
+    #> → Downloading repo "NovoNordisk-OpenSource/mighty.standards@dev/internal-components"
+    #> → Successfully downloaded and cached "NovoNordisk-OpenSource/mighty.standards@dev/internal-components"
+    #> → Found "mighty_read_data" in "NovoNordisk-OpenSource/mighty.standards/components@dev/internal-components"
+    #> → Using cached repo "NovoNordisk-OpenSource/mighty.standards@dev/internal-components"
+    #> → Found "mighty_read_data" in "NovoNordisk-OpenSource/mighty.standards/components@dev/internal-components"
+
 Standard template and rendered output
 
 **Template**
@@ -277,6 +283,11 @@ src_mutations = list(
 The standard template and a rendered version using the parameter list
 above can be expanded below.
 
+    #> → Using cached repo "NovoNordisk-OpenSource/mighty.standards@dev/internal-components"
+    #> → Found "mighty_init_domain" in "NovoNordisk-OpenSource/mighty.standards/components@dev/internal-components"
+    #> → Using cached repo "NovoNordisk-OpenSource/mighty.standards@dev/internal-components"
+    #> → Found "mighty_init_domain" in "NovoNordisk-OpenSource/mighty.standards/components@dev/internal-components"
+
 Standard template and rendered output
 
 **Template**
@@ -410,6 +421,11 @@ list(
 
 The standard template and a rendered version using the parameter list
 above can be expanded below.
+
+    #> → Using cached repo "NovoNordisk-OpenSource/mighty.standards@dev/internal-components"
+    #> → Found "mighty_filter_domain" in "NovoNordisk-OpenSource/mighty.standards/components@dev/internal-components"
+    #> → Using cached repo "NovoNordisk-OpenSource/mighty.standards@dev/internal-components"
+    #> → Found "mighty_filter_domain" in "NovoNordisk-OpenSource/mighty.standards/components@dev/internal-components"
 
 Standard template and rendered output
 
@@ -548,6 +564,11 @@ list(
 The standard template and a rendered version using the parameter list
 above can be expanded below.
 
+    #> → Using cached repo "NovoNordisk-OpenSource/mighty.standards@dev/internal-components"
+    #> → Found "mighty_col_mutate" in "NovoNordisk-OpenSource/mighty.standards/components@dev/internal-components"
+    #> → Using cached repo "NovoNordisk-OpenSource/mighty.standards@dev/internal-components"
+    #> → Found "mighty_col_mutate" in "NovoNordisk-OpenSource/mighty.standards/components@dev/internal-components"
+
 Standard template and rendered output
 
 **Template**
@@ -625,6 +646,11 @@ list(
 The standard template and a rendered version using the parameter list
 above can be expanded below.
 
+    #> → Using cached repo "NovoNordisk-OpenSource/mighty.standards@dev/internal-components"
+    #> → Found "mighty_col_rename" in "NovoNordisk-OpenSource/mighty.standards/components@dev/internal-components"
+    #> → Using cached repo "NovoNordisk-OpenSource/mighty.standards@dev/internal-components"
+    #> → Found "mighty_col_rename" in "NovoNordisk-OpenSource/mighty.standards/components@dev/internal-components"
+
 Standard template and rendered output
 
 **Template**
@@ -700,6 +726,11 @@ filter.
 
 The standard template and a rendered version using the parameter list
 above can be expanded below.
+
+    #> → Using cached repo "NovoNordisk-OpenSource/mighty.standards@dev/internal-components"
+    #> → Found "mighty_col_echo" in "NovoNordisk-OpenSource/mighty.standards/components@dev/internal-components"
+    #> → Using cached repo "NovoNordisk-OpenSource/mighty.standards@dev/internal-components"
+    #> → Found "mighty_col_echo" in "NovoNordisk-OpenSource/mighty.standards/components@dev/internal-components"
 
 Standard template and rendered output
 
@@ -809,6 +840,13 @@ list(
 
 The template and two rendered versions — one with a short column list
 and one with a longer list — can be expanded below.
+
+    #> → Using cached repo "NovoNordisk-OpenSource/mighty.standards@dev/internal-components"
+    #> → Found "mighty_write_data" in "NovoNordisk-OpenSource/mighty.standards/components@dev/internal-components"
+    #> → Using cached repo "NovoNordisk-OpenSource/mighty.standards@dev/internal-components"
+    #> → Found "mighty_write_data" in "NovoNordisk-OpenSource/mighty.standards/components@dev/internal-components"
+    #> → Using cached repo "NovoNordisk-OpenSource/mighty.standards@dev/internal-components"
+    #> → Found "mighty_write_data" in "NovoNordisk-OpenSource/mighty.standards/components@dev/internal-components"
 
 Standard template and rendered output
 
