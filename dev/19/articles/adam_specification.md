@@ -527,8 +527,6 @@ columns:
 
 Mighty will abort with an error:
 
-    #> → Found "/tmp/Rtmp99cbi5/file1eae38356858/dtc_to_dt.mustache" in "."
-    #> → Found "/tmp/Rtmp99cbi5/file1eae38356858/dtc_to_dt.mustache" in "."
     #> Error:
     #> ! Specification validation errors found:
     #>

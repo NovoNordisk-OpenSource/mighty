@@ -103,6 +103,27 @@
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">keys</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="at">USUBJID</span><span class="kw">]</span></span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">id</span><span class="kw">:</span><span class="at"> MDPARAM</span></span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">keys</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="at">STUDYID</span><span class="kw">,</span><span class="at"> TOPICCD</span><span class="kw">]</span></span></code></pre></div>
+</section></section><section class="section level2"><h2 id="component-repositories">Component repositories<a class="anchor" aria-label="anchor" href="#component-repositories"></a>
+</h2>
+<p>The <code>repos</code> field tells mighty where to look for code components. Repositories are searched in the order listed, and the first match wins.</p>
+<p>Each entry can be:</p>
+<ul>
+<li>
+<code>owner/repo</code> — a GitHub repository</li>
+<li>
+<code>owner/repo/subdir</code> — a subdirectory inside a GitHub repository</li>
+<li>
+<code>owner/repo/subdir@ref</code> — a specific branch, tag, or commit</li>
+<li>A local filesystem path (absolute or relative to the study directory)</li>
+</ul>
+<p>GitHub repositories are downloaded once per session and cached.</p>
+<section class="level3"><h4 id="example-1">Example:<a class="anchor" aria-label="anchor" href="#example-1"></a>
+</h4>
+<div class="sourceCode" id="cb2"><pre class="sourceCode yml"><code class="sourceCode yaml"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">repos</span><span class="kw">:</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> NovoNordisk-OpenSource/mighty.standards/components</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> my-org/study-components@v1.0.0</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> ./local-components</span></span></code></pre></div>
+<p><strong>IMPORTANT:</strong> <code>repos</code> must include a source for mighty’s internal templates (typically <code>NovoNordisk-OpenSource/mighty.standards/components</code>). Without it, mighty cannot resolve the special components used during code generation.</p>
 </section></section><script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
@@ -186,7 +207,8 @@
       }
     }
   });
-  </script></main>
+  </script></main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
+    </nav></aside>
 </div>
 
 
