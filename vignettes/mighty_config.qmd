@@ -36,3 +36,27 @@ external_data:
   - id: MDPARAM
     keys: [STUDYID, TOPICCD]
 ```
+
+# Component repositories
+
+The `repos` field tells mighty where to look for code components. Repositories are searched in the order listed, and the first match wins.
+
+Each entry can be:
+
+- `owner/repo` — a GitHub repository
+- `owner/repo/subdir` — a subdirectory inside a GitHub repository
+- `owner/repo/subdir@ref` — a specific branch, tag, or commit
+- A local filesystem path (absolute or relative to the study directory)
+
+GitHub repositories are downloaded once per session and cached.
+
+### Example:
+
+```yml
+repos:
+  - NovoNordisk-OpenSource/mighty.standards/components
+  - my-org/study-components@v1.0.0
+  - ./local-components
+```
+
+**IMPORTANT:** `repos` must include a source for mighty's internal templates (typically `NovoNordisk-OpenSource/mighty.standards/components`). Without it, mighty cannot resolve the special components used during code generation.
