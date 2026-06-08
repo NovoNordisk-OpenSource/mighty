@@ -58,7 +58,7 @@ GitHub repositories are downloaded once per session and cached.
 repos:
   - NovoNordisk-OpenSource/mighty.standards/components
   - my-org/study-components@v1.0.0
-  - ./local-components
+  - "./local-components"
 ```
 
 **IMPORTANT:** `repos` must include a source for mighty’s internal
