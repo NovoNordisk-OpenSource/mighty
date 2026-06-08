@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">mighty</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9028</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9029</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -198,11 +198,6 @@
 <span><span class="op">)</span></span></code></pre></div>
 <p>The standard template and a rendered version using the parameter list above can be expanded below.</p>
 <div class="cell">
-<pre><code><span><span class="co">#&gt; → Downloading repo "NovoNordisk-OpenSource/mighty.standards@dev/internal-components"</span></span>
-<span><span class="co">#&gt; → Successfully downloaded and cached "NovoNordisk-OpenSource/mighty.standards@dev/internal-components"</span></span>
-<span><span class="co">#&gt; → Found "mighty_read_data" in "NovoNordisk-OpenSource/mighty.standards/components@dev/internal-components"</span></span>
-<span><span class="co">#&gt; → Using cached repo "NovoNordisk-OpenSource/mighty.standards@dev/internal-components"</span></span>
-<span><span class="co">#&gt; → Found "mighty_read_data" in "NovoNordisk-OpenSource/mighty.standards/components@dev/internal-components"</span></span></code></pre>
 <div class="cell-output-display">
 <details><summary>Standard template and rendered output</summary><p><strong>Template</strong></p>
 <pre><code>#' @title Read source data
@@ -364,7 +359,7 @@ cnt &lt;- connector::connect(config = {{{connector_path_expr}}})
 <section class="level2"><h3 id="example-1">Example<a class="anchor" aria-label="anchor" href="#example-1"></a>
 </h3>
 <p>Using the same ADSL specification from <code>mighty_read_data</code>:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>  self <span class="op">=</span> <span class="st">"ADSL"</span>,</span>
 <span>  keep_vars <span class="op">=</span> <span class="st">"ARM, STUDYID, USUBJID"</span>,</span>
@@ -372,17 +367,13 @@ cnt &lt;- connector::connect(config = {{{connector_path_expr}}})
 <span>  src_mutations <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p><code>src_mutations</code> is empty here because both source domains have <code>filter: NA</code>. When domain-specific filters are defined, mighty populates it so that a temporary <code>SRC_</code> column can be added before row binding (see <a href="adam_specification.html#filter-execution-order">ADaM specification — filter execution order</a>):</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">src_mutations</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>domain <span class="op">=</span> <span class="st">"DM"</span><span class="op">)</span>,</span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>domain <span class="op">=</span> <span class="st">"DM_VACCINE"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>The standard template and a rendered version using the parameter list above can be expanded below.</p>
 <div class="cell">
-<pre><code><span><span class="co">#&gt; → Using cached repo "NovoNordisk-OpenSource/mighty.standards@dev/internal-components"</span></span>
-<span><span class="co">#&gt; → Found "mighty_init_domain" in "NovoNordisk-OpenSource/mighty.standards/components@dev/internal-components"</span></span>
-<span><span class="co">#&gt; → Using cached repo "NovoNordisk-OpenSource/mighty.standards@dev/internal-components"</span></span>
-<span><span class="co">#&gt; → Found "mighty_init_domain" in "NovoNordisk-OpenSource/mighty.standards/components@dev/internal-components"</span></span></code></pre>
 <div class="cell-output-display">
 <details><summary>Standard template and rendered output</summary><p><strong>Template</strong></p>
 <pre><code>#' @title Initialize ADaM domain
@@ -449,30 +440,30 @@ cnt &lt;- connector::connect(config = {{{connector_path_expr}}})
 <section class="level2"><h3 id="example-2">Example<a class="anchor" aria-label="anchor" href="#example-2"></a>
 </h3>
 <p>Given this YAML specification:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">id</span><span class="kw">:</span><span class="at"> ADLB</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">keys</span><span class="kw">:</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> USUBJID</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> STUDYID</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="fu">population</span><span class="kw">:</span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">base</span><span class="kw">:</span></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="kw">-</span><span class="at"> </span><span class="fu">domain</span><span class="kw">:</span><span class="at"> LB</span></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">depends</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="at">NA</span><span class="kw">]</span></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">filter</span><span class="kw">:</span><span class="at"> NA</span></span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="kw">-</span><span class="at"> </span><span class="fu">domain</span><span class="kw">:</span><span class="at"> XL</span></span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">depends</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="at">LBCAT</span><span class="kw">]</span></span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">filter</span><span class="kw">:</span><span class="at"> </span><span class="st">"LBCAT == 'CHEMISTRY'"</span></span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">global</span><span class="kw">:</span></span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="kw">-</span><span class="at"> </span><span class="fu">filter</span><span class="kw">:</span><span class="at"> </span><span class="st">"!is.na(SEX)"</span></span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">depends</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="at">ADSL.SEX</span><span class="kw">]</span></span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="fu">columns</span><span class="kw">:</span></span>
-<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">id</span><span class="kw">:</span><span class="at"> USUBJID</span></span>
-<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">id</span><span class="kw">:</span><span class="at"> STUDYID</span></span>
-<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">id</span><span class="kw">:</span><span class="at"> PARAMCD</span></span>
-<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">id</span><span class="kw">:</span><span class="at"> LBCAT</span></span>
-<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">id</span><span class="kw">:</span><span class="at"> SEX</span></span>
-<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">method</span><span class="kw">:</span><span class="at"> ADSL.SEX</span></span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">id</span><span class="kw">:</span><span class="at"> ADLB</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">keys</span><span class="kw">:</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> USUBJID</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> STUDYID</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="fu">population</span><span class="kw">:</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">base</span><span class="kw">:</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="kw">-</span><span class="at"> </span><span class="fu">domain</span><span class="kw">:</span><span class="at"> LB</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">depends</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="at">NA</span><span class="kw">]</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">filter</span><span class="kw">:</span><span class="at"> NA</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="kw">-</span><span class="at"> </span><span class="fu">domain</span><span class="kw">:</span><span class="at"> XL</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">depends</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="at">LBCAT</span><span class="kw">]</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">filter</span><span class="kw">:</span><span class="at"> </span><span class="st">"LBCAT == 'CHEMISTRY'"</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">global</span><span class="kw">:</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="kw">-</span><span class="at"> </span><span class="fu">filter</span><span class="kw">:</span><span class="at"> </span><span class="st">"!is.na(SEX)"</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">depends</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="at">ADSL.SEX</span><span class="kw">]</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="fu">columns</span><span class="kw">:</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">id</span><span class="kw">:</span><span class="at"> USUBJID</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">id</span><span class="kw">:</span><span class="at"> STUDYID</span></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">id</span><span class="kw">:</span><span class="at"> PARAMCD</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">id</span><span class="kw">:</span><span class="at"> LBCAT</span></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">id</span><span class="kw">:</span><span class="at"> SEX</span></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">method</span><span class="kw">:</span><span class="at"> ADSL.SEX</span></span></code></pre></div>
 <p>Mighty builds the following parameter list and passes it to the template:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>  self <span class="op">=</span> <span class="st">"ADLB"</span>,</span>
 <span>  joins <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
@@ -494,10 +485,6 @@ cnt &lt;- connector::connect(config = {{{connector_path_expr}}})
 </div>
 <p>The standard template and a rendered version using the parameter list above can be expanded below.</p>
 <div class="cell">
-<pre><code><span><span class="co">#&gt; → Using cached repo "NovoNordisk-OpenSource/mighty.standards@dev/internal-components"</span></span>
-<span><span class="co">#&gt; → Found "mighty_filter_domain" in "NovoNordisk-OpenSource/mighty.standards/components@dev/internal-components"</span></span>
-<span><span class="co">#&gt; → Using cached repo "NovoNordisk-OpenSource/mighty.standards@dev/internal-components"</span></span>
-<span><span class="co">#&gt; → Found "mighty_filter_domain" in "NovoNordisk-OpenSource/mighty.standards/components@dev/internal-components"</span></span></code></pre>
 <div class="cell-output-display">
 <details><summary>Standard template and rendered output</summary><p><strong>Template</strong></p>
 <pre><code>#' @title Filter ADaM domain
@@ -615,12 +602,12 @@ cnt &lt;- connector::connect(config = {{{connector_path_expr}}})
 <section class="level2"><h3 id="example-3">Example<a class="anchor" aria-label="anchor" href="#example-3"></a>
 </h3>
 <p>Consider the following YAML specification snippet. <code>AVAL</code> is defined with <code>method: LBSTRESN</code>, and <code>LBSTRESN</code> is also listed as its own column. Mighty copies the values rather than renaming because the source column is retained in the output:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">columns</span><span class="kw">:</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">id</span><span class="kw">:</span><span class="at"> LBSTRESN</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">id</span><span class="kw">:</span><span class="at"> AVAL</span></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">method</span><span class="kw">:</span><span class="at"> LBSTRESN</span></span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">columns</span><span class="kw">:</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">id</span><span class="kw">:</span><span class="at"> LBSTRESN</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">id</span><span class="kw">:</span><span class="at"> AVAL</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">method</span><span class="kw">:</span><span class="at"> LBSTRESN</span></span></code></pre></div>
 <p>Mighty builds the following parameter list and passes it to the template:</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>  self <span class="op">=</span> <span class="st">"ADLB"</span>,</span>
 <span>  rename_var <span class="op">=</span> <span class="st">"AVAL"</span>,</span>
@@ -628,10 +615,6 @@ cnt &lt;- connector::connect(config = {{{connector_path_expr}}})
 <span><span class="op">)</span></span></code></pre></div>
 <p>The standard template and a rendered version using the parameter list above can be expanded below.</p>
 <div class="cell">
-<pre><code><span><span class="co">#&gt; → Using cached repo "NovoNordisk-OpenSource/mighty.standards@dev/internal-components"</span></span>
-<span><span class="co">#&gt; → Found "mighty_col_mutate" in "NovoNordisk-OpenSource/mighty.standards/components@dev/internal-components"</span></span>
-<span><span class="co">#&gt; → Using cached repo "NovoNordisk-OpenSource/mighty.standards@dev/internal-components"</span></span>
-<span><span class="co">#&gt; → Found "mighty_col_mutate" in "NovoNordisk-OpenSource/mighty.standards/components@dev/internal-components"</span></span></code></pre>
 <div class="cell-output-display">
 <details><summary>Standard template and rendered output</summary><p><strong>Template</strong></p>
 <pre><code>#' @title Copy column
@@ -670,11 +653,11 @@ cnt &lt;- connector::connect(config = {{{connector_path_expr}}})
 <section class="level2"><h3 id="example-4">Example<a class="anchor" aria-label="anchor" href="#example-4"></a>
 </h3>
 <p>Consider the following YAML specification snippet. <code>SRCSEQ</code> is defined with <code>method: LBSEQ</code>, and <code>LBSEQ</code> is <strong>not</strong> listed as its own column. Because the source column has no independent entry, mighty renames it rather than copying it:</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">columns</span><span class="kw">:</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">id</span><span class="kw">:</span><span class="at"> SRCSEQ</span></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">method</span><span class="kw">:</span><span class="at"> LBSEQ</span></span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">columns</span><span class="kw">:</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">id</span><span class="kw">:</span><span class="at"> SRCSEQ</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">method</span><span class="kw">:</span><span class="at"> LBSEQ</span></span></code></pre></div>
 <p>Mighty builds the following parameter list and passes it to the template:</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>  self <span class="op">=</span> <span class="st">"ADLB"</span>,</span>
 <span>  rename_var <span class="op">=</span> <span class="st">"SRCSEQ"</span>,</span>
@@ -682,10 +665,6 @@ cnt &lt;- connector::connect(config = {{{connector_path_expr}}})
 <span><span class="op">)</span></span></code></pre></div>
 <p>The standard template and a rendered version using the parameter list above can be expanded below.</p>
 <div class="cell">
-<pre><code><span><span class="co">#&gt; → Using cached repo "NovoNordisk-OpenSource/mighty.standards@dev/internal-components"</span></span>
-<span><span class="co">#&gt; → Found "mighty_col_rename" in "NovoNordisk-OpenSource/mighty.standards/components@dev/internal-components"</span></span>
-<span><span class="co">#&gt; → Using cached repo "NovoNordisk-OpenSource/mighty.standards@dev/internal-components"</span></span>
-<span><span class="co">#&gt; → Found "mighty_col_rename" in "NovoNordisk-OpenSource/mighty.standards/components@dev/internal-components"</span></span></code></pre>
 <div class="cell-output-display">
 <details><summary>Standard template and rendered output</summary><p><strong>Template</strong></p>
 <pre><code>#' @title Rename column
@@ -724,11 +703,11 @@ cnt &lt;- connector::connect(config = {{{connector_path_expr}}})
 <section class="level2"><h3 id="example-5">Example<a class="anchor" aria-label="anchor" href="#example-5"></a>
 </h3>
 <p>Consider the following YAML specification snippet. The dot notation <code>ADSL.SEX</code> in <code>method:</code> tells mighty the column originates from another domain, which triggers a left join rather than a direct copy:</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">columns</span><span class="kw">:</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">id</span><span class="kw">:</span><span class="at"> SEX</span></span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">method</span><span class="kw">:</span><span class="at"> ADSL.SEX</span></span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">columns</span><span class="kw">:</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">id</span><span class="kw">:</span><span class="at"> SEX</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">method</span><span class="kw">:</span><span class="at"> ADSL.SEX</span></span></code></pre></div>
 <p>Mighty builds the following parameter list and passes it to the template:</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>  self <span class="op">=</span> <span class="st">"ADLB"</span>,</span>
 <span>  join_dataset <span class="op">=</span> <span class="st">"ADSL"</span>,</span>
@@ -741,10 +720,6 @@ cnt &lt;- connector::connect(config = {{{connector_path_expr}}})
 <p>This is the step that permanently adds <code>SEX</code> to ADLB — the same column that <code>mighty_filter_domain</code> joined in temporarily to evaluate the global filter.</p>
 <p>The standard template and a rendered version using the parameter list above can be expanded below.</p>
 <div class="cell">
-<pre><code><span><span class="co">#&gt; → Using cached repo "NovoNordisk-OpenSource/mighty.standards@dev/internal-components"</span></span>
-<span><span class="co">#&gt; → Found "mighty_col_echo" in "NovoNordisk-OpenSource/mighty.standards/components@dev/internal-components"</span></span>
-<span><span class="co">#&gt; → Using cached repo "NovoNordisk-OpenSource/mighty.standards@dev/internal-components"</span></span>
-<span><span class="co">#&gt; → Found "mighty_col_echo" in "NovoNordisk-OpenSource/mighty.standards/components@dev/internal-components"</span></span></code></pre>
 <div class="cell-output-display">
 <details><summary>Standard template and rendered output</summary><p><strong>Template</strong></p>
 <pre><code>#' @title Echo column from another domain
@@ -804,7 +779,7 @@ by = c({{{by_vars}}})){{#needs_rename}} |&gt;
 <section class="level2"><h3 id="example-6">Example<a class="anchor" aria-label="anchor" href="#example-6"></a>
 </h3>
 <p>For the ADSL specification from the <code>mighty_read_data</code> example, mighty builds:</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>  self <span class="op">=</span> <span class="st">"ADSL"</span>,</span>
 <span>  file_ext <span class="op">=</span> <span class="st">"parquet"</span>,</span>
@@ -818,7 +793,7 @@ by = c({{{by_vars}}})){{#needs_rename}} |&gt;
 <p>When mighty is run with source data available for validation, columns that cannot be derived due to missing source data are prefixed with <code>#</code> in the formatted string, commenting them out of the <code><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">dplyr::select()</a></code> call. This allows the generated program to run and produce a partial dataset rather than failing outright. This behavior is part of mighty’s missing data handling and does not affect the template itself.</p>
 </blockquote>
 </div>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>  self <span class="op">=</span> <span class="st">"ADLB"</span>,</span>
 <span>  file_ext <span class="op">=</span> <span class="st">"parquet"</span>,</span>
@@ -827,12 +802,6 @@ by = c({{{by_vars}}})){{#needs_rename}} |&gt;
 <span><span class="op">)</span></span></code></pre></div>
 <p>The template and two rendered versions — one with a short column list and one with a longer list — can be expanded below.</p>
 <div class="cell">
-<pre><code><span><span class="co">#&gt; → Using cached repo "NovoNordisk-OpenSource/mighty.standards@dev/internal-components"</span></span>
-<span><span class="co">#&gt; → Found "mighty_write_data" in "NovoNordisk-OpenSource/mighty.standards/components@dev/internal-components"</span></span>
-<span><span class="co">#&gt; → Using cached repo "NovoNordisk-OpenSource/mighty.standards@dev/internal-components"</span></span>
-<span><span class="co">#&gt; → Found "mighty_write_data" in "NovoNordisk-OpenSource/mighty.standards/components@dev/internal-components"</span></span>
-<span><span class="co">#&gt; → Using cached repo "NovoNordisk-OpenSource/mighty.standards@dev/internal-components"</span></span>
-<span><span class="co">#&gt; → Found "mighty_write_data" in "NovoNordisk-OpenSource/mighty.standards/components@dev/internal-components"</span></span></code></pre>
 <div class="cell-output-display">
 <details><summary>Standard template and rendered output</summary><p><strong>Template</strong></p>
 <pre><code>#' @title Persist ADaM dataset
