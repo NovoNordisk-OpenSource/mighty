@@ -73,6 +73,14 @@ create_temp_yaml <- function(
 #' @keywords internal testing
 #' @noRd
 setup_study_dir <- function(yaml_list, .local_envir = parent.frame()) {
+  # Ensure a _mighty.yml with repos is always present
+
+  if (is.null(yaml_list[["_mighty"]])) {
+    yaml_list[["_mighty"]] <- readLines(
+      testthat::test_path("fixtures", "_mighty.yml")
+    )
+  }
+
   dir <- withr::local_tempdir(.local_envir = .local_envir)
   for (name in names(yaml_list)) {
     filename <- if (grepl("\\.yml$", name)) {

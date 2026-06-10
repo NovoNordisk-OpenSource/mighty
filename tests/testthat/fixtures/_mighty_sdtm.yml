@@ -5,3 +5,6 @@ external_data:
     keys: [STUDYID, USUBJID]
   - id: DM_VACCINE
     keys: [STUDYID, USUBJID]
+repos:
+  - "NovoNordisk-OpenSource/mighty.standards/components@dev/internal-components"
+  - "."

@@ -74,7 +74,7 @@ build_domain_init_action <- function(
 
   data.table(
     node_id = paste0(domain_i, "-init_domain"),
-    code_id = "_init_domain.mustache",
+    code_id = "mighty_init_domain",
     type = "init_domain",
     depend_cols = list(depend_cols_i),
     outputs = list(outputs_i_final),

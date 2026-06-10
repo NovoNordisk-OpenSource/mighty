@@ -124,17 +124,17 @@ process_action <- function(
 ) {
   handler <- switch(
     action$code_id,
-    "_read_data.mustache" = handle_read_data_action,
-    "_init_domain.mustache" = handle_init_domain_action,
-    "_filter_domain.mustache" = handle_filter_domain_action,
-    "_write_data.mustache" = handle_write_domain_action,
+    "mighty_read_data" = handle_read_data_action,
+    "mighty_init_domain" = handle_init_domain_action,
+    "mighty_filter_domain" = handle_filter_domain_action,
+    "mighty_write_data" = handle_write_domain_action,
     handle_generic_action # default case
   )
 
   handler(action, processed_actions, available_cols, ui_data)
 }
 
-#' Handler for _read_data.mustache Actions
+#' Handler for mighty_read_data Actions
 #'
 #' @description
 #' Processes read data actions by validating expected outputs against available
@@ -282,7 +282,7 @@ derive_updated_action_values <- function(
   )
 }
 
-#' Handler for _init_domain.mustache Actions
+#' Handler for mighty_init_domain Actions
 #'
 #' @description
 #' Processes init domain actions by checking dependencies against read_data
@@ -321,7 +321,7 @@ handle_init_domain_action <- function(
 
   # Check if read_data action was lacking outputs
   rda <- processed_actions[
-    program_id == action$program_id & code_id == "_read_data.mustache"
+    program_id == action$program_id & code_id == "mighty_read_data"
   ][1]
   rda_removed_outputs <- rda$removed_outputs[[1]]
   if (length(rda_removed_outputs) > 1 || !is.na(rda_removed_outputs)) {
@@ -357,7 +357,7 @@ handle_init_domain_action <- function(
   action
 }
 
-#' Handler for _filter_domain.mustache
+#' Handler for mighty_filter_domain
 #'
 #' @description
 #' Processes filter domain actions by checking dependencies against available
@@ -407,7 +407,7 @@ handle_filter_domain_action <- function(
   removed_depend_cols <- list()
   # Check if read_data action had missing dependencies
   rda <- processed_actions[
-    program_id == action$program_id & code_id == "_read_data.mustache"
+    program_id == action$program_id & code_id == "mighty_read_data"
   ][1]
   rda_removed_outputs <- rda$removed_outputs[[1]]
 
@@ -426,7 +426,7 @@ handle_filter_domain_action <- function(
   # Removed outputs in init domain also needs to be considered as removed columns
   ida <- processed_actions[
     program_id == action$program_id &
-      code_id == "_init_domain.mustache"
+      code_id == "mighty_init_domain"
   ][1]
   ida_removed <- ida$removed_outputs[[1]]
   if (length(ida_removed) > 1 || !is.na(ida_removed)) {
@@ -546,7 +546,7 @@ handle_write_domain_action <- function(
   removed_depend_cols <- NA
   # Check if init_domain action was lacking outputs
   ida <- processed_actions[
-    program_id == action$program_id & code_id == "_init_domain.mustache"
+    program_id == action$program_id & code_id == "mighty_init_domain"
   ][1]
   ida_removed_outputs <- ida$removed_outputs[[1]]
 
@@ -795,7 +795,7 @@ find_missing_dependencies <- function(depend_cols, available_cols) {
 update_available_columns_for_action <- function(action, available_cols) {
   # Handle case where outputs is NA or NULL
   if (
-    action$code_id == "_read_data.mustache" ||
+    action$code_id == "mighty_read_data" ||
       is.null(action$outputs[[1]]) ||
       (length(action$outputs[[1]]) == 1 && is.na(action$outputs[[1]]))
   ) {

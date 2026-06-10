@@ -5,7 +5,10 @@ test_that("Global filter and domain filter are equivalent when same filter use o
   - id: DM
     keys: [USUBJID]
   - id: DM_VACCINE
-    keys: [USUBJID]"
+    keys: [USUBJID]
+repos:
+  - 'NovoNordisk-OpenSource/mighty.standards/components@dev/internal-components'
+  - '.'"
 
   setup_testdata(
     testdata = "pharmaverse",
