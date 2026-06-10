@@ -9,3 +9,6 @@ external_data:
     keys: [STUDYID, AVISITN]
   - id: MDFLOW
     keys: [STUDYID, AVISITN, TOPICCD]
+repos:
+  - "NovoNordisk-OpenSource/mighty.standards/components@dev/internal-components"
+  - "."

@@ -45,7 +45,7 @@ add_read_data_actions <- function(actions) {
       node_id = paste(dom, pgm, "read_data", sep = "-"),
       program_id = pgm,
       rank = 0,
-      code_id = "_read_data.mustache",
+      code_id = "mighty_read_data",
       type = "read_data",
       depend_cols = list(data.table(
         column_name = character(0),

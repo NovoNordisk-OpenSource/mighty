@@ -433,6 +433,7 @@ Consider a component that derives both a date and its imputation flag — it pro
 #| echo: false
 #| output: false
 library(mighty)
+options(mighty.component.verbosity_level = "quiet")
 component_dir <- tempfile()
 dir.create(component_dir)
 component_file <- file.path(component_dir, "dtc_to_dt.mustache")

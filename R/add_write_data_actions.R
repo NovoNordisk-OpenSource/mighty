@@ -16,7 +16,7 @@
 #'   \item Identifies all outputs from actions (excluding read_data actions)
 #'   \item Creates column dependencies for the write_data action
 #'   \item Adds a write_data action with rank = max(existing_ranks) + 1
-#'   \item Uses the "_write_data.mustache" code template
+#'   \item Uses the `mighty_write_data` code template
 #' }
 #'
 #' @examples
@@ -50,7 +50,7 @@ add_write_data_actions <- function(actions) {
       node_id = paste(dom, pgm, "write_data", sep = "-"),
       program_id = pgm,
       rank = max(x$rank) + 1,
-      code_id = "_write_data.mustache",
+      code_id = "mighty_write_data",
       type = "write_data",
       depend_cols = list(depend_cols),
       outputs = list(NA),

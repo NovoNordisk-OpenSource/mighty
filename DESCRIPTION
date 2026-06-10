@@ -1,6 +1,6 @@
 Package: mighty
 Title: ADaM Program Generation Through Declarative Specifications
-Version: 0.0.0.9028
+Version: 0.0.0.9029
 Authors@R: c(
     person("Matthew", "Phelps", , "mewp@novonordisk.com", role = c("aut", "cre")),
     person("Nicolai", "Skov Johnsen", , "nosj@novonordisk.com", role = "aut"),
@@ -27,26 +27,28 @@ Imports:
     cli,
     glue,
     purrr,
-    mighty.component (>= 0.1.0.9000),
+    mighty.component (>= 0.1.0.9001),
     mighty.metadata (>= 0.1.0.9003),
     visNetwork,
     zephyr,
     rlang,
     utils,
     S7schema
-Suggests: 
+Suggests:
     admiral,
     arrow,
+    gh,
     knitr,
     pharmaverseadam,
     pharmaversesdtm (>= 0.2.0),
     quarto,
+    remotes,
     rmarkdown,
     testthat (>= 3.0.0),
     withr,
     roxygen2,
     connector,
-    labelled,    
+    labelled,
     tools,
     whisker
 VignetteBuilder: 

@@ -323,7 +323,7 @@ create_filter_domain_action <- function(
   # Consolidate domain_filter action for domain
   data.table(
     node_id = paste0(target_domain, "-filter_domain"),
-    code_id = "_filter_domain.mustache",
+    code_id = "mighty_filter_domain",
     type = "filter_domain",
     depend_cols = list(filter_domain_dep_cols),
     outputs = list(filter_domain_outputs),
