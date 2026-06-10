@@ -18,3 +18,4 @@
 ^\.lintr
 ^\.jscpd.json
 ^\.lycheeignore
+^adr$
