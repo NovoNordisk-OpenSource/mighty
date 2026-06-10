@@ -1,10 +1,11 @@
 # Special components
 
-Special components are Mustache templates prefixed with `_` that mighty
-inserts automatically into every generated ADaM program. Users never
-reference them in YAML specs. This vignette documents the parameter
-contract for each special component so that template authors can
-understand (and modify) the templates.
+Special components are Mustache templates (prefixed with `mighty_`) that
+mighty inserts automatically into every generated ADaM program. They
+live in mighty.standards and are resolved via the `repos` mechanism.
+Users never reference them in YAML specs. This vignette documents the
+parameter contract for each special component so that template authors
+can understand (and modify) the templates.
 
 ## Three stages of code generation
 
@@ -58,27 +59,29 @@ this is a Mustache language requirement.
 Before diving into each template, it helps to understand one parameter
 that appears in four of them with different contents each time.
 
-`keep_vars` appears in the four structural templates (`_read_data`,
-`_init_domain`, `_filter_domain`, `_write_data`) but not in the
-column-level templates (`_col_mutate`, `_col_rename`, `_col_echo`). It
+`keep_vars` appears in the four structural templates
+(`mighty_read_data`, `mighty_init_domain`, `mighty_filter_domain`,
+`mighty_write_data`) but not in the column-level templates
+(`mighty_col_mutate`, `mighty_col_rename`, `mighty_col_echo`). It
 carries a different set of columns at each stage:
 
 | Template | `keep_vars` contains | Purpose |
 |----|----|----|
-| `_read_data` | All columns needed by any downstream step, per source domain | Limits memory footprint on read |
-| `_init_domain` | Same list as `_read_data` | Selects columns after row binding |
-| `_filter_domain` | Columns surviving after filtering, minus `SRC_` and filter-only columns | Drops columns no longer needed post-filter |
-| `_write_data` | Final output columns in YAML spec order | Controls what is persisted and in what order |
+| `mighty_read_data` | All columns needed by any downstream step, per source domain | Limits memory footprint on read |
+| `mighty_init_domain` | Same list as `mighty_read_data` | Selects columns after row binding |
+| `mighty_filter_domain` | Columns surviving after filtering, minus `SRC_` and filter-only columns | Drops columns no longer needed post-filter |
+| `mighty_write_data` | Final output columns in YAML spec order | Controls what is persisted and in what order |
 
-`keep_vars` in `_read_data` is the origin: every column referenced in
-later templates must have been loaded there first. If a column appears
-in `_init_domain`, `_filter_domain`, or `_write_data` but was not
-included in `_read_data`, the generated program will fail at execution
-time with a column not found error. Mighty computes all four lists from
-the same YAML specification so this is guaranteed automatically — but it
-matters when modifying templates or building custom pipelines.
+`keep_vars` in `mighty_read_data` is the origin: every column referenced
+in later templates must have been loaded there first. If a column
+appears in `mighty_init_domain`, `mighty_filter_domain`, or
+`mighty_write_data` but was not included in `mighty_read_data`, the
+generated program will fail at execution time with a column not found
+error. Mighty computes all four lists from the same YAML specification
+so this is guaranteed automatically — but it matters when modifying
+templates or building custom pipelines.
 
-## \_read_data
+## mighty_read_data
 
 Rendered at the top of every ADaM program. Opens a connector and reads
 each source dataset, selecting only the columns needed downstream.
@@ -174,10 +177,10 @@ Standard template and rendered output
     cnt <- connector::connect(config = {{{connector_path_expr}}})
     {{#domains}}
       {{#is_current_domain}}
-      {{{domain_name}}} <-  cnt${{{data_type}}}$read_cnt(tolower('{{{domain_name}}}'))
+      {{{domain_name}}} <- cnt${{{data_type}}}$read_cnt(tolower('{{{domain_name}}}'))
       {{/is_current_domain}}
       {{^is_current_domain}}
-      {{{domain_name}}} <-  cnt${{{data_type}}}$read_cnt(tolower('{{{domain_name}}}')) |>
+      {{{domain_name}}} <- cnt${{{data_type}}}$read_cnt(tolower('{{{domain_name}}}')) |>
       dplyr::select({{{keep_vars}}})
       {{/is_current_domain}}
       {{/domains}}
@@ -186,9 +189,9 @@ Standard template and rendered output
 
 ``` r
 cnt <- connector::connect(config = "_connector.yml")
-  DM <-  cnt$sdtm$read_cnt(tolower('DM')) |>
+  DM <- cnt$sdtm$read_cnt(tolower('DM')) |>
   dplyr::select(ARM, STUDYID, USUBJID)
-  DM_VACCINE <-  cnt$sdtm$read_cnt(tolower('DM_VACCINE')) |>
+  DM_VACCINE <- cnt$sdtm$read_cnt(tolower('DM_VACCINE')) |>
   dplyr::select(ARM, STUDYID, USUBJID)
 ```
 
@@ -217,7 +220,7 @@ element is a named list with the following fields:
 |----|----|----|
 | `domain_name` | character | Source dataset name, uppercase (e.g. `"DM"`, `"ADSL"`). |
 | `data_type` | character | Which connector data source to use: `"sdtm"`, `"adam"`, or `"metadata"`. |
-| `keep_vars` | character | Comma-separated column names to select, sorted alphabetically and uppercased. Only used when `is_current_domain` is `FALSE`. Column order in the final dataset is controlled by `keep_vars` in `_write_data`, not by this field. |
+| `keep_vars` | character | Comma-separated column names to select, sorted alphabetically and uppercased. Only used when `is_current_domain` is `FALSE`. Column order in the final dataset is controlled by `keep_vars` in `mighty_write_data`, not by this field. |
 | `is_current_domain` | logical | `TRUE` when the domain being read is the same one being built. When `TRUE`, `keep_vars` should be ignored. |
 
 ##### How `data_type` is determined
@@ -237,15 +240,15 @@ output of an earlier program for the same domain (e.g. an ADSL “update”
 program). When `is_current_domain` is `TRUE`, `keep_vars` should be
 ignored.
 
-## \_init_domain
+## mighty_init_domain
 
-Rendered once per program, after `_read_data`. Combines one or more
-source datasets by row binding and selects the columns needed for the
-domain.
+Rendered once per program, after `mighty_read_data`. Combines one or
+more source datasets by row binding and selects the columns needed for
+the domain.
 
 ### Example
 
-Using the same ADSL specification from `_read_data`:
+Using the same ADSL specification from `mighty_read_data`:
 
 ``` r
 
@@ -293,14 +296,14 @@ Standard template and rendered output
       dplyr::mutate(SRC_ = "{{{domain}}}")
 
     {{/src_mutations}}
-    {{{self}}} <-  {{{source_domain_rbind}}} |>
+    {{{self}}} <- {{{source_domain_rbind}}} |>
         dplyr::select({{{keep_vars}}}) |>
         admiral::convert_blanks_to_na()
 
 **Rendered output**
 
 ``` r
-ADSL <-  rbind(DM,
+ADSL <- rbind(DM,
 DM_VACCINE) |>
     dplyr::select(ARM, STUDYID, USUBJID) |>
     admiral::convert_blanks_to_na()
@@ -341,10 +344,11 @@ to support domain-specific row filters. See the [ADaM specification
 vignette](https://novonordisk-opensource.github.io/mighty/articles/adam_specification.html#filter-execution-order)
 for a full explanation of how filtering works across source domains.
 
-## \_filter_domain
+## mighty_filter_domain
 
-Rendered after `_init_domain`. Applies joins, domain-specific filters,
-global filters, and column selection to the initialized dataset.
+Rendered after `mighty_init_domain`. Applies joins, domain-specific
+filters, global filters, and column selection to the initialized
+dataset.
 
 ### Example
 
@@ -401,7 +405,7 @@ list(
 > the YAML spec, but it is absent from `keep_vars`. This is intentional:
 > `SEX` originates from `ADSL` (via `method: ADSL.SEX`) and is not
 > present in the LB or XL source data. It is joined in temporarily to
-> evaluate the filter, then dropped. A subsequent `_col_echo` step
+> evaluate the filter, then dropped. A subsequent `mighty_col_echo` step
 > re-adds `SEX` to ADLB permanently via a left join with ADSL.
 
 The standard template and a rendered version using the parameter list
@@ -436,18 +440,18 @@ Standard template and rendered output
 
     {{/joins}}
     {{#domain_filter}}
-    {{{self}}} <-  {{{self}}} |>
+    {{{self}}} <- {{{self}}} |>
       dplyr::filter({{{domain_filter}}}) |>
       dplyr::select(-SRC_)
 
     {{/domain_filter}}
     {{#global_filter}}
-    {{{self}}} <-  {{{self}}} |>
+    {{{self}}} <- {{{self}}} |>
       dplyr::filter({{{global_filter}}})
 
     {{/global_filter}}
     {{#keep_vars}}
-    {{{self}}} <-  {{{self}}} |>
+    {{{self}}} <- {{{self}}} |>
       dplyr::select({{{keep_vars}}})
 
     {{/keep_vars}}
@@ -459,14 +463,14 @@ ADLB <- ADLB |>
   dplyr::left_join(ADSL |> dplyr::select(SEX, STUDYID, USUBJID),
                    by = c("STUDYID", "USUBJID"))
 
-ADLB <-  ADLB |>
+ADLB <- ADLB |>
   dplyr::filter((SRC_ == 'LB') | (SRC_ == 'XL' & LBCAT == 'CHEMISTRY')) |>
   dplyr::select(-SRC_)
 
-ADLB <-  ADLB |>
+ADLB <- ADLB |>
   dplyr::filter(!is.na(SEX))
 
-ADLB <-  ADLB |>
+ADLB <- ADLB |>
   dplyr::select(LBCAT, PARAMCD, STUDYID, USUBJID)
 ```
 
@@ -509,7 +513,7 @@ selection is needed — whisker treats `NULL` as falsy so the
 call is suppressed. `SRC_` is excluded because it is only used during
 filtering.
 
-## \_col_mutate
+## mighty_col_mutate
 
 Rendered for each `col_copy` action — variables copied verbatim from one
 column to another, typically with an ADaM-standard rename
@@ -579,11 +583,11 @@ The name of the new column to create.
 
 The name of the existing column whose values are copied.
 
-## \_col_rename
+## mighty_col_rename
 
 Rendered for each `col_rename` action — renames an existing column
-in-place without copying values. Unlike `_col_mutate`, which creates a
-new column via
+in-place without copying values. Unlike `mighty_col_mutate`, which
+creates a new column via
 [`dplyr::mutate()`](https://dplyr.tidyverse.org/reference/mutate.html),
 this template uses
 [`dplyr::rename()`](https://dplyr.tidyverse.org/reference/rename.html)
@@ -657,7 +661,7 @@ The new column name after renaming.
 
 The existing column to rename.
 
-## \_col_echo
+## mighty_col_echo
 
 Rendered for each `col_echo` action — variables pulled in from a
 different domain via a left join.
@@ -691,7 +695,7 @@ list(
 ```
 
 This is the step that permanently adds `SEX` to ADLB — the same column
-that `_filter_domain` joined in temporarily to evaluate the global
+that `mighty_filter_domain` joined in temporarily to evaluate the global
 filter.
 
 The standard template and a rendered version using the parameter list
@@ -760,14 +764,15 @@ call is appended.
 `output_var` is the desired column name in `self`. When `needs_rename`
 is `FALSE` they are equal.
 
-## \_write_data
+## mighty_write_data
 
 Rendered at the end of every ADaM program. Sorts rows, selects columns
 in specification order, and persists the dataset via the connector.
 
 ### Example
 
-For the ADSL specification from the `_read_data` example, mighty builds:
+For the ADSL specification from the `mighty_read_data` example, mighty
+builds:
 
 ``` r
 
@@ -788,7 +793,7 @@ list(
 > `#` in the formatted string, commenting them out of the
 > [`dplyr::select()`](https://dplyr.tidyverse.org/reference/select.html)
 > call. This allows the generated program to run and produce a partial
-> dataset rather than failing outright. This behaviour is part of
+> dataset rather than failing outright. This behavior is part of
 > mighty’s missing data handling and does not affect the template
 > itself.
 

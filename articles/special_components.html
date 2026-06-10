@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">mighty</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9028</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9029</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -78,7 +78,7 @@
 
 
 
-    <p>Special components are Mustache templates prefixed with <code>_</code> that mighty inserts automatically into every generated ADaM program. Users never reference them in YAML specs. This vignette documents the parameter contract for each special component so that template authors can understand (and modify) the templates.</p>
+    <p>Special components are Mustache templates (prefixed with <code>mighty_</code>) that mighty inserts automatically into every generated ADaM program. They live in mighty.standards and are resolved via the <code>repos</code> mechanism. Users never reference them in YAML specs. This vignette documents the parameter contract for each special component so that template authors can understand (and modify) the templates.</p>
 <section class="section level2"><h2 id="three-stages-of-code-generation">Three stages of code generation<a class="anchor" aria-label="anchor" href="#three-stages-of-code-generation"></a>
 </h2>
 <p>Mighty produces ADaM programs through three distinct stages, each with its own environment. Knowing which stage you’re looking at tells you what values are available and what the parameters mean.</p>
@@ -117,7 +117,7 @@
 </section><section class="section level2"><h2 id="the-keep_vars-pipeline">The <code>keep_vars</code> pipeline<a class="anchor" aria-label="anchor" href="#the-keep_vars-pipeline"></a>
 </h2>
 <p>Before diving into each template, it helps to understand one parameter that appears in four of them with different contents each time.</p>
-<p><code>keep_vars</code> appears in the four structural templates (<code>_read_data</code>, <code>_init_domain</code>, <code>_filter_domain</code>, <code>_write_data</code>) but not in the column-level templates (<code>_col_mutate</code>, <code>_col_rename</code>, <code>_col_echo</code>). It carries a different set of columns at each stage:</p>
+<p><code>keep_vars</code> appears in the four structural templates (<code>mighty_read_data</code>, <code>mighty_init_domain</code>, <code>mighty_filter_domain</code>, <code>mighty_write_data</code>) but not in the column-level templates (<code>mighty_col_mutate</code>, <code>mighty_col_rename</code>, <code>mighty_col_echo</code>). It carries a different set of columns at each stage:</p>
 <table class="table caption-top">
 <colgroup>
 <col style="width: 33%">
@@ -132,30 +132,30 @@
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td><code>_read_data</code></td>
+<td><code>mighty_read_data</code></td>
 <td>All columns needed by any downstream step, per source domain</td>
 <td>Limits memory footprint on read</td>
 </tr>
 <tr class="even">
-<td><code>_init_domain</code></td>
-<td>Same list as <code>_read_data</code>
+<td><code>mighty_init_domain</code></td>
+<td>Same list as <code>mighty_read_data</code>
 </td>
 <td>Selects columns after row binding</td>
 </tr>
 <tr class="odd">
-<td><code>_filter_domain</code></td>
+<td><code>mighty_filter_domain</code></td>
 <td>Columns surviving after filtering, minus <code>SRC_</code> and filter-only columns</td>
 <td>Drops columns no longer needed post-filter</td>
 </tr>
 <tr class="even">
-<td><code>_write_data</code></td>
+<td><code>mighty_write_data</code></td>
 <td>Final output columns in YAML spec order</td>
 <td>Controls what is persisted and in what order</td>
 </tr>
 </tbody>
 </table>
-<p><code>keep_vars</code> in <code>_read_data</code> is the origin: every column referenced in later templates must have been loaded there first. If a column appears in <code>_init_domain</code>, <code>_filter_domain</code>, or <code>_write_data</code> but was not included in <code>_read_data</code>, the generated program will fail at execution time with a column not found error. Mighty computes all four lists from the same YAML specification so this is guaranteed automatically — but it matters when modifying templates or building custom pipelines.</p>
-</section><section class="section level2"><h2 id="read_data">_read_data<a class="anchor" aria-label="anchor" href="#read_data"></a>
+<p><code>keep_vars</code> in <code>mighty_read_data</code> is the origin: every column referenced in later templates must have been loaded there first. If a column appears in <code>mighty_init_domain</code>, <code>mighty_filter_domain</code>, or <code>mighty_write_data</code> but was not included in <code>mighty_read_data</code>, the generated program will fail at execution time with a column not found error. Mighty computes all four lists from the same YAML specification so this is guaranteed automatically — but it matters when modifying templates or building custom pipelines.</p>
+</section><section class="section level2"><h2 id="mighty_read_data">mighty_read_data<a class="anchor" aria-label="anchor" href="#mighty_read_data"></a>
 </h2>
 <p>Rendered at the top of every ADaM program. Opens a connector and reads each source dataset, selecting only the columns needed downstream.</p>
 <section class="level2"><h3 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
@@ -237,18 +237,18 @@
 cnt &lt;- connector::connect(config = {{{connector_path_expr}}})
 {{#domains}}
   {{#is_current_domain}}
-  {{{domain_name}}} &lt;-  cnt${{{data_type}}}$read_cnt(tolower('{{{domain_name}}}'))
+  {{{domain_name}}} &lt;- cnt${{{data_type}}}$read_cnt(tolower('{{{domain_name}}}'))
   {{/is_current_domain}}
   {{^is_current_domain}}
-  {{{domain_name}}} &lt;-  cnt${{{data_type}}}$read_cnt(tolower('{{{domain_name}}}')) |&gt;
+  {{{domain_name}}} &lt;- cnt${{{data_type}}}$read_cnt(tolower('{{{domain_name}}}')) |&gt;
   dplyr::select({{{keep_vars}}})
   {{/is_current_domain}}
   {{/domains}}</code></pre>
 <p><strong>Rendered output</strong></p>
 <pre><code class="language-r"><span><span class="va">cnt</span> <span class="op">&lt;-</span> <span class="fu">connector</span><span class="fu">::</span><span class="fu"><a href="https://novonordisk-opensource.github.io/connector/reference/connect.html" class="external-link">connect</a></span><span class="op">(</span>config <span class="op">=</span> <span class="st">"_connector.yml"</span><span class="op">)</span></span>
-<span>  <span class="va">DM</span> <span class="op">&lt;-</span>  <span class="va">cnt</span><span class="op">$</span><span class="va">sdtm</span><span class="op">$</span><span class="fu">read_cnt</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/chartr.html" class="external-link">tolower</a></span><span class="op">(</span><span class="st">'DM'</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="va">DM</span> <span class="op">&lt;-</span> <span class="va">cnt</span><span class="op">$</span><span class="va">sdtm</span><span class="op">$</span><span class="fu">read_cnt</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/chartr.html" class="external-link">tolower</a></span><span class="op">(</span><span class="st">'DM'</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">ARM</span>, <span class="va">STUDYID</span>, <span class="va">USUBJID</span><span class="op">)</span></span>
-<span>  <span class="va">DM_VACCINE</span> <span class="op">&lt;-</span>  <span class="va">cnt</span><span class="op">$</span><span class="va">sdtm</span><span class="op">$</span><span class="fu">read_cnt</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/chartr.html" class="external-link">tolower</a></span><span class="op">(</span><span class="st">'DM_VACCINE'</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="va">DM_VACCINE</span> <span class="op">&lt;-</span> <span class="va">cnt</span><span class="op">$</span><span class="va">sdtm</span><span class="op">$</span><span class="fu">read_cnt</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/chartr.html" class="external-link">tolower</a></span><span class="op">(</span><span class="st">'DM_VACCINE'</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">ARM</span>, <span class="va">STUDYID</span>, <span class="va">USUBJID</span><span class="op">)</span></span></code></pre>
 </details>
 </div>
@@ -311,7 +311,7 @@ cnt &lt;- connector::connect(config = {{{connector_path_expr}}})
 <tr class="odd">
 <td><code>keep_vars</code></td>
 <td>character</td>
-<td>Comma-separated column names to select, sorted alphabetically and uppercased. Only used when <code>is_current_domain</code> is <code>FALSE</code>. Column order in the final dataset is controlled by <code>keep_vars</code> in <code>_write_data</code>, not by this field.</td>
+<td>Comma-separated column names to select, sorted alphabetically and uppercased. Only used when <code>is_current_domain</code> is <code>FALSE</code>. Column order in the final dataset is controlled by <code>keep_vars</code> in <code>mighty_write_data</code>, not by this field.</td>
 </tr>
 <tr class="even">
 <td><code>is_current_domain</code></td>
@@ -353,12 +353,12 @@ cnt &lt;- connector::connect(config = {{{connector_path_expr}}})
 <a class="anchor" aria-label="anchor" href="#when-is_current_domain-is-true"></a>
 </h5>
 <p>This happens in multi-program domains where a later program reads the output of an earlier program for the same domain (e.g. an ADSL “update” program). When <code>is_current_domain</code> is <code>TRUE</code>, <code>keep_vars</code> should be ignored.</p>
-</section></section></section></section><section class="section level2"><h2 id="init_domain">_init_domain<a class="anchor" aria-label="anchor" href="#init_domain"></a>
+</section></section></section></section><section class="section level2"><h2 id="mighty_init_domain">mighty_init_domain<a class="anchor" aria-label="anchor" href="#mighty_init_domain"></a>
 </h2>
-<p>Rendered once per program, after <code>_read_data</code>. Combines one or more source datasets by row binding and selects the columns needed for the domain.</p>
+<p>Rendered once per program, after <code>mighty_read_data</code>. Combines one or more source datasets by row binding and selects the columns needed for the domain.</p>
 <section class="level2"><h3 id="example-1">Example<a class="anchor" aria-label="anchor" href="#example-1"></a>
 </h3>
-<p>Using the same ADSL specification from <code>_read_data</code>:</p>
+<p>Using the same ADSL specification from <code>mighty_read_data</code>:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>  self <span class="op">=</span> <span class="st">"ADSL"</span>,</span>
@@ -391,11 +391,11 @@ cnt &lt;- connector::connect(config = {{{connector_path_expr}}})
   dplyr::mutate(SRC_ = "{{{domain}}}")
 
 {{/src_mutations}}
-{{{self}}} &lt;-  {{{source_domain_rbind}}} |&gt;
+{{{self}}} &lt;- {{{source_domain_rbind}}} |&gt;
     dplyr::select({{{keep_vars}}}) |&gt;
     admiral::convert_blanks_to_na()</code></pre>
 <p><strong>Rendered output</strong></p>
-<pre><code class="language-r"><span><span class="va">ADSL</span> <span class="op">&lt;-</span>  <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">DM</span>,</span>
+<pre><code class="language-r"><span><span class="va">ADSL</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">DM</span>,</span>
 <span><span class="va">DM_VACCINE</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">ARM</span>, <span class="va">STUDYID</span>, <span class="va">USUBJID</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu">admiral</span><span class="fu">::</span><span class="fu"><a href="https:/pharmaverse.github.io/admiral/v1.4.2/cran-release/reference/convert_blanks_to_na.html">convert_blanks_to_na</a></span><span class="op">(</span><span class="op">)</span></span></code></pre>
@@ -434,9 +434,9 @@ cnt &lt;- connector::connect(config = {{{connector_path_expr}}})
 </table>
 <p><code>src_mutations</code> is empty when <code>SRC_</code> is not in <code>keep_vars</code>.</p>
 <p><code>SRC_</code> is an internal column that mighty adds and removes automatically to support domain-specific row filters. See the <a href="adam_specification.html#filter-execution-order">ADaM specification vignette</a> for a full explanation of how filtering works across source domains.</p>
-</section></section></section><section class="section level2"><h2 id="filter_domain">_filter_domain<a class="anchor" aria-label="anchor" href="#filter_domain"></a>
+</section></section></section><section class="section level2"><h2 id="mighty_filter_domain">mighty_filter_domain<a class="anchor" aria-label="anchor" href="#mighty_filter_domain"></a>
 </h2>
-<p>Rendered after <code>_init_domain</code>. Applies joins, domain-specific filters, global filters, and column selection to the initialized dataset.</p>
+<p>Rendered after <code>mighty_init_domain</code>. Applies joins, domain-specific filters, global filters, and column selection to the initialized dataset.</p>
 <section class="level2"><h3 id="example-2">Example<a class="anchor" aria-label="anchor" href="#example-2"></a>
 </h3>
 <p>Given this YAML specification:</p>
@@ -480,7 +480,7 @@ cnt &lt;- connector::connect(config = {{{connector_path_expr}}})
 <div>
 <blockquote>
 <p><strong>Note</strong></p>
-<p><code>SEX</code> appears in the global filter (<code>!is.na(SEX)</code>) and is declared in the YAML spec, but it is absent from <code>keep_vars</code>. This is intentional: <code>SEX</code> originates from <code>ADSL</code> (via <code>method: ADSL.SEX</code>) and is not present in the LB or XL source data. It is joined in temporarily to evaluate the filter, then dropped. A subsequent <code>_col_echo</code> step re-adds <code>SEX</code> to ADLB permanently via a left join with ADSL.</p>
+<p><code>SEX</code> appears in the global filter (<code>!is.na(SEX)</code>) and is declared in the YAML spec, but it is absent from <code>keep_vars</code>. This is intentional: <code>SEX</code> originates from <code>ADSL</code> (via <code>method: ADSL.SEX</code>) and is not present in the LB or XL source data. It is joined in temporarily to evaluate the filter, then dropped. A subsequent <code>mighty_col_echo</code> step re-adds <code>SEX</code> to ADLB permanently via a left join with ADSL.</p>
 </blockquote>
 </div>
 <p>The standard template and a rendered version using the parameter list above can be expanded below.</p>
@@ -512,18 +512,18 @@ cnt &lt;- connector::connect(config = {{{connector_path_expr}}})
 
 {{/joins}}
 {{#domain_filter}}
-{{{self}}} &lt;-  {{{self}}} |&gt;
+{{{self}}} &lt;- {{{self}}} |&gt;
   dplyr::filter({{{domain_filter}}}) |&gt;
   dplyr::select(-SRC_)
 
 {{/domain_filter}}
 {{#global_filter}}
-{{{self}}} &lt;-  {{{self}}} |&gt;
+{{{self}}} &lt;- {{{self}}} |&gt;
   dplyr::filter({{{global_filter}}})
 
 {{/global_filter}}
 {{#keep_vars}}
-{{{self}}} &lt;-  {{{self}}} |&gt;
+{{{self}}} &lt;- {{{self}}} |&gt;
   dplyr::select({{{keep_vars}}})
 
 {{/keep_vars}}</code></pre>
@@ -532,14 +532,14 @@ cnt &lt;- connector::connect(config = {{{connector_path_expr}}})
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">left_join</a></span><span class="op">(</span><span class="va">ADSL</span> <span class="op">|&gt;</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">SEX</span>, <span class="va">STUDYID</span>, <span class="va">USUBJID</span><span class="op">)</span>,</span>
 <span>                   by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"STUDYID"</span>, <span class="st">"USUBJID"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">ADLB</span> <span class="op">&lt;-</span>  <span class="va">ADLB</span> <span class="op">|&gt;</span></span>
+<span><span class="va">ADLB</span> <span class="op">&lt;-</span> <span class="va">ADLB</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="op">(</span><span class="va">SRC_</span> <span class="op">==</span> <span class="st">'LB'</span><span class="op">)</span> <span class="op">|</span> <span class="op">(</span><span class="va">SRC_</span> <span class="op">==</span> <span class="st">'XL'</span> <span class="op">&amp;</span> <span class="va">LBCAT</span> <span class="op">==</span> <span class="st">'CHEMISTRY'</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">SRC_</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">ADLB</span> <span class="op">&lt;-</span>  <span class="va">ADLB</span> <span class="op">|&gt;</span></span>
+<span><span class="va">ADLB</span> <span class="op">&lt;-</span> <span class="va">ADLB</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">SEX</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">ADLB</span> <span class="op">&lt;-</span>  <span class="va">ADLB</span> <span class="op">|&gt;</span></span>
+<span><span class="va">ADLB</span> <span class="op">&lt;-</span> <span class="va">ADLB</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">LBCAT</span>, <span class="va">PARAMCD</span>, <span class="va">STUDYID</span>, <span class="va">USUBJID</span><span class="op">)</span></span></code></pre>
 </details>
 </div>
@@ -596,7 +596,7 @@ cnt &lt;- connector::connect(config = {{{connector_path_expr}}})
 <code>keep_vars</code><a class="anchor" aria-label="anchor" href="#keep_vars-1"></a>
 </h4>
 <p>A comma-separated string of column names to retain. <code>NULL</code> when no selection is needed — whisker treats <code>NULL</code> as falsy so the <code><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">dplyr::select()</a></code> call is suppressed. <code>SRC_</code> is excluded because it is only used during filtering.</p>
-</section></section></section><section class="section level2"><h2 id="col_mutate">_col_mutate<a class="anchor" aria-label="anchor" href="#col_mutate"></a>
+</section></section></section><section class="section level2"><h2 id="mighty_col_mutate">mighty_col_mutate<a class="anchor" aria-label="anchor" href="#mighty_col_mutate"></a>
 </h2>
 <p>Rendered for each <code>col_copy</code> action — variables copied verbatim from one column to another, typically with an ADaM-standard rename (e.g. <code>LBSTRESN</code> → <code>AVAL</code>).</p>
 <section class="level2"><h3 id="example-3">Example<a class="anchor" aria-label="anchor" href="#example-3"></a>
@@ -646,9 +646,9 @@ cnt &lt;- connector::connect(config = {{{connector_path_expr}}})
 <code>source_var</code><a class="anchor" aria-label="anchor" href="#source_var"></a>
 </h4>
 <p>The name of the existing column whose values are copied.</p>
-</section></section></section><section class="section level2"><h2 id="col_rename">_col_rename<a class="anchor" aria-label="anchor" href="#col_rename"></a>
+</section></section></section><section class="section level2"><h2 id="mighty_col_rename">mighty_col_rename<a class="anchor" aria-label="anchor" href="#mighty_col_rename"></a>
 </h2>
-<p>Rendered for each <code>col_rename</code> action — renames an existing column in-place without copying values. Unlike <code>_col_mutate</code>, which creates a new column via <code><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">dplyr::mutate()</a></code>, this template uses <code><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">dplyr::rename()</a></code> and leaves no extra column behind.</p>
+<p>Rendered for each <code>col_rename</code> action — renames an existing column in-place without copying values. Unlike <code>mighty_col_mutate</code>, which creates a new column via <code><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">dplyr::mutate()</a></code>, this template uses <code><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">dplyr::rename()</a></code> and leaves no extra column behind.</p>
 <p>Both templates share the same parameter list and are served by the same internal function (<code>params_mutate_code</code>). They differ only in the R verb the template emits.</p>
 <section class="level2"><h3 id="example-4">Example<a class="anchor" aria-label="anchor" href="#example-4"></a>
 </h3>
@@ -697,7 +697,7 @@ cnt &lt;- connector::connect(config = {{{connector_path_expr}}})
 <code>source_var</code><a class="anchor" aria-label="anchor" href="#source_var-1"></a>
 </h4>
 <p>The existing column to rename.</p>
-</section></section></section><section class="section level2"><h2 id="col_echo">_col_echo<a class="anchor" aria-label="anchor" href="#col_echo"></a>
+</section></section></section><section class="section level2"><h2 id="mighty_col_echo">mighty_col_echo<a class="anchor" aria-label="anchor" href="#mighty_col_echo"></a>
 </h2>
 <p>Rendered for each <code>col_echo</code> action — variables pulled in from a different domain via a left join.</p>
 <section class="level2"><h3 id="example-5">Example<a class="anchor" aria-label="anchor" href="#example-5"></a>
@@ -717,7 +717,7 @@ cnt &lt;- connector::connect(config = {{{connector_path_expr}}})
 <span>  output_var <span class="op">=</span> <span class="st">"SEX"</span>,</span>
 <span>  var_to_add <span class="op">=</span> <span class="st">"SEX"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p>This is the step that permanently adds <code>SEX</code> to ADLB — the same column that <code>_filter_domain</code> joined in temporarily to evaluate the global filter.</p>
+<p>This is the step that permanently adds <code>SEX</code> to ADLB — the same column that <code>mighty_filter_domain</code> joined in temporarily to evaluate the global filter.</p>
 <p>The standard template and a rendered version using the parameter list above can be expanded below.</p>
 <div class="cell">
 <div class="cell-output-display">
@@ -773,12 +773,12 @@ by = c({{{by_vars}}})){{#needs_rename}} |&gt;
 <a class="anchor" aria-label="anchor" href="#output_var-var_to_add"></a>
 </h4>
 <p><code>var_to_add</code> is the column name as it exists in <code>join_dataset</code>. <code>output_var</code> is the desired column name in <code>self</code>. When <code>needs_rename</code> is <code>FALSE</code> they are equal.</p>
-</section></section></section><section class="section level2"><h2 id="write_data">_write_data<a class="anchor" aria-label="anchor" href="#write_data"></a>
+</section></section></section><section class="section level2"><h2 id="mighty_write_data">mighty_write_data<a class="anchor" aria-label="anchor" href="#mighty_write_data"></a>
 </h2>
 <p>Rendered at the end of every ADaM program. Sorts rows, selects columns in specification order, and persists the dataset via the connector.</p>
 <section class="level2"><h3 id="example-6">Example<a class="anchor" aria-label="anchor" href="#example-6"></a>
 </h3>
-<p>For the ADSL specification from the <code>_read_data</code> example, mighty builds:</p>
+<p>For the ADSL specification from the <code>mighty_read_data</code> example, mighty builds:</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>  self <span class="op">=</span> <span class="st">"ADSL"</span>,</span>
@@ -790,7 +790,7 @@ by = c({{{by_vars}}})){{#needs_rename}} |&gt;
 <div>
 <blockquote>
 <p><strong>Note</strong></p>
-<p>When mighty is run with source data available for validation, columns that cannot be derived due to missing source data are prefixed with <code>#</code> in the formatted string, commenting them out of the <code><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">dplyr::select()</a></code> call. This allows the generated program to run and produce a partial dataset rather than failing outright. This behaviour is part of mighty’s missing data handling and does not affect the template itself.</p>
+<p>When mighty is run with source data available for validation, columns that cannot be derived due to missing source data are prefixed with <code>#</code> in the formatted string, commenting them out of the <code><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">dplyr::select()</a></code> call. This allows the generated program to run and produce a partial dataset rather than failing outright. This behavior is part of mighty’s missing data handling and does not affect the template itself.</p>
 </blockquote>
 </div>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
