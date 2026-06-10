@@ -105,9 +105,6 @@ Trace each fixture in `mighty/tests/testthat/fixtures/` and test helper function
 
 `testthat` snapshot files (`_snaps/`) move along with their tests, unmodified. They are not regenerated as part of the migration. A snapshot mismatch after the move can be diagnostic if the move accidentally changed behavior.
 
-### 13. Components: no migration action
-
-The contents of `mighty/inst/components/` and `mighty.component/inst/components/` are not affected. `mighty/inst/components/` is stale and should be deleted (separate PR)
 
 ## Non-goals
 
