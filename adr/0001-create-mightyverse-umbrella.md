@@ -32,17 +32,15 @@ The recommendations below assume Option 1. They are drafts for team discussion, 
 
 *Alternatives considered:* a pure test/doc harness with no end-user install, or a user-facing umbrella with tests living elsewhere. 
 
-### 2. Cross-repo CI gating *(discussion point)*
+### 2. What triggers the integration test runs *(discussion point)*
 
-Recommendation: each sibling repo's CI installs the rest of the ecosystem and runs `mightyverse`'s integration suite, in addition to its own unit tests. This catches ecosystem breakage at PR time on the originating repo.
+Recommendation: each sibling repo's CI runs `mightyverse`'s integration suite, in addition to its own unit tests, on PRs to main. This catches ecosystem breakage at PR time on the originating repo.
 
 The cons: every sibling's CI now depends on `mightyverse`, and `mightyverse`'s `main` must stay green or it blocks the rest of the ecosystem.
 
 *Alternatives:*
 - Run integration tests only in `mightyverse` CI; rely on manual triggers or post-merge runs to catch cross-repo regressions. Not automatic, may allowing breaking changes to go un-addressed.
 - Scheduled: nightly CI run `mightyverse` PRs. No real gain from manual, just a delay
-
-
 
 ### 3. Test cut line and unit-test backfill
 
@@ -75,12 +73,6 @@ The attach list is reviewable when `mighty.toolbox` opens or if `mighty.standard
 ### 7. Documentation scope: OS pieces only
 
 `mightyverse` documents the OS pipeline (YAML → action graph → generated R programs). Submission deliverables (`mighty.toolbox`) are not documented in `mightyverse`; toolbox docs stay in toolbox. If toolbox opens in the future, a stub vignette in `mightyverse` linking out becomes a reasonable option.
-
-### 8. Repo: new `NN-OpenSource/mightyverse`
-
-Create a new top-level repo alongside the existing `mighty.*` repos. The local-workspace name collision (the workspace directory is currently called `mightyverse/`) is resolved by renaming the workspace directory locally; it has no effect on others.
-
-*Alternative considered:* place `mightyverse` as a subdirectory inside the `mighty` repo. Rejected because it conflates release cadences and breaks the "narrative docs live in their own place" decision.
 
 ### 9. Migration sequencing: copy-then-delete
 
