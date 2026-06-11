@@ -6,7 +6,7 @@
 
 ## Context
 
-The `mighty` repo currently houses three things: (1) the orchestration engine itself, (2) ecosystem-wide vignettes that span `mighty`, `mighty.metadata`, and `mighty.component`, and (3) an integration-heavy test suite (47 test files; the suite is light on unit tests). This conflates concerns: a user landing on `mighty`'s pkgdown site reads docs that aren't really about `mighty`, and a CI failure in `mighty` may reflect breakage in a sibling package.
+The `mighty` repo currently houses three things: (1) the orchestration engine itself, (2) ecosystem-wide vignettes that span `mighty`, `mighty.metadata`, and `mighty.component`, and (3) integration tests for the ecosystem.
 
 This ADR proposes creating a new R package, `mightyverse`, as a tidyverse-style umbrella that owns the ecosystem-level documentation and integration test suite. After migration, each `mighty.*` repo's documentation focuses on what that package alone does, and ecosystem-spanning concerns live in one place.
 
@@ -19,8 +19,6 @@ Two ways to split ecosystem concerns out of `mighty`:
 **Option 2: keep `mighty` as the user-facing pkg; move the engine into a new `mighty.something` package.** `mighty` becomes the umbrella, the landing page, and the home of integration tests. `mighty.something` holds the orchestration code and unit tests. The 2 exports are re-exported from the engine through `mighty`.
 
 Option 2 requires a bit more work to ensure git history moves cleanly.
-
-
 
 ## Recommendations
 
