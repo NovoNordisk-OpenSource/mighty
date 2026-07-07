@@ -1,14 +1,5 @@
 # Special components
 
-``` r
-
-# `mighty.component` fetches component templates from GitHub via the
-# `gh` package. `gh` < 1.6.0 rejects the `ghs_` App-installation token
-# that CI provides, so we skip evaluation on runners pinned to an
-# older CRAN snapshot.
-knitr::opts_chunk$set(eval = utils::packageVersion("gh") >= "1.6.0")
-```
-
 Special components are Mustache templates (prefixed with `mighty_`) that
 mighty inserts automatically into every generated ADaM program. They
 live in mighty.standards and are resolved via the `repos` mechanism.

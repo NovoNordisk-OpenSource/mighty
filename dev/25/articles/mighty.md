@@ -1,14 +1,5 @@
 # Get started
 
-``` r
-
-# `mighty.component` fetches component templates from GitHub via the
-# `gh` package. `gh` < 1.6.0 rejects the `ghs_` App-installation token
-# that CI provides, so we skip evaluation on runners pinned to an
-# older CRAN snapshot.
-knitr::opts_chunk$set(eval = utils::packageVersion("gh") >= "1.6.0")
-```
-
 ## Your first mighty ADaM program
 
 Here is a minimal example that demonstrates how to specify and render a
@@ -175,7 +166,7 @@ generating ADSL based on the specifications
 
     #> → Downloading repo "NovoNordisk-OpenSource/mighty.standards@dev/internal-components"
     #> → Successfully downloaded and cached "NovoNordisk-OpenSource/mighty.standards@dev/internal-components"
-    #> → Found "/tmp/RtmpeUFjAi/mighty_example_study/age_group_01.R" in "NovoNordisk-OpenSource/mighty.standards/components@dev/internal-components"
+    #> → Found "/tmp/RtmpWI6hr7/mighty_example_study/age_group_01.R" in "NovoNordisk-OpenSource/mighty.standards/components@dev/internal-components"
     #> → Using cached repo "NovoNordisk-OpenSource/mighty.standards@dev/internal-components"
     #> → Found "mighty_read_data" in "NovoNordisk-OpenSource/mighty.standards/components@dev/internal-components"
     #> → Using cached repo "NovoNordisk-OpenSource/mighty.standards@dev/internal-components"
@@ -183,7 +174,7 @@ generating ADSL based on the specifications
     #> → Using cached repo "NovoNordisk-OpenSource/mighty.standards@dev/internal-components"
     #> → Found "mighty_filter_domain" in "NovoNordisk-OpenSource/mighty.standards/components@dev/internal-components"
     #> → Using cached repo "NovoNordisk-OpenSource/mighty.standards@dev/internal-components"
-    #> → Found "/tmp/RtmpeUFjAi/mighty_example_study/age_group_01.R" in "NovoNordisk-OpenSource/mighty.standards/components@dev/internal-components"
+    #> → Found "/tmp/RtmpWI6hr7/mighty_example_study/age_group_01.R" in "NovoNordisk-OpenSource/mighty.standards/components@dev/internal-components"
     #> → Using cached repo "NovoNordisk-OpenSource/mighty.standards@dev/internal-components"
     #> → Found "mighty_col_mutate" in "NovoNordisk-OpenSource/mighty.standards/components@dev/internal-components"
     #> → Using cached repo "NovoNordisk-OpenSource/mighty.standards@dev/internal-components"
@@ -195,13 +186,13 @@ generating ADSL based on the specifications
     #> → Using cached repo "NovoNordisk-OpenSource/mighty.standards@dev/internal-components"
     #> → Found "mighty_filter_domain" in "NovoNordisk-OpenSource/mighty.standards/components@dev/internal-components"
     #> → Using cached repo "NovoNordisk-OpenSource/mighty.standards@dev/internal-components"
-    #> → Found "/tmp/RtmpeUFjAi/mighty_example_study/age_group_01.R" in "NovoNordisk-OpenSource/mighty.standards/components@dev/internal-components"
+    #> → Found "/tmp/RtmpWI6hr7/mighty_example_study/age_group_01.R" in "NovoNordisk-OpenSource/mighty.standards/components@dev/internal-components"
     #> → Using cached repo "NovoNordisk-OpenSource/mighty.standards@dev/internal-components"
     #> → Found "mighty_col_mutate" in "NovoNordisk-OpenSource/mighty.standards/components@dev/internal-components"
     #> → Using cached repo "NovoNordisk-OpenSource/mighty.standards@dev/internal-components"
     #> → Found "mighty_write_data" in "NovoNordisk-OpenSource/mighty.standards/components@dev/internal-components"
     # ADSL-1-read_data -------------------------------------------------------------
-    cnt <- connector::connect(config = "/tmp/RtmpeUFjAi/mighty_example_study/_connector.yml")
+    cnt <- connector::connect(config = "/tmp/RtmpWI6hr7/mighty_example_study/_connector.yml")
       DM <- cnt$sdtm$read_cnt(tolower('DM')) |>
       dplyr::select(AGE, ARM, STUDYID, USUBJID)
 

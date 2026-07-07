@@ -78,15 +78,7 @@
 
 
 
-    <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># `mighty.component` fetches component templates from GitHub via the</span></span>
-<span><span class="co"># `gh` package. `gh` &lt; 1.6.0 rejects the `ghs_` App-installation token</span></span>
-<span><span class="co"># that CI provides, so we skip evaluation on runners pinned to an</span></span>
-<span><span class="co"># older CRAN snapshot.</span></span>
-<span><span class="fu">knitr</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/knitr/man/opts_chunk.html" class="external-link">opts_chunk</a></span><span class="op">$</span><span class="fu">set</span><span class="op">(</span>eval <span class="op">=</span> <span class="fu">utils</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/utils/packageDescription.html" class="external-link">packageVersion</a></span><span class="op">(</span><span class="st">"gh"</span><span class="op">)</span> <span class="op">&gt;=</span> <span class="st">"1.6.0"</span><span class="op">)</span></span></code></pre></div>
-</div>
-<section class="section level2"><h2 id="your-first-mighty-adam-program">Your first mighty ADaM program<a class="anchor" aria-label="anchor" href="#your-first-mighty-adam-program"></a>
+    <section class="section level2"><h2 id="your-first-mighty-adam-program">Your first mighty ADaM program<a class="anchor" aria-label="anchor" href="#your-first-mighty-adam-program"></a>
 </h2>
 <p>Here is a minimal example that demonstrates how to specify and render a simple ADSL program with mighty to get you acquainted with the core concepts of the framework.</p>
 <section class="level2"><h3 id="study-directory-guidelines">Study directory guidelines<a class="anchor" aria-label="anchor" href="#study-directory-guidelines"></a>
@@ -110,56 +102,56 @@
 <p>The <code>_mighty.yml</code> file provides framework configuration that spans across all ADaM domains. This includes primary keys for external datasets that are used for joining tables.</p>
 <p>For this example, we will focus on a simple ADSL table and only provide keys related to that domain.</p>
 <p><strong>_mighty.yml</strong></p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode yml"><code class="sourceCode yaml"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">external_data</span><span class="kw">:</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">id</span><span class="kw">:</span><span class="at"> DM</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">keys</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="at">USUBJID</span><span class="kw">,</span><span class="at"> STUDYID</span><span class="kw">]</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">id</span><span class="kw">:</span><span class="at"> LB</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">keys</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="at">USUBJID</span><span class="kw">,</span><span class="at"> STUDYID</span><span class="kw">,</span><span class="at"> LBSEQ</span><span class="kw">]</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="fu">repos</span><span class="kw">:</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="st">"NovoNordisk-OpenSource/mighty.standards/components@dev/internal-components"</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="st">"."</span></span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode yml"><code class="sourceCode yaml"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">external_data</span><span class="kw">:</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">id</span><span class="kw">:</span><span class="at"> DM</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">keys</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="at">USUBJID</span><span class="kw">,</span><span class="at"> STUDYID</span><span class="kw">]</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">id</span><span class="kw">:</span><span class="at"> LB</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">keys</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="at">USUBJID</span><span class="kw">,</span><span class="at"> STUDYID</span><span class="kw">,</span><span class="at"> LBSEQ</span><span class="kw">]</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">repos</span><span class="kw">:</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="st">"NovoNordisk-OpenSource/mighty.standards/components@dev/internal-components"</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="st">"."</span></span></code></pre></div>
 </section><section class="level2"><h3 id="set-up-your-adam-specification">Set up your ADaM specification<a class="anchor" aria-label="anchor" href="#set-up-your-adam-specification"></a>
 </h3>
 <p>Provide a YAML file that specifies which columns to include in ADSL and how they are derived. The specification <strong>only contains columns that belong in the final dataset</strong>; source columns needed only during derivation are handled through component dependencies instead. See <code><a href="../articles/adam_specification.html">vignette("adam_specification")</a></code> for details.</p>
 <p>This ADSL table contains 6 columns: 4 simple columns from the base domain, 1 renamed column, and 1 derivation using a custom component.</p>
 <p><strong>adsl.yml</strong></p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode yml"><code class="sourceCode yaml"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">id</span><span class="kw">:</span><span class="at"> ADSL</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">label</span><span class="kw">:</span><span class="at"> Subject Level Analysis Dataset</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span><span class="kw">:</span><span class="at"> SUBJECT LEVEL ANALYSIS DATASET</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">structure</span><span class="kw">:</span><span class="at"> One record per subject</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu">keys</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="at">USUBJID</span><span class="kw">,</span><span class="at"> STUDYID</span><span class="kw">]</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="fu">population</span><span class="kw">:</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">base</span><span class="kw">:</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="kw">-</span><span class="at"> </span><span class="fu">domain</span><span class="kw">:</span><span class="at"> DM</span></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">depends</span><span class="kw">:</span></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="kw">-</span><span class="at"> AGE</span></span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">filter</span><span class="kw">:</span><span class="at"> </span><span class="st">'!is.na(AGE)'</span></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">global</span><span class="kw">:</span></span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="kw">-</span><span class="at"> </span><span class="fu">filter</span><span class="kw">:</span><span class="at"> NA</span></span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">depends</span><span class="kw">:</span></span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="kw">-</span><span class="at"> NA</span></span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="fu">columns</span><span class="kw">:</span></span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">id</span><span class="kw">:</span><span class="at"> USUBJID</span></span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">id</span><span class="kw">:</span><span class="at"> STUDYID</span></span>
-<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">id</span><span class="kw">:</span><span class="at"> ARM</span></span>
-<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">id</span><span class="kw">:</span><span class="at"> PLANNED_ARM</span></span>
-<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">method</span><span class="kw">:</span><span class="at"> ARM</span></span>
-<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">id</span><span class="kw">:</span><span class="at"> AGE</span></span>
-<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">id</span><span class="kw">:</span><span class="at"> AGE_GRP1</span></span>
-<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">component</span><span class="kw">:</span></span>
-<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">id</span><span class="kw">:</span><span class="at"> </span><span class="st">"age_group_01.R"</span></span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode yml"><code class="sourceCode yaml"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">id</span><span class="kw">:</span><span class="at"> ADSL</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">label</span><span class="kw">:</span><span class="at"> Subject Level Analysis Dataset</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span><span class="kw">:</span><span class="at"> SUBJECT LEVEL ANALYSIS DATASET</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">structure</span><span class="kw">:</span><span class="at"> One record per subject</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">keys</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="at">USUBJID</span><span class="kw">,</span><span class="at"> STUDYID</span><span class="kw">]</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="fu">population</span><span class="kw">:</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">base</span><span class="kw">:</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="kw">-</span><span class="at"> </span><span class="fu">domain</span><span class="kw">:</span><span class="at"> DM</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">depends</span><span class="kw">:</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="kw">-</span><span class="at"> AGE</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">filter</span><span class="kw">:</span><span class="at"> </span><span class="st">'!is.na(AGE)'</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">global</span><span class="kw">:</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="kw">-</span><span class="at"> </span><span class="fu">filter</span><span class="kw">:</span><span class="at"> NA</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">depends</span><span class="kw">:</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="kw">-</span><span class="at"> NA</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="fu">columns</span><span class="kw">:</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">id</span><span class="kw">:</span><span class="at"> USUBJID</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">id</span><span class="kw">:</span><span class="at"> STUDYID</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">id</span><span class="kw">:</span><span class="at"> ARM</span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">id</span><span class="kw">:</span><span class="at"> PLANNED_ARM</span></span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">method</span><span class="kw">:</span><span class="at"> ARM</span></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">id</span><span class="kw">:</span><span class="at"> AGE</span></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">id</span><span class="kw">:</span><span class="at"> AGE_GRP1</span></span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">component</span><span class="kw">:</span></span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">id</span><span class="kw">:</span><span class="at"> </span><span class="st">"age_group_01.R"</span></span></code></pre></div>
 </section><section class="level2"><h3 id="define-your-custom-component">Define your custom component<a class="anchor" aria-label="anchor" href="#define-your-custom-component"></a>
 </h3>
 <p>The column <code>AGE_GRP1</code> in ADSL is derived by using a custom component that contains the logic to process the ADSL table by deriving the additional column <code>AGE_GRP1</code>.</p>
 <p><strong>age_group_01.R</strong></p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#' @title Age group 01</span></span>
 <span><span class="co">#' @description Grouping of age</span></span>
 <span><span class="co">#' @type column</span></span>
@@ -180,7 +172,7 @@
 </h3>
 <p>Call mighty to consolidate, analyze and render your ADSL program:</p>
 <p><strong>example_01_main.R</strong></p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># ADSL with 1 base domain</span></span>
 <span><span class="co">#   - 4 predecessors</span></span>
 <span><span class="co">#   - 1 renamed predecessor</span></span>
@@ -200,7 +192,7 @@
 <p>Printing the rendered ADaM program yields a complete program for generating ADSL based on the specifications</p>
 <pre><code><span><span class="co">#&gt; → Downloading repo "NovoNordisk-OpenSource/mighty.standards@dev/internal-components"</span></span>
 <span><span class="co">#&gt; → Successfully downloaded and cached "NovoNordisk-OpenSource/mighty.standards@dev/internal-components"</span></span>
-<span><span class="co">#&gt; → Found "/tmp/RtmpeUFjAi/mighty_example_study/age_group_01.R" in "NovoNordisk-OpenSource/mighty.standards/components@dev/internal-components"</span></span>
+<span><span class="co">#&gt; → Found "/tmp/RtmpWI6hr7/mighty_example_study/age_group_01.R" in "NovoNordisk-OpenSource/mighty.standards/components@dev/internal-components"</span></span>
 <span><span class="co">#&gt; → Using cached repo "NovoNordisk-OpenSource/mighty.standards@dev/internal-components"</span></span>
 <span><span class="co">#&gt; → Found "mighty_read_data" in "NovoNordisk-OpenSource/mighty.standards/components@dev/internal-components"</span></span>
 <span><span class="co">#&gt; → Using cached repo "NovoNordisk-OpenSource/mighty.standards@dev/internal-components"</span></span>
@@ -208,7 +200,7 @@
 <span><span class="co">#&gt; → Using cached repo "NovoNordisk-OpenSource/mighty.standards@dev/internal-components"</span></span>
 <span><span class="co">#&gt; → Found "mighty_filter_domain" in "NovoNordisk-OpenSource/mighty.standards/components@dev/internal-components"</span></span>
 <span><span class="co">#&gt; → Using cached repo "NovoNordisk-OpenSource/mighty.standards@dev/internal-components"</span></span>
-<span><span class="co">#&gt; → Found "/tmp/RtmpeUFjAi/mighty_example_study/age_group_01.R" in "NovoNordisk-OpenSource/mighty.standards/components@dev/internal-components"</span></span>
+<span><span class="co">#&gt; → Found "/tmp/RtmpWI6hr7/mighty_example_study/age_group_01.R" in "NovoNordisk-OpenSource/mighty.standards/components@dev/internal-components"</span></span>
 <span><span class="co">#&gt; → Using cached repo "NovoNordisk-OpenSource/mighty.standards@dev/internal-components"</span></span>
 <span><span class="co">#&gt; → Found "mighty_col_mutate" in "NovoNordisk-OpenSource/mighty.standards/components@dev/internal-components"</span></span>
 <span><span class="co">#&gt; → Using cached repo "NovoNordisk-OpenSource/mighty.standards@dev/internal-components"</span></span>
@@ -220,13 +212,13 @@
 <span><span class="co">#&gt; → Using cached repo "NovoNordisk-OpenSource/mighty.standards@dev/internal-components"</span></span>
 <span><span class="co">#&gt; → Found "mighty_filter_domain" in "NovoNordisk-OpenSource/mighty.standards/components@dev/internal-components"</span></span>
 <span><span class="co">#&gt; → Using cached repo "NovoNordisk-OpenSource/mighty.standards@dev/internal-components"</span></span>
-<span><span class="co">#&gt; → Found "/tmp/RtmpeUFjAi/mighty_example_study/age_group_01.R" in "NovoNordisk-OpenSource/mighty.standards/components@dev/internal-components"</span></span>
+<span><span class="co">#&gt; → Found "/tmp/RtmpWI6hr7/mighty_example_study/age_group_01.R" in "NovoNordisk-OpenSource/mighty.standards/components@dev/internal-components"</span></span>
 <span><span class="co">#&gt; → Using cached repo "NovoNordisk-OpenSource/mighty.standards@dev/internal-components"</span></span>
 <span><span class="co">#&gt; → Found "mighty_col_mutate" in "NovoNordisk-OpenSource/mighty.standards/components@dev/internal-components"</span></span>
 <span><span class="co">#&gt; → Using cached repo "NovoNordisk-OpenSource/mighty.standards@dev/internal-components"</span></span>
 <span><span class="co">#&gt; → Found "mighty_write_data" in "NovoNordisk-OpenSource/mighty.standards/components@dev/internal-components"</span></span>
 <span><span class="co"># ADSL-1-read_data -------------------------------------------------------------</span></span>
-<span><span class="va">cnt</span> <span class="op">&lt;-</span> <span class="fu">connector</span><span class="fu">::</span><span class="fu"><a href="https://novonordisk-opensource.github.io/connector/reference/connect.html" class="external-link">connect</a></span><span class="op">(</span>config <span class="op">=</span> <span class="st">"/tmp/RtmpeUFjAi/mighty_example_study/_connector.yml"</span><span class="op">)</span></span>
+<span><span class="va">cnt</span> <span class="op">&lt;-</span> <span class="fu">connector</span><span class="fu">::</span><span class="fu"><a href="https://novonordisk-opensource.github.io/connector/reference/connect.html" class="external-link">connect</a></span><span class="op">(</span>config <span class="op">=</span> <span class="st">"/tmp/RtmpWI6hr7/mighty_example_study/_connector.yml"</span><span class="op">)</span></span>
 <span>  <span class="va">DM</span> <span class="op">&lt;-</span> <span class="va">cnt</span><span class="op">$</span><span class="va">sdtm</span><span class="op">$</span><span class="fu">read_cnt</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/chartr.html" class="external-link">tolower</a></span><span class="op">(</span><span class="st">'DM'</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">AGE</span>, <span class="va">ARM</span>, <span class="va">STUDYID</span>, <span class="va">USUBJID</span><span class="op">)</span></span>
 <span></span>
