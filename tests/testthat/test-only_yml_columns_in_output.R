@@ -1,7 +1,4 @@
 test_that("Only YAML-defined columns appear in the final dataset", {
-  # `gh` < 1.6.0 rejects `ghs_` App-installation tokens used in CI.
-  skip_if_not_installed("gh", "1.6.0")
-
   # SETUP -------------------------------------------------------------------
 
   component <- "

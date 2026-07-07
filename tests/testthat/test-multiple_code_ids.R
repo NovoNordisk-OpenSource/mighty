@@ -1,7 +1,4 @@
 test_that("Multiple columns using same code_id, but diff parameters errors out", {
-  # `gh` < 1.6.0 rejects `ghs_` App-installation tokens used in CI.
-  skip_if_not_installed("gh", "1.6.0")
-
   component_file <- withr::local_tempfile(fileext = ".mustache")
   writeLines(
     "
@@ -69,9 +66,6 @@ columns:
 })
 
 test_that("Same component with different parameters and disjoint outputs succeeds", {
-  # `gh` < 1.6.0 rejects `ghs_` App-installation tokens used in CI.
-  skip_if_not_installed("gh", "1.6.0")
-
   component_file <- withr::local_tempfile(fileext = ".mustache")
   writeLines(
     "
@@ -138,9 +132,6 @@ columns:
 
 
 test_that("Within-domain parameter conflicts are reported for every affected domain", {
-  # `gh` < 1.6.0 rejects `ghs_` App-installation tokens used in CI.
-  skip_if_not_installed("gh", "1.6.0")
-
   component_file <- withr::local_tempfile(fileext = ".mustache")
   writeLines(
     "
@@ -251,9 +242,6 @@ columns:
 
 
 test_that("Same component reused across domains with different parameters succeeds", {
-  # `gh` < 1.6.0 rejects `ghs_` App-installation tokens used in CI.
-  skip_if_not_installed("gh", "1.6.0")
-
   component_file <- withr::local_tempfile(fileext = ".mustache")
   writeLines(
     "
@@ -348,9 +336,6 @@ columns:
 
 
 test_that("Same component with identical parameters across invocations passes", {
-  # `gh` < 1.6.0 rejects `ghs_` App-installation tokens used in CI.
-  skip_if_not_installed("gh", "1.6.0")
-
   component_file <- withr::local_tempfile(fileext = ".mustache")
   writeLines(
     "

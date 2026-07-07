@@ -1,7 +1,4 @@
 test_that("Validation warning occurs when component uses ADSL implicitly without declaring @depends on ADSL", {
-  # `gh` < 1.6.0 rejects `ghs_` App-installation tokens used in CI.
-  skip_if_not_installed("gh", "1.6.0")
-
   # SETUP -------------------------------------------------------------------
 
   # Custom component that uses ADSL but only declares dependency on
@@ -71,9 +68,6 @@ test_that("Validation warning occurs when component uses ADSL implicitly without
 })
 
 test_that("Topology is generated correctly when component declares dependencies on both ADSL and external datasets", {
-  # `gh` < 1.6.0 rejects `ghs_` App-installation tokens used in CI.
-  skip_if_not_installed("gh", "1.6.0")
-
   # SETUP -------------------------------------------------------------------
   trial_path <- withr::local_tempdir()
 
@@ -147,9 +141,6 @@ test_that("Topology is generated correctly when component declares dependencies 
 })
 
 test_that("Warning message lists all output columns from component with missing ADLB dependency", {
-  # `gh` < 1.6.0 rejects `ghs_` App-installation tokens used in CI.
-  skip_if_not_installed("gh", "1.6.0")
-
   # SETUP -------------------------------------------------------------------
 
   # Custom component that uses ADLB without declaring dependency on ADLB
@@ -233,9 +224,6 @@ test_that("Warning message lists all output columns from component with missing 
 })
 
 test_that("Warn if two domains but one has component with missing depends", {
-  # `gh` < 1.6.0 rejects `ghs_` App-installation tokens used in CI.
-  skip_if_not_installed("gh", "1.6.0")
-
   # SETUP -------------------------------------------------------------------
 
   # Custom component that uses ADLB without declaring dependency on ADLB
@@ -331,9 +319,6 @@ test_that("Warn if two domains but one has component with missing depends", {
 })
 
 test_that("Validation with mix of components warning when no @depends on component", {
-  # `gh` < 1.6.0 rejects `ghs_` App-installation tokens used in CI.
-  skip_if_not_installed("gh", "1.6.0")
-
   # SETUP -------------------------------------------------------------------
 
   # Custom component that uses ADSL but only declares dependency on
@@ -429,9 +414,6 @@ test_that("Validation with mix of components warning when no @depends on compone
 })
 
 test_that("Validation with two domains throws warning when no @depends on component", {
-  # `gh` < 1.6.0 rejects `ghs_` App-installation tokens used in CI.
-  skip_if_not_installed("gh", "1.6.0")
-
   # SETUP -------------------------------------------------------------------
 
   # Custom component that uses ADSL but only declares dependency on
@@ -523,9 +505,6 @@ test_that("Validation with two domains throws warning when no @depends on compon
 })
 
 test_that("Error when ADaM specification is missing init_domain (no population.base)", {
-  # `gh` < 1.6.0 rejects `ghs_` App-installation tokens used in CI.
-  skip_if_not_installed("gh", "1.6.0")
-
   # This test shows the only way a user could encounter a validate_init_domain_presence()
   #  error. This pathways is very unlikely for a user, but we are keeping the
   #  validate_init_domain_presence() check as a defensive programming against introducing

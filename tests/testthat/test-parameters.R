@@ -1,7 +1,4 @@
 test_that("Complex test with multiple domains and column/row operations", {
-  # `gh` < 1.6.0 rejects `ghs_` App-installation tokens used in CI.
-  skip_if_not_installed("gh", "1.6.0")
-
   # SETUP -------------------------------------------------------------------
 
   adam_specifications <- setup_study_from_fixtures(
