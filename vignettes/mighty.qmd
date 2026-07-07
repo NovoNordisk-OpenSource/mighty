@@ -8,11 +8,15 @@ knitr:
   opts_chunk:
     collapse: true
     comment: '#>'
+    # `mighty.component` fetches component templates from GitHub via the
+    # `gh` package. `gh` < 1.6.0 rejects the `ghs_` App-installation token
+    # that CI provides, so we skip evaluation on runners pinned to an
+    # older CRAN snapshot.
+    eval: !expr utils::packageVersion("gh") >= "1.6.0"
 ---
 
 ```{r}
 #| include: false
-#| eval: true
 library(mighty)
 
 # Create study directory structure
@@ -165,7 +169,6 @@ For this example, we will focus on a simple ADSL table and only provide keys rel
 
 ```{r}
 #| echo: false
-#| eval: true
 #| results: asis
 cat("```yml\n")
 cat(mighty_yaml)
@@ -182,7 +185,6 @@ This ADSL table contains 6 columns: 4 simple columns from the base domain, 1 ren
 
 ```{r}
 #| echo: false
-#| eval: true
 #| results: asis
 cat("```yml\n")
 cat(adsl_yaml)
@@ -197,7 +199,6 @@ The column `AGE_GRP1` in ADSL is derived by using a custom component that contai
 
 ```{r}
 #| echo: false
-#| eval: true
 #| results: asis
 cat("```r\n")
 cat(component_code)
@@ -212,7 +213,6 @@ Call mighty to consolidate, analyze and render your ADSL program:
 
 ```{r}
 #| echo: false
-#| eval: true
 #| results: asis
 cat("```r\n")
 cat(main_script_content)
@@ -223,7 +223,6 @@ Printing the rendered ADaM program yields a complete program for generating ADSL
 
 ```{r}
 #| echo: false
-#| eval: true
 #| results: asis
 # Execute the code generation
 results <- mighty::generate_adam_code(
