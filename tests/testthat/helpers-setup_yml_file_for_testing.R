@@ -81,6 +81,11 @@ setup_study_dir <- function(yaml_list, .local_envir = parent.frame()) {
     )
   }
 
+  # `_mighty.yml` fixtures reference component repos fetched via the `gh`
+  # package. `gh` < 1.6.0 rejects the `ghs_` App-installation token that CI
+  # provides, so skip on runners pinned to older CRAN snapshots.
+  testthat::skip_if_not_installed("gh", "1.6.0")
+
   dir <- withr::local_tempdir(.local_envir = .local_envir)
   for (name in names(yaml_list)) {
     filename <- if (grepl("\\.yml$", name)) {
