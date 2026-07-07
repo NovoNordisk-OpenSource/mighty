@@ -11,6 +11,7 @@ knitr:
 ---
 
 ```{r}
+#| include: false
 # `mighty.component` fetches component templates from GitHub via the
 # `gh` package. `gh` < 1.6.0 rejects the `ghs_` App-installation token
 # that CI provides, so we skip evaluation on runners pinned to an
