@@ -500,6 +500,9 @@ columns:
 })
 
 test_that("Missing domain in source data makes actions non-executable", {
+  # `gh` < 1.6.0 rejects `ghs_` App-installation tokens used in CI.
+  skip_if_not_installed("gh", "1.6.0")
+
   # SETUP -------------------------------------------------------------------
 
   trial_path <- withr::local_tempdir()
@@ -576,6 +579,9 @@ columns:
 })
 
 test_that("Missing columns in one base domain are disregarded in other base domains", {
+  # `gh` < 1.6.0 rejects `ghs_` App-installation tokens used in CI.
+  skip_if_not_installed("gh", "1.6.0")
+
   #yaml file with three base domains
   # check that missing column affects other domains
   trial_path <- withr::local_tempdir()
@@ -692,6 +698,9 @@ columns:
 })
 
 test_that("Filter removes missing base domain variables and creates lineage message", {
+  # `gh` < 1.6.0 rejects `ghs_` App-installation tokens used in CI.
+  skip_if_not_installed("gh", "1.6.0")
+
   # SETUP -------------------------------------------------------------------
   trial_path <- withr::local_tempdir()
 

@@ -1,4 +1,7 @@
 test_that("Supplementary data action is placed after filter_domain when no supplementary columns are used in filters", {
+  # `gh` < 1.6.0 rejects `ghs_` App-installation tokens used in CI.
+  skip_if_not_installed("gh", "1.6.0")
+
   # SETUP -------------------------------------------------------------------
 
   adam_specifications <- setup_study_from_fixtures(
@@ -71,6 +74,9 @@ test_that("Supplementary data action is placed after filter_domain when no suppl
 })
 
 test_that("Supp data action is placed before filter_domain when supp columns are used in filters (1 domain filter)", {
+  # `gh` < 1.6.0 rejects `ghs_` App-installation tokens used in CI.
+  skip_if_not_installed("gh", "1.6.0")
+
   # SETUP -------------------------------------------------------------------
 
   adam_specifications <- setup_study_from_fixtures(
@@ -145,6 +151,9 @@ test_that("Supp data action is placed before filter_domain when supp columns are
 
 
 test_that("Supp data action is placed before filter_domain when supp columns are used in filters (2 domain filters)", {
+  # `gh` < 1.6.0 rejects `ghs_` App-installation tokens used in CI.
+  skip_if_not_installed("gh", "1.6.0")
+
   # SETUP -------------------------------------------------------------------
 
   adam_specifications <- setup_study_from_fixtures(
@@ -220,6 +229,9 @@ test_that("Supp data action is placed before filter_domain when supp columns are
 
 
 test_that("Supp data action is placed before filter_domain when supp columns and ADSL cols are used in filters", {
+  # `gh` < 1.6.0 rejects `ghs_` App-installation tokens used in CI.
+  skip_if_not_installed("gh", "1.6.0")
+
   # SETUP -------------------------------------------------------------------
 
   adam_specifications <- setup_study_from_fixtures(
@@ -280,6 +292,9 @@ test_that("Supp data action is placed before filter_domain when supp columns and
 
 
 test_that("Col_compute and parent col_compute is placed before filter_domain when the col_compute is used in filters", {
+  # `gh` < 1.6.0 rejects `ghs_` App-installation tokens used in CI.
+  skip_if_not_installed("gh", "1.6.0")
+
   # SETUP -------------------------------------------------------------------
 
   adam_specifications <- setup_study_from_fixtures(
