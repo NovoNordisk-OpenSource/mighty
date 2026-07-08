@@ -81,10 +81,16 @@ setup_study_dir <- function(yaml_list, .local_envir = parent.frame()) {
     )
   }
 
-  # `_mighty.yml` fixtures reference component repos fetched via the `gh`
-  # package. `gh` < 1.6.0 rejects the `ghs_` App-installation token that CI
-  # provides, so skip on runners pinned to older CRAN snapshots.
-  testthat::skip_if_not_installed("gh", "1.6.0")
+  # `gh` < 1.6.0 rejects the `ghs_` App-installation token CI provides.
+  # Only skip on CI with old `gh`; locally, personal tokens work fine.
+  mighty_content <- yaml_list[["_mighty"]]
+  has_remote_repos <- any(
+    grepl("^\\s*-\\s+\".+/.+\"", mighty_content) &
+      !grepl("^\\s*-\\s+\"\\.\"", mighty_content)
+  )
+  if (has_remote_repos && nzchar(Sys.getenv("CI"))) {
+    testthat::skip_if_not_installed("gh", "1.6.0")
+  }
 
   dir <- withr::local_tempdir(.local_envir = .local_envir)
   for (name in names(yaml_list)) {
