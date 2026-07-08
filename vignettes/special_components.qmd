@@ -12,7 +12,9 @@ knitr:
 
 ```{r}
 #| include: false
-can_eval <- !nzchar(Sys.getenv("CI")) || nzchar(Sys.getenv("GITHUB_PAT"))
+pat <- Sys.getenv("GITHUB_PAT", "")
+valid_pat <- grepl("^(ghp_|github_pat_|[0-9a-f]{40}$)", pat)
+can_eval <- !nzchar(Sys.getenv("CI")) || valid_pat
 knitr::opts_chunk$set(eval = can_eval)
 ```
 
