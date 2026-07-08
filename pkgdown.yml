@@ -1,5 +1,5 @@
 pandoc: 3.8.3
-pkgdown: 2.2.0
+pkgdown: 2.2.1
 pkgdown_sha: ~
 articles:
   adam_specification: adam_specification.html
@@ -11,7 +11,7 @@ articles:
   mighty: mighty.html
   missing_data_analysis: missing_data_analysis.html
   special_components: special_components.html
-last_built: 2026-06-10T08:10Z
+last_built: 2026-07-08T06:55Z
 urls:
   reference: https://novonordisk-opensource.github.io/mighty/reference
   article: https://novonordisk-opensource.github.io/mighty/articles
