@@ -67,6 +67,7 @@ EXSTDY
 fcase
 fifelse
 FPFV
+getenv
 grepl
 groupname
 gsub

@@ -2,7 +2,6 @@ on:
   push:
     branches:
       - main
-      - fix/vignette-eval-note
       - master
   pull_request:
     branches:
