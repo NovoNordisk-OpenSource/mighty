@@ -12,11 +12,20 @@ knitr:
 
 ```{r}
 #| include: false
-# `mighty.component` fetches component templates from GitHub via the
-# `gh` package. `gh` < 1.6.0 rejects the `ghs_` App-installation token
-# that CI provides, so we skip evaluation on runners pinned to an
-# older CRAN snapshot.
-knitr::opts_chunk$set(eval = utils::packageVersion("gh") >= "1.6.0")
+can_eval <- !nzchar(Sys.getenv("CI")) || nzchar(Sys.getenv("GITHUB_PAT"))
+knitr::opts_chunk$set(eval = can_eval)
+```
+
+```{r}
+#| echo: false
+#| results: asis
+if (!can_eval) {
+  cat(
+    "> **Note:** Vignette code was not evaluated because no GitHub PAT",
+    "is available in this environment. Run locally with a configured",
+    "`GITHUB_PAT` to see full output.\n"
+  )
+}
 ```
 
 ```{r}
