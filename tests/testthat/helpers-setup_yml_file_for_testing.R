@@ -89,7 +89,9 @@ setup_study_dir <- function(yaml_list, .local_envir = parent.frame()) {
       !grepl("^\\s*-\\s+[\"']\\.[\"']", mighty_lines)
   )
   if (has_remote_repos && nzchar(Sys.getenv("CI"))) {
-    testthat::skip("Remote component repos require a GitHub PAT (currently unavailable in CI)")
+    testthat::skip(
+      "Remote component repos require a GitHub PAT (currently unavailable in CI)"
+    )
   }
 
   dir <- withr::local_tempdir(.local_envir = .local_envir)
