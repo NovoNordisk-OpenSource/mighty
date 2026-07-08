@@ -197,62 +197,6 @@
 <span>  <span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>The standard template and a rendered version using the parameter list above can be expanded below.</p>
-<div class="cell">
-<div class="cell-output-display">
-<details><summary>Standard template and rendered output</summary><p><strong>Template</strong></p>
-<pre><code>#' @title Read source data
-#' @description Opens a connector and reads each source dataset into memory,
-#'   retaining only the columns needed downstream. Rendered once at the top of
-#'   every generated ADaM program.
-#' @type internal
-#' @param connector_path_expr Character string. R expression that evaluates to
-#'   the connector configuration file path. Either a quoted literal path or a
-#'   bare R expression evaluated at runtime (e.g. `here::here("_connector.yml")`).
-#' @param domains List of lists. Each element represents a domain/dataset to be read, containing the following components:
-#'   \describe{
-#'     \item{is_current_domain}{Logical. `TRUE` to read the entire dataset (e.g. an ADSL update program reading its own earlier output); `FALSE` to apply column selection.}
-#'     \item{domain_name}{Character string. Name of the domain to read, uppercase (e.g. `"DM"`, `"ADSL"`).}
-#'     \item{data_type}{Character string. Connector data source to use: `"sdtm"`, `"adam"`, or `"metadata"`.}
-#'     \item{keep_vars}{Character string. Comma-separated column names to select. Ignored when `is_current_domain` is `TRUE`.}
-#'   }
-#'
-#'   Example:
-#'   \preformatted{
-#'   domains &lt;- list(
-#'     list(
-#'       is_current_domain = TRUE,
-#'       domain_name = "ADSL",
-#'       data_type = "adam",
-#'       keep_vars = "ARM_MATCH, COUNTRY, NEWFL01, USUBJID"
-#'     ),
-#'     list(
-#'       is_current_domain = FALSE,
-#'       domain_name = "ADLB",
-#'       data_type = "adam",
-#'       keep_vars = "AVAL, LBTEST, USUBJID"
-#'     )
-#'   )
-#'   }
-#' @code
-cnt &lt;- connector::connect(config = {{{connector_path_expr}}})
-{{#domains}}
-  {{#is_current_domain}}
-  {{{domain_name}}} &lt;- cnt${{{data_type}}}$read_cnt(tolower('{{{domain_name}}}'))
-  {{/is_current_domain}}
-  {{^is_current_domain}}
-  {{{domain_name}}} &lt;- cnt${{{data_type}}}$read_cnt(tolower('{{{domain_name}}}')) |&gt;
-  dplyr::select({{{keep_vars}}})
-  {{/is_current_domain}}
-  {{/domains}}</code></pre>
-<p><strong>Rendered output</strong></p>
-<pre><code class="language-r"><span><span class="va">cnt</span> <span class="op">&lt;-</span> <span class="fu">connector</span><span class="fu">::</span><span class="fu"><a href="https://novonordisk-opensource.github.io/connector/reference/connect.html" class="external-link">connect</a></span><span class="op">(</span>config <span class="op">=</span> <span class="st">"_connector.yml"</span><span class="op">)</span></span>
-<span>  <span class="va">DM</span> <span class="op">&lt;-</span> <span class="va">cnt</span><span class="op">$</span><span class="va">sdtm</span><span class="op">$</span><span class="fu">read_cnt</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/chartr.html" class="external-link">tolower</a></span><span class="op">(</span><span class="st">'DM'</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">ARM</span>, <span class="va">STUDYID</span>, <span class="va">USUBJID</span><span class="op">)</span></span>
-<span>  <span class="va">DM_VACCINE</span> <span class="op">&lt;-</span> <span class="va">cnt</span><span class="op">$</span><span class="va">sdtm</span><span class="op">$</span><span class="fu">read_cnt</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/chartr.html" class="external-link">tolower</a></span><span class="op">(</span><span class="st">'DM_VACCINE'</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">ARM</span>, <span class="va">STUDYID</span>, <span class="va">USUBJID</span><span class="op">)</span></span></code></pre>
-</details>
-</div>
-</div>
 </section><section class="level2"><h3 id="parameters">Parameters<a class="anchor" aria-label="anchor" href="#parameters"></a>
 </h3>
 <section class="level3"><h4 id="connector_path_expr">
@@ -373,35 +317,6 @@ cnt &lt;- connector::connect(config = {{{connector_path_expr}}})
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>domain <span class="op">=</span> <span class="st">"DM_VACCINE"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>The standard template and a rendered version using the parameter list above can be expanded below.</p>
-<div class="cell">
-<div class="cell-output-display">
-<details><summary>Standard template and rendered output</summary><p><strong>Template</strong></p>
-<pre><code>#' @title Initialize ADaM domain
-#' @description Combines one or more source datasets by row binding, optionally
-#'   tagging each row with a `SRC_` tracking column, and selects the columns
-#'   needed for the domain. Rendered once per program, after `_read_data`.
-#' @type internal
-#' @param self Character string. Name of the ADaM domain being initialised (e.g. `"ADSL"`, `"ADLB"`).
-#' @param keep_vars Character string. Comma-separated column names to select after row binding.
-#' @param source_domain_rbind Character string. Pre-formatted R expression that combines source datasets. A single domain is passed as its name; multiple domains are wrapped in `rbind()`.
-#' @param src_mutations List of lists. Per-domain mutation specifications used to add a `SRC_` tracking column before row binding. Each element has a single field `domain` (e.g. `list(list(domain = "LB"), list(domain = "XL"))`). Empty list when `SRC_` is not needed.
-#' @code
-{{#src_mutations}}
-{{{domain}}} &lt;- {{{domain}}} |&gt;
-  dplyr::mutate(SRC_ = "{{{domain}}}")
-
-{{/src_mutations}}
-{{{self}}} &lt;- {{{source_domain_rbind}}} |&gt;
-    dplyr::select({{{keep_vars}}}) |&gt;
-    admiral::convert_blanks_to_na()</code></pre>
-<p><strong>Rendered output</strong></p>
-<pre><code class="language-r"><span><span class="va">ADSL</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">DM</span>,</span>
-<span><span class="va">DM_VACCINE</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">ARM</span>, <span class="va">STUDYID</span>, <span class="va">USUBJID</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>    <span class="fu">admiral</span><span class="fu">::</span><span class="fu"><a href="https:/pharmaverse.github.io/admiral/v1.5.0/cran-release/reference/convert_blanks_to_na.html">convert_blanks_to_na</a></span><span class="op">(</span><span class="op">)</span></span></code></pre>
-</details>
-</div>
-</div>
 </section><section class="level2"><h3 id="parameters-1">Parameters<a class="anchor" aria-label="anchor" href="#parameters-1"></a>
 </h3>
 <section class="level3"><h4 id="self">
@@ -484,66 +399,6 @@ cnt &lt;- connector::connect(config = {{{connector_path_expr}}})
 </blockquote>
 </div>
 <p>The standard template and a rendered version using the parameter list above can be expanded below.</p>
-<div class="cell">
-<div class="cell-output-display">
-<details><summary>Standard template and rendered output</summary><p><strong>Template</strong></p>
-<pre><code>#' @title Filter ADaM domain
-#' @description Applies joins needed for filter evaluation, domain-specific row
-#'   filters (via the internal `SRC_` column), global row filters, and final
-#'   column selection. Rendered after `_init_domain`.
-#' @type internal
-#' @param self Character string. Name of the ADaM domain being filtered (e.g. `"ADLB"`).
-#' @param joins List of join specifications used to bring in columns required for
-#'   filter evaluation. Each element is a list containing:
-#'   \describe{
-#'     \item{table}{Character string. Name of the dataset to join with.}
-#'     \item{select_expr}{Character string. Comma-separated column names to select from the join dataset.}
-#'     \item{keys}{Character string. Comma-separated quoted column names used as join keys (e.g. `"\"STUDYID\", \"USUBJID\""`).}
-#'   }
-#'   Empty list when no filter depends on an external dataset.
-#' @param domain_filter Character string or `NULL`. Pre-formatted R expression filtering on `SRC_` (e.g. `"(SRC_ == 'LB') | (SRC_ == 'XL' &amp; LBCAT == 'CHEMISTRY')"`). `NULL` when no domain-specific filter is defined — the filter block is skipped.
-#' @param global_filter Character string or `NULL`. Raw filter expression from the YAML spec (e.g. `"!is.na(SEX)"`). `NULL` when no global filter is defined — the filter block is skipped.
-#' @param keep_vars Character string or `NULL`. Comma-separated column names to retain. `NULL` when no selection is needed — the select block is skipped. `SRC_` is excluded automatically.
-#' @code
-{{#joins}}
-{{{self}}} &lt;- {{{self}}} |&gt;
-  dplyr::left_join({{{table}}} |&gt; dplyr::select({{{select_expr}}}),
-                   by = c({{{keys}}}))
-
-{{/joins}}
-{{#domain_filter}}
-{{{self}}} &lt;- {{{self}}} |&gt;
-  dplyr::filter({{{domain_filter}}}) |&gt;
-  dplyr::select(-SRC_)
-
-{{/domain_filter}}
-{{#global_filter}}
-{{{self}}} &lt;- {{{self}}} |&gt;
-  dplyr::filter({{{global_filter}}})
-
-{{/global_filter}}
-{{#keep_vars}}
-{{{self}}} &lt;- {{{self}}} |&gt;
-  dplyr::select({{{keep_vars}}})
-
-{{/keep_vars}}</code></pre>
-<p><strong>Rendered output</strong></p>
-<pre><code class="language-r"><span><span class="va">ADLB</span> <span class="op">&lt;-</span> <span class="va">ADLB</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">left_join</a></span><span class="op">(</span><span class="va">ADSL</span> <span class="op">|&gt;</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">SEX</span>, <span class="va">STUDYID</span>, <span class="va">USUBJID</span><span class="op">)</span>,</span>
-<span>                   by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"STUDYID"</span>, <span class="st">"USUBJID"</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">ADLB</span> <span class="op">&lt;-</span> <span class="va">ADLB</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="op">(</span><span class="va">SRC_</span> <span class="op">==</span> <span class="st">'LB'</span><span class="op">)</span> <span class="op">|</span> <span class="op">(</span><span class="va">SRC_</span> <span class="op">==</span> <span class="st">'XL'</span> <span class="op">&amp;</span> <span class="va">LBCAT</span> <span class="op">==</span> <span class="st">'CHEMISTRY'</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">SRC_</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">ADLB</span> <span class="op">&lt;-</span> <span class="va">ADLB</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">SEX</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">ADLB</span> <span class="op">&lt;-</span> <span class="va">ADLB</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">LBCAT</span>, <span class="va">PARAMCD</span>, <span class="va">STUDYID</span>, <span class="va">USUBJID</span><span class="op">)</span></span></code></pre>
-</details>
-</div>
-</div>
 </section><section class="level2"><h3 id="parameters-2">Parameters<a class="anchor" aria-label="anchor" href="#parameters-2"></a>
 </h3>
 <section class="level3"><h4 id="self-1">
@@ -614,24 +469,6 @@ cnt &lt;- connector::connect(config = {{{connector_path_expr}}})
 <span>  source_var <span class="op">=</span> <span class="st">"LBSTRESN"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>The standard template and a rendered version using the parameter list above can be expanded below.</p>
-<div class="cell">
-<div class="cell-output-display">
-<details><summary>Standard template and rendered output</summary><p><strong>Template</strong></p>
-<pre><code>#' @title Copy column
-#' @description Copies values from an existing column into a new column using
-#'   `dplyr::mutate()`. Used when the source column is also retained in the
-#'   output; see `_col_rename` when the source column should be replaced.
-#' @type internal
-#' @param self Character string. Name of the dataset being modified (e.g. `"ADLB"`).
-#' @param rename_var Character string. Name of the new column to create (e.g. `"AVAL"`).
-#' @param source_var Character string. Name of the existing column to copy from (e.g. `"LBSTRESN"`).
-#' @code
-{{{self}}} &lt;- {{{self}}} |&gt; dplyr::mutate({{{rename_var}}} = {{{source_var}}})</code></pre>
-<p><strong>Rendered output</strong></p>
-<pre><code class="language-r"><span><span class="va">ADLB</span> <span class="op">&lt;-</span> <span class="va">ADLB</span> <span class="op">|&gt;</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>AVAL <span class="op">=</span> <span class="va">LBSTRESN</span><span class="op">)</span></span></code></pre>
-</details>
-</div>
-</div>
 </section><section class="level2"><h3 id="parameters-3">Parameters<a class="anchor" aria-label="anchor" href="#parameters-3"></a>
 </h3>
 <section class="level3"><h4 id="self-2">
@@ -664,25 +501,6 @@ cnt &lt;- connector::connect(config = {{{connector_path_expr}}})
 <span>  source_var <span class="op">=</span> <span class="st">"LBSEQ"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>The standard template and a rendered version using the parameter list above can be expanded below.</p>
-<div class="cell">
-<div class="cell-output-display">
-<details><summary>Standard template and rendered output</summary><p><strong>Template</strong></p>
-<pre><code>#' @title Rename column
-#' @description Renames an existing column in-place using `dplyr::rename()`,
-#'   leaving no extra column behind. Used when the source column has no
-#'   independent entry in the YAML spec; see `_col_mutate` when the source
-#'   column is also retained in the output.
-#' @type internal
-#' @param self Character string. Name of the dataset being modified (e.g. `"ADLB"`).
-#' @param rename_var Character string. New column name after renaming (e.g. `"SRCSEQ"`).
-#' @param source_var Character string. Existing column to rename (e.g. `"LBSEQ"`).
-#' @code
-{{{self}}} &lt;- {{{self}}} |&gt; dplyr::rename({{{rename_var}}} = {{{source_var}}})</code></pre>
-<p><strong>Rendered output</strong></p>
-<pre><code class="language-r"><span><span class="va">ADLB</span> <span class="op">&lt;-</span> <span class="va">ADLB</span> <span class="op">|&gt;</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename</a></span><span class="op">(</span>SRCSEQ <span class="op">=</span> <span class="va">LBSEQ</span><span class="op">)</span></span></code></pre>
-</details>
-</div>
-</div>
 </section><section class="level2"><h3 id="parameters-4">Parameters<a class="anchor" aria-label="anchor" href="#parameters-4"></a>
 </h3>
 <section class="level3"><h4 id="self-3">
@@ -719,33 +537,6 @@ cnt &lt;- connector::connect(config = {{{connector_path_expr}}})
 <span><span class="op">)</span></span></code></pre></div>
 <p>This is the step that permanently adds <code>SEX</code> to ADLB — the same column that <code>mighty_filter_domain</code> joined in temporarily to evaluate the global filter.</p>
 <p>The standard template and a rendered version using the parameter list above can be expanded below.</p>
-<div class="cell">
-<div class="cell-output-display">
-<details><summary>Standard template and rendered output</summary><p><strong>Template</strong></p>
-<pre><code>#' @title Echo column from another domain
-#' @description Brings a column from another domain into the current dataset
-#'   via a `dplyr::left_join()`. Used when `method:` in the YAML specification
-#'   uses dot notation (e.g. `ADSL.SEX`) to reference a cross-domain variable.
-#' @type internal
-#' @param self Character string. Name of the primary dataset being modified; the left-hand side of the join, whose row count is preserved (e.g. `"ADLB"`).
-#' @param join_dataset Character string. Name of the dataset to look up from; the right-hand side of the join (e.g. `"ADSL"`).
-#' @param select_expr Character string. Comma-separated column names to select from `join_dataset` before joining. Includes both join keys and the variable being added.
-#' @param by_vars Character string. Comma-separated quoted column names used as join keys, ready for `dplyr::left_join(by = c(...))` (e.g. `"\"STUDYID\", \"USUBJID\""`).
-#' @param needs_rename Logical. `TRUE` when the variable name in `join_dataset` differs from the desired output name, triggering an appended `dplyr::rename()` call.
-#' @param output_var Character string. Desired column name in `self` after the join.
-#' @param var_to_add Character string. Column name as it exists in `join_dataset`, before any renaming. Equal to `output_var` when `needs_rename` is `FALSE`.
-#' @code
-{{{self}}} &lt;- {{{self}}} |&gt;
-    dplyr::left_join({{{join_dataset}}} |&gt; dplyr::select({{{select_expr}}}),
-by = c({{{by_vars}}})){{#needs_rename}} |&gt;
-                     dplyr::rename({{{output_var}}} = {{{var_to_add}}}){{/needs_rename}}</code></pre>
-<p><strong>Rendered output</strong></p>
-<pre><code class="language-r"><span><span class="va">ADLB</span> <span class="op">&lt;-</span> <span class="va">ADLB</span> <span class="op">|&gt;</span></span>
-<span>    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">left_join</a></span><span class="op">(</span><span class="va">ADSL</span> <span class="op">|&gt;</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">STUDYID</span>, <span class="va">USUBJID</span>, <span class="va">SEX</span><span class="op">)</span>,</span>
-<span>by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"STUDYID"</span>, <span class="st">"USUBJID"</span><span class="op">)</span><span class="op">)</span></span></code></pre>
-</details>
-</div>
-</div>
 </section><section class="level2"><h3 id="parameters-5">Parameters<a class="anchor" aria-label="anchor" href="#parameters-5"></a>
 </h3>
 <section class="level3"><h4 id="self-4">
@@ -801,59 +592,6 @@ by = c({{{by_vars}}})){{#needs_rename}} |&gt;
 <span>  keep_vars <span class="op">=</span> <span class="st">"USUBJID,\nSTUDYID,\nPARAMCD,\nAVAL"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>The template and two rendered versions — one with a short column list and one with a longer list — can be expanded below.</p>
-<div class="cell">
-<div class="cell-output-display">
-<details><summary>Standard template and rendered output</summary><p><strong>Template</strong></p>
-<pre><code>#' @title Persist ADaM dataset
-#' @description Sorts rows by the domain's primary keys, selects and orders
-#'   columns according to the YAML specification, and persists the dataset via
-#'   the connector. Rendered once at the end of every ADaM program.
-#' @type internal
-#' @param self Character string. Name of the ADaM domain to persist (e.g. `"ADSL"`, `"ADLB"`).
-#' @param row_order_vars Character string or `NULL`. Primary key columns used to sort rows, formatted as a `,\n`-separated string. `NULL` when no row order is defined — the sort block is skipped.
-#' @param keep_vars Character string or `NULL`. Output columns in specification order, formatted as a `,\n`-separated string. `NULL` for intermediate programs in multi-program domains — the select block is skipped. Columns not yet available are prefixed with `# `.
-#' @param file_ext Character string. File extension for the persisted dataset. Defaults to `"parquet"`.
-#' @code
-{{#row_order_vars}}
-# Sort rows by primary key
-{{{self}}} &lt;- {{{self}}} |&gt; dplyr::arrange({{{row_order_vars}}})
-
-{{/row_order_vars}}
-{{#keep_vars}}
-# Sort columns
-{{{self}}} &lt;- {{{self}}} |&gt; dplyr::select({{{keep_vars}}})
-
-{{/keep_vars}}
-# Save ADaM table
-cnt$adam$write_cnt({{{self}}}, tolower("{{{self}}}.{{{file_ext}}}"), overwrite = TRUE)</code></pre>
-<p><strong>Rendered output — short column list</strong></p>
-<pre><code class="language-r"><span><span class="co"># Sort rows by primary key</span></span>
-<span><span class="va">ADSL</span> <span class="op">&lt;-</span> <span class="va">ADSL</span> <span class="op">|&gt;</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="va">USUBJID</span>,</span>
-<span><span class="va">STUDYID</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Sort columns</span></span>
-<span><span class="va">ADSL</span> <span class="op">&lt;-</span> <span class="va">ADSL</span> <span class="op">|&gt;</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">USUBJID</span>,</span>
-<span><span class="va">STUDYID</span>,</span>
-<span><span class="va">ARM</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Save ADaM table</span></span>
-<span><span class="va">cnt</span><span class="op">$</span><span class="va">adam</span><span class="op">$</span><span class="fu">write_cnt</span><span class="op">(</span><span class="va">ADSL</span>, <span class="fu"><a href="https://rdrr.io/r/base/chartr.html" class="external-link">tolower</a></span><span class="op">(</span><span class="st">"ADSL.parquet"</span><span class="op">)</span>, overwrite <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre>
-<p><strong>Rendered output — long column list</strong></p>
-<pre><code class="language-r"><span><span class="co"># Sort rows by primary key</span></span>
-<span><span class="va">ADLB</span> <span class="op">&lt;-</span> <span class="va">ADLB</span> <span class="op">|&gt;</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="va">USUBJID</span>,</span>
-<span><span class="va">STUDYID</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Sort columns</span></span>
-<span><span class="va">ADLB</span> <span class="op">&lt;-</span> <span class="va">ADLB</span> <span class="op">|&gt;</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">USUBJID</span>,</span>
-<span><span class="va">STUDYID</span>,</span>
-<span><span class="va">PARAMCD</span>,</span>
-<span><span class="va">AVAL</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Save ADaM table</span></span>
-<span><span class="va">cnt</span><span class="op">$</span><span class="va">adam</span><span class="op">$</span><span class="fu">write_cnt</span><span class="op">(</span><span class="va">ADLB</span>, <span class="fu"><a href="https://rdrr.io/r/base/chartr.html" class="external-link">tolower</a></span><span class="op">(</span><span class="st">"ADLB.parquet"</span><span class="op">)</span>, overwrite <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre>
-</details>
-</div>
-</div>
 </section><section class="level2"><h3 id="parameters-6">Parameters<a class="anchor" aria-label="anchor" href="#parameters-6"></a>
 </h3>
 <section class="level3"><h4 id="self-5">
