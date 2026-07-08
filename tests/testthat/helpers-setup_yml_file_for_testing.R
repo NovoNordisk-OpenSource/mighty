@@ -81,15 +81,15 @@ setup_study_dir <- function(yaml_list, .local_envir = parent.frame()) {
     )
   }
 
-  # `gh` < 1.6.0 rejects the `ghs_` App-installation token CI provides.
-  # Only skip on CI with old `gh`; locally, personal tokens work fine.
+  # CI provides a `ghs_` App-installation token that the `gh` package does not
+  # recognise as a valid PAT. Skip tests that fetch remote component repos on CI.
   mighty_content <- yaml_list[["_mighty"]]
   has_remote_repos <- any(
-    grepl("^\\s*-\\s+\".+/.+\"", mighty_content) &
-      !grepl("^\\s*-\\s+\"\\.\"", mighty_content)
+    grepl("^\\s*-\\s+[\"'].+/.+[\"']", mighty_content) &
+      !grepl("^\\s*-\\s+[\"']\\.[\"']", mighty_content)
   )
   if (has_remote_repos && nzchar(Sys.getenv("CI"))) {
-    testthat::skip_if_not_installed("gh", "1.6.0")
+    testthat::skip("Remote component repos require a GitHub PAT (currently unavailable in CI)")
   }
 
   dir <- withr::local_tempdir(.local_envir = .local_envir)
