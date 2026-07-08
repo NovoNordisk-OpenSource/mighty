@@ -82,7 +82,7 @@ setup_study_dir <- function(yaml_list, .local_envir = parent.frame()) {
   }
 
   # CI provides a `ghs_` App-installation token that the `gh` package does not
-  # recognise as a valid PAT. Skip tests that fetch remote component repos on CI.
+  # recognize as a valid PAT. Skip tests that fetch remote component repos on CI.
   mighty_lines <- unlist(strsplit(yaml_list[["_mighty"]], "\n"))
   has_remote_repos <- any(
     grepl("^\\s*-\\s+[\"'].+/.+[\"']", mighty_lines) &
