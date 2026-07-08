@@ -1,6 +1,7 @@
 on:
   push:
     branches:
+      - chore/use-pinned-workflow
       - main
       - master
   pull_request:
