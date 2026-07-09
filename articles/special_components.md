@@ -136,6 +136,65 @@ list(
 The standard template and a rendered version using the parameter list
 above can be expanded below.
 
+Standard template and rendered output
+
+**Template**
+
+    #' @title Read source data
+    #' @description Opens a connector and reads each source dataset into memory,
+    #'   retaining only the columns needed downstream. Rendered once at the top of
+    #'   every generated ADaM program.
+    #' @type internal
+    #' @param connector_path_expr Character string. R expression that evaluates to
+    #'   the connector configuration file path. Either a quoted literal path or a
+    #'   bare R expression evaluated at runtime (e.g. `here::here("_connector.yml")`).
+    #' @param domains List of lists. Each element represents a domain/dataset to be read, containing the following components:
+    #'   \describe{
+    #'     \item{is_current_domain}{Logical. `TRUE` to read the entire dataset (e.g. an ADSL update program reading its own earlier output); `FALSE` to apply column selection.}
+    #'     \item{domain_name}{Character string. Name of the domain to read, uppercase (e.g. `"DM"`, `"ADSL"`).}
+    #'     \item{data_type}{Character string. Connector data source to use: `"sdtm"`, `"adam"`, or `"metadata"`.}
+    #'     \item{keep_vars}{Character string. Comma-separated column names to select. Ignored when `is_current_domain` is `TRUE`.}
+    #'   }
+    #'
+    #'   Example:
+    #'   \preformatted{
+    #'   domains <- list(
+    #'     list(
+    #'       is_current_domain = TRUE,
+    #'       domain_name = "ADSL",
+    #'       data_type = "adam",
+    #'       keep_vars = "ARM_MATCH, COUNTRY, NEWFL01, USUBJID"
+    #'     ),
+    #'     list(
+    #'       is_current_domain = FALSE,
+    #'       domain_name = "ADLB",
+    #'       data_type = "adam",
+    #'       keep_vars = "AVAL, LBTEST, USUBJID"
+    #'     )
+    #'   )
+    #'   }
+    #' @code
+    cnt <- connector::connect(config = {{{connector_path_expr}}})
+    {{#domains}}
+      {{#is_current_domain}}
+      {{{domain_name}}} <- cnt${{{data_type}}}$read_cnt(tolower('{{{domain_name}}}'))
+      {{/is_current_domain}}
+      {{^is_current_domain}}
+      {{{domain_name}}} <- cnt${{{data_type}}}$read_cnt(tolower('{{{domain_name}}}')) |>
+      dplyr::select({{{keep_vars}}})
+      {{/is_current_domain}}
+      {{/domains}}
+
+**Rendered output**
+
+``` r
+cnt <- connector::connect(config = "_connector.yml")
+  DM <- cnt$sdtm$read_cnt(tolower('DM')) |>
+  dplyr::select(ARM, STUDYID, USUBJID)
+  DM_VACCINE <- cnt$sdtm$read_cnt(tolower('DM_VACCINE')) |>
+  dplyr::select(ARM, STUDYID, USUBJID)
+```
+
 ### Parameters
 
 #### `connector_path_expr`
@@ -217,6 +276,38 @@ src_mutations = list(
 
 The standard template and a rendered version using the parameter list
 above can be expanded below.
+
+Standard template and rendered output
+
+**Template**
+
+    #' @title Initialize ADaM domain
+    #' @description Combines one or more source datasets by row binding, optionally
+    #'   tagging each row with a `SRC_` tracking column, and selects the columns
+    #'   needed for the domain. Rendered once per program, after `_read_data`.
+    #' @type internal
+    #' @param self Character string. Name of the ADaM domain being initialised (e.g. `"ADSL"`, `"ADLB"`).
+    #' @param keep_vars Character string. Comma-separated column names to select after row binding.
+    #' @param source_domain_rbind Character string. Pre-formatted R expression that combines source datasets. A single domain is passed as its name; multiple domains are wrapped in `rbind()`.
+    #' @param src_mutations List of lists. Per-domain mutation specifications used to add a `SRC_` tracking column before row binding. Each element has a single field `domain` (e.g. `list(list(domain = "LB"), list(domain = "XL"))`). Empty list when `SRC_` is not needed.
+    #' @code
+    {{#src_mutations}}
+    {{{domain}}} <- {{{domain}}} |>
+      dplyr::mutate(SRC_ = "{{{domain}}}")
+
+    {{/src_mutations}}
+    {{{self}}} <- {{{source_domain_rbind}}} |>
+        dplyr::select({{{keep_vars}}}) |>
+        admiral::convert_blanks_to_na()
+
+**Rendered output**
+
+``` r
+ADSL <- rbind(DM,
+DM_VACCINE) |>
+    dplyr::select(ARM, STUDYID, USUBJID) |>
+    admiral::convert_blanks_to_na()
+```
 
 ### Parameters
 
@@ -320,6 +411,69 @@ list(
 The standard template and a rendered version using the parameter list
 above can be expanded below.
 
+Standard template and rendered output
+
+**Template**
+
+    #' @title Filter ADaM domain
+    #' @description Applies joins needed for filter evaluation, domain-specific row
+    #'   filters (via the internal `SRC_` column), global row filters, and final
+    #'   column selection. Rendered after `_init_domain`.
+    #' @type internal
+    #' @param self Character string. Name of the ADaM domain being filtered (e.g. `"ADLB"`).
+    #' @param joins List of join specifications used to bring in columns required for
+    #'   filter evaluation. Each element is a list containing:
+    #'   \describe{
+    #'     \item{table}{Character string. Name of the dataset to join with.}
+    #'     \item{select_expr}{Character string. Comma-separated column names to select from the join dataset.}
+    #'     \item{keys}{Character string. Comma-separated quoted column names used as join keys (e.g. `"\"STUDYID\", \"USUBJID\""`).}
+    #'   }
+    #'   Empty list when no filter depends on an external dataset.
+    #' @param domain_filter Character string or `NULL`. Pre-formatted R expression filtering on `SRC_` (e.g. `"(SRC_ == 'LB') | (SRC_ == 'XL' & LBCAT == 'CHEMISTRY')"`). `NULL` when no domain-specific filter is defined — the filter block is skipped.
+    #' @param global_filter Character string or `NULL`. Raw filter expression from the YAML spec (e.g. `"!is.na(SEX)"`). `NULL` when no global filter is defined — the filter block is skipped.
+    #' @param keep_vars Character string or `NULL`. Comma-separated column names to retain. `NULL` when no selection is needed — the select block is skipped. `SRC_` is excluded automatically.
+    #' @code
+    {{#joins}}
+    {{{self}}} <- {{{self}}} |>
+      dplyr::left_join({{{table}}} |> dplyr::select({{{select_expr}}}),
+                       by = c({{{keys}}}))
+
+    {{/joins}}
+    {{#domain_filter}}
+    {{{self}}} <- {{{self}}} |>
+      dplyr::filter({{{domain_filter}}}) |>
+      dplyr::select(-SRC_)
+
+    {{/domain_filter}}
+    {{#global_filter}}
+    {{{self}}} <- {{{self}}} |>
+      dplyr::filter({{{global_filter}}})
+
+    {{/global_filter}}
+    {{#keep_vars}}
+    {{{self}}} <- {{{self}}} |>
+      dplyr::select({{{keep_vars}}})
+
+    {{/keep_vars}}
+
+**Rendered output**
+
+``` r
+ADLB <- ADLB |>
+  dplyr::left_join(ADSL |> dplyr::select(SEX, STUDYID, USUBJID),
+                   by = c("STUDYID", "USUBJID"))
+
+ADLB <- ADLB |>
+  dplyr::filter((SRC_ == 'LB') | (SRC_ == 'XL' & LBCAT == 'CHEMISTRY')) |>
+  dplyr::select(-SRC_)
+
+ADLB <- ADLB |>
+  dplyr::filter(!is.na(SEX))
+
+ADLB <- ADLB |>
+  dplyr::select(LBCAT, PARAMCD, STUDYID, USUBJID)
+```
+
 ### Parameters
 
 #### `self`
@@ -394,6 +548,27 @@ list(
 The standard template and a rendered version using the parameter list
 above can be expanded below.
 
+Standard template and rendered output
+
+**Template**
+
+    #' @title Copy column
+    #' @description Copies values from an existing column into a new column using
+    #'   `dplyr::mutate()`. Used when the source column is also retained in the
+    #'   output; see `_col_rename` when the source column should be replaced.
+    #' @type internal
+    #' @param self Character string. Name of the dataset being modified (e.g. `"ADLB"`).
+    #' @param rename_var Character string. Name of the new column to create (e.g. `"AVAL"`).
+    #' @param source_var Character string. Name of the existing column to copy from (e.g. `"LBSTRESN"`).
+    #' @code
+    {{{self}}} <- {{{self}}} |> dplyr::mutate({{{rename_var}}} = {{{source_var}}})
+
+**Rendered output**
+
+``` r
+ADLB <- ADLB |> dplyr::mutate(AVAL = LBSTRESN)
+```
+
 ### Parameters
 
 #### `self`
@@ -450,6 +625,28 @@ list(
 The standard template and a rendered version using the parameter list
 above can be expanded below.
 
+Standard template and rendered output
+
+**Template**
+
+    #' @title Rename column
+    #' @description Renames an existing column in-place using `dplyr::rename()`,
+    #'   leaving no extra column behind. Used when the source column has no
+    #'   independent entry in the YAML spec; see `_col_mutate` when the source
+    #'   column is also retained in the output.
+    #' @type internal
+    #' @param self Character string. Name of the dataset being modified (e.g. `"ADLB"`).
+    #' @param rename_var Character string. New column name after renaming (e.g. `"SRCSEQ"`).
+    #' @param source_var Character string. Existing column to rename (e.g. `"LBSEQ"`).
+    #' @code
+    {{{self}}} <- {{{self}}} |> dplyr::rename({{{rename_var}}} = {{{source_var}}})
+
+**Rendered output**
+
+``` r
+ADLB <- ADLB |> dplyr::rename(SRCSEQ = LBSEQ)
+```
+
 ### Parameters
 
 #### `self`
@@ -503,6 +700,36 @@ filter.
 
 The standard template and a rendered version using the parameter list
 above can be expanded below.
+
+Standard template and rendered output
+
+**Template**
+
+    #' @title Echo column from another domain
+    #' @description Brings a column from another domain into the current dataset
+    #'   via a `dplyr::left_join()`. Used when `method:` in the YAML specification
+    #'   uses dot notation (e.g. `ADSL.SEX`) to reference a cross-domain variable.
+    #' @type internal
+    #' @param self Character string. Name of the primary dataset being modified; the left-hand side of the join, whose row count is preserved (e.g. `"ADLB"`).
+    #' @param join_dataset Character string. Name of the dataset to look up from; the right-hand side of the join (e.g. `"ADSL"`).
+    #' @param select_expr Character string. Comma-separated column names to select from `join_dataset` before joining. Includes both join keys and the variable being added.
+    #' @param by_vars Character string. Comma-separated quoted column names used as join keys, ready for `dplyr::left_join(by = c(...))` (e.g. `"\"STUDYID\", \"USUBJID\""`).
+    #' @param needs_rename Logical. `TRUE` when the variable name in `join_dataset` differs from the desired output name, triggering an appended `dplyr::rename()` call.
+    #' @param output_var Character string. Desired column name in `self` after the join.
+    #' @param var_to_add Character string. Column name as it exists in `join_dataset`, before any renaming. Equal to `output_var` when `needs_rename` is `FALSE`.
+    #' @code
+    {{{self}}} <- {{{self}}} |>
+        dplyr::left_join({{{join_dataset}}} |> dplyr::select({{{select_expr}}}),
+    by = c({{{by_vars}}})){{#needs_rename}} |>
+                         dplyr::rename({{{output_var}}} = {{{var_to_add}}}){{/needs_rename}}
+
+**Rendered output**
+
+``` r
+ADLB <- ADLB |>
+    dplyr::left_join(ADSL |> dplyr::select(STUDYID, USUBJID, SEX),
+by = c("STUDYID", "USUBJID"))
+```
 
 ### Parameters
 
@@ -582,6 +809,66 @@ list(
 
 The template and two rendered versions — one with a short column list
 and one with a longer list — can be expanded below.
+
+Standard template and rendered output
+
+**Template**
+
+    #' @title Persist ADaM dataset
+    #' @description Sorts rows by the domain's primary keys, selects and orders
+    #'   columns according to the YAML specification, and persists the dataset via
+    #'   the connector. Rendered once at the end of every ADaM program.
+    #' @type internal
+    #' @param self Character string. Name of the ADaM domain to persist (e.g. `"ADSL"`, `"ADLB"`).
+    #' @param row_order_vars Character string or `NULL`. Primary key columns used to sort rows, formatted as a `,\n`-separated string. `NULL` when no row order is defined — the sort block is skipped.
+    #' @param keep_vars Character string or `NULL`. Output columns in specification order, formatted as a `,\n`-separated string. `NULL` for intermediate programs in multi-program domains — the select block is skipped. Columns not yet available are prefixed with `# `.
+    #' @param file_ext Character string. File extension for the persisted dataset. Defaults to `"parquet"`.
+    #' @code
+    {{#row_order_vars}}
+    # Sort rows by primary key
+    {{{self}}} <- {{{self}}} |> dplyr::arrange({{{row_order_vars}}})
+
+    {{/row_order_vars}}
+    {{#keep_vars}}
+    # Sort columns
+    {{{self}}} <- {{{self}}} |> dplyr::select({{{keep_vars}}})
+
+    {{/keep_vars}}
+    # Save ADaM table
+    cnt$adam$write_cnt({{{self}}}, tolower("{{{self}}}.{{{file_ext}}}"), overwrite = TRUE)
+
+**Rendered output — short column list**
+
+``` r
+# Sort rows by primary key
+ADSL <- ADSL |> dplyr::arrange(USUBJID,
+STUDYID)
+
+# Sort columns
+ADSL <- ADSL |> dplyr::select(USUBJID,
+STUDYID,
+ARM)
+
+# Save ADaM table
+cnt$adam$write_cnt(ADSL, tolower("ADSL.parquet"), overwrite = TRUE)
+```
+
+**Rendered output — long column list**
+
+``` r
+# Sort rows by primary key
+ADLB <- ADLB |> dplyr::arrange(USUBJID,
+STUDYID)
+
+# Sort columns
+ADLB <- ADLB |> dplyr::select(USUBJID,
+STUDYID,
+PARAMCD,
+AVAL)
+
+# Save ADaM table
+cnt$adam$write_cnt(ADLB, tolower("ADLB.parquet"), overwrite = TRUE)
+```
 
 ### Parameters
 
