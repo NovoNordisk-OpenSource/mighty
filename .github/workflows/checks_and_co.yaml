@@ -2,6 +2,7 @@ on:
   push:
     branches:
       - main
+      - fix/narrow-gh-skip
       - master
   pull_request:
     branches:

@@ -81,17 +81,9 @@ setup_study_dir <- function(yaml_list, .local_envir = parent.frame()) {
     )
   }
 
-  # CI provides a `ghs_` App-installation token that the `gh` package does not
-  # recognize as a valid PAT. Skip tests that fetch remote component repos on CI.
-  mighty_lines <- unlist(strsplit(yaml_list[["_mighty"]], "\n"))
-  has_remote_repos <- any(
-    grepl("^\\s*-\\s+[\"'].+/.+[\"']", mighty_lines) &
-      !grepl("^\\s*-\\s+[\"']\\.[\"']", mighty_lines)
-  )
-  if (has_remote_repos && nzchar(Sys.getenv("CI"))) {
-    testthat::skip(
-      "Remote component repos require a GitHub PAT (currently unavailable in CI)"
-    )
+  # `gh` < 1.6.0 rejects the `ghs_` App-installation token that CI provides.
+  if (isTRUE(as.logical(Sys.getenv("CI", "false")))) {
+    testthat::skip_if_not_installed("gh", "1.6.0")
   }
 
   dir <- withr::local_tempdir(.local_envir = .local_envir)
