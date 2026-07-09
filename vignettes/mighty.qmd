@@ -16,7 +16,10 @@ knitr:
 # `gh` package. `gh` < 1.6.0 rejects the `ghs_` App-installation token
 # that CI provides, so we skip evaluation on runners pinned to an
 # older CRAN snapshot.
-knitr::opts_chunk$set(eval = utils::packageVersion("gh") >= "1.6.0")
+knitr::opts_chunk$set(
+  eval = utils::packageVersion("gh") >= "1.6.0" ||
+    isFALSE(as.logical(Sys.getenv("CI", "false")))
+)
 ```
 
 ```{r}

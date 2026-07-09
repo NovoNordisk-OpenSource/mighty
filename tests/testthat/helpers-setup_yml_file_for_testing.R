@@ -83,8 +83,11 @@ setup_study_dir <- function(yaml_list, .local_envir = parent.frame()) {
 
   # `_mighty.yml` fixtures reference component repos fetched via the `gh`
   # package. `gh` < 1.6.0 rejects the `ghs_` App-installation token that CI
-  # provides, so skip on runners pinned to older CRAN snapshots.
-  testthat::skip_if_not_installed("gh", "1.6.0")
+  # provides, so skip on CI runners pinned to older CRAN snapshots. Locally
+  # (no `CI` env var), run the tests regardless of the installed `gh`.
+  if (isTRUE(as.logical(Sys.getenv("CI", "false")))) {
+    testthat::skip_if_not_installed("gh", "1.6.0")
+  }
 
   dir <- withr::local_tempdir(.local_envir = .local_envir)
   for (name in names(yaml_list)) {
