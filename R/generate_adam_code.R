@@ -115,13 +115,73 @@
 #'
 #' @import data.table
 #' @export
-generate_adam_code <- function(
+generate_adam_code <- S7::new_generic(
+  name = "generate_adam_code",
+  dispatch_args = "adam_specifications",
+  fun = function(
+    adam_specifications,
+    path_connector_config,
+    check_cross_domain_adam_dependencies = TRUE,
+    data_context = NULL
+  ) {
+    S7::S7_dispatch()
+  }
+)
+
+#' @noRd
+S7::method(generate_adam_code, S7::class_character) <- function(
   adam_specifications,
   path_connector_config,
   check_cross_domain_adam_dependencies = TRUE,
   data_context = NULL
 ) {
-  study <- mighty.metadata::mighty_study(adam_specifications)
+  generate_adam_code_folder(
+    folder = adam_specifications,
+    path_connector_config = path_connector_config,
+    check_cross_domain_adam_dependencies = check_cross_domain_adam_dependencies,
+    data_context = data_context
+  )
+}
+
+#' @noRd
+S7::method(generate_adam_code, mighty.metadata::mighty_study) <- function(
+  adam_specifications,
+  path_connector_config,
+  check_cross_domain_adam_dependencies = TRUE,
+  data_context = NULL
+) {
+  generate_adam_code_study(
+    study = adam_specifications,
+    path_connector_config = path_connector_config,
+    check_cross_domain_adam_dependencies = check_cross_domain_adam_dependencies,
+    data_context = data_context
+  )
+}
+
+#' @noRd
+generate_adam_code_folder <- function(
+  folder,
+  path_connector_config,
+  check_cross_domain_adam_dependencies,
+  data_context
+) {
+  study <- mighty.metadata::mighty_study(folder)
+
+  generate_adam_code(
+    adam_specifications = study,
+    path_connector_config = path_connector_config,
+    check_cross_domain_adam_dependencies = check_cross_domain_adam_dependencies,
+    data_context = data_context
+  )
+}
+
+#' @noRd
+generate_adam_code_study <- function(
+  study,
+  path_connector_config,
+  check_cross_domain_adam_dependencies,
+  data_context
+) {
   repos <- study@mighty$repos
   ui_yml <- study |>
     purrr::imap(process_adam_domain)
