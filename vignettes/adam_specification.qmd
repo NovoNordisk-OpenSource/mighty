@@ -522,7 +522,10 @@ population:
 study_dir <- tempfile()
 dir.create(study_dir)
 writeLines(yml, file.path(study_dir, "adlb.yml"))
-writeLines("external_data:\n  - id: DM\n    keys: [STUDYID, USUBJID]", file.path(study_dir, "_mighty.yml"))
+writeLines(
+  "external_data:\n  - id: DM\n    keys: [STUDYID, USUBJID]",
+  file.path(study_dir, "_mighty.yml")
+)
 writeLines("study_id: demo_study", file.path(study_dir, "_study.yml"))
 
 generate_adam_code(
@@ -546,6 +549,7 @@ The YAML specification describes only columns that appear in the final ADaM data
 
 **Intermediate derived values shared across final columns.** In traditional ADaM programming, a temporary column might be calculated once, used by several downstream derivations, and then dropped. Mighty does not support this pattern — there is no way to declare a column that exists only during execution. Instead, either group the final columns that share the intermediate calculation into a single component (using multiple `@outputs`), or recalculate the intermediate value within each component that needs it.
 Recalculating intermediate values across multiple components may reduce computational efficiency, but this is not a primary concern. The paramount goal of ADaM programs is clarity and transparency for regulatory review. Therefore, group derivations into shared components only when it improves the logical flow and understanding of the analysis, not simply to optimize performance.
+
 # Row operations
 
 Row operations are specified in the `rows` section of the ADaM domain YAML as an array.
