@@ -20,6 +20,7 @@ Useful links:
 
 Authors:
 \itemize{
+  \item Matthew Phelps \email{mewp@novonordisk.com}
   \item Nicolai Skov Johnsen \email{nosj@novonordisk.com}
   \item Aksel Thomsen \email{oath@novonordisk.com}
   \item Michael Hedegaard Thomsen \email{mhzt@novonordisk.com}

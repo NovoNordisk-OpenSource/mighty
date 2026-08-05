@@ -1,64 +1,68 @@
 Package: mighty
 Title: ADaM Program Generation Through Declarative Specifications
-Version: 0.0.0.9030
+Version: 0.0.0.9031
 Authors@R: c(
     person("Matthew", "Phelps", , "mewp@novonordisk.com", role = c("aut", "cre")),
     person("Nicolai", "Skov Johnsen", , "nosj@novonordisk.com", role = "aut"),
     person("Aksel", "Thomsen", , "oath@novonordisk.com", role = "aut"),
     person("Michael Hedegaard", "Thomsen", , "mhzt@novonordisk.com", role = "aut")
   )
-Description: Provides tools for generating ADaM programs in clinical trials using a declarative approach. Users 
-  specify what data structure and derivations they need through YAML-based specifications, rather than writing imperative 
-  code. The package handles dependency tracking between columns and rows, orchestrates code components, and automatically 
-  generates executable R programs for ADaM dataset creation.
+Description: Provides tools for generating ADaM programs in clinical
+    trials using a declarative approach. Users specify what data structure
+    and derivations they need through YAML-based specifications, rather
+    than writing imperative code. The package handles dependency tracking
+    between columns and rows, orchestrates code components, and
+    automatically generates executable R programs for ADaM dataset
+    creation.
 License: Apache License (>= 2)
 URL: https://novonordisk-opensource.github.io/mighty/
 Depends: 
     R (>= 4.1)
 Imports: 
+    assertthat,
     checkmate,
+    cli,
     data.table,
     dplyr,
-    igraph,
-    styler,
-    RColorBrewer,
-    R6,
-    assertthat,
-    cli,
     glue,
-    purrr,
+    igraph,
     mighty.component (>= 0.1.0.9001),
     mighty.metadata (>= 0.1.0.9003),
-    visNetwork,
-    zephyr,
+    purrr,
+    R6,
+    RColorBrewer,
     rlang,
+    S7,
+    S7schema,
+    styler,
     utils,
-    S7schema
+    visNetwork,
+    zephyr
 Suggests:
     admiral,
     arrow,
+    connector,
     gh,
     knitr,
+    labelled,
     pharmaverseadam,
     pharmaversesdtm (>= 0.2.0),
     quarto,
     remotes,
     rmarkdown,
-    testthat (>= 3.0.0),
-    withr,
     roxygen2,
-    connector,
-    labelled,
+    testthat (>= 3.0.0),
     tools,
-    whisker
+    whisker,
+    withr
 VignetteBuilder: 
     knitr,
     quarto
 Remotes: 
     NovoNordisk-OpenSource/mighty.component,
     NovoNordisk-OpenSource/mighty.metadata
+Config/roxygen2/version: 8.0.0
 Config/testthat/edition: 3
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-Config/roxygen2/version: 8.0.0
 RoxygenNote: 7.3.3
