@@ -1,0 +1,463 @@
+# Code Components
+
+## Overview
+
+Code components are the building blocks that implement the actual
+derivations, transformations, and calculations in your ADaM datasets.
+Components come in two technical formats that determine how mighty
+processes and executes them:
+
+- **R script components** - Plain executable R code (`.R` files)
+- **Mustache template components** - Parameterizable templates
+  (`.mustache` files)
+
+## Column vs Row components
+
+Beyond their technical format, components are classified by what they do
+to your data:
+
+**Column components** (`@type column`) create new columns in your
+dataset. They take existing columns as inputs and derive new variables.
+For example, calculating an age group from age, or computing a relative
+day from two dates. Column components:
+
+- Always create one or more new columns (specified in `@outputs`)
+- Can depend on columns from multiple datasets
+- Build on top of each other - one component’s output can be another’s
+  input
+- Are the most common type of component
+- Are referenced in the `column` section of your YAML ADaM specification
+
+**Row components** (`@type row`) add new rows to your dataset and may
+modify existing columns in those new rows. For example, adding parameter
+records in BDS datasets, or computing summary statistics that create new
+observation rows. Row components:
+
+- Add new records to the dataset
+- May modify column values in the newly created rows
+- List any modified columns in `@outputs`
+- Do not create new columns - they only populate values in existing
+  column structures
+- Are referenced in the `row` or `parameter` sections of your YAML ADaM
+  specification
+
+The key distinction: column components expand your dataset horizontally
+(more variables), while row components expand it vertically.
+
+## Component Structure
+
+All components share a common structure:
+
+- A roxygen-like metadata header
+- A body containing the business logic
+
+The format you choose depends on whether your derivation logic needs
+parameterization. R scripts execute fixed logic, while Mustache
+templates allow you to pass parameters from your ADaM specification to
+customize behavior.
+
+## Metadata Header
+
+All components use the same metadata header structure with
+roxygen2-style tags. Mighty extracts this metadata to understand
+dependencies, outputs, and how to orchestrate components.
+
+### Metadata Tags
+
+#### `@title`
+
+Short descriptive title for the component.
+
+``` r
+
+#' @title Age Group Classification
+```
+
+#### `@description`
+
+Detailed explanation of what the component does.
+
+``` r
+
+#' @description Categorizes subjects into age groups based on AGE variable
+```
+
+#### `@param`
+
+*Only for Mustache template components* - Parameters to pass to the
+template, populated from the `with` section of the ADaM specification.
+See
+[`vignette("adam_specification")`](https://novonordisk-opensource.github.io/mighty/articles/adam_specification.md).
+
+``` r
+
+#' @param domain Name of the ADaM domain
+#' @param cut_points Vector of age cut points
+```
+
+#### `@type`
+
+Component type, either `"column"` or `"row"`.
+
+``` r
+
+#' @type column
+```
+
+#### `@depends`
+
+Input dependencies listing the required columns. Format:
+`DOMAIN COLUMN1`
+
+Multiple depends are listed on separate lines:
+
+``` r
+
+#' @depends ADSL AGE
+#' @depends ADLB LBSTRESN
+```
+
+Mighty uses this for dependency analysis and execution ordering.
+
+#### `@outputs`
+
+If the component is a column derivation, this specifies which column(s)
+the component creates. If the component is a row/parameter action, this
+specifies which column(s) the component modifies
+
+Multiple outputs are listed on separate lines.
+
+``` r
+
+#' @outputs AGE_GRP1
+#' @outputs COL1
+```
+
+Mighty uses this to track what each component produces or modifies.
+
+#### `@code`
+
+Marker indicating where the executable code (the component body) begins.
+All code must come after this tag.
+
+``` r
+
+#' @code
+
+# Your R code here
+ADSL <- ADSL |> dplyr::mutate(...)
+```
+
+## R Script Components
+
+R script components contain plain executable R code with fixed
+derivation logic. They are saved as `.R` files and execute the same way
+every time they are called.
+
+### When to Use
+
+Use R script components when:
+
+- Derivation logic is fixed and does not need parameterization
+- The component is specific to a single use case
+- You want straightforward, readable code without template syntax
+
+### Code Structure
+
+- All executable code must come after the `@code` tag
+- Use roxygen2 comment style (`#'`) for metadata
+- Regular R comments (`#`) can be used within the code
+
+### Example: Simple Column Derivation
+
+``` r
+
+#' @title Age Group Classification
+#' @description Categorizes subjects into age groups based on AGE variable
+#' @type column
+#' @depends ADSL AGE
+#' @outputs AGE_GRP1
+#' @code
+
+ADSL <- ADSL |>
+  # This is an example comment
+  dplyr::mutate(
+    AGE_GRP1 = cut(
+      AGE,
+      breaks = c(-Inf, 18, 65, 75, Inf),
+      labels = c("< 18 years", "18 - 64 years", "65 - 74 years", ">= 75 years"),
+      right = FALSE
+    )
+  )
+```
+
+### Example: Dependent Derivation
+
+Components can depend on other derived columns:
+
+``` r
+
+#' @title Age Category Classification
+#' @description Further categorizes age groups into expected vs unexpected ranges
+#' @type column
+#' @depends ADSL AGE_GRP1
+#' @outputs AGE_CAT1
+#' @code
+
+ADSL <- ADSL |>
+  dplyr::mutate(
+    AGE_CAT1 = dplyr::case_when(
+      AGE_GRP1 %in% c("< 18 years", ">= 75 years") ~ "Outside expected range",
+      TRUE ~ "Inside expected range"
+    )
+  )
+```
+
+### Example: Multiple Dependencies
+
+Components can depend on multiple columns from multiple datasets:
+
+``` r
+
+#' @title Minimum AVAL per Subject
+#' @description Derives the minimum lab value for each subject from ADLB
+#' @type column
+#' @depends ADSL USUBJID
+#' @depends ADLB USUBJID
+#' @depends ADLB AVAL
+#' @outputs MIN_AVAL
+#' @code
+
+ADSL <- ADSL |>
+  dplyr::left_join(
+    ADLB |>
+      dplyr::select(USUBJID, AVAL) |>
+      dplyr::group_by(USUBJID) |>
+      dplyr::summarise(MIN_AVAL = min(AVAL, na.rm = TRUE)) |>
+      dplyr::ungroup(),
+    by = "USUBJID"
+  )
+```
+
+## Mustache Template Components
+
+Mustache template components use [Mustache
+syntax](https://mustache.github.io/mustache.5.html) to enable
+parameterization. They are saved as `.mustache` files and allow the same
+component logic to be reused with different parameters.
+
+### When to Use
+
+Use Mustache template components when:
+
+- You want to reuse a component across multiple columns, datasets,
+  trials, or projects
+- The same derivation logic needs to work with different parameters
+
+### Template Syntax
+
+Mustache templates use triple curly braces `{{{variable}}}` as
+placeholders that get replaced with actual values when mighty renders
+the component. Triple braces avoid HTML escaping, which would corrupt R
+operators such as `<-` and `>` in generated code. See [Template
+syntax](https://novonordisk-opensource.github.io/mighty/articles/special_components.html#template-syntax)
+in the special components vignette for a full explanation of double
+vs. triple mustache syntax.
+
+- Parameters are specified in the `with:` section of your YAML
+  specification
+- Both metadata and code sections can contain placeholders
+
+### Code Structure
+
+- Metadata header uses `@param` tags to document expected parameters
+- Placeholders can appear in `@depends`, `@outputs`, and the code body
+- Mighty renders the template before execution, replacing all
+  placeholders
+- The rendered output is plain R code
+
+### Example: Parameterized Column Derivation
+
+**Template file: `relative_day.mustache`**
+
+``` mustache
+#' @title Analysis relative day
+#' @description
+#' Derives the relative day compared to the treatment start date.
+#'
+#' @param domain Name of ADaM domain
+#' @param variable Name of new variable to create
+#' @param date Name of date variable to use
+#' @type column
+#' @depends {{{domain}}} {{{date}}}
+#' @depends {{{domain}}} TRTSDT
+#' @outputs {{{variable}}}
+#' @code
+{{{domain}}} <- {{{domain}}} |>
+  dplyr::mutate(
+    {{{variable}}} = admiral::compute_duration(
+      start_date = TRTSDT,
+      end_date = {{{date}}},
+      in_unit = "days",
+      out_unit = "days",
+      add_one = TRUE
+    )
+  )
+```
+
+**Usage in ADaM specification:**
+
+``` yml
+columns:
+  - id: ADYDT
+    component:
+      id: path/to/components/relative_day.mustache
+      with:
+        domain: ADVS
+        date: ADT
+        variable: ADYDT
+```
+
+**Rendered output (what mighty sees):**
+
+``` r
+
+#' @title Analysis relative day
+#' @description
+#' Derives the relative day compared to the treatment start date.
+#'
+#' @param domain Name of ADaM domain
+#' @param variable Name of new variable to create
+#' @param date Name of date variable to use
+#' @type column
+#' @depends ADVS ADT
+#' @depends ADVS TRTSDT
+#' @outputs ADYDT
+#' @code
+ADVS <- ADVS |>
+  dplyr::mutate(
+    ADYDT = admiral::compute_duration(
+      start_date = TRTSDT,
+      end_date = ADT,
+      in_unit = "days",
+      out_unit = "days",
+      add_one = TRUE
+    )
+  )
+```
+
+### Example: Reusing Templates with Different Parameters
+
+The same Mustache template can be used multiple times with different
+parameters:
+
+``` yml
+columns:
+  - id: ADYDT
+    component:
+      id: relative_day.mustache
+      with:
+        domain: ADVS
+        date: ADT
+        variable: ADYDT
+
+
+  - id: ASTDY
+    component:
+      id: relative_day.mustache
+      with:
+        domain: ADVS
+        date: ASTDT
+        variable: ASTDY
+```
+
+For the full rules on how mighty handles component reuse in ADaM
+specifications — including restrictions on overlapping outputs — see
+[Component reuse
+rules](https://novonordisk-opensource.github.io/mighty/articles/adam_specification.html#component-reuse-rules).
+
+## Handling external dependencies
+
+The YAML specification contains only columns that appear in the final
+ADaM dataset (see [No intermediate
+columns](https://novonordisk-opensource.github.io/mighty/articles/adam_specification.html#no-intermediate-columns)).
+Components often need source columns that are not in the final dataset —
+for example, an SDTM character date used to derive an analysis date.
+
+When a component declares `@depends DOMAIN COLUMN`, mighty adds that
+column to the data-reading step of the generated program. The column is
+available inside the component’s code without appearing in the YAML
+`columns` section. This is the intended mechanism for accessing source
+data that does not belong in the final output.
+
+For example, a component that derives `ASTDT` and `ASTDTF` from the SDTM
+character date `LBDTC`:
+
+``` r
+
+#' @title Convert DTC to DT
+#' @description Converts DTC to date (DT) format and computes the corresponding date flag (DTF) for the ADLB dataset.
+#' @type column
+#' @depends LB USUBJID
+#' @depends LB STUDYID
+#' @depends LB LBSEQ
+#' @depends LB LBDTC
+#' @depends ADLB USUBJID
+#' @depends ADLB STUDYID
+#' @depends ADLB LBSEQ
+#' @outputs ASTDT
+#' @outputs ASTDTF
+#' @code
+ADLB <- ADLB |>
+  dplyr::left_join(
+    LB |>
+      dplyr::mutate(
+        ASTDT = admiral::convert_dtc_to_dt(
+          dtc = LBDTC,
+          highest_imputation = "M",
+          date_imputation = "first"
+        ),
+        ASTDTF = admiral::compute_dtf(
+          dtc = LBDTC,
+          dt = ASTDT
+        )
+      ),
+    by = c("USUBJID", "STUDYID", "LBSEQ")
+  )
+ 
+```
+
+Mighty reads `LBDTC` from the source domain because the component
+declares `@depends LB LBDTC`, even though `LBDTC` has no entry in the
+YAML `columns` section.
+
+This approach may cause the same source column to be joined more than
+once across different components. This is an accepted trade-off:
+
+- Multiple columns can share a single component. If several derived
+  columns need the same source data, group them in one component to
+  avoid redundant reads.
+- Compute time is rarely the bottleneck in ADaM programming. Mighty
+  optimizes for development time, not compute time.
+- Self-contained components are easier to test and reuse independently.
+
+## Standard vs. Custom Components
+
+The classification of a component as either Standard or Custom is
+determined only by the governance of standard components. Mighty treats
+all components the same. Standard components and custom components can
+be either `.mustache` files or `.R` files.
+
+## In-built Components
+
+There are a small number of in-built components are core functionality
+managed by mighty itself:
+
+- Data I/O operations (reading from connectors, writing outputs)
+- Domain initialization and filtering
+- Join operations based on primary keys defined in `_mighty.yml`
+  `external_data`
+- Not directly referenced by users in specifications
+
+These are automatically generated and inserted by mighty as part of the
+program generation process.
