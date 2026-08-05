@@ -19,6 +19,8 @@ Useful links:
 
 Authors:
 
+- Matthew Phelps <mewp@novonordisk.com>
+
 - Nicolai Skov Johnsen <nosj@novonordisk.com>
 
 - Aksel Thomsen <oath@novonordisk.com>
