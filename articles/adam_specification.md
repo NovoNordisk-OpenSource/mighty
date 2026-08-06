@@ -576,8 +576,9 @@ multiple components may reduce computational efficiency, but this is not
 a primary concern. The paramount goal of ADaM programs is clarity and
 transparency for regulatory review. Therefore, group derivations into
 shared components only when it improves the logical flow and
-understanding of the analysis, not simply to optimize performance. \#
-Row operations
+understanding of the analysis, not simply to optimize performance.
+
+## Row operations
 
 Row operations are specified in the `rows` section of the ADaM domain
 YAML as an array.
