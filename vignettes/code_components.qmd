@@ -94,6 +94,13 @@ Component type: `"column"`, `"row"`, `"parameter"`, or `"internal"`.
 #' @type column
 ```
 
+### `@origin`
+*Optional* - CDISC origin of the column, one of `"Assigned"`, `"Collected"`, `"Derived"`, `"Not Available"`, `"Other"`, `"Predecessor"`, or `"Protocol"`. Used for define.xml generation.
+
+```r
+#' @origin Derived
+```
+
 ### `@depends`
 Input dependencies listing the required columns. Format: `DOMAIN COLUMN1`
 
