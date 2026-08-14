@@ -18,8 +18,8 @@ Code components are the building blocks that implement the actual derivations, t
 - **Mustache template components** - Parameterizable templates (`.mustache` files)
 
 
-# Column vs Row components
-Beyond their technical format, components are classified by what they do to your data:
+# Component types
+Beyond their technical format, components are classified by what they do to your data. `@type` takes one of four values: `column`, `row`, `parameter`, or `internal`.
 
 **Column components** (`@type column`) create new columns in your dataset. They take existing columns as inputs and derive new variables. For example, calculating an age group from age, or computing a relative day from two dates. Column components:
 
@@ -29,15 +29,25 @@ Beyond their technical format, components are classified by what they do to your
 - Are the most common type of component
 - Are referenced in the `column` section of your YAML ADaM specification
 
-**Row components** (`@type row`) add new rows to your dataset and may modify existing columns in those new rows. For example, adding parameter records in BDS datasets, or computing summary statistics that create new observation rows. Row components:
+**Row components** (`@type row`) add new rows to your dataset or modify existing rows. For example, computing summary statistics that create new observation rows. Row components:
 
 - Add new records to the dataset
 - May modify column values in the newly created rows
+- May modify existing rows (i.e. with a subset operation)
 - List any modified columns in `@outputs`
 - Do not create new columns - they only populate values in existing column structures
-- Are referenced in the `row` or `parameter` sections of your YAML ADaM specification
+- Are referenced in the `row` section of your YAML ADaM specification
 
-The key distinction: column components expand your dataset horizontally (more variables), while row components expand it vertically.
+**Parameter components** (`@type parameter`) create BDS parameter records, such as adding a new PARAMCD to a BDS dataset. They are processed the same way as row components. Parameter components:
+
+- Add new parameter records to the dataset
+- May modify column values in the newly created rows
+- List any modified columns in `@outputs`
+- Are referenced in the `parameter` section of your YAML ADaM specification
+
+**Internal components** (`@type internal`) implement mighty's own internal machinery, such as reading source data or initializing a domain. They are not referenced from a column, row, or parameter section of a YAML ADaM specification, and are not typically written by end users.
+
+The key distinction between the user-facing types: column components expand your dataset horizontally (more variables), while row and parameter components expand it vertically (more records).
 
 # Component Structure 
 
@@ -78,7 +88,7 @@ Detailed explanation of what the component does.
 
 
 ### `@type`
-Component type, either `"column"` or `"row"`.
+Component type: `"column"`, `"row"`, `"parameter"`, or `"internal"`.
 
 ```r
 #' @type column
