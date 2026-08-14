@@ -662,13 +662,13 @@ Parameters are specified as an array, similar to rows and columns.
       - id: BMI_CATEGORY
         component:
           id: bds_groups
+          with:
+            input: BMI
+            output: BMIGRP
+            bins: [0, 20, 25, 30, 100]
+            labels: ["<20", "20-<25", "25-<30", "30+"]
         depends:
           - parameters.BMI
-        with:
-          input: BMI
-          output: BMIGRP
-          bins: [0, 20, 25, 30, 100]
-          labels: ["<20", "20-<25", "25-<30", "30+"]
     ```
 
     Creates a BMI category parameter that depends on the BMI parameter being derived first. Note the `parameters.` prefix in the dependency.
