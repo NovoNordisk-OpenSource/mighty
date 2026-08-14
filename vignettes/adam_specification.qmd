@@ -144,7 +144,7 @@ Each entry in the `base` array specifies a source domain:
 | Field    | Description                                     | Notes |
 |----------|-------------------------------------------------|---------------|
 | `domain` | SDTM domain name                                                    | Case-sensitive |
-| `depends`| Columns needed for filtering this domain                            | Can be empty array `[]` |
+| `depends`| Columns needed for filtering this domain                            | Use `NA` for no dependency |
 | `filter` | Filter specification. Must be an R expression that can be evaluated | Can be `NA` |
 
 ### Domain-specific filtering
