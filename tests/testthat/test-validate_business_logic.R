@@ -219,7 +219,6 @@ parameters:
   adam_specifications <- setup_study_dir(list("adlb" = yaml_content))
 
   # ACT / ASSERT ---------------------------------------------------------------
-  # Test that validation error is caught: Rule "val_no_duplicate_row_parameter_ids"
   study <- mighty.metadata::mighty_study(adam_specifications)
   err_ <- process_adam_domain(study$ADLB, "ADLB") |>
     expect_error(
@@ -263,7 +262,7 @@ columns:
   )
 })
 
-test_that("bare method on a row fails validation", {
+test_that("bare method on a row is not checked for domain qualification", {
   # SETUP ----------------------------------------------------------------------
 
   yaml_content <- "
@@ -288,15 +287,8 @@ rows:
   study <- mighty.metadata::mighty_study(adam_specifications)
 
   # ACT / ASSERT ---------------------------------------------------------------
-  err_ <- process_adam_domain(study$ADLB, "ADLB") |>
-    expect_error(
-      "The following `method` values are not domain-qualified:"
-    )
-  expect_match(
-    err_$body,
-    "method 'LBSTRESN' on row ROW_ACTION_99 in domain ADLB must be domain-qualified, e.g. 'ADLB.LBSTRESN'",
-    all = FALSE
-  )
+  process_adam_domain(study$ADLB, "ADLB") |>
+    expect_no_error()
 })
 
 test_that("NA method and already-qualified method are exempt from qualification check", {

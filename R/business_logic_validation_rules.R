@@ -34,9 +34,9 @@ val_method_and_component_id_not_both_populated <- function(
 
 #' Validate that method values are domain-qualified
 #'
-#' This rule checks that every `method` value (on columns and rows) is
-#' domain-qualified (e.g. `ADLB.LBSTRESN`), rejecting the bare form (e.g.
-#' `LBSTRESN`).
+#' This rule checks that every column `method` value is domain-qualified
+#' (e.g. `ADLB.LBSTRESN`), rejecting the bare form (e.g. `LBSTRESN`). Row and
+#' parameter `method` values are free text and are not checked.
 #'
 #' @param yaml_content Raw YAML content structure from mighty_metadata
 #' @param context Validation context (yaml_file, ruleset_name, etc.)
@@ -48,14 +48,9 @@ val_method_is_domain_qualified <- function(
 ) {
   domain_id <- yaml_content$id %||% ""
 
-  errors <- c(
-    unlist(lapply(yaml_content$columns, \(col) {
-      check_domain_qualified_method(col$method, "column", col$id, domain_id)
-    })),
-    unlist(lapply(yaml_content$rows, \(row) {
-      check_domain_qualified_method(row$method, "row", row$id, domain_id)
-    }))
-  )
+  errors <- unlist(lapply(yaml_content$columns, \(col) {
+    check_domain_qualified_method(col$method, col$id, domain_id)
+  }))
 
   if (length(errors) == 0) {
     return(list(valid = TRUE, errors = character(0)))
@@ -70,9 +65,9 @@ val_method_is_domain_qualified <- function(
   )
 }
 
-#' Check a single `method` value for domain qualification
+#' Check a single column `method` value for domain qualification
 #' @noRd
-check_domain_qualified_method <- function(method, location, id, domain_id) {
+check_domain_qualified_method <- function(method, id, domain_id) {
   if (!has_content(method)) {
     return(character(0))
   }
@@ -80,9 +75,9 @@ check_domain_qualified_method <- function(method, location, id, domain_id) {
     return(character(0))
   }
   location_label <- if (has_content(id)) {
-    paste0(location, " ", id)
+    paste0("column ", id)
   } else {
-    location
+    "column"
   }
   glue::glue(
     "method '{method}' on {location_label} in domain {domain_id} ",
