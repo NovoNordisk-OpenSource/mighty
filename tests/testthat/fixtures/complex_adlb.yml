@@ -30,10 +30,10 @@ columns:
     method: ADSL.RACE_COUNTRY
 
   - id: AVAL
-    method: LBSTRESN
+    method: ADLB.LBSTRESN
 
   - id: AVALC
-    method: LBSTRESC
+    method: ADLB.LBSTRESC
 
   - id: STUDYID
 

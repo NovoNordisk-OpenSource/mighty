@@ -105,7 +105,8 @@ get_business_rules <- function(ruleset_name) {
       collect_errors = register_rules(
         val_no_duplicate_row_parameter_ids,
         val_depend_rows,
-        val_keys_included_as_columns
+        val_keys_included_as_columns,
+        val_method_depends_domain_qualified
       )
     )
   )

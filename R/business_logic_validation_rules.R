@@ -32,6 +32,77 @@ val_method_and_component_id_not_both_populated <- function(
 }
 
 
+#' Validate that method values are domain-qualified
+#'
+#' This rule checks that every `method` value (on columns and rows) is
+#' domain-qualified (e.g. `ADLB.LBSTRESN`), rejecting the bare form (e.g.
+#' `LBSTRESN`).
+#'
+#' @param yaml_content Raw YAML content structure from mighty_metadata
+#' @param context Validation context (yaml_file, ruleset_name, etc.)
+#' @return List with 'valid' (logical) and 'errors' (character vector)
+#' @noRd
+val_method_depends_domain_qualified <- function(
+  yaml_content,
+  context = list()
+) {
+  domain_id <- yaml_content$id %||% ""
+
+  errors <- c(
+    unlist(lapply(yaml_content$columns, \(col) {
+      check_domain_qualified_method(col$method, "column", col$id, domain_id)
+    })),
+    unlist(lapply(yaml_content$rows, \(row) {
+      check_domain_qualified_method(row$method, "row", row$id, domain_id)
+    }))
+  )
+
+  if (length(errors) == 0) {
+    return(list(valid = TRUE, errors = character(0)))
+  }
+
+  list(
+    valid = FALSE,
+    errors = c(
+      "The following `method` values are not domain-qualified:",
+      paste0("  - ", errors)
+    )
+  )
+}
+
+#' Build an error message for a single unqualified value
+#' @noRd
+format_unqualified_value_error <- function(
+  field,
+  value,
+  location,
+  id,
+  domain_id
+) {
+  location_label <- if (has_content(id)) {
+    paste0(location, " ", id)
+  } else {
+    location
+  }
+  glue::glue(
+    "{field} '{value}' on {location_label} in domain {domain_id} ",
+    "must be domain-qualified, e.g. '{domain_id}.{value}'"
+  )
+}
+
+#' Check a single `method` value for domain qualification
+#' @noRd
+check_domain_qualified_method <- function(method, location, id, domain_id) {
+  if (!has_content(method)) {
+    return(character(0))
+  }
+  if (has_domain_prefix(method)) {
+    return(character(0))
+  }
+  format_unqualified_value_error("method", method, location, id, domain_id)
+}
+
+
 #' Generic validation for duplicate IDs across sections
 #'
 #' This function provides a unified approach to validate that IDs are unique

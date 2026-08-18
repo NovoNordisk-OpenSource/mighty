@@ -56,7 +56,7 @@ columns:
   - id: LBTESTCD
 
   - id: STUDYID2
-    method: STUDYID
+    method: ADLB.STUDYID
 
   - id: STUDYID3
     method: ADSL.STUDYID2 

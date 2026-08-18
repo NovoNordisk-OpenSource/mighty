@@ -197,13 +197,13 @@ extract_component_parameters <- function(component_with) {
 #'
 #' @description
 #' Extracts and consolidates dependencies from both base and global population
-#' sections, applying domain prefixing logic for cross-domain dependencies.
+#' sections.
 #'
 #' @param population_base Base population section from YAML
 #' @param population_global Global population section from YAML
-#' @param domain_id Current domain ID for domain prefix logic
+#' @param domain_id Current domain ID (unused; kept for call-site symmetry)
 #'
-#' @return Character vector of dependencies with appropriate domain prefixes
+#' @return Character vector of dependencies
 #'
 #' @noRd
 collect_all_dependencies <- function(
@@ -237,6 +237,10 @@ collect_all_dependencies <- function(
 #' 2. Method references a different column name or different domain than
 #'    the current column
 #'
+#' Method is assumed to already be domain-qualified (e.g. "ADSL.AGE"),
+#' guaranteed by `val_method_depends_domain_qualified()` having run earlier
+#' in `process_adam_domain()`.
+#'
 #' @param method Method field from column definition (may be NULL)
 #' @param component Component object from column definition (may be NULL)
 #' @param col_id Current column ID
@@ -261,13 +265,9 @@ should_use_method_as_depend_cols <- function(
   }
 
   # Method must reference a different column or domain
-  is_different <- if (has_domain_prefix(method)) {
-    parsed_domain <- extract_domain_prefix(method)
-    parsed_column <- extract_dependency_id(method)
-    parsed_domain != domain_id || parsed_column != col_id
-  } else {
-    method != col_id
-  }
+  parsed_domain <- extract_domain_prefix(method)
+  parsed_column <- extract_dependency_id(method)
+  is_different <- parsed_domain != domain_id || parsed_column != col_id
 
   if (is_different) method else NULL
 }

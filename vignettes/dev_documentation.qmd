@@ -24,7 +24,7 @@ knitr:
     ``` yml
     columns:
       - id: PLANNED_ARM
-        method: ARM
+        method: ADSL.ARM
     ```
 
 -   **col_echo**: An echo can have a col_compute, col_echo, col_mutate, or a col_copy as parents. The depend_cols of echo's ARE used when constructing the "external" nodes. Example:

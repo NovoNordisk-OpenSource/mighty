@@ -34,7 +34,7 @@ columns:
   - id: ARM
 
   - id: PLANNED_ARM
-    method: ARM
+    method: ADSL.ARM
 
   - id: ARM_GRP1
     component:

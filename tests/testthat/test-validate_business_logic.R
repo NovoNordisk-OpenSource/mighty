@@ -228,6 +228,113 @@ parameters:
   expect_match(err_$body, "- DUPLICATE_ROW_ID", all = FALSE)
 })
 
+test_that("bare method on a column fails validation", {
+  # SETUP ----------------------------------------------------------------------
+
+  yaml_content <- "
+id: ADLB
+label: Laboratory Analysis Dataset
+class: BASIC DATA STRUCTURE
+structure: One record per subject per parameter per analysis visit
+keys: [USUBJID]
+population:
+  base:
+    - domain: LB
+      depends:
+        - NA
+      filter: NA
+columns:
+  - id: USUBJID
+  - id: LBSTRESN
+  - id: AVAL
+    method: LBSTRESN
+"
+  adam_specifications <- setup_study_dir(list("adlb" = yaml_content))
+  study <- mighty.metadata::mighty_study(adam_specifications)
+
+  # ACT / ASSERT ---------------------------------------------------------------
+  err_ <- process_adam_domain(study$ADLB, "ADLB") |>
+    expect_error(
+      "The following `method` values are not domain-qualified:"
+    )
+  expect_match(
+    err_$body,
+    "method 'LBSTRESN' on column AVAL in domain ADLB must be domain-qualified, e.g. 'ADLB.LBSTRESN'",
+    all = FALSE
+  )
+})
+
+test_that("bare method on a row fails validation", {
+  # SETUP ----------------------------------------------------------------------
+
+  yaml_content <- "
+id: ADLB
+label: Laboratory Analysis Dataset
+class: BASIC DATA STRUCTURE
+structure: One record per subject per parameter per analysis visit
+keys: [USUBJID]
+population:
+  base:
+    - domain: LB
+      depends:
+        - NA
+      filter: NA
+columns:
+  - id: USUBJID
+rows:
+  - id: ROW_ACTION_99
+    method: LBSTRESN
+    component:
+      id: ROW_ACTION_99
+"
+  adam_specifications <- setup_study_dir(list("adlb" = yaml_content))
+  study <- mighty.metadata::mighty_study(adam_specifications)
+
+  # ACT / ASSERT ---------------------------------------------------------------
+  err_ <- process_adam_domain(study$ADLB, "ADLB") |>
+    expect_error(
+      "The following `method` values are not domain-qualified:"
+    )
+  expect_match(
+    err_$body,
+    "method 'LBSTRESN' on row ROW_ACTION_99 in domain ADLB must be domain-qualified, e.g. 'ADLB.LBSTRESN'",
+    all = FALSE
+  )
+})
+
+test_that("NA method and already-qualified method are exempt from qualification check", {
+  # SETUP ----------------------------------------------------------------------
+
+  yaml_content <- "
+id: ADLB
+label: Laboratory Analysis Dataset
+class: BASIC DATA STRUCTURE
+structure: One record per subject per parameter per analysis visit
+keys: [USUBJID]
+population:
+  base:
+    - domain: LB
+      depends:
+        - NA
+      filter: NA
+columns:
+  - id: USUBJID
+  - id: LBSTRESN
+  - id: AVAL
+    method: ADLB.LBSTRESN
+rows:
+  - id: ROW_ACTION_99
+    component:
+      id: ROW_ACTION_99
+"
+  adam_specifications <- setup_study_dir(list("adlb" = yaml_content))
+  study <- mighty.metadata::mighty_study(adam_specifications)
+
+  # ACT / ASSERT ---------------------------------------------------------------
+  process_adam_domain(study$ADLB, "ADLB") |>
+    expect_no_error()
+})
+
 test_that("missing population section fails validation", {
   # SETUP ----------------------------------------------------------------------
 

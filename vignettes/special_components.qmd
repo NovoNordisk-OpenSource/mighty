@@ -449,15 +449,15 @@ to another, typically with an ADaM-standard rename (e.g. `LBSTRESN` → `AVAL`).
 ## Example
 
 Consider the following YAML specification snippet. `AVAL` is defined with
-`method: LBSTRESN`, and `LBSTRESN` is also listed as its own column. Mighty
-copies the values rather than renaming because the source column is retained
-in the output:
+`method: ADLB.LBSTRESN`, and `LBSTRESN` is also listed as its own column.
+Mighty copies the values rather than renaming because the source column is
+retained in the output:
 
 ```yaml
 columns:
   - id: LBSTRESN
   - id: AVAL
-    method: LBSTRESN
+    method: ADLB.LBSTRESN
 ```
 
 Mighty builds the following parameter list and passes it to the template:
@@ -502,14 +502,14 @@ Both templates share the same parameter list and are served by the same internal
 ## Example
 
 Consider the following YAML specification snippet. `SRCSEQ` is defined with
-`method: LBSEQ`, and `LBSEQ` is **not** listed as its own column. Because
-the source column has no independent entry, mighty renames it rather than
-copying it:
+`method: ADLB.LBSEQ`, and `LBSEQ` is **not** listed as its own column.
+Because the source column has no independent entry, mighty renames it rather
+than copying it:
 
 ```yaml
 columns:
   - id: SRCSEQ
-    method: LBSEQ
+    method: ADLB.LBSEQ
 ```
 
 Mighty builds the following parameter list and passes it to the template:

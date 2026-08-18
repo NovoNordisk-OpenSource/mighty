@@ -30,10 +30,10 @@ columns:
   - id: DOMAIN
 
   - id: AGEU
-    method: AGEU
+    method: ADSL.AGEU
 
   - id: PLANNED_ARM
-    method: ARM
+    method: ADSL.ARM
 
   - id: SEX
 

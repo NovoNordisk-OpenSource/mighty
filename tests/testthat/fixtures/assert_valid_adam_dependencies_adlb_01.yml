@@ -25,4 +25,4 @@ columns:
   - id: VISITNUM
 
   - id: VISITNUM2
-    method: VISITNUM
+    method: ADLB.VISITNUM
