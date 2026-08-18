@@ -42,7 +42,7 @@ val_method_and_component_id_not_both_populated <- function(
 #' @param context Validation context (yaml_file, ruleset_name, etc.)
 #' @return List with 'valid' (logical) and 'errors' (character vector)
 #' @noRd
-val_method_depends_domain_qualified <- function(
+val_method_is_domain_qualified <- function(
   yaml_content,
   context = list()
 ) {
@@ -70,26 +70,6 @@ val_method_depends_domain_qualified <- function(
   )
 }
 
-#' Build an error message for a single unqualified value
-#' @noRd
-format_unqualified_value_error <- function(
-  field,
-  value,
-  location,
-  id,
-  domain_id
-) {
-  location_label <- if (has_content(id)) {
-    paste0(location, " ", id)
-  } else {
-    location
-  }
-  glue::glue(
-    "{field} '{value}' on {location_label} in domain {domain_id} ",
-    "must be domain-qualified, e.g. '{domain_id}.{value}'"
-  )
-}
-
 #' Check a single `method` value for domain qualification
 #' @noRd
 check_domain_qualified_method <- function(method, location, id, domain_id) {
@@ -99,7 +79,15 @@ check_domain_qualified_method <- function(method, location, id, domain_id) {
   if (has_domain_prefix(method)) {
     return(character(0))
   }
-  format_unqualified_value_error("method", method, location, id, domain_id)
+  location_label <- if (has_content(id)) {
+    paste0(location, " ", id)
+  } else {
+    location
+  }
+  glue::glue(
+    "method '{method}' on {location_label} in domain {domain_id} ",
+    "must be domain-qualified, e.g. '{domain_id}.{method}'"
+  )
 }
 
 

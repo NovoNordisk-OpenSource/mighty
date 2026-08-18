@@ -42,7 +42,7 @@ process_adam_domain <- function(domain, domain_name) {
 
   validate_business_logic(yaml_content, domain_name = domain_name)
 
-  init <- transform_population_to_init(yaml_content$population, yaml_content$id)
+  init <- transform_population_to_init(yaml_content$population)
 
   columns <- transform_columns_to_named_list(
     yaml_content$columns,
@@ -201,15 +201,13 @@ extract_component_parameters <- function(component_with) {
 #'
 #' @param population_base Base population section from YAML
 #' @param population_global Global population section from YAML
-#' @param domain_id Current domain ID (unused; kept for call-site symmetry)
 #'
 #' @return Character vector of dependencies
 #'
 #' @noRd
 collect_all_dependencies <- function(
   population_base,
-  population_global,
-  domain_id
+  population_global
 ) {
   # Extract base dependencies
   base_depends <- if (has_content(population_base)) {
@@ -238,7 +236,7 @@ collect_all_dependencies <- function(
 #'    the current column
 #'
 #' Method is assumed to already be domain-qualified (e.g. "ADSL.AGE"),
-#' guaranteed by `val_method_depends_domain_qualified()` having run earlier
+#' guaranteed by `val_method_is_domain_qualified()` having run earlier
 #' in `process_adam_domain()`.
 #'
 #' @param method Method field from column definition (may be NULL)
@@ -324,14 +322,12 @@ create_row_action_entry <- function(entry) {
 #' Transform population structure to init structure
 #'
 #' @param population The population section from mighty_metadata YAML
-#' @param domain_id The ID of the current domain (used to determine if
-#'   global dependencies need domain prefix)
 #'
 #' @return A list with base_domains, filter_domain, filter_global,
 #'   and filter_depend_cols
 #'
 #' @noRd
-transform_population_to_init <- function(population, domain_id) {
+transform_population_to_init <- function(population) {
   if (is.null(population)) {
     return(list())
   }
@@ -368,8 +364,7 @@ transform_population_to_init <- function(population, domain_id) {
   # Collect all dependencies from both base and global
   all_depends <- collect_all_dependencies(
     population_base = population$base,
-    population_global = population$global,
-    domain_id = domain_id
+    population_global = population$global
   )
   # Always include filter_depend_cols, even if empty (to match old format behavior)
   if (has_content(all_depends)) {

@@ -106,7 +106,7 @@ get_business_rules <- function(ruleset_name) {
         val_no_duplicate_row_parameter_ids,
         val_depend_rows,
         val_keys_included_as_columns,
-        val_method_depends_domain_qualified
+        val_method_is_domain_qualified
       )
     )
   )
