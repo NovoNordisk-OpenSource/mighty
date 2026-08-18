@@ -245,7 +245,6 @@ population:
       filter: NA
 columns:
   - id: USUBJID
-  - id: LBSTRESN
   - id: AVAL
     method: LBSTRESN
 "
@@ -284,8 +283,6 @@ columns:
 rows:
   - id: ROW_ACTION_99
     method: LBSTRESN
-    component:
-      id: ROW_ACTION_99
 "
   adam_specifications <- setup_study_dir(list("adlb" = yaml_content))
   study <- mighty.metadata::mighty_study(adam_specifications)
@@ -319,13 +316,10 @@ population:
       filter: NA
 columns:
   - id: USUBJID
-  - id: LBSTRESN
   - id: AVAL
     method: ADLB.LBSTRESN
 rows:
   - id: ROW_ACTION_99
-    component:
-      id: ROW_ACTION_99
 "
   adam_specifications <- setup_study_dir(list("adlb" = yaml_content))
   study <- mighty.metadata::mighty_study(adam_specifications)
