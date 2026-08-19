@@ -17,7 +17,7 @@ Code components are the building blocks that implement the actual derivations, t
 - **R script components** - Plain executable R code (`.R` files)
 - **Mustache template components** - Parameterizable templates (`.mustache` files)
 
-
+Component metadata parsing and Mustache rendering are handled by the [mighty.component](https://github.com/NovoNordisk-OpenSource/mighty.component) package. This vignette describes the metadata format and file structure that components must follow; mighty.component is what mighty uses under the hood to read and render them.
 # Component types
 Beyond their technical format, components are classified by what they do to your data. `@type` takes one of four values: `column`, `row`, `parameter`, or `internal`.
 
