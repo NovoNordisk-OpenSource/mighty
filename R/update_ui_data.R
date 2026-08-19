@@ -8,13 +8,20 @@
 #'
 #' @param code_component_metadata List of metadata for code components, indexed by code_id
 #' @param ui_data Data table containing UI data with optional code_id references
+#' @param base_domains Named list of SDTM base domains per ADaM domain (from
+#'   `ui_init_t$base_domains`), used to classify base-domain-sourced renames
+#'   as local rather than cross-domain.
 #'
 #' @return A data table with UI data enriched with code component metadata and processed dependent columns
 #' @noRd
 #'
 #' @examples
 #' # Example usage would go here
-consolidate_metadata <- function(code_component_metadata, ui_data) {
+consolidate_metadata <- function(
+  code_component_metadata,
+  ui_data,
+  base_domains = NULL
+) {
   # Validate inputs
   checkmate::assert_list(code_component_metadata)
   checkmate::assert_data_frame(ui_data, min.rows = 1)
@@ -42,7 +49,8 @@ consolidate_metadata <- function(code_component_metadata, ui_data) {
       outputs = get("outputs"),
       domain = get("domain")
     )],
-    classify_action_type
+    classify_action_type,
+    base_domains = base_domains
   ) |>
     unlist()
   ui_data_updated[, "type_from_code" := NULL]
@@ -101,7 +109,8 @@ classify_action_type <- function(
   type_from_code,
   depend_cols,
   outputs,
-  domain
+  domain,
+  base_domains = NULL
 ) {
   # Type determined by code component metadata
   if (!is.na(code_id)) {
@@ -131,7 +140,9 @@ classify_action_type <- function(
   checkmate::assert_character(dependency, len = 1L, any.missing = FALSE)
   dep_domain <- extract_domain_prefix(dependency)
   dep_column <- extract_dependency_id(dependency)
-  is_local <- domain == dep_domain
+  domain_base_domains <- base_domains[[domain]]
+  is_local <- domain == dep_domain ||
+    (length(domain_base_domains) == 1 && dep_domain %in% domain_base_domains)
   is_different_column <- dep_column != unlist(outputs)
 
   # Depends on a different local column -> rename (or mutate if conflict)

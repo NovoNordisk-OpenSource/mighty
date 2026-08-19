@@ -295,7 +295,7 @@ When using `component`, it has these subfields:
     ``` yml
     columns:
       - id: AVAL
-        method: ADLB.LBSTRESN
+        method: LB.LBSTRESN
     ```
 
     Renames `LBSTRESN` from the base domain to `AVAL`. Unlike copying (example 4), the source column `LBSTRESN` is **not** listed separately in `columns`, so only the renamed column `AVAL` appears in the final dataset.

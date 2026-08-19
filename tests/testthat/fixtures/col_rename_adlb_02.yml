@@ -1,0 +1,25 @@
+# Minimal copy of col_rename_adlb_01.yml with SRCSEQ sourced from the true
+# SDTM base domain (LB.LBSEQ) instead of the self-referential form
+id: ADLB
+label: Laboratory Analysis Dataset
+class: BASIC DATA STRUCTURE
+structure: One record per subject per parameter per analysis visit
+keys:
+  - USUBJID
+
+population:
+  base:
+    - domain: LB
+      depends:
+        - NA
+      filter: NA
+  global:
+    - filter: NA
+      depends:
+        - NA
+
+columns:
+  - id: USUBJID
+
+  - id: SRCSEQ
+    method: LB.LBSEQ

@@ -54,7 +54,7 @@ setup_actions <- function(
 
   actions <- components_rendered |>
     get_component_metadata() |>
-    consolidate_metadata(actions_base) |>
+    consolidate_metadata(actions_base, base_domains = ui_init_t$base_domains) |>
     add_keys_to_depend_cols(domain_keys, ui_init_t) |>
     assert_valid_depend_cols(
       ui_yml,
