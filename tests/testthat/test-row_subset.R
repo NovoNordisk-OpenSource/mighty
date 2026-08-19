@@ -46,7 +46,7 @@ rows:
       id: {{{row_component}}}
       with:
         domain: ADLB
-    subset: \"LBTEST == 'Microcytes'\"
+    subset: \"USUBJID == '01-708-1216'\"
 " |>
     whisker::whisker.render(data = list(row_component = component_file))
 
@@ -85,6 +85,7 @@ rows:
   # EXPECT: row operation ran correctly on real data ---------------------------
 
   lb <- pharmaversesdtm::lb
+  target_subject <- "01-708-1216"
   n_microcytes <- sum(lb$LBTEST == "Microcytes")
 
   actual$programs[1][[1]] <- remove_connector_write_step(actual$programs[1][[
@@ -103,4 +104,16 @@ rows:
   expect_equal(nrow(ADLB), nrow(lb) + n_microcytes)
   expect_equal(sum(ADLB$LBTEST == "Microcytes"), n_microcytes)
   expect_equal(sum(ADLB$LBTEST == "Microcytes (new)"), n_microcytes)
+
+  # Rows for every other subject are untouched by the subset. Row order isn't
+  # preserved through the generated program, so compare content order-independently.
+  other_subjects <- ADLB[ADLB$USUBJID != target_subject, c("USUBJID", "LBTEST")]
+  other_subjects <- other_subjects[
+    order(other_subjects$USUBJID, other_subjects$LBTEST),
+  ]
+  expected_other <- lb[lb$USUBJID != target_subject, c("USUBJID", "LBTEST")]
+  expected_other <- expected_other[
+    order(expected_other$USUBJID, expected_other$LBTEST),
+  ]
+  expect_equal(other_subjects, expected_other, ignore_attr = TRUE)
 })
