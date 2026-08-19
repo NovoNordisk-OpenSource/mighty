@@ -248,7 +248,7 @@ Mustache templates use triple curly braces `{{{{variable}}}}` as placeholders th
 
 - Metadata header uses `@param` tags to document expected parameters
 - Placeholders can appear in `@depends`, `@outputs`, and the code body
-- Mighty renders the template before execution, replacing all placeholders
+- Mighty (via mighty.components) renders the template before execution, replacing all placeholders
 - The rendered output is plain R code
 
 ## Example: Parameterized Column Derivation
