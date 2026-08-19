@@ -56,10 +56,10 @@ component or custom component).
 
 ## Workflow
 
-To handle missing domains and missing columns, mighty.metadata will
-extract available domains and columns from SDTM and metadata. ADaM is
-not in scope as this will be build, based on the specification yaml
-file. The list of available data is then passed to mighty, which will
+To handle missing domains and missing columns, mighty’s `data_context`
+will extract available domains and columns from SDTM and metadata. ADaM
+is not in scope as this will be build, based on the specification yaml
+file. The list of available data is then used by mighty, which will
 detect discrepancies from the specification and available data, create
 programs that satisfies with the specification (which will not be
 executable (or contain errors) due to missing data) along with programs
@@ -74,10 +74,10 @@ Steps to Handle Missing Data:
 1.  Wish-List Specification: Users create an ADaM specification
     containing all desired columns and row operations, regardless of
     data availability.
-2.  Available Data: mighty.metadata supplies a
-    [`Connector`](https://github.com/NovoNordisk-OpenSource/connector)
-    object to mighty by which available data (SDTM and metadata) can be
-    extracted.
+2.  Available Data: Users provide a `data_context`, built from a
+    [`connector`](https://github.com/NovoNordisk-OpenSource/connector)
+    object, to `generate_adam_code(data_context = ...)` by which
+    available data (SDTM and metadata) can be extracted.
 3.  Dependency Generation: mighty combines the wish-list specification,
     and available data with corresponding code components to identify
     dependencies (via ancestor nodes in the topology).
