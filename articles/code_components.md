@@ -11,10 +11,14 @@ processes and executes them:
 - **Mustache template components** - Parameterizable templates
   (`.mustache` files)
 
-## Column vs Row components
-
-Beyond their technical format, components are classified by what they do
-to your data:
+Component metadata parsing and Mustache rendering are handled by the
+[mighty.component](https://github.com/NovoNordisk-OpenSource/mighty.component)
+package. This vignette describes the metadata format and file structure
+that components must follow; mighty.component is what mighty uses under
+the hood to read and render them. \# Component types Beyond their
+technical format, components are classified by what they do to your
+data. `@type` takes one of four values: `column`, `row`, `parameter`, or
+`internal`.
 
 **Column components** (`@type column`) create new columns in your
 dataset. They take existing columns as inputs and derive new variables.
@@ -28,21 +32,37 @@ day from two dates. Column components:
 - Are the most common type of component
 - Are referenced in the `column` section of your YAML ADaM specification
 
-**Row components** (`@type row`) add new rows to your dataset and may
-modify existing columns in those new rows. For example, adding parameter
-records in BDS datasets, or computing summary statistics that create new
+**Row components** (`@type row`) add new rows to your dataset or modify
+existing rows. For example, computing summary statistics that create new
 observation rows. Row components:
 
 - Add new records to the dataset
 - May modify column values in the newly created rows
+- May modify existing rows (i.e. with a subset operation)
 - List any modified columns in `@outputs`
 - Do not create new columns - they only populate values in existing
   column structures
-- Are referenced in the `row` or `parameter` sections of your YAML ADaM
+- Are referenced in the `row` section of your YAML ADaM specification
+
+**Parameter components** (`@type parameter`) create BDS parameter
+records, such as adding a new PARAMCD to a BDS dataset. They are
+processed the same way as row components. Parameter components:
+
+- Add new parameter records to the dataset
+- May modify column values in the newly created rows
+- List any modified columns in `@outputs`
+- Are referenced in the `parameter` section of your YAML ADaM
   specification
 
-The key distinction: column components expand your dataset horizontally
-(more variables), while row components expand it vertically.
+**Internal components** (`@type internal`) implement mighty’s own
+internal machinery, such as reading source data or initializing a
+domain. They are not referenced from a column, row, or parameter section
+of a YAML ADaM specification, and are not typically written by end
+users.
+
+The key distinction between the user-facing types: column components
+expand your dataset horizontally (more variables), while row and
+parameter components expand it vertically (more records).
 
 ## Component Structure
 
@@ -97,11 +117,22 @@ See
 
 #### `@type`
 
-Component type, either `"column"` or `"row"`.
+Component type: `"column"`, `"row"`, `"parameter"`, or `"internal"`.
 
 ``` r
 
 #' @type column
+```
+
+#### `@origin`
+
+*Optional* - CDISC origin of the column, one of `"Assigned"`,
+`"Collected"`, `"Derived"`, `"Not Available"`, `"Other"`,
+`"Predecessor"`, or `"Protocol"`. Used for define.xml generation.
+
+``` r
+
+#' @origin Derived
 ```
 
 #### `@depends`
@@ -272,8 +303,8 @@ vs. triple mustache syntax.
 
 - Metadata header uses `@param` tags to document expected parameters
 - Placeholders can appear in `@depends`, `@outputs`, and the code body
-- Mighty renders the template before execution, replacing all
-  placeholders
+- Mighty (via mighty.components) renders the template before execution,
+  replacing all placeholders
 - The rendered output is plain R code
 
 ### Example: Parameterized Column Derivation

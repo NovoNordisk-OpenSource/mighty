@@ -158,7 +158,7 @@ Each entry in the `base` array specifies a source domain:
 | Field | Description | Notes |
 |----|----|----|
 | `domain` | SDTM domain name | Case-sensitive |
-| `depends` | Columns needed for filtering this domain | Can be empty array `[]` |
+| `depends` | Columns needed for filtering this domain | Use `NA` for no dependency |
 | `filter` | Filter specification. Must be an R expression that can be evaluated | Can be `NA` |
 
 #### Domain-specific filtering
@@ -707,13 +707,13 @@ Parameters are specified as an array, similar to rows and columns.
       - id: BMI_CATEGORY
         component:
           id: bds_groups
+          with:
+            input: BMI
+            output: BMIGRP
+            bins: [0, 20, 25, 30, 100]
+            labels: ["<20", "20-<25", "25-<30", "30+"]
         depends:
           - parameters.BMI
-        with:
-          input: BMI
-          output: BMIGRP
-          bins: [0, 20, 25, 30, 100]
-          labels: ["<20", "20-<25", "25-<30", "30+"]
     ```
 
     Creates a BMI category parameter that depends on the BMI parameter
