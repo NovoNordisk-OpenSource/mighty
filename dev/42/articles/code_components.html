@@ -86,9 +86,8 @@
 <strong>R script components</strong> - Plain executable R code (<code>.R</code> files)</li>
 <li>
 <strong>Mustache template components</strong> - Parameterizable templates (<code>.mustache</code> files)</li>
-</ul></section><section class="section level2"><h2 id="component-types">Component types<a class="anchor" aria-label="anchor" href="#component-types"></a>
-</h2>
-<p>Beyond their technical format, components are classified by what they do to your data. <code>@type</code> takes one of four values: <code>column</code>, <code>row</code>, <code>parameter</code>, or <code>internal</code>.</p>
+</ul>
+<p>Component metadata parsing and Mustache rendering are handled by the <a href="https://github.com/NovoNordisk-OpenSource/mighty.component" class="external-link">mighty.component</a> package. This vignette describes the metadata format and file structure that components must follow; mighty.component is what mighty uses under the hood to read and render them. # Component types Beyond their technical format, components are classified by what they do to your data. <code>@type</code> takes one of four values: <code>column</code>, <code>row</code>, <code>parameter</code>, or <code>internal</code>.</p>
 <p><strong>Column components</strong> (<code>@type column</code>) create new columns in your dataset. They take existing columns as inputs and derive new variables. For example, calculating an age group from age, or computing a relative day from two dates. Column components:</p>
 <ul>
 <li>Always create one or more new columns (specified in <code>@outputs</code>)</li>
@@ -284,7 +283,7 @@
 <ul>
 <li>Metadata header uses <code>@param</code> tags to document expected parameters</li>
 <li>Placeholders can appear in <code>@depends</code>, <code>@outputs</code>, and the code body</li>
-<li>Mighty renders the template before execution, replacing all placeholders</li>
+<li>Mighty (via mighty.components) renders the template before execution, replacing all placeholders</li>
 <li>The rendered output is plain R code</li>
 </ul></section><section class="level2"><h3 id="example-parameterized-column-derivation">Example: Parameterized Column Derivation<a class="anchor" aria-label="anchor" href="#example-parameterized-column-derivation"></a>
 </h3>

@@ -11,11 +11,14 @@ processes and executes them:
 - **Mustache template components** - Parameterizable templates
   (`.mustache` files)
 
-## Component types
-
-Beyond their technical format, components are classified by what they do
-to your data. `@type` takes one of four values: `column`, `row`,
-`parameter`, or `internal`.
+Component metadata parsing and Mustache rendering are handled by the
+[mighty.component](https://github.com/NovoNordisk-OpenSource/mighty.component)
+package. This vignette describes the metadata format and file structure
+that components must follow; mighty.component is what mighty uses under
+the hood to read and render them. \# Component types Beyond their
+technical format, components are classified by what they do to your
+data. `@type` takes one of four values: `column`, `row`, `parameter`, or
+`internal`.
 
 **Column components** (`@type column`) create new columns in your
 dataset. They take existing columns as inputs and derive new variables.
@@ -300,8 +303,8 @@ vs. triple mustache syntax.
 
 - Metadata header uses `@param` tags to document expected parameters
 - Placeholders can appear in `@depends`, `@outputs`, and the code body
-- Mighty renders the template before execution, replacing all
-  placeholders
+- Mighty (via mighty.components) renders the template before execution,
+  replacing all placeholders
 - The rendered output is plain R code
 
 ### Example: Parameterized Column Derivation
