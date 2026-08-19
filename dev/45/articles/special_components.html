@@ -652,10 +652,10 @@ cnt &lt;- connector::connect(config = {{{connector_path_expr}}})
 <p>Both templates share the same parameter list and are served by the same internal function (<code>params_mutate_code</code>). They differ only in the R verb the template emits.</p>
 <section class="level2"><h3 id="example-4">Example<a class="anchor" aria-label="anchor" href="#example-4"></a>
 </h3>
-<p>Consider the following YAML specification snippet. <code>SRCSEQ</code> is defined with <code>method: ADLB.LBSEQ</code>, and <code>LBSEQ</code> is <strong>not</strong> listed as its own column. Because the source column has no independent entry, mighty renames it rather than copying it:</p>
+<p>Consider the following YAML specification snippet. <code>SRCSEQ</code> is defined with <code>method: LB.LBSEQ</code>, where <code>LB</code> is the SDTM base domain for <code>ADLB</code>, and <code>LBSEQ</code> is <strong>not</strong> listed as its own column. Because the source column has no independent entry, mighty renames it rather than copying it:</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">columns</span><span class="kw">:</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">id</span><span class="kw">:</span><span class="at"> SRCSEQ</span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">method</span><span class="kw">:</span><span class="at"> ADLB.LBSEQ</span></span></code></pre></div>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">method</span><span class="kw">:</span><span class="at"> LB.LBSEQ</span></span></code></pre></div>
 <p>Mighty builds the following parameter list and passes it to the template:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>

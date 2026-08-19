@@ -600,14 +600,15 @@ the template emits.
 ### Example
 
 Consider the following YAML specification snippet. `SRCSEQ` is defined
-with `method: ADLB.LBSEQ`, and `LBSEQ` is **not** listed as its own
-column. Because the source column has no independent entry, mighty
-renames it rather than copying it:
+with `method: LB.LBSEQ`, where `LB` is the SDTM base domain for `ADLB`,
+and `LBSEQ` is **not** listed as its own column. Because the source
+column has no independent entry, mighty renames it rather than copying
+it:
 
 ``` yaml
 columns:
   - id: SRCSEQ
-    method: ADLB.LBSEQ
+    method: LB.LBSEQ
 ```
 
 Mighty builds the following parameter list and passes it to the

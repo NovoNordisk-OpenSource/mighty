@@ -329,7 +329,7 @@ When using `component`, it has these subfields:
     ``` yml
     columns:
       - id: AVAL
-        method: ADLB.LBSTRESN
+        method: LB.LBSTRESN
     ```
 
     Renames `LBSTRESN` from the base domain to `AVAL`. Unlike copying
