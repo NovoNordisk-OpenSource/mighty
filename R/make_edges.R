@@ -139,22 +139,14 @@ expand_parent_columns <- function(nodes, base_domains = NULL) {
 
   # Normalize base-domain-sourced dependencies to their owning ADaM domain,
   # so they match init_domain's tagged output domain (see expand_child_columns)
-  if (nrow(parents_expanded) > 0) {
-    domain_base_domains <- base_domains[parents_expanded$domain]
-    is_base_domain_source <- lengths(domain_base_domains) == 1 &
-      vapply(
-        seq_len(nrow(parents_expanded)),
-        \(i) {
-          parents_expanded$parent_column_domain[[i]] %in%
-            domain_base_domains[[i]]
-        },
-        logical(1)
-      )
-    parents_expanded[
-      is_base_domain_source,
-      `:=`(parent_column_domain = domain, parent_column_domain_type = "adam")
-    ]
-  }
+  domain_to_base_domain <- unlist(base_domains[lengths(base_domains) == 1])
+  matched_base_domain <- domain_to_base_domain[parents_expanded$domain]
+  is_base_domain_source <- !is.na(matched_base_domain) &
+    parents_expanded$parent_column_domain == matched_base_domain
+  parents_expanded[
+    is_base_domain_source,
+    `:=`(parent_column_domain = domain, parent_column_domain_type = "adam")
+  ]
 
   return(parents_expanded[,
     list(
