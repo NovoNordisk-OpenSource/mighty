@@ -55,6 +55,9 @@ is “COMPLETED.”
 
 ``` yml
 id: ADSL
+label: Subject-Level Analysis Dataset
+class: SUBJECT LEVEL ANALYSIS DATASET
+structure: One record per subject
 
 keys:
   - USUBJID
@@ -81,10 +84,13 @@ columns:
       id: der_complsfl
 ```
 
-This specification uses the mighty.metadata format with four main
+This specification uses the mighty.metadata format with these main
 sections:
 
 - **id**: The ADaM domain name (ADSL)
+- **label**: A description of the dataset
+- **class**: The CDISC class of the dataset
+- **structure**: A text description of the dataset’s structure
 - **keys**: Primary key variables for the dataset
 - **population**: Defines which SDTM domains form the base population
 - **columns**: An array of column definitions with their derivation
