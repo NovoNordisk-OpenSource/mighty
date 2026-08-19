@@ -257,7 +257,7 @@ columns:
     )
   expect_match(
     err_$body,
-    "method 'LBSTRESN' on column AVAL in domain ADLB must be domain-qualified, e.g. 'ADLB.LBSTRESN'",
+    "method 'LBSTRESN' on column AVAL must be domain-qualified, e.g. 'ADLB.LBSTRESN'",
     all = FALSE
   )
 })
