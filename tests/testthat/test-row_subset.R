@@ -12,8 +12,14 @@ test_that("subsetted row component keeps clean @depends/@outputs (mighty.metadat
 #' @outputs LBTEST
 #' @code
 new_lbtest <- {{{domain}}} |>
-  dplyr::filter(LBTEST == \"Microcytes\") |>
-  dplyr::mutate(LBTEST = \"Microcytes (new)\")
+# Albumin is shared by ~254 of 254 subjects, so this filter alone would match
+# rows for many subjects. The outer `subset: "USUBJID == ..."` (see YAML below)
+# is what actually narrows this to the target subject's records — using a
+# widely-shared LBTEST here (rather than one unique to a single subject) means
+# a broken subset that leaked in other subjects' rows would show up in the
+# isolation check below.
+  dplyr::filter(LBTEST == \"Albumin\") |>
+  dplyr::mutate(LBTEST = \"Albumin (new)\")
 {{{domain}}} <- rbind({{{domain}}}, new_lbtest)
 " |>
     writeLines(con = component_file)
@@ -86,7 +92,8 @@ rows:
 
   lb <- pharmaversesdtm::lb
   target_subject <- "01-708-1216"
-  n_microcytes <- sum(lb$LBTEST == "Microcytes")
+  n_lb_albumin <- sum(lb$LBTEST == "Albumin")
+  n_target_albumin <- sum(lb$USUBJID == target_subject & lb$LBTEST == "Albumin")
 
   actual$programs[1][[1]] <- remove_connector_write_step(actual$programs[1][[
     1
@@ -101,9 +108,10 @@ rows:
   expect_no_error(source(program))
 
   # Original rows are untouched, and one new row is appended per subsetted row
-  expect_equal(nrow(ADLB), nrow(lb) + n_microcytes)
-  expect_equal(sum(ADLB$LBTEST == "Microcytes"), n_microcytes)
-  expect_equal(sum(ADLB$LBTEST == "Microcytes (new)"), n_microcytes)
+  # that matches the component's filter (only the target subject's Albumin rows)
+  expect_equal(nrow(ADLB), nrow(lb) + n_target_albumin)
+  expect_equal(sum(ADLB$LBTEST == "Albumin"), n_lb_albumin)
+  expect_equal(sum(ADLB$LBTEST == "Albumin (new)"), n_target_albumin)
 
   # Rows for every other subject are untouched by the subset. Row order isn't
   # preserved through the generated program, so compare content order-independently.
