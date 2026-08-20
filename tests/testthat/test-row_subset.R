@@ -12,12 +12,7 @@ test_that("subsetted row component keeps clean @depends/@outputs (mighty.metadat
 #' @outputs LBTEST
 #' @code
 new_lbtest <- {{{domain}}} |>
-# Albumin is shared by ~254 of 254 subjects, so this filter alone would match
-# rows for many subjects. The outer `subset: "USUBJID == ..."` (see YAML below)
-# is what actually narrows this to the target subject's records — using a
-# widely-shared LBTEST here (rather than one unique to a single subject) means
-# a broken subset that leaked in other subjects' rows would show up in the
-# isolation check below.
+
   dplyr::filter(LBTEST == \"Albumin\") |>
   dplyr::mutate(LBTEST = \"Albumin (new)\")
 {{{domain}}} <- rbind({{{domain}}}, new_lbtest)
