@@ -484,6 +484,7 @@
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">id</span><span class="kw">:</span><span class="at"> AVAL</span></span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">method</span><span class="kw">:</span><span class="at"> LB.LBSTRESN</span></span></code></pre></div>
 <p>Renames <code>LBSTRESN</code> from the base domain to <code>AVAL</code>. Unlike copying (example 4), the source column <code>LBSTRESN</code> is <strong>not</strong> listed separately in <code>columns</code>, so only the renamed column <code>AVAL</code> appears in the final dataset.</p>
+<p>Note that example 4 qualifies <code>LBSTRESN</code> with <code>ADLB</code> while example 5 qualifies it with <code>LB</code>. This is because example 4 copies a column that is also retained in ADLB (<code>LBSTRESN</code> is listed as its own column, so it exists in ADLB’s own output), while in example 5 the source column being renamed only exists in the <code>base</code> dataset (<code>LB</code>) — it’s never listed as its own ADLB column.</p>
 </li>
 </ol></section><section class="level3"><h4 id="derived-columns">Derived columns<a class="anchor" aria-label="anchor" href="#derived-columns"></a>
 </h4>

@@ -337,6 +337,13 @@ When using `component`, it has these subfields:
     separately in `columns`, so only the renamed column `AVAL` appears
     in the final dataset.
 
+    Note that example 4 qualifies `LBSTRESN` with `ADLB` while example 5
+    qualifies it with `LB`. This is because example 4 copies a column
+    that is also retained in ADLB (`LBSTRESN` is listed as its own
+    column, so it exists in ADLB’s own output), while in example 5 the
+    source column being renamed only exists in the `base` dataset (`LB`)
+    — it’s never listed as its own ADLB column.
+
 #### Derived columns
 
 Derived columns use code components to perform data transformations. A
