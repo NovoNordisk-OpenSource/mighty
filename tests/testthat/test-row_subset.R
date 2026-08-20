@@ -12,7 +12,6 @@ test_that("subsetted row component keeps clean @depends/@outputs (mighty.metadat
 #' @outputs LBTEST
 #' @code
 new_lbtest <- {{{domain}}} |>
-
   dplyr::filter(LBTEST == \"Albumin\") |>
   dplyr::mutate(LBTEST = \"Albumin (new)\")
 {{{domain}}} <- rbind({{{domain}}}, new_lbtest)
