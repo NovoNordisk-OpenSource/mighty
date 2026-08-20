@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">mighty</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9031</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9032</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -286,8 +286,7 @@
 <tr class="even">
 <td><code>depends</code></td>
 <td>Columns needed for filtering this domain</td>
-<td>Can be empty array <code>[]</code>
-</td>
+<td>Use <code>NA</code> for no dependency</td>
 </tr>
 <tr class="odd">
 <td><code>filter</code></td>
@@ -720,13 +719,13 @@
 <span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">id</span><span class="kw">:</span><span class="at"> BMI_CATEGORY</span></span>
 <span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">component</span><span class="kw">:</span></span>
 <span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">id</span><span class="kw">:</span><span class="at"> bds_groups</span></span>
-<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">depends</span><span class="kw">:</span></span>
-<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> parameters.BMI</span></span>
-<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">with</span><span class="kw">:</span></span>
-<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">input</span><span class="kw">:</span><span class="at"> BMI</span></span>
-<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">output</span><span class="kw">:</span><span class="at"> BMIGRP</span></span>
-<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">bins</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="dv">0</span><span class="kw">,</span><span class="at"> </span><span class="dv">20</span><span class="kw">,</span><span class="at"> </span><span class="dv">25</span><span class="kw">,</span><span class="at"> </span><span class="dv">30</span><span class="kw">,</span><span class="at"> </span><span class="dv">100</span><span class="kw">]</span></span>
-<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">labels</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="st">"&lt;20"</span><span class="kw">,</span><span class="at"> </span><span class="st">"20-&lt;25"</span><span class="kw">,</span><span class="at"> </span><span class="st">"25-&lt;30"</span><span class="kw">,</span><span class="at"> </span><span class="st">"30+"</span><span class="kw">]</span></span></code></pre></div>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">with</span><span class="kw">:</span></span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">input</span><span class="kw">:</span><span class="at"> BMI</span></span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">output</span><span class="kw">:</span><span class="at"> BMIGRP</span></span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">bins</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="dv">0</span><span class="kw">,</span><span class="at"> </span><span class="dv">20</span><span class="kw">,</span><span class="at"> </span><span class="dv">25</span><span class="kw">,</span><span class="at"> </span><span class="dv">30</span><span class="kw">,</span><span class="at"> </span><span class="dv">100</span><span class="kw">]</span></span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">labels</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="st">"&lt;20"</span><span class="kw">,</span><span class="at"> </span><span class="st">"20-&lt;25"</span><span class="kw">,</span><span class="at"> </span><span class="st">"25-&lt;30"</span><span class="kw">,</span><span class="at"> </span><span class="st">"30+"</span><span class="kw">]</span></span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">depends</span><span class="kw">:</span></span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> parameters.BMI</span></span></code></pre></div>
 <p>Creates a BMI category parameter that depends on the BMI parameter being derived first. Note the <code>parameters.</code> prefix in the dependency.</p>
 </li>
 <li>
