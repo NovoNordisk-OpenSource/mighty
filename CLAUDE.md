@@ -1,7 +1,7 @@
 ## Commands
 
 * Run R from the console with `--quiet --vanilla`
-* Format: `air format` after generating or editing R code, but only format modified files, do not fomrat the entire directory/pkg
+* Format: `air format` after generating or editing R code, but only format modified files, do not format the entire directory/pkg
 * Test all: `devtools::test()`
 * Test one file: `devtools::test_file("tests/testthat/test-filename.R")`
 * Never use `devtools::test_active_file()` — it doesn't work in this setup
