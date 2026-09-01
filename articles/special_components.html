@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">mighty</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9032</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9033</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -601,11 +601,11 @@ cnt &lt;- connector::connect(config = {{{connector_path_expr}}})
 <p>Rendered for each <code>col_copy</code> action — variables copied verbatim from one column to another, typically with an ADaM-standard rename (e.g. <code>LBSTRESN</code> → <code>AVAL</code>).</p>
 <section class="level2"><h3 id="example-3">Example<a class="anchor" aria-label="anchor" href="#example-3"></a>
 </h3>
-<p>Consider the following YAML specification snippet. <code>AVAL</code> is defined with <code>method: LBSTRESN</code>, and <code>LBSTRESN</code> is also listed as its own column. Mighty copies the values rather than renaming because the source column is retained in the output:</p>
+<p>Consider the following YAML specification snippet. <code>AVAL</code> is defined with <code>method: ADLB.LBSTRESN</code>, and <code>LBSTRESN</code> is also listed as its own column. Mighty copies the values rather than renaming because the source column is retained in the output:</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">columns</span><span class="kw">:</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">id</span><span class="kw">:</span><span class="at"> LBSTRESN</span></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">id</span><span class="kw">:</span><span class="at"> AVAL</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">method</span><span class="kw">:</span><span class="at"> LBSTRESN</span></span></code></pre></div>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">method</span><span class="kw">:</span><span class="at"> ADLB.LBSTRESN</span></span></code></pre></div>
 <p>Mighty builds the following parameter list and passes it to the template:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
@@ -652,10 +652,10 @@ cnt &lt;- connector::connect(config = {{{connector_path_expr}}})
 <p>Both templates share the same parameter list and are served by the same internal function (<code>params_mutate_code</code>). They differ only in the R verb the template emits.</p>
 <section class="level2"><h3 id="example-4">Example<a class="anchor" aria-label="anchor" href="#example-4"></a>
 </h3>
-<p>Consider the following YAML specification snippet. <code>SRCSEQ</code> is defined with <code>method: LBSEQ</code>, and <code>LBSEQ</code> is <strong>not</strong> listed as its own column. Because the source column has no independent entry, mighty renames it rather than copying it:</p>
+<p>Consider the following YAML specification snippet. <code>SRCSEQ</code> is defined with <code>method: LB.LBSEQ</code>, where <code>LB</code> is the SDTM base domain for <code>ADLB</code>, and <code>LBSEQ</code> is <strong>not</strong> listed as its own column. Because the source column has no independent entry, mighty renames it rather than copying it:</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">columns</span><span class="kw">:</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">id</span><span class="kw">:</span><span class="at"> SRCSEQ</span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">method</span><span class="kw">:</span><span class="at"> LBSEQ</span></span></code></pre></div>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">method</span><span class="kw">:</span><span class="at"> LB.LBSEQ</span></span></code></pre></div>
 <p>Mighty builds the following parameter list and passes it to the template:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>

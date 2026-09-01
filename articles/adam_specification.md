@@ -317,7 +317,7 @@ When using `component`, it has these subfields:
     columns:
       - id: LBSTRESN
       - id: AVAL
-        method: LBSTRESN
+        method: ADLB.LBSTRESN
     ```
 
     Creates a new column AVAL by copying the content of LBSTRESN from
@@ -329,13 +329,20 @@ When using `component`, it has these subfields:
     ``` yml
     columns:
       - id: AVAL
-        method: LBSTRESN
+        method: LB.LBSTRESN
     ```
 
     Renames `LBSTRESN` from the base domain to `AVAL`. Unlike copying
     (example 4), the source column `LBSTRESN` is **not** listed
     separately in `columns`, so only the renamed column `AVAL` appears
     in the final dataset.
+
+    Note that example 4 qualifies `LBSTRESN` with `ADLB` while example 5
+    qualifies it with `LB`. This is because example 4 copies a column
+    that is also retained in ADLB (`LBSTRESN` is listed as its own
+    column, so it exists in ADLB’s own output), while in example 5 the
+    source column being renamed only exists in the `base` dataset (`LB`)
+    — it’s never listed as its own ADLB column.
 
 #### Derived columns
 

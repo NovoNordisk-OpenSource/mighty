@@ -522,7 +522,7 @@ column to another, typically with an ADaM-standard rename
 ### Example
 
 Consider the following YAML specification snippet. `AVAL` is defined
-with `method: LBSTRESN`, and `LBSTRESN` is also listed as its own
+with `method: ADLB.LBSTRESN`, and `LBSTRESN` is also listed as its own
 column. Mighty copies the values rather than renaming because the source
 column is retained in the output:
 
@@ -530,7 +530,7 @@ column is retained in the output:
 columns:
   - id: LBSTRESN
   - id: AVAL
-    method: LBSTRESN
+    method: ADLB.LBSTRESN
 ```
 
 Mighty builds the following parameter list and passes it to the
@@ -600,14 +600,15 @@ the template emits.
 ### Example
 
 Consider the following YAML specification snippet. `SRCSEQ` is defined
-with `method: LBSEQ`, and `LBSEQ` is **not** listed as its own column.
-Because the source column has no independent entry, mighty renames it
-rather than copying it:
+with `method: LB.LBSEQ`, where `LB` is the SDTM base domain for `ADLB`,
+and `LBSEQ` is **not** listed as its own column. Because the source
+column has no independent entry, mighty renames it rather than copying
+it:
 
 ``` yaml
 columns:
   - id: SRCSEQ
-    method: LBSEQ
+    method: LB.LBSEQ
 ```
 
 Mighty builds the following parameter list and passes it to the

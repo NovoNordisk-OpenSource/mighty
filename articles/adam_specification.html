@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">mighty</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9032</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9033</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -475,15 +475,16 @@
 <div class="sourceCode" id="cb11"><pre class="sourceCode yml"><code class="sourceCode yaml"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">columns</span><span class="kw">:</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">id</span><span class="kw">:</span><span class="at"> LBSTRESN</span></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">id</span><span class="kw">:</span><span class="at"> AVAL</span></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">method</span><span class="kw">:</span><span class="at"> LBSTRESN</span></span></code></pre></div>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">method</span><span class="kw">:</span><span class="at"> ADLB.LBSTRESN</span></span></code></pre></div>
 <p>Creates a new column AVAL by copying the content of LBSTRESN from the base domain. Note that LBSTRESN must also be specified in the columns section. Both columns will exist in the resulting dataset.</p>
 </li>
 <li>
 <p>Renaming a column from the base domain</p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode yml"><code class="sourceCode yaml"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">columns</span><span class="kw">:</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">id</span><span class="kw">:</span><span class="at"> AVAL</span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">method</span><span class="kw">:</span><span class="at"> LBSTRESN</span></span></code></pre></div>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">method</span><span class="kw">:</span><span class="at"> LB.LBSTRESN</span></span></code></pre></div>
 <p>Renames <code>LBSTRESN</code> from the base domain to <code>AVAL</code>. Unlike copying (example 4), the source column <code>LBSTRESN</code> is <strong>not</strong> listed separately in <code>columns</code>, so only the renamed column <code>AVAL</code> appears in the final dataset.</p>
+<p>Note that example 4 qualifies <code>LBSTRESN</code> with <code>ADLB</code> while example 5 qualifies it with <code>LB</code>. This is because example 4 copies a column that is also retained in ADLB (<code>LBSTRESN</code> is listed as its own column, so it exists in ADLB’s own output), while in example 5 the source column being renamed only exists in the <code>base</code> dataset (<code>LB</code>) — it’s never listed as its own ADLB column.</p>
 </li>
 </ol></section><section class="level3"><h4 id="derived-columns">Derived columns<a class="anchor" aria-label="anchor" href="#derived-columns"></a>
 </h4>

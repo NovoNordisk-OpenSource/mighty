@@ -18,7 +18,7 @@
   ``` yml
   columns:
     - id: PLANNED_ARM
-      method: ARM
+      method: ADSL.ARM
   ```
 
 - **col_echo**: An echo can have a col_compute, col_echo, col_mutate, or
