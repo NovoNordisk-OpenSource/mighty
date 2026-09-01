@@ -1,3 +1,4 @@
+.lintr
 AAGE
 abspath
 ACTARM
@@ -178,3 +179,4 @@ VSSEQ
 VSTESTCD
 winslash
 withr
+WORDLIST
