@@ -74,13 +74,8 @@ check_domain_qualified_method <- function(method, id, domain_id) {
   if (has_domain_prefix(method)) {
     return(character(0))
   }
-  location_label <- if (has_content(id)) {
-    paste0("column ", id)
-  } else {
-    "column"
-  }
   glue::glue(
-    "method '{method}' on {location_label} ",
+    "method '{method}' on column {id} ",
     "must be domain-qualified, e.g. '{domain_id}.{method}'"
   )
 }
