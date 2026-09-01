@@ -1,5 +1,5 @@
 test_that("classify_action_type treats a single base domain as local (col_rename)", {
-  actual <- mighty:::classify_action_type(
+  actual <- classify_action_type(
     code_id = NA,
     type_from_code = NA,
     depend_cols = list("LB.LBSEQ"),
@@ -15,7 +15,7 @@ test_that("classify_action_type does not treat a second base domain as local (co
   # Guards against sweeping multi-base-domain harmonization (e.g. LB and XL
   # both feeding ADLB with differently-named sequence vars) into col_rename -
   # that case must go through a custom col_compute component instead.
-  actual <- mighty:::classify_action_type(
+  actual <- classify_action_type(
     code_id = NA,
     type_from_code = NA,
     depend_cols = list("XL.SOMECOL"),
