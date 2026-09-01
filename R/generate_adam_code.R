@@ -218,7 +218,7 @@ generate_adam_code_study <- function(
     filter_domain,
     domain_keys
   )
-  edges <- make_edges(actions_03_filter)
+  edges <- make_edges(actions_03_filter, base_domains = ui_init_t$base_domains)
   actions_04_org <- organize_actions(actions_03_filter, edges)
   actions_05_read <- add_read_data_actions(actions_04_org)
   actions_06_write <- add_write_data_actions(actions_05_read)

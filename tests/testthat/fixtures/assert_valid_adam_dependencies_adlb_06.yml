@@ -27,7 +27,7 @@ columns:
   - id: VISITNUM
 
   - id: VISITNUM2
-    method: VISITNUM
+    method: ADLB.VISITNUM
 
   - id: AGE
     method: ADSL.AGE

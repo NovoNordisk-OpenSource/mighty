@@ -10,8 +10,6 @@ test_that("method is ignored when it should not create dependencies", {
     "AGE",
     "ADSL"
   ))
-  # method matches col_id (no prefix)
-  expect_null(should_use_method_as_depend_cols("AGE", list(), "AGE", "ADSL"))
   # method matches domain + col_id (with prefix)
   expect_null(should_use_method_as_depend_cols(
     "ADSL.AGE",
@@ -31,11 +29,6 @@ test_that("method is used when it references a different column or domain", {
   expect_equal(
     should_use_method_as_depend_cols("DM.AGE", list(), "AGE", "ADSL"),
     "DM.AGE"
-  )
-  # different column, no prefix
-  expect_equal(
-    should_use_method_as_depend_cols("RFSTDTC", list(), "AGE", "ADSL"),
-    "RFSTDTC"
   )
   # different domain and rename of column (should still use method)
   expect_equal(

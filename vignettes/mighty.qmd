@@ -75,7 +75,7 @@ columns:
   - id: ARM
 
   - id: PLANNED_ARM
-    method: ARM
+    method: ADSL.ARM
 
   - id: AGE
 

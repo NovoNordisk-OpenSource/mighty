@@ -117,7 +117,7 @@ columns:
       - rows.NEW_SPECIFIC_GRAVITY
 
   - id: AVAL
-    method: LBSTRESN
+    method: ADLB.LBSTRESN
     depends:
       - rows.NEW_PROTEIN
 

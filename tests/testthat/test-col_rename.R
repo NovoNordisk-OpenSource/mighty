@@ -42,6 +42,43 @@ test_that("col_rename uses dplyr::rename for base domain source in ADLB", {
   expect_no_match(write_code, "\\bLBSEQ\\b")
 })
 
+test_that("col_rename uses dplyr::rename for true base-domain source in ADLB", {
+  # SETUP -------------------------------------------------------------------
+
+  adam_specifications <- setup_study_from_fixtures(
+    fixtures = list("adlb" = "col_rename_adlb_02.yml")
+  )
+  path_connector_config <- withr::local_tempdir()
+
+  setup_testdata(
+    testdata = "pharmaverse",
+    test_data_path = path_connector_config,
+    sdtm_domains = "lb"
+  )
+
+  # ACT ---------------------------------------------------------------------
+
+  actual <- generate_adam_code(
+    adam_specifications = adam_specifications,
+    path_connector_config = get_connector_config_path(path_connector_config),
+    check_cross_domain_adam_dependencies = FALSE
+  )
+
+  # EXPECT ------------------------------------------------------------------
+
+  ps <- actual$program_sequence
+
+  # SRCSEQ (method: LB.LBSEQ, the true SDTM source domain) -> col_rename
+  expect_equal(ps[ps$node_id == "ADLB-SRCSEQ", ][["type"]], "col_rename")
+
+  program_code <- actual$programs[[1]]
+  expect_match(program_code, "dplyr::rename")
+  expect_match(program_code, "SRCSEQ = LBSEQ")
+
+  init_outputs <- ps[ps$node_id == "ADLB-init_domain", ]$outputs[[1]]
+  expect_true("LBSEQ" %in% init_outputs)
+})
+
 test_that("col_rename falls back to col_mutate when source is a col_copy", {
   # SETUP -------------------------------------------------------------------
 

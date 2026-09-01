@@ -8,13 +8,20 @@
 #'
 #' @param code_component_metadata List of metadata for code components, indexed by code_id
 #' @param ui_data Data table containing UI data with optional code_id references
+#' @param base_domains Named list of SDTM base domains per ADaM domain (from
+#'   `ui_init_t$base_domains`), used to classify base-domain-sourced renames
+#'   as local rather than cross-domain.
 #'
 #' @return A data table with UI data enriched with code component metadata and processed dependent columns
 #' @noRd
 #'
 #' @examples
 #' # Example usage would go here
-consolidate_metadata <- function(code_component_metadata, ui_data) {
+consolidate_metadata <- function(
+  code_component_metadata,
+  ui_data,
+  base_domains = NULL
+) {
   # Validate inputs
   checkmate::assert_list(code_component_metadata)
   checkmate::assert_data_frame(ui_data, min.rows = 1)
@@ -42,7 +49,8 @@ consolidate_metadata <- function(code_component_metadata, ui_data) {
       outputs = get("outputs"),
       domain = get("domain")
     )],
-    classify_action_type
+    classify_action_type,
+    base_domains = base_domains
   ) |>
     unlist()
   ui_data_updated[, "type_from_code" := NULL]
@@ -72,7 +80,9 @@ consolidate_metadata <- function(code_component_metadata, ui_data) {
   ]
   rename_rows <- which(ui_data_updated$type == "col_rename")
   for (i in rename_rows) {
-    source_col <- unlist(ui_data_updated$depend_cols[[i]])
+    source_col <- extract_dependency_id(unlist(ui_data_updated$depend_cols[[
+      i
+    ]]))
     domain_i <- ui_data_updated$domain[[i]]
     source_is_col_copy <- source_col %in%
       col_copy_by_domain[domain == domain_i]$col
@@ -99,7 +109,8 @@ classify_action_type <- function(
   type_from_code,
   depend_cols,
   outputs,
-  domain
+  domain,
+  base_domains = NULL
 ) {
   # Type determined by code component metadata
   if (!is.na(code_id)) {
@@ -127,8 +138,12 @@ classify_action_type <- function(
 
   dependency <- unlist(depend_cols)
   checkmate::assert_character(dependency, len = 1L, any.missing = FALSE)
-  is_local <- !has_domain_prefix(dependency)
-  is_different_column <- dependency != unlist(outputs)
+  dep_domain <- extract_domain_prefix(dependency)
+  dep_column <- extract_dependency_id(dependency)
+  domain_base_domains <- base_domains[[domain]]
+  is_local <- domain == dep_domain ||
+    (length(domain_base_domains) == 1 && dep_domain %in% domain_base_domains)
+  is_different_column <- dep_column != unlist(outputs)
 
   # Depends on a different local column -> rename (or mutate if conflict)
   if (is_local && is_different_column) {
@@ -136,11 +151,8 @@ classify_action_type <- function(
   }
 
   # Depends on column from another domain -> echo
-  if (has_domain_prefix(dependency)) {
-    dep_domain <- extract_domain_prefix(dependency)
-    if (domain != dep_domain) {
-      return("col_echo")
-    }
+  if (!is_local) {
+    return("col_echo")
   }
 
   cli::cli_abort(c(
@@ -259,10 +271,10 @@ process_depend_cols <- function(data) {
 #'   - **data.frame** (with `domain`, `column` cols): For actions with a `code_id`
 #'     (col_compute, row_compute). Parsed from code component roxygen `@depends` tags.
 #'   - **list of strings**: For actions without a `code_id` (col_echo, col_mutate).
-#'     Comes from YAML `method` field, e.g. `"ADSL.TRTSDT"` or `"TRTSDT"`.
+#'     Comes from YAML `method` field, always domain-qualified, e.g. `"ADSL.TRTSDT"`.
 #'   - **NA**: For col_copy actions (dependencies are inferred from outputs).
-#' @param domain Character string specifying the current domain value to use for
-#'   elements without domain prefixes.
+#' @param domain Character string specifying the current domain value, used
+#'   for col_copy self-dependencies.
 #' @param outputs List of outputs from the action, used for col_copy self-dependencies.
 #'
 #' @return
@@ -302,15 +314,12 @@ process_action_depend_cols <- function(type, depend_cols, domain, outputs) {
   }
 
   # Only col_echo, col_rename, and col_mutate reach here - their depend_cols
-  # comes from the YAML method field, which is always a single value
+  # comes from the YAML method field, which is always a single, domain-
+  # qualified value
   elements <- unlist(depend_cols)
   checkmate::assert_character(elements, len = 1L, any.missing = FALSE)
 
-  parsed_domain <- if (has_domain_prefix(elements)) {
-    extract_domain_prefix(elements)
-  } else {
-    domain
-  }
+  parsed_domain <- extract_domain_prefix(elements)
   parsed_id <- extract_dependency_id(elements)
 
   data.table::data.table(

@@ -48,7 +48,7 @@ columns:
   - id: STUDYID
 
   - id: STUDYID2
-    method: STUDYID
+    method: ADLB.STUDYID
 "
   adam_specifications <- setup_study_dir(list(
     "adsl" = yaml_content_adsl,

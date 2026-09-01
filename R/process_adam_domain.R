@@ -42,7 +42,7 @@ process_adam_domain <- function(domain, domain_name) {
 
   validate_business_logic(yaml_content, domain_name = domain_name)
 
-  init <- transform_population_to_init(yaml_content$population, yaml_content$id)
+  init <- transform_population_to_init(yaml_content$population)
 
   columns <- transform_columns_to_named_list(
     yaml_content$columns,
@@ -197,19 +197,17 @@ extract_component_parameters <- function(component_with) {
 #'
 #' @description
 #' Extracts and consolidates dependencies from both base and global population
-#' sections, applying domain prefixing logic for cross-domain dependencies.
+#' sections.
 #'
 #' @param population_base Base population section from YAML
 #' @param population_global Global population section from YAML
-#' @param domain_id Current domain ID for domain prefix logic
 #'
-#' @return Character vector of dependencies with appropriate domain prefixes
+#' @return Character vector of dependencies
 #'
 #' @noRd
 collect_all_dependencies <- function(
   population_base,
-  population_global,
-  domain_id
+  population_global
 ) {
   # Extract base dependencies
   base_depends <- if (has_content(population_base)) {
@@ -237,6 +235,10 @@ collect_all_dependencies <- function(
 #' 2. Method references a different column name or different domain than
 #'    the current column
 #'
+#' Method is assumed to already be domain-qualified (e.g. "ADSL.AGE"),
+#' guaranteed by `val_method_is_domain_qualified()` having run earlier
+#' in `process_adam_domain()`.
+#'
 #' @param method Method field from column definition (may be NULL)
 #' @param component Component object from column definition (may be NULL)
 #' @param col_id Current column ID
@@ -261,13 +263,9 @@ should_use_method_as_depend_cols <- function(
   }
 
   # Method must reference a different column or domain
-  is_different <- if (has_domain_prefix(method)) {
-    parsed_domain <- extract_domain_prefix(method)
-    parsed_column <- extract_dependency_id(method)
-    parsed_domain != domain_id || parsed_column != col_id
-  } else {
-    method != col_id
-  }
+  parsed_domain <- extract_domain_prefix(method)
+  parsed_column <- extract_dependency_id(method)
+  is_different <- parsed_domain != domain_id || parsed_column != col_id
 
   if (is_different) method else NULL
 }
@@ -324,14 +322,12 @@ create_row_action_entry <- function(entry) {
 #' Transform population structure to init structure
 #'
 #' @param population The population section from mighty_metadata YAML
-#' @param domain_id The ID of the current domain (used to determine if
-#'   global dependencies need domain prefix)
 #'
 #' @return A list with base_domains, filter_domain, filter_global,
 #'   and filter_depend_cols
 #'
 #' @noRd
-transform_population_to_init <- function(population, domain_id) {
+transform_population_to_init <- function(population) {
   if (is.null(population)) {
     return(list())
   }
@@ -368,8 +364,7 @@ transform_population_to_init <- function(population, domain_id) {
   # Collect all dependencies from both base and global
   all_depends <- collect_all_dependencies(
     population_base = population$base,
-    population_global = population$global,
-    domain_id = domain_id
+    population_global = population$global
   )
   # Always include filter_depend_cols, even if empty (to match old format behavior)
   if (has_content(all_depends)) {

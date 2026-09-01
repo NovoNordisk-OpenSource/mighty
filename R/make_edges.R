@@ -15,13 +15,19 @@
 #'   domain, type, depend_cols, depend_rows, outputs, and code_id
 #' @param primary_domain Character string specifying the primary domain
 #'   (default: "ADSL")
+#' @param base_domains Named list of SDTM base domains per ADaM domain (from
+#'   `ui_init_t$base_domains`), used to connect base-domain-sourced
+#'   `col_rename` dependencies back to their domain's `init_domain` node.
 #'
 #' @return A data.table with two columns (parent_node, node_id) representing the
 #'   directed edges in the computational graph
 #' @noRd
-make_edges <- function(nodes, primary_domain = "ADSL") {
+make_edges <- function(nodes, primary_domain = "ADSL", base_domains = NULL) {
   # Process column dependencies to create edges
-  column_edges <- create_column_dependency_edges(nodes)
+  column_edges <- create_column_dependency_edges(
+    nodes,
+    base_domains = base_domains
+  )
 
   # Process row dependencies if they exist
   row_edges <- create_row_dependency_edges(nodes)
@@ -46,13 +52,16 @@ make_edges <- function(nodes, primary_domain = "ADSL") {
 #' @description Identifies parent-child relationships based on column
 #'   dependencies
 #' @param nodes The nodes data.table
+#' @param base_domains Named list of SDTM base domains per ADaM domain, used
+#'   to match `col_rename` dependencies sourced from a true base domain
+#'   against their domain's `init_domain` node.
 #' @return A data.table of edges based on column dependencies
 #' @noRd
-create_column_dependency_edges <- function(nodes) {
+create_column_dependency_edges <- function(nodes, base_domains = NULL) {
   nodes2 <- nodes[nodes$type != "col_copy", ]
 
   # Get expanded parent columns that each node depends on
-  parents_expanded <- expand_parent_columns(nodes2)
+  parents_expanded <- expand_parent_columns(nodes2, base_domains = base_domains)
 
   # Get expanded child columns that each node produces
   children_expanded <- expand_child_columns(nodes2)
@@ -106,9 +115,15 @@ create_column_dependency_edges <- function(nodes) {
 #' @title Expand parent columns for each node
 #' @description Creates a detailed list of columns each node depends on
 #' @param nodes The nodes data.table
+#' @param base_domains Named list of SDTM base domains per ADaM domain. When
+#'   a parent column's domain is a node's own single declared base domain
+#'   (e.g. a `col_rename` sourced from the true SDTM base domain rather than
+#'   the self-referential ADaM form), the parent column domain is normalized
+#'   to the node's ADaM domain so it matches the `init_domain` node's tagged
+#'   output domain.
 #' @return A data.table with expanded parent column information
 #' @noRd
-expand_parent_columns <- function(nodes) {
+expand_parent_columns <- function(nodes, base_domains = NULL) {
   # This gives a data.table showing which columns each node depends on
   parents_expanded <- nodes[,
     rbindlist(get("depend_cols")),
@@ -121,6 +136,17 @@ expand_parent_columns <- function(nodes) {
       "parent_column_domain",
       "parent_column_domain_type"
     ))
+
+  # Normalize base-domain-sourced dependencies to their owning ADaM domain,
+  # so they match init_domain's tagged output domain (see expand_child_columns)
+  domain_to_base_domain <- unlist(base_domains[lengths(base_domains) == 1])
+  matched_base_domain <- domain_to_base_domain[parents_expanded$domain]
+  is_base_domain_source <- !is.na(matched_base_domain) &
+    parents_expanded$parent_column_domain == matched_base_domain
+  parents_expanded[
+    is_base_domain_source,
+    `:=`(parent_column_domain = domain, parent_column_domain_type = "adam")
+  ]
 
   return(parents_expanded[,
     list(

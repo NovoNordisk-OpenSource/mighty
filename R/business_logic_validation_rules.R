@@ -32,6 +32,55 @@ val_method_and_component_id_not_both_populated <- function(
 }
 
 
+#' Validate that method values are domain-qualified
+#'
+#' This rule checks that every column `method` value is domain-qualified
+#' (e.g. `ADLB.LBSTRESN`), rejecting the bare form (e.g. `LBSTRESN`). Row and
+#' parameter `method` values are free text and are not checked.
+#'
+#' @param yaml_content Raw YAML content structure from mighty_metadata
+#' @param context Validation context (yaml_file, ruleset_name, etc.)
+#' @return List with 'valid' (logical) and 'errors' (character vector)
+#' @noRd
+val_method_is_domain_qualified <- function(
+  yaml_content,
+  context = list()
+) {
+  domain_id <- yaml_content$id %||% ""
+
+  errors <- unlist(lapply(yaml_content$columns, \(col) {
+    check_domain_qualified_method(col$method, col$id, domain_id)
+  }))
+
+  if (length(errors) == 0) {
+    return(list(valid = TRUE, errors = character(0)))
+  }
+
+  list(
+    valid = FALSE,
+    errors = c(
+      "The following `method` values are not domain-qualified:",
+      paste0("  - ", errors)
+    )
+  )
+}
+
+#' Check a single column `method` value for domain qualification
+#' @noRd
+check_domain_qualified_method <- function(method, id, domain_id) {
+  if (!has_content(method)) {
+    return(character(0))
+  }
+  if (has_domain_prefix(method)) {
+    return(character(0))
+  }
+  glue::glue(
+    "method '{method}' on column {id} ",
+    "must be domain-qualified, e.g. '{domain_id}.{method}'"
+  )
+}
+
+
 #' Generic validation for duplicate IDs across sections
 #'
 #' This function provides a unified approach to validate that IDs are unique
