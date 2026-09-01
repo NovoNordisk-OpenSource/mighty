@@ -100,13 +100,13 @@ get_business_rules <- function(ruleset_name) {
   rule_registry <- list(
     adam_domain = list(
       stop_on_error = register_rules(
-        val_method_and_component_id_not_both_populated
+        val_method_and_component_id_not_both_populated,
+        val_method_is_domain_qualified
       ),
       collect_errors = register_rules(
         val_no_duplicate_row_parameter_ids,
         val_depend_rows,
-        val_keys_included_as_columns,
-        val_method_is_domain_qualified
+        val_keys_included_as_columns
       )
     )
   )
