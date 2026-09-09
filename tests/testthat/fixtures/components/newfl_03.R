@@ -1,6 +1,8 @@
 #' @title Newfl 03
 #' @description A description
 #' @type column
+#' @origin Derived
+#' @method A method description
 #' @depends ADSL NEWFL01
 #' @depends ADSL NEWFL02
 #' @outputs NEWFL03

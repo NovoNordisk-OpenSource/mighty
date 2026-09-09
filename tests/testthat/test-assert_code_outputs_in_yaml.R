@@ -32,6 +32,8 @@ columns:
 #' @description
 #' Derives the relative day compared to the treatment start date.
 #' @type column
+#' @origin Derived
+#' @method A method description
 #' @depends ADSL USUBJID
 #' @outputs A
 #' @outputs B
@@ -93,6 +95,8 @@ columns:
 #' @description
 #' Derives the relative day compared to the treatment start date.
 #' @type column
+#' @origin Derived
+#' @method A method description
 #' @depends ADSL USUBJID
 #' @outputs B
 #' @code

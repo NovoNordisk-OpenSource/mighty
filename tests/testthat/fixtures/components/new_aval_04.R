@@ -1,6 +1,8 @@
 #' @title New aval 04
 #' @description A description
 #' @type row
+#' @origin Derived
+#' @method A method description
 #' @depends ADLB AVAL
 #' @depends ADLB AVALC
 #' @outputs AVAL

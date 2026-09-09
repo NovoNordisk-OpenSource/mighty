@@ -8,6 +8,8 @@ test_that("subsetted row component keeps clean @depends/@outputs (mighty.metadat
 #' @description A description
 #' @param domain `character` Name of the domain being derived
 #' @type row
+#' @origin Derived
+#' @method A method description
 #' @depends {{{domain}}} LBTEST
 #' @outputs LBTEST
 #' @code

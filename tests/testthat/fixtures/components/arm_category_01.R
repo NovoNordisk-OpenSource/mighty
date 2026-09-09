@@ -1,6 +1,8 @@
 #' @title Arm category 01
 #' @description A description
 #' @type column
+#' @origin Derived
+#' @method A method description
 #' @depends ADSL ARM_GRP1
 #' @outputs ARM_CAT1
 #' @code

@@ -1,6 +1,8 @@
 #' @title Lbtest 01
 #' @description A description
 #' @type column
+#' @origin Derived
+#' @method A method description
 #' @depends ADLB USUBJID
 #' @depends ADLB LBSEQ
 #' @depends ADLB AVAL

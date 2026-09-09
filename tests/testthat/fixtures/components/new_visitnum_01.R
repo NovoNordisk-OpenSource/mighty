@@ -1,6 +1,8 @@
 #' @title New visitnum 01
 #' @description A description
 #' @type row
+#' @origin Derived
+#' @method A method description
 #' @depends ADLB VISITNUM
 #' @outputs VISITNUM
 #' @code
