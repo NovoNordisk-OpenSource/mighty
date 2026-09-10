@@ -7,6 +7,8 @@ test_that("Multiple columns using same code_id, but diff parameters errors out",
 #' @param param_1 `character` A test parameter
 #' @param param_2 `character` A test parameter
 #' @type column
+#' @origin Derived
+#' @method A method description
 #' @depends ADLB USUBJID
 #' @outputs A
 #' @outputs B
@@ -74,6 +76,8 @@ test_that("Same component with different parameters and disjoint outputs succeed
 #' @param value `character` The value to assign
 #' @param new_variable `character` Name of the new variable
 #' @type column
+#' @origin Derived
+#' @method A method description
 #' @outputs {{{new_variable}}}
 #' @code
 ADLB <- ADLB |>
@@ -141,6 +145,8 @@ test_that("Within-domain parameter conflicts are reported for every affected dom
 #' @param param_2 `character` A test parameter
 #' @param domain `character` The domain name
 #' @type column
+#' @origin Derived
+#' @method A method description
 #' @depends {{{domain}}} USUBJID
 #' @outputs A
 #' @outputs B
@@ -251,6 +257,8 @@ test_that("Same component reused across domains with different parameters succee
 #' @param param_2 `character` A test parameter
 #' @param domain `character` The domain name
 #' @type column
+#' @origin Derived
+#' @method A method description
 #' @depends {{{domain}}} USUBJID
 #' @outputs A
 #' @code
@@ -344,6 +352,8 @@ test_that("Same component with identical parameters across invocations passes", 
 #' @param param_1 `character` A test parameter
 #' @param param_2 `character` A test parameter
 #' @type column
+#' @origin Derived
+#' @method A method description
 #' @depends ADLB USUBJID
 #' @outputs A
 #' @outputs B
