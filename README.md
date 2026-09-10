@@ -139,7 +139,11 @@ it ourselves:
 #' @description This script adds a `COMPLSFL` column to the input data frame,
 #' indicating whether a subject's end-of-study status is marked as "COMPLETED".
 #'
-#' @type derivation
+#' @type column
+#'
+#' @origin Derived
+#'
+#' @method Set to "Y" when EOSSTT is "COMPLETED", otherwise "N".
 #'
 #' @depends ADSL EOSSTT
 #'
