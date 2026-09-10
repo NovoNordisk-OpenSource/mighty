@@ -1,0 +1,112 @@
+# Inputs Overview
+
+## Overview
+
+mighty requires these essential input building blocks:
+
+- **ADaM specification**: Domain-specific blueprints defining content
+  requirements
+- **Framework configuration (\_mighty.yml)**: External dataset
+  definitions and relationships
+- **Code components**: Reusable, validated code blocks for complex
+  derivations
+- **Study properties (\_study.yml)**: Study-level properties such as
+  `study_id`, used by mighty.toolbox for define.xml generation
+  (optional)
+
+This modular approach separates the *what* (specifications) from the
+*how* (code components), enabling efficient and consistent ADaM
+development. By providing these building blocks, mighty takes care of
+organizing and rendering ADaM programs.
+
+Additionally (and optional), mighty can render programs that are
+executable, based on the available data:
+
+- **Data Model Metadata (optional)**: Metadata about available data
+  sources (SDTM, metadata used for ADaM generation, and non-mighty ADaM
+  datasets)
+
+## Framework configuration (\_mighty.yml)
+
+The `_mighty.yml` file provides framework configuration required by
+mighty. It contains:
+
+- **External data**: Key variables for all external datasets relevant to
+  ADaM domains, including SDTM, metadata (MD data sets), and ADaM tables
+
+The primary keys specified for each external dataset establish the
+relationships between tables by defining the columns used for joining
+operations. When mighty needs to combine data from multiple sources, it
+uses these primary keys to determine the appropriate join logic across
+SDTM, metadata, and ADaM data sets. See
+[`vignette("mighty_config")`](https://novonordisk-opensource.github.io/mighty/articles/mighty_config.md)
+for more details.
+
+## ADaM Specification
+
+Each ADaM domain requires its own specification that acts as a
+comprehensive blueprint. The specification defines:
+
+- **Base tables**: Which SDTM domain(s) serve as the foundation
+- **Subsetting rules**: How to filter base domains during preparation
+- **Column requirements**: Both retained SDTM variables and derived
+  variables
+- **Row operations**: Transformations such as derived parameters and
+  imputations
+
+For detailed information about the ADaM specification data model and
+syntax, see
+[`vignette("adam_specification")`](https://novonordisk-opensource.github.io/mighty/articles/adam_specification.md).
+
+## Code Components
+
+Code components provide the implementation logic for complex derivations
+referenced in ADaM specifications. These pre-validated, reusable modules
+ensure consistency and reduce development time.
+
+The are three component sources:
+
+**Standard Library (mighty.standards)**
+
+- Standardized derivations and calculations
+- Thoroughly tested and validated
+
+**Custom Components**
+
+- Trial-specific derivations developed during study conduct
+- Tailored to unique protocol requirements
+- Maintained within the trial repository
+
+**Internal Components**
+
+- Core functionality managed by mighty
+- Data I/O operations and filtering
+- Join operations based on primary keys defined in `_mighty.yml`
+
+## Study properties (\_study.yml)
+
+The optional `_study.yml` file provides study-level properties. It
+requires a `study_id` field and supports additional properties such as
+`study_description`.
+
+While mighty itself does not use `_study.yml` during code generation, it
+is read and stored by
+[`mighty.metadata::mighty_study()`](https://novonordisk-opensource.github.io/mighty.metadata/reference/mighty_study.html)
+as part of the study metadata. The file is used by mighty.toolbox when
+generating define.xml for regulatory submissions. If `_study.yml` is not
+present, mighty will display an informational message but continue
+without error.
+
+## Data Model Metadata (optional)
+
+When a trial is in conduct, the available data may change as a result of
+implementing new SDTM datasets, adding columns, creating and updating
+supplementary qualifiers datasets, etc. until DBL. This can happen when
+new data points are collected, or if the protocol is amended. Mighty
+produces ADaM programs that are in alignment with the ADaM specification
+but if underlying data sources are not compliant with these, the
+generated programs will not be able to execute. Therefore mighty can use
+data model metadata to extract code that can be executed at any given
+time during trial conduct. See
+[`vignette("missing_data_analysis")`](https://novonordisk-opensource.github.io/mighty/articles/missing_data_analysis.md)
+for more details.
