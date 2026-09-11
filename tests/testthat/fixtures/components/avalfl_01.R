@@ -1,6 +1,8 @@
 #' @title avalfl_01
 #' @description A description
 #' @type column
+#' @origin Derived
+#' @method A method description
 #' @depends ADLB AVAL
 #' @outputs AVALFL
 #' @outputs AVALREA

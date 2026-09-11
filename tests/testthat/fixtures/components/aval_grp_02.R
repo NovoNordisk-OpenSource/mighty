@@ -1,6 +1,8 @@
 #' @title Aval grp 02
 #' @description A description
 #' @type column
+#' @origin Derived
+#' @method A method description
 #' @depends ADLB AVAL_GRP
 #' @outputs AVAL_GRP2
 #' @code

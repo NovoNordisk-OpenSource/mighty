@@ -1,6 +1,8 @@
 #' @title Age diff 02
 #' @description A description
 #' @type column
+#' @origin Derived
+#' @method A method description
 #' @depends ADSL AGE_DIFF1
 #' @depends ADSL PLANNED_ARM
 #' @outputs AGE_DIFF2

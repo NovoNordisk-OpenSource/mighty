@@ -1,6 +1,8 @@
 #' @title Min aval 01
 #' @description A description
 #' @type column
+#' @origin Derived
+#' @method A method description
 #' @depends ADSL USUBJID
 #' @depends ADLB USUBJID
 #' @depends ADLB AVAL

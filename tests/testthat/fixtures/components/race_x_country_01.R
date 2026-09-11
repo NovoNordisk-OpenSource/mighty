@@ -1,6 +1,8 @@
 #' @title Race x country 01
 #' @description A description
 #' @type column
+#' @origin Derived
+#' @method A method description
 #' @depends ADSL RACE
 #' @depends ADSL COUNTRY
 #' @outputs RACE_COUNTRY

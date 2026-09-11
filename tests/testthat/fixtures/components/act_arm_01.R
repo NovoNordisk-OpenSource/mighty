@@ -2,6 +2,8 @@
 #' @description A description
 #'
 #' @type column
+#' @origin Derived
+#' @method A method description
 #' @depends DM STUDYID
 #' @depends DM USUBJID
 #' @depends DM ACTARM

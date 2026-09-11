@@ -5,6 +5,8 @@ test_that("Only YAML-defined columns appear in the final dataset", {
 #' @title Convert DTC to DT
 #' @description Converts DTC to date (DT) format and computes the corresponding date flag (DTF) for the ADLB dataset.
 #' @type column
+#' @origin Derived
+#' @method A method description
 #' @depends LB USUBJID
 #' @depends LB STUDYID
 #' @depends LB LBSEQ

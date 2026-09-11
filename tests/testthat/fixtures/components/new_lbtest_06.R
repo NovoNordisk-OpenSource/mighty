@@ -1,6 +1,8 @@
 #' @title lbtest 06
 #' @description A description
 #' @type row
+#' @origin Derived
+#' @method A method description
 #' @depends ADLB LBTEST
 #' @depends ADLB AVAL
 #' @depends ADLB DOMAIN

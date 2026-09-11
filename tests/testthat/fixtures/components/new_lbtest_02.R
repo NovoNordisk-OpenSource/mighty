@@ -1,6 +1,8 @@
 #' @title New lbtest 02
 #' @description A description
 #' @type row
+#' @origin Derived
+#' @method A method description
 #' @depends ADLB LBTEST
 #' @depends ADLB AVALC
 #' @outputs LBTEST

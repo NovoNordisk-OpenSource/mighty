@@ -7,6 +7,8 @@ test_that("Validation warning occurs when component uses ADSL implicitly without
 #' @title BRDATE
 #' @description Treatment
 #' @type column
+#' @origin Derived
+#' @method A method description
 #' @depends dm BRTHDTC
 #' @outputs BRDATE
 #' @code
@@ -76,6 +78,8 @@ test_that("Topology is generated correctly when component declares dependencies 
 #' @title BRDATE
 #' @description Treatment
 #' @type column
+#' @origin Derived
+#' @method A method description
 #' @depends dm BRTHDTC
 #' @depends ADSL USUBJID
 #' @outputs BRDATE
@@ -148,6 +152,8 @@ test_that("Warning message lists all output columns from component with missing 
 #' @title BRDATE
 #' @description Treatment
 #' @type column
+#' @origin Derived
+#' @method A method description
 #' @depends dm BRTHDTC
 #' @outputs BRDATE
 #' @outputs BRDATE2
@@ -231,6 +237,8 @@ test_that("Warn if two domains but one has component with missing depends", {
 #' @title BRDATE
 #' @description Treatment
 #' @type column
+#' @origin Derived
+#' @method A method description
 #' @depends dm BRTHDTC
 #' @outputs BRDATE
 #' @outputs BRDATE2
@@ -327,6 +335,8 @@ test_that("Validation with mix of components warning when no @depends on compone
 #' @title BRDATE
 #' @description Treatment
 #' @type column
+#' @origin Derived
+#' @method A method description
 #' @depends dm BRTHDTC
 #' @outputs BRDATE
 #' @code
@@ -345,6 +355,8 @@ test_that("Validation with mix of components warning when no @depends on compone
 #' @title BRDATEOK valid
 #' @description Treatment
 #' @type column
+#' @origin Derived
+#' @method A method description
 #' @depends dm BRTHDTC
 #' @depends ADSL USUBJID
 #' @outputs BRDATEOK
@@ -422,6 +434,8 @@ test_that("Validation with two domains throws warning when no @depends on compon
 #' @title BRDATE
 #' @description Treatment
 #' @type column
+#' @origin Derived
+#' @method A method description
 #' @depends dm BRTHDTC
 #' @outputs BRDATE
 #' @code
@@ -516,6 +530,8 @@ test_that("Error when ADaM specification is missing init_domain (no population.b
 #' @title BRDATE
 #' @description Birth date derivation with no dependencies
 #' @type column
+#' @origin Derived
+#' @method A method description
 #' @outputs BRDATE
 #' @code
   ADSL <- ADSL %>% dplyr::mutate(BRDATE = NA_character_)

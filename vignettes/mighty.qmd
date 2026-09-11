@@ -105,6 +105,8 @@ assign("adsl_yaml", adsl_yaml, envir = .GlobalEnv)
 component_code <- "#' @title Age group 01
 #' @description Grouping of age
 #' @type column
+#' @origin Derived
+#' @method Age cut into the groups < 18, 18-64, 65-74 and >= 75 years.
 #' @depends ADSL AGE
 #' @outputs AGE_GRP1
 #' @returns `ADSL`

@@ -1,6 +1,8 @@
 #' @title Newfl 02
 #' @description A description
 #' @type column
+#' @origin Derived
+#' @method A method description
 #' @depends ADSL USUBJID
 #' @depends ADSL COUNTRY
 #' @depends ADSL ARM_MATCH

@@ -1,6 +1,8 @@
 #' @title Lbtest_03
 #' @description A description
 #' @type column
+#' @origin Derived
+#' @method A method description
 #' @depends ADLB LBTEST
 #' @outputs LBTEST3
 #' @outputs LBTEST3_FLG

@@ -1,6 +1,8 @@
 #' @title supp_ae_01
 #' @description A description
 #' @type column
+#' @origin Derived
+#' @method A method description
 #' @depends ADAE USUBJID
 #' @depends ADAE AESEQ
 #' @depends SUPPAE USUBJID

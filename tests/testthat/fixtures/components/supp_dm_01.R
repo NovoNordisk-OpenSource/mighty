@@ -1,6 +1,8 @@
 #' @title supp_dm_01
 #' @description A description
 #' @type column
+#' @origin Derived
+#' @method A method description
 #' @depends ADSL STUDYID
 #' @depends ADSL USUBJID
 #' @depends SUPPDM STUDYID
