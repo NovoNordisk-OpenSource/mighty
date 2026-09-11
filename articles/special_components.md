@@ -145,6 +145,8 @@ Standard template and rendered output
     #'   retaining only the columns needed downstream. Rendered once at the top of
     #'   every generated ADaM program.
     #' @type internal
+    #' @origin Not Available
+    #' @method Not applicable
     #' @param connector_path_expr Character string. R expression that evaluates to
     #'   the connector configuration file path. Either a quoted literal path or a
     #'   bare R expression evaluated at runtime (e.g. `here::here("_connector.yml")`).
@@ -286,6 +288,8 @@ Standard template and rendered output
     #'   tagging each row with a `SRC_` tracking column, and selects the columns
     #'   needed for the domain. Rendered once per program, after `_read_data`.
     #' @type internal
+    #' @origin Not Available
+    #' @method Not applicable
     #' @param self Character string. Name of the ADaM domain being initialised (e.g. `"ADSL"`, `"ADLB"`).
     #' @param keep_vars Character string. Comma-separated column names to select after row binding.
     #' @param source_domain_rbind Character string. Pre-formatted R expression that combines source datasets. A single domain is passed as its name; multiple domains are wrapped in `rbind()`.
@@ -420,6 +424,8 @@ Standard template and rendered output
     #'   filters (via the internal `SRC_` column), global row filters, and final
     #'   column selection. Rendered after `_init_domain`.
     #' @type internal
+    #' @origin Not Available
+    #' @method Not applicable
     #' @param self Character string. Name of the ADaM domain being filtered (e.g. `"ADLB"`).
     #' @param joins List of join specifications used to bring in columns required for
     #'   filter evaluation. Each element is a list containing:
@@ -557,6 +563,8 @@ Standard template and rendered output
     #'   `dplyr::mutate()`. Used when the source column is also retained in the
     #'   output; see `_col_rename` when the source column should be replaced.
     #' @type internal
+    #' @origin Not Available
+    #' @method Not applicable
     #' @param self Character string. Name of the dataset being modified (e.g. `"ADLB"`).
     #' @param rename_var Character string. Name of the new column to create (e.g. `"AVAL"`).
     #' @param source_var Character string. Name of the existing column to copy from (e.g. `"LBSTRESN"`).
@@ -636,6 +644,8 @@ Standard template and rendered output
     #'   independent entry in the YAML spec; see `_col_mutate` when the source
     #'   column is also retained in the output.
     #' @type internal
+    #' @origin Not Available
+    #' @method Not applicable
     #' @param self Character string. Name of the dataset being modified (e.g. `"ADLB"`).
     #' @param rename_var Character string. New column name after renaming (e.g. `"SRCSEQ"`).
     #' @param source_var Character string. Existing column to rename (e.g. `"LBSEQ"`).
@@ -711,6 +721,8 @@ Standard template and rendered output
     #'   via a `dplyr::left_join()`. Used when `method:` in the YAML specification
     #'   uses dot notation (e.g. `ADSL.SEX`) to reference a cross-domain variable.
     #' @type internal
+    #' @origin Not Available
+    #' @method Not applicable
     #' @param self Character string. Name of the primary dataset being modified; the left-hand side of the join, whose row count is preserved (e.g. `"ADLB"`).
     #' @param join_dataset Character string. Name of the dataset to look up from; the right-hand side of the join (e.g. `"ADSL"`).
     #' @param select_expr Character string. Comma-separated column names to select from `join_dataset` before joining. Includes both join keys and the variable being added.
@@ -820,6 +832,8 @@ Standard template and rendered output
     #'   columns according to the YAML specification, and persists the dataset via
     #'   the connector. Rendered once at the end of every ADaM program.
     #' @type internal
+    #' @origin Not Available
+    #' @method Not applicable
     #' @param self Character string. Name of the ADaM domain to persist (e.g. `"ADSL"`, `"ADLB"`).
     #' @param row_order_vars Character string or `NULL`. Primary key columns used to sort rows, formatted as a `,\n`-separated string. `NULL` when no row order is defined — the sort block is skipped.
     #' @param keep_vars Character string or `NULL`. Output columns in specification order, formatted as a `,\n`-separated string. `NULL` for intermediate programs in multi-program domains — the select block is skipped. Columns not yet available are prefixed with `# `.

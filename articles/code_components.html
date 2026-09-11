@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">mighty</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9033</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9034</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -157,15 +157,21 @@
 </section><section class="level3"><h4 id="origin">
 <code>@origin</code><a class="anchor" aria-label="anchor" href="#origin"></a>
 </h4>
-<p><em>Optional</em> - CDISC origin of the column, one of <code>"Assigned"</code>, <code>"Collected"</code>, <code>"Derived"</code>, <code>"Not Available"</code>, <code>"Other"</code>, <code>"Predecessor"</code>, or <code>"Protocol"</code>. Used for define.xml generation.</p>
+<p>CDISC origin of the column, one of <code>"Assigned"</code>, <code>"Collected"</code>, <code>"Derived"</code>, <code>"Not Available"</code>, <code>"Other"</code>, <code>"Predecessor"</code>, or <code>"Protocol"</code>. Used for define.xml generation.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#' @origin Derived</span></span></code></pre></div>
+</section><section class="level3"><h4 id="method">
+<code>@method</code><a class="anchor" aria-label="anchor" href="#method"></a>
+</h4>
+<p>Description of how the column is derived, in prose. Used as the method description for define.xml generation.</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co">#' @method Age cut into the groups &lt; 18, 18-64, 65-74 and &gt;= 75 years.</span></span></code></pre></div>
 </section><section class="level3"><h4 id="depends">
 <code>@depends</code><a class="anchor" aria-label="anchor" href="#depends"></a>
 </h4>
 <p>Input dependencies listing the required columns. Format: <code>DOMAIN COLUMN1</code></p>
 <p>Multiple depends are listed on separate lines:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#' @depends ADSL AGE</span></span>
 <span><span class="co">#' @depends ADLB LBSTRESN</span></span></code></pre></div>
 <p>Mighty uses this for dependency analysis and execution ordering.</p>
@@ -174,7 +180,7 @@
 </h4>
 <p>If the component is a column derivation, this specifies which column(s) the component creates. If the component is a row/parameter action, this specifies which column(s) the component modifies</p>
 <p>Multiple outputs are listed on separate lines.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#' @outputs AGE_GRP1</span></span>
 <span><span class="co">#' @outputs COL1</span></span></code></pre></div>
 <p>Mighty uses this to track what each component produces or modifies.</p>
@@ -182,7 +188,7 @@
 <code>@code</code><a class="anchor" aria-label="anchor" href="#code"></a>
 </h4>
 <p>Marker indicating where the executable code (the component body) begins. All code must come after this tag.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#' @code</span></span>
 <span></span>
 <span><span class="co"># Your R code here</span></span>
@@ -205,10 +211,12 @@
 <li>Regular R comments (<code>#</code>) can be used within the code</li>
 </ul></section><section class="level2"><h3 id="example-simple-column-derivation">Example: Simple Column Derivation<a class="anchor" aria-label="anchor" href="#example-simple-column-derivation"></a>
 </h3>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#' @title Age Group Classification</span></span>
 <span><span class="co">#' @description Categorizes subjects into age groups based on AGE variable</span></span>
 <span><span class="co">#' @type column</span></span>
+<span><span class="co">#' @origin Derived</span></span>
+<span><span class="co">#' @method Age cut into the groups &lt; 18, 18-64, 65-74 and &gt;= 75 years.</span></span>
 <span><span class="co">#' @depends ADSL AGE</span></span>
 <span><span class="co">#' @outputs AGE_GRP1</span></span>
 <span><span class="co">#' @code</span></span>
@@ -226,10 +234,12 @@
 </section><section class="level2"><h3 id="example-dependent-derivation">Example: Dependent Derivation<a class="anchor" aria-label="anchor" href="#example-dependent-derivation"></a>
 </h3>
 <p>Components can depend on other derived columns:</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#' @title Age Category Classification</span></span>
 <span><span class="co">#' @description Further categorizes age groups into expected vs unexpected ranges</span></span>
 <span><span class="co">#' @type column</span></span>
+<span><span class="co">#' @origin Derived</span></span>
+<span><span class="co">#' @method Age groups &lt; 18 and &gt;= 75 years are flagged as outside the expected range.</span></span>
 <span><span class="co">#' @depends ADSL AGE_GRP1</span></span>
 <span><span class="co">#' @outputs AGE_CAT1</span></span>
 <span><span class="co">#' @code</span></span>
@@ -244,10 +254,12 @@
 </section><section class="level2"><h3 id="example-multiple-dependencies">Example: Multiple Dependencies<a class="anchor" aria-label="anchor" href="#example-multiple-dependencies"></a>
 </h3>
 <p>Components can depend on multiple columns from multiple datasets:</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#' @title Minimum AVAL per Subject</span></span>
 <span><span class="co">#' @description Derives the minimum lab value for each subject from ADLB</span></span>
 <span><span class="co">#' @type column</span></span>
+<span><span class="co">#' @origin Derived</span></span>
+<span><span class="co">#' @method Lowest AVAL recorded for the subject in ADLB.</span></span>
 <span><span class="co">#' @depends ADSL USUBJID</span></span>
 <span><span class="co">#' @depends ADLB USUBJID</span></span>
 <span><span class="co">#' @depends ADLB AVAL</span></span>
@@ -288,39 +300,41 @@
 </ul></section><section class="level2"><h3 id="example-parameterized-column-derivation">Example: Parameterized Column Derivation<a class="anchor" aria-label="anchor" href="#example-parameterized-column-derivation"></a>
 </h3>
 <p><strong>Template file: <code>relative_day.mustache</code></strong></p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode mustache"><code class="sourceCode mustache"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>#' @title Analysis relative day</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>#' @description</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>#' Derives the relative day compared to the treatment start date.</span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>#'</span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>#' @param domain Name of ADaM domain</span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>#' @param variable Name of new variable to create</span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>#' @param date Name of date variable to use</span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>#' @type column</span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>#' @depends <span class="sc">{{{</span>domain<span class="sc">}}}</span> <span class="sc">{{{</span>date<span class="sc">}}}</span></span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>#' @depends <span class="sc">{{{</span>domain<span class="sc">}}}</span> TRTSDT</span>
-<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>#' @outputs <span class="sc">{{{</span>variable<span class="sc">}}}</span></span>
-<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>#' @code</span>
-<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a><span class="sc">{{{</span>domain<span class="sc">}}}</span> &lt;- <span class="sc">{{{</span>domain<span class="sc">}}}</span> |&gt;</span>
-<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>  dplyr::mutate(</span>
-<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>    <span class="sc">{{{</span>variable<span class="sc">}}}</span> = admiral::compute_duration(</span>
-<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>      start_date = TRTSDT,</span>
-<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>      end_date = <span class="sc">{{{</span>date<span class="sc">}}}</span>,</span>
-<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>      in_unit = "days",</span>
-<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>      out_unit = "days",</span>
-<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>      add_one = TRUE</span>
-<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode mustache"><code class="sourceCode mustache"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>#' @title Analysis relative day</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>#' @description</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>#' Derives the relative day compared to the treatment start date.</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>#'</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>#' @param domain Name of ADaM domain</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>#' @param variable Name of new variable to create</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>#' @param date Name of date variable to use</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>#' @type column</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>#' @origin Derived</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>#' @method Number of days from TRTSDT to <span class="sc">{{{</span>date<span class="sc">}}}</span>, counting both endpoints.</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>#' @depends <span class="sc">{{{</span>domain<span class="sc">}}}</span> <span class="sc">{{{</span>date<span class="sc">}}}</span></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>#' @depends <span class="sc">{{{</span>domain<span class="sc">}}}</span> TRTSDT</span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>#' @outputs <span class="sc">{{{</span>variable<span class="sc">}}}</span></span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>#' @code</span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a><span class="sc">{{{</span>domain<span class="sc">}}}</span> &lt;- <span class="sc">{{{</span>domain<span class="sc">}}}</span> |&gt;</span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>  dplyr::mutate(</span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>    <span class="sc">{{{</span>variable<span class="sc">}}}</span> = admiral::compute_duration(</span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>      start_date = TRTSDT,</span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>      end_date = <span class="sc">{{{</span>date<span class="sc">}}}</span>,</span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>      in_unit = "days",</span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a>      out_unit = "days",</span>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a>      add_one = TRUE</span>
+<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
 <p><strong>Usage in ADaM specification:</strong></p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode yml"><code class="sourceCode yaml"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">columns</span><span class="kw">:</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">id</span><span class="kw">:</span><span class="at"> ADYDT</span></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">component</span><span class="kw">:</span></span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">id</span><span class="kw">:</span><span class="at"> path/to/components/relative_day.mustache</span></span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">with</span><span class="kw">:</span></span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">domain</span><span class="kw">:</span><span class="at"> ADVS</span></span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">date</span><span class="kw">:</span><span class="at"> ADT</span></span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">variable</span><span class="kw">:</span><span class="at"> ADYDT</span></span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode yml"><code class="sourceCode yaml"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">columns</span><span class="kw">:</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">id</span><span class="kw">:</span><span class="at"> ADYDT</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">component</span><span class="kw">:</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">id</span><span class="kw">:</span><span class="at"> path/to/components/relative_day.mustache</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">with</span><span class="kw">:</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">domain</span><span class="kw">:</span><span class="at"> ADVS</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">date</span><span class="kw">:</span><span class="at"> ADT</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">variable</span><span class="kw">:</span><span class="at"> ADYDT</span></span></code></pre></div>
 <p><strong>Rendered output (what mighty sees):</strong></p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#' @title Analysis relative day</span></span>
 <span><span class="co">#' @description</span></span>
 <span><span class="co">#' Derives the relative day compared to the treatment start date.</span></span>
@@ -329,6 +343,8 @@
 <span><span class="co">#' @param variable Name of new variable to create</span></span>
 <span><span class="co">#' @param date Name of date variable to use</span></span>
 <span><span class="co">#' @type column</span></span>
+<span><span class="co">#' @origin Derived</span></span>
+<span><span class="co">#' @method Number of days from TRTSDT to ADT, counting both endpoints.</span></span>
 <span><span class="co">#' @depends ADVS ADT</span></span>
 <span><span class="co">#' @depends ADVS TRTSDT</span></span>
 <span><span class="co">#' @outputs ADYDT</span></span>
@@ -346,33 +362,35 @@
 </section><section class="level2"><h3 id="example-reusing-templates-with-different-parameters">Example: Reusing Templates with Different Parameters<a class="anchor" aria-label="anchor" href="#example-reusing-templates-with-different-parameters"></a>
 </h3>
 <p>The same Mustache template can be used multiple times with different parameters:</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode yml"><code class="sourceCode yaml"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">columns</span><span class="kw">:</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">id</span><span class="kw">:</span><span class="at"> ADYDT</span></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">component</span><span class="kw">:</span></span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">id</span><span class="kw">:</span><span class="at"> relative_day.mustache</span></span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">with</span><span class="kw">:</span></span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">domain</span><span class="kw">:</span><span class="at"> ADVS</span></span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">date</span><span class="kw">:</span><span class="at"> ADT</span></span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">variable</span><span class="kw">:</span><span class="at"> ADYDT</span></span>
-<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">id</span><span class="kw">:</span><span class="at"> ASTDY</span></span>
-<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">component</span><span class="kw">:</span></span>
-<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">id</span><span class="kw">:</span><span class="at"> relative_day.mustache</span></span>
-<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">with</span><span class="kw">:</span></span>
-<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">domain</span><span class="kw">:</span><span class="at"> ADVS</span></span>
-<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">date</span><span class="kw">:</span><span class="at"> ASTDT</span></span>
-<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">variable</span><span class="kw">:</span><span class="at"> ASTDY</span></span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode yml"><code class="sourceCode yaml"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">columns</span><span class="kw">:</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">id</span><span class="kw">:</span><span class="at"> ADYDT</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">component</span><span class="kw">:</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">id</span><span class="kw">:</span><span class="at"> relative_day.mustache</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">with</span><span class="kw">:</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">domain</span><span class="kw">:</span><span class="at"> ADVS</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">date</span><span class="kw">:</span><span class="at"> ADT</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">variable</span><span class="kw">:</span><span class="at"> ADYDT</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">id</span><span class="kw">:</span><span class="at"> ASTDY</span></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">component</span><span class="kw">:</span></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">id</span><span class="kw">:</span><span class="at"> relative_day.mustache</span></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">with</span><span class="kw">:</span></span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">domain</span><span class="kw">:</span><span class="at"> ADVS</span></span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">date</span><span class="kw">:</span><span class="at"> ASTDT</span></span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">variable</span><span class="kw">:</span><span class="at"> ASTDY</span></span></code></pre></div>
 <p>For the full rules on how mighty handles component reuse in ADaM specifications — including restrictions on overlapping outputs — see <a href="adam_specification.html#component-reuse-rules">Component reuse rules</a>.</p>
 </section></section><section class="section level2"><h2 id="handling-external-dependencies">Handling external dependencies<a class="anchor" aria-label="anchor" href="#handling-external-dependencies"></a>
 </h2>
 <p>The YAML specification contains only columns that appear in the final ADaM dataset (see <a href="adam_specification.html#no-intermediate-columns">No intermediate columns</a>). Components often need source columns that are not in the final dataset — for example, an SDTM character date used to derive an analysis date.</p>
 <p>When a component declares <code>@depends DOMAIN COLUMN</code>, mighty adds that column to the data-reading step of the generated program. The column is available inside the component’s code without appearing in the YAML <code>columns</code> section. This is the intended mechanism for accessing source data that does not belong in the final output.</p>
 <p>For example, a component that derives <code>ASTDT</code> and <code>ASTDTF</code> from the SDTM character date <code>LBDTC</code>:</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#' @title Convert DTC to DT</span></span>
 <span><span class="co">#' @description Converts DTC to date (DT) format and computes the corresponding date flag (DTF) for the ADLB dataset.</span></span>
 <span><span class="co">#' @type column</span></span>
+<span><span class="co">#' @origin Derived</span></span>
+<span><span class="co">#' @method Analysis start date and date flag derived from the SDTM LBDTC character date.</span></span>
 <span><span class="co">#' @depends LB USUBJID</span></span>
 <span><span class="co">#' @depends LB STUDYID</span></span>
 <span><span class="co">#' @depends LB LBSEQ</span></span>

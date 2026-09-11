@@ -126,13 +126,23 @@ Component type: `"column"`, `"row"`, `"parameter"`, or `"internal"`.
 
 #### `@origin`
 
-*Optional* - CDISC origin of the column, one of `"Assigned"`,
-`"Collected"`, `"Derived"`, `"Not Available"`, `"Other"`,
-`"Predecessor"`, or `"Protocol"`. Used for define.xml generation.
+CDISC origin of the column, one of `"Assigned"`, `"Collected"`,
+`"Derived"`, `"Not Available"`, `"Other"`, `"Predecessor"`, or
+`"Protocol"`. Used for define.xml generation.
 
 ``` r
 
 #' @origin Derived
+```
+
+#### `@method`
+
+Description of how the column is derived, in prose. Used as the method
+description for define.xml generation.
+
+``` r
+
+#' @method Age cut into the groups < 18, 18-64, 65-74 and >= 75 years.
 ```
 
 #### `@depends`
@@ -206,6 +216,8 @@ Use R script components when:
 #' @title Age Group Classification
 #' @description Categorizes subjects into age groups based on AGE variable
 #' @type column
+#' @origin Derived
+#' @method Age cut into the groups < 18, 18-64, 65-74 and >= 75 years.
 #' @depends ADSL AGE
 #' @outputs AGE_GRP1
 #' @code
@@ -231,6 +243,8 @@ Components can depend on other derived columns:
 #' @title Age Category Classification
 #' @description Further categorizes age groups into expected vs unexpected ranges
 #' @type column
+#' @origin Derived
+#' @method Age groups < 18 and >= 75 years are flagged as outside the expected range.
 #' @depends ADSL AGE_GRP1
 #' @outputs AGE_CAT1
 #' @code
@@ -253,6 +267,8 @@ Components can depend on multiple columns from multiple datasets:
 #' @title Minimum AVAL per Subject
 #' @description Derives the minimum lab value for each subject from ADLB
 #' @type column
+#' @origin Derived
+#' @method Lowest AVAL recorded for the subject in ADLB.
 #' @depends ADSL USUBJID
 #' @depends ADLB USUBJID
 #' @depends ADLB AVAL
@@ -320,6 +336,8 @@ vs. triple mustache syntax.
 #' @param variable Name of new variable to create
 #' @param date Name of date variable to use
 #' @type column
+#' @origin Derived
+#' @method Number of days from TRTSDT to {{{date}}}, counting both endpoints.
 #' @depends {{{domain}}} {{{date}}}
 #' @depends {{{domain}}} TRTSDT
 #' @outputs {{{variable}}}
@@ -361,6 +379,8 @@ columns:
 #' @param variable Name of new variable to create
 #' @param date Name of date variable to use
 #' @type column
+#' @origin Derived
+#' @method Number of days from TRTSDT to ADT, counting both endpoints.
 #' @depends ADVS ADT
 #' @depends ADVS TRTSDT
 #' @outputs ADYDT
@@ -429,6 +449,8 @@ character date `LBDTC`:
 #' @title Convert DTC to DT
 #' @description Converts DTC to date (DT) format and computes the corresponding date flag (DTF) for the ADLB dataset.
 #' @type column
+#' @origin Derived
+#' @method Analysis start date and date flag derived from the SDTM LBDTC character date.
 #' @depends LB USUBJID
 #' @depends LB STUDYID
 #' @depends LB LBSEQ
