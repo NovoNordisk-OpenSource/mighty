@@ -28,9 +28,7 @@ columns:
         output_var: 'A'
 "
 
-  comp_dir <- withr::local_tempdir()
-  tmp_file <- file.path(comp_dir, "ady.mustache")
-  "
+  comp <- "
 #' @title Analysis relative day
 #' @description desc
 #' Derives the relative day compared to the treatment start date.
@@ -46,15 +44,15 @@ columns:
 {{{output_var}}} <- {{{output_var}}} |>
   dplyr::mutate(U2={{{depends_var}}})
  " |>
-    writeLines(con = tmp_file)
+    create_temp_component(filename = "ady.mustache")
 
   yaml_content <- whisker::whisker.render(
     yml,
-    data = list(ady_custom = "ady.mustache")
+    data = list(ady_custom = comp$filename)
   )
   adam_specifications <- setup_study_dir(
     list("adsl" = yaml_content),
-    extra_repos = comp_dir
+    extra_repos = comp$dir
   )
 
   # ACT ------------------------------------------------------------

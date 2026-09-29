@@ -25,9 +25,7 @@ columns:
       id: {{{ady_custom}}}
 "
 
-  comp_dir <- withr::local_tempdir()
-  tmp_file <- file.path(comp_dir, "ady.mustache")
-  "
+  comp <- "
 #' @title Analysis relative day
 #' @description
 #' Derives the relative day compared to the treatment start date.
@@ -43,15 +41,15 @@ ADSL <- ADSL |>
   dplyr::mutate(B=USUBJID)
 
  " |>
-    writeLines(con = tmp_file)
+    create_temp_component(filename = "ady.mustache")
 
   yaml_content <- whisker::whisker.render(
     yml,
-    data = list(ady_custom = "ady.mustache")
+    data = list(ady_custom = comp$filename)
   )
   adam_specifications <- setup_study_dir(
     list("adsl" = yaml_content),
-    extra_repos = comp_dir
+    extra_repos = comp$dir
   )
 
   # ACT & ASSERT ------------------------------------------------------------
@@ -89,9 +87,7 @@ columns:
       id: {{{ady_custom}}}
 "
 
-  comp_dir <- withr::local_tempdir()
-  tmp_file <- file.path(comp_dir, "ady.mustache")
-  "
+  comp <- "
 #' @title Analysis relative day
 #' @description
 #' Derives the relative day compared to the treatment start date.
@@ -105,15 +101,15 @@ ADSL <- ADSL |>
   dplyr::mutate(B=USUBJID)
 
  " |>
-    writeLines(con = tmp_file)
+    create_temp_component(filename = "ady.mustache")
 
   yaml_content <- whisker::whisker.render(
     yml,
-    data = list(ady_custom = "ady.mustache")
+    data = list(ady_custom = comp$filename)
   )
   adam_specifications <- setup_study_dir(
     list("adsl" = yaml_content),
-    extra_repos = comp_dir
+    extra_repos = comp$dir
   )
 
   # ACT & ASSERT ------------------------------------------------------------

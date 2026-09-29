@@ -33,11 +33,7 @@ ADLB <- ADLB |>
       ),
     by = c(\"USUBJID\", \"STUDYID\", \"LBSEQ\")
   )"
-  comp_dir <- withr::local_tempdir()
-  writeLines(
-    as.character(component),
-    file.path(comp_dir, "convert_dtc_to_dt.R")
-  )
+  comp <- create_temp_component(component, filename = "convert_dtc_to_dt.R")
 
   yaml_content_adlb <- "
 id: ADLB
@@ -67,16 +63,17 @@ columns:
 
   - id: ASTDT
     component:
-      id: convert_dtc_to_dt.R
+      id: {{{component_file}}}
 
   - id: ASTDTF
     component:
-      id: convert_dtc_to_dt.R
-"
+      id: {{{component_file}}}
+" |>
+    whisker::whisker.render(data = list(component_file = comp$filename))
 
   adam_specifications <- setup_study_dir(
     list("adlb" = yaml_content_adlb),
-    extra_repos = comp_dir
+    extra_repos = comp$dir
   )
 
   path_connector_config <- withr::local_tempdir()
