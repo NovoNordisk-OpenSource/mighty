@@ -11,9 +11,8 @@
 #'   cross-domain dependencies in ADaM specifications.
 #' @param domain_keys Character vector. Domain key variables for dependency
 #'   validation and metadata enrichment.
-#' @param repos Character vector of repository paths used to resolve standard
-#'   component references. Passed through to
-#'   [mighty.component::get_rendered_component()]. May be `NULL`.
+#' @param repos A `mighty.component::mighty_repos()` collection (or `NULL`),
+#'   passed through to [mighty.component::get_rendered_component()].
 #'
 #' @return Named list with two elements:
 #'   \describe{

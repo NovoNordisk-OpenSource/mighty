@@ -43,20 +43,20 @@ The `repos` field tells mighty where to look for code components. Repositories a
 
 Each entry can be:
 
-- `owner/repo` — a GitHub repository
-- `owner/repo/subdir` — a subdirectory inside a GitHub repository
-- `owner/repo/subdir@ref` — a specific branch, tag, or commit
-- A local filesystem path (absolute or relative to the study directory)
+- `github::owner/repo` — a GitHub repository
+- `github::owner/repo/subdir` — a subdirectory inside a GitHub repository
+- `github::owner/repo/subdir@ref` — a specific branch, tag, or commit
+- A local filesystem path (absolute or relative to the working directory), optionally prefixed with `local::`
 
-GitHub repositories are downloaded once per session and cached.
+mighty resolves each GitHub repository once per `generate_adam_code()` run (one API call to resolve the ref to a commit), and downloads are cached per commit for the session.
 
 ### Example:
 
 ```yml
 repos:
-  - NovoNordisk-OpenSource/mighty.standards/components
-  - my-org/study-components@v1.0.0
+  - github::NovoNordisk-OpenSource/mighty.standards/components
+  - github::my-org/study-components@v1.0.0
   - "./local-components"
 ```
 
-**IMPORTANT:** `repos` must include a source for mighty's internal templates (typically `NovoNordisk-OpenSource/mighty.standards/components`). Without it, mighty cannot resolve the special components used during code generation.
+**IMPORTANT:** `repos` must include a source for mighty's internal templates (typically `github::NovoNordisk-OpenSource/mighty.standards/components`). Without it, mighty cannot resolve the special components used during code generation.
