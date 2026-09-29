@@ -90,7 +90,8 @@ create_temp_component <- function(
 #'   elements will be used as filenames (with .yml extension added if not
 #'   present).
 #' @param extra_repos An optional character vector of additional repository paths
-#'   to append to the `repos` section of `_mighty.yml`.
+#'   to prepend to the `repos` section of `_mighty.yml`. Prepended repos are
+#'   searched first.
 #' @param .local_envir The environment where the temporary directory should be
 #'   registered for cleanup. Defaults to the parent frame.
 #'
@@ -116,7 +117,8 @@ setup_study_dir <- function(
       yaml_list[["_mighty"]],
       collapse = "\n"
     ))
-    mighty_yml$repos <- c(mighty_yml$repos, extra_repos)
+    # Prepend so test-local components win over same-named files in other repos
+    mighty_yml$repos <- c(extra_repos, mighty_yml$repos)
     yaml_list[["_mighty"]] <- yaml::as.yaml(mighty_yml)
   }
 
@@ -154,7 +156,8 @@ setup_study_dir <- function(
 #' @param process_glue Logical. If TRUE (default), processes {path_base} glue
 #'   placeholders in the YAML files.
 #' @param extra_repos An optional character vector of additional repository paths
-#'   to append to the `repos` section of `_mighty.yml`.
+#'   to prepend to the `repos` section of `_mighty.yml`. Prepended repos are
+#'   searched first.
 #' @param .local_envir Environment for cleanup. Defaults to parent frame.
 #'
 #' @return Path to temporary study directory containing processed YAML files
