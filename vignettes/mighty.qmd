@@ -42,7 +42,7 @@ mighty_yaml <- 'external_data:
   - id: LB
     keys: [USUBJID, STUDYID, LBSEQ]
 repos:
-  - "NovoNordisk-OpenSource/mighty.standards/components@dev/internal-components"
+  - "github::NovoNordisk-OpenSource/mighty.standards/components@dev/internal-components"
   - "."
 '
 writeLines(mighty_yaml, file.path(study_dir, "_mighty.yml"))
