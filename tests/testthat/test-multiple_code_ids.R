@@ -70,7 +70,7 @@ columns:
 test_that("Same component with different parameters and disjoint outputs succeeds", {
   comp <- create_temp_component(
     "
-#' @title param_1_new_1_val
+#' @title new_var_with_value
 #' @description Assigns a new variable with name and value from parameters.
 #' @param value `character` The value to assign
 #' @param new_variable `character` Name of the new variable
@@ -82,7 +82,7 @@ test_that("Same component with different parameters and disjoint outputs succeed
 ADLB <- ADLB |>
   dplyr::mutate({{{new_variable}}} = {{{value}}})
 ",
-    filename = "param_1_new_1_val.mustache"
+    filename = "new_var_with_value.mustache"
   )
 
   yml <- whisker::whisker.render(
