@@ -182,11 +182,7 @@ generate_adam_code_study <- function(
   check_cross_domain_adam_dependencies,
   data_context
 ) {
-  # Build collection once so each GitHub repo is resolved once per run
-  repos <- study@mighty$repos
-  if (!is.null(repos)) {
-    repos <- mighty.component::mighty_repos(repos = repos)
-  }
+  repos <- mighty.component::mighty_repos(repos = study@mighty$repos)
   ui_yml <- study |>
     purrr::imap(process_adam_domain)
 
