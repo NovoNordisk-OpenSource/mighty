@@ -28,8 +28,8 @@ columns:
         output_var: 'A'
 "
 
-  tmp_file <- withr::local_tempdir() |>
-    file.path("ady.mustache")
+  comp_dir <- withr::local_tempdir()
+  tmp_file <- file.path(comp_dir, "ady.mustache")
   "
 #' @title Analysis relative day
 #' @description desc
@@ -50,11 +50,12 @@ columns:
 
   yaml_content <- whisker::whisker.render(
     yml,
-    data = list(ady_custom = tmp_file)
+    data = list(ady_custom = "ady.mustache")
   )
-  adam_specifications <- setup_study_dir(list(
-    "adsl" = yaml_content
-  ))
+  adam_specifications <- setup_study_dir(
+    list("adsl" = yaml_content),
+    extra_repos = comp_dir
+  )
 
   # ACT ------------------------------------------------------------
 

@@ -1,6 +1,5 @@
 test_that("Multiple columns using same code_id, but diff parameters errors out", {
-  component_file <- withr::local_tempfile(fileext = ".mustache")
-  writeLines(
+  comp <- create_temp_component(
     "
 #' @title fn_AB
 #' @description Multi-output parameterized test component
@@ -16,7 +15,7 @@ test_that("Multiple columns using same code_id, but diff parameters errors out",
 ADLB <- ADLB |>
   dplyr::mutate(A = USUBJID, B = USUBJID)
 ",
-    con = component_file
+    filename = "fn_AB.mustache"
   )
 
   yml <- whisker::whisker.render(
@@ -51,12 +50,13 @@ columns:
         param_1: x
         param_2: y
 ",
-    data = list(component_file = component_file)
+    data = list(component_file = comp$filename)
   )
 
-  adam_specifications <- setup_study_dir(list(
-    "adlb" = yml
-  ))
+  adam_specifications <- setup_study_dir(
+    list("adlb" = yml),
+    extra_repos = comp$dir
+  )
   expect_error(
     generate_adam_code(
       adam_specifications = adam_specifications,
@@ -68,8 +68,7 @@ columns:
 })
 
 test_that("Same component with different parameters and disjoint outputs succeeds", {
-  component_file <- withr::local_tempfile(fileext = ".mustache")
-  writeLines(
+  comp <- create_temp_component(
     "
 #' @title param_1_new_1_val
 #' @description Assigns a new variable with name and value from parameters.
@@ -83,7 +82,7 @@ test_that("Same component with different parameters and disjoint outputs succeed
 ADLB <- ADLB |>
   dplyr::mutate({{{new_variable}}} = {{{value}}})
 ",
-    con = component_file
+    filename = "param_1_new_1_val.mustache"
   )
 
   yml <- whisker::whisker.render(
@@ -118,12 +117,13 @@ columns:
         new_variable: B
         value: '2'
 ",
-    data = list(component_file = component_file)
+    data = list(component_file = comp$filename)
   )
 
-  adam_specifications <- setup_study_dir(list(
-    "adlb" = yml
-  ))
+  adam_specifications <- setup_study_dir(
+    list("adlb" = yml),
+    extra_repos = comp$dir
+  )
 
   expect_no_error(
     generate_adam_code(
@@ -136,8 +136,7 @@ columns:
 
 
 test_that("Within-domain parameter conflicts are reported for every affected domain", {
-  component_file <- withr::local_tempfile(fileext = ".mustache")
-  writeLines(
+  comp <- create_temp_component(
     "
 #' @title fn_AB
 #' @description Multi-output parameterized test component
@@ -154,7 +153,7 @@ test_that("Within-domain parameter conflicts are reported for every affected dom
 {{{domain}}} <- {{{domain}}} |>
   dplyr::mutate(A = USUBJID, B = USUBJID)
 ",
-    con = component_file
+    filename = "fn_AB.mustache"
   )
 
   yml_adsl <- whisker::whisker.render(
@@ -191,7 +190,7 @@ columns:
         param_2: y
         domain: ADSL
 ",
-    data = list(component_file = component_file)
+    data = list(component_file = comp$filename)
   )
 
   yml_adlb <- whisker::whisker.render(
@@ -228,13 +227,16 @@ columns:
         param_2: y
         domain: ADLB
 ",
-    data = list(component_file = component_file)
+    data = list(component_file = comp$filename)
   )
 
-  adam_specifications <- setup_study_dir(list(
-    "adsl" = yml_adsl,
-    "adlb" = yml_adlb
-  ))
+  adam_specifications <- setup_study_dir(
+    list(
+      "adsl" = yml_adsl,
+      "adlb" = yml_adlb
+    ),
+    extra_repos = comp$dir
+  )
 
   expect_error(
     generate_adam_code(
@@ -248,8 +250,7 @@ columns:
 
 
 test_that("Same component reused across domains with different parameters succeeds", {
-  component_file <- withr::local_tempfile(fileext = ".mustache")
-  writeLines(
+  comp <- create_temp_component(
     "
 #' @title fn_A
 #' @description Single-output parameterized test component
@@ -265,7 +266,7 @@ test_that("Same component reused across domains with different parameters succee
 {{{domain}}} <- {{{domain}}} |>
   dplyr::mutate(A = USUBJID)
 ",
-    con = component_file
+    filename = "fn_A.mustache"
   )
 
   yml_adsl <- whisker::whisker.render(
@@ -295,7 +296,7 @@ columns:
         param_2: '2'
         domain: ADSL
 ",
-    data = list(component_file = component_file)
+    data = list(component_file = comp$filename)
   )
 
   yml_adlb <- whisker::whisker.render(
@@ -325,13 +326,16 @@ columns:
         param_2: y
         domain: ADLB
 ",
-    data = list(component_file = component_file)
+    data = list(component_file = comp$filename)
   )
 
-  adam_specifications <- setup_study_dir(list(
-    "adsl" = yml_adsl,
-    "adlb" = yml_adlb
-  ))
+  adam_specifications <- setup_study_dir(
+    list(
+      "adsl" = yml_adsl,
+      "adlb" = yml_adlb
+    ),
+    extra_repos = comp$dir
+  )
 
   expect_no_error(
     generate_adam_code(
@@ -344,8 +348,7 @@ columns:
 
 
 test_that("Same component with identical parameters across invocations passes", {
-  component_file <- withr::local_tempfile(fileext = ".mustache")
-  writeLines(
+  comp <- create_temp_component(
     "
 #' @title fn_AB
 #' @description Multi-output parameterized test component
@@ -361,7 +364,7 @@ test_that("Same component with identical parameters across invocations passes", 
 ADLB <- ADLB |>
   dplyr::mutate(A = USUBJID, B = USUBJID)
 ",
-    con = component_file
+    filename = "fn_AB.mustache"
   )
 
   yml <- whisker::whisker.render(
@@ -396,12 +399,13 @@ columns:
         param_1: '1'
         param_2: '2'
 ",
-    data = list(component_file = component_file)
+    data = list(component_file = comp$filename)
   )
 
-  adam_specifications <- setup_study_dir(list(
-    "adlb" = yml
-  ))
+  adam_specifications <- setup_study_dir(
+    list("adlb" = yml),
+    extra_repos = comp$dir
+  )
 
   expect_no_error(
     generate_adam_code(

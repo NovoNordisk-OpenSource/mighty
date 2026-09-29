@@ -7,7 +7,7 @@ test_that("Global filter and domain filter are equivalent when same filter use o
   - id: DM_VACCINE
     keys: [USUBJID]
 repos:
-  - 'NovoNordisk-OpenSource/mighty.standards/components@dev/internal-components'
+  - 'github::NovoNordisk-OpenSource/mighty.standards/components@dev/internal-components'
   - '.'"
 
   setup_testdata(

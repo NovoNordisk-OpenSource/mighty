@@ -1,8 +1,8 @@
 test_that("subsetted row component keeps clean @depends/@outputs (mighty.metadata#44)", {
   # ARRANGE -------------------------------------------------------------------
 
-  component_file <- withr::local_tempdir() |>
-    file.path("new_lbtest_subset.mustache")
+  comp_dir <- withr::local_tempdir()
+  component_file <- file.path(comp_dir, "new_lbtest_subset.mustache")
   "
 #' @title New lbtest subset
 #' @description A description
@@ -50,9 +50,14 @@ rows:
         domain: ADLB
     subset: \"USUBJID == '01-708-1216'\"
 " |>
-    whisker::whisker.render(data = list(row_component = component_file))
+    whisker::whisker.render(
+      data = list(row_component = "new_lbtest_subset.mustache")
+    )
 
-  adam_specifications <- setup_study_dir(list("adlb" = yaml_content))
+  adam_specifications <- setup_study_dir(
+    list("adlb" = yaml_content),
+    extra_repos = comp_dir
+  )
 
   study <- mighty.metadata::mighty_study(adam_specifications) |>
     mighty.metadata::resolve_subsets()
