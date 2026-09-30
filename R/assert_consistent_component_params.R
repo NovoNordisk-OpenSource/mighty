@@ -141,30 +141,16 @@ find_overlapping_outputs <- function(components) {
 #' @return A single formatted string.
 #' @noRd
 format_overlap_violation <- function(violation) {
-  display_id <- display_component_id(violation$code_id)
+  code_id <- violation$code_id
   overlapping <- violation$overlapping[[1]]
   domain <- violation$domain
   col_str <- format_list(toupper(overlapping), format_column)
   paste0(
     format_domain(domain),
     " - ",
-    cli::format_inline("{.file {display_id}}"),
+    cli::format_inline("{.file {code_id}}"),
     ": ",
     col_str,
     " would be derived with different parameter values"
   )
-}
-
-
-#' Format a component ID for display
-#'
-#' Custom components use file paths as their ID. For display purposes, only the
-#' file basename is shown (e.g., `path/to/der_complsfl.R` becomes
-#' `der_complsfl.R`). Standard components are returned as-is.
-#'
-#' @param code_id A component identifier string.
-#' @return A string suitable for display in user-facing messages.
-#' @noRd
-display_component_id <- function(code_id) {
-  if (grepl("/", code_id)) basename(code_id) else code_id
 }

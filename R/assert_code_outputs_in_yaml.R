@@ -51,14 +51,12 @@ assert_code_outputs_in_yaml <- function(x) {
     code_out <- mismatches$code_outputs[[i]]
     yaml_out <- mismatches$yaml_outputs[[i]]
 
-    display_id <- display_component_id(code_id)
-
     code_str <- format_list(code_out, format_column)
     yaml_str <- format_list(yaml_out, format_column)
     msg <- paste0(
       format_domain(domain),
       " - ",
-      paste0("{.file ", display_id, "}"),
+      paste0("{.file ", code_id, "}"),
       ": ",
       "produces ",
       code_str,
