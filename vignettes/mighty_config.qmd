@@ -48,7 +48,7 @@ Each entry can be:
 - `github::owner/repo/subdir@ref` — a specific branch, tag, or commit
 - A local filesystem path (absolute or relative to the working directory), optionally prefixed with `local::`
 
-mighty resolves each GitHub repository once per `generate_adam_code()` run (one API call to resolve the ref to a commit), and downloads are cached per commit for the session.
+mighty resolves each GitHub ref to a commit once per R session, and downloads each commit once per session. Later calls to `generate_adam_code()` reuse the cached copy. Restart R to pick up new commits on a branch.
 
 ### Example:
 
@@ -60,3 +60,12 @@ repos:
 ```
 
 **IMPORTANT:** `repos` must include a source for mighty's internal templates (typically `github::NovoNordisk-OpenSource/mighty.standards/components`). Without it, mighty cannot resolve the special components used during code generation.
+
+## Component IDs
+
+The `id` of a component in an ADaM specification is looked up in `repos`. It is not a file path. Inside each repository, `id: relative_day` matches:
+
+- `relative_day.R` or `relative_day.mustache`
+- the same file names inside a `relative_day/` subdirectory
+
+If one repository has more than one match (for example both `relative_day.R` and `relative_day.mustache`), mighty stops with an error. Use the file name with its extension to select one.
