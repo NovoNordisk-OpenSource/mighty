@@ -31,6 +31,10 @@ study_dir <- file.path(tempdir(), "mighty_example_study")
 dir.create(study_dir, showWarnings = FALSE, recursive = TRUE)
 assign("study_dir", study_dir, envir = .GlobalEnv)
 
+# Custom components live outside the specifications directory
+components_dir <- file.path(tempdir(), "mighty_example_components")
+dir.create(components_dir, showWarnings = FALSE, recursive = TRUE)
+
 
 # Create _study.yml with study-level properties
 writeLines("study_id: example_study", file.path(study_dir, "_study.yml"))
@@ -42,10 +46,19 @@ mighty_yaml <- 'external_data:
   - id: LB
     keys: [USUBJID, STUDYID, LBSEQ]
 repos:
-  - "NovoNordisk-OpenSource/mighty.standards/components@dev/internal-components"
-  - "."
+  - "github::NovoNordisk-OpenSource/mighty.standards/components@dev/internal-components"
+  - "./components"
 '
-writeLines(mighty_yaml, file.path(study_dir, "_mighty.yml"))
+# The components repo needs to be an absolute path when the vignette is
+# rendered by `pkgdown`, but we don't want to show that ugly tmp path to the
+# users
+mighty_yaml_with_abspath <- gsub(
+  '"./components"',
+  sprintf('"%s"', normalizePath(components_dir, winslash = "/")),
+  mighty_yaml,
+  fixed = TRUE
+)
+writeLines(mighty_yaml_with_abspath, file.path(study_dir, "_mighty.yml"))
 assign("mighty_yaml", mighty_yaml, envir = .GlobalEnv)
 
 
@@ -83,22 +96,7 @@ columns:
     component:
       id: "age_group_01.R"
 '
-# The path to the age_group.R component needs to be an absolute path when
-# the vignette is rendered by `pkgdown`, but we don't want to show
-# that ugly tmp path to the users
-adsl_yaml_with_abspath <- gsub(
-  '"age_group_01.R"',
-  sprintf(
-    '"%s"',
-    normalizePath(
-      file.path(study_dir, "age_group_01.R"),
-      winslash = "/",
-      mustWork = FALSE
-    )
-  ),
-  adsl_yaml
-)
-writeLines(adsl_yaml_with_abspath, file.path(study_dir, "adsl.yml"))
+writeLines(adsl_yaml, file.path(study_dir, "adsl.yml"))
 assign("adsl_yaml", adsl_yaml, envir = .GlobalEnv)
 
 
@@ -121,7 +119,7 @@ ADSL <- ADSL |>
     )
   )
 "
-writeLines(component_code, file.path(study_dir, "age_group_01.R"))
+writeLines(component_code, file.path(components_dir, "age_group_01.R"))
 assign("component_code", component_code, envir = .GlobalEnv)
 
 
@@ -155,7 +153,7 @@ Here is a minimal example that demonstrates how to specify and render a simple A
 The only constraints mighty has on the directory structure is the presence of a directory that contains **only** the following YAML specification files:
 
 - Domain specifications (e.g., `adsl.yml`, `adae.yml`, `adlb.yml`)
-- `_mighty.yml` — [framework configuration](mighty_config.qmd) (external dataset keys)
+- `_mighty.yml` — [framework configuration](mighty_config.qmd) (external dataset keys and component repos)
 - `_study.yml` — study-level properties (optional, used by mighty.toolbox for define.xml)
 
 
@@ -173,6 +171,8 @@ The `_mighty.yml` file provides framework configuration that spans across all AD
 This includes primary keys for external datasets that are used for joining tables.
 
 For this example, we will focus on a simple ADSL table and only provide keys related to that domain.
+
+The `repos` field lists where mighty looks for code components. The first entry points to the standard components repo; the second is a local directory with the study-specific custom components.
 
 **\_mighty.yml**
 
@@ -203,6 +203,8 @@ cat("```")
 ## Define your custom component
 
 The column `AGE_GRP1` in ADSL is derived by using a custom component that contains the logic to process the ADSL table by deriving the additional column `AGE_GRP1`.
+
+Save the component in the `components` directory listed under `repos`. The ADaM specification refers to it by its file name, `age_group_01.R`.
 
 **age_group_01.R**
 

@@ -447,7 +447,7 @@ transform_columns_to_named_list <- function(columns, domain_id) {
 #'   YAML
 #'
 #' @return Named list where keys are empty strings `""` and values contain:
-#'   \item{code_id}{Component name or path to the component file if custom}
+#'   \item{code_id}{Component ID (name or file name, looked up in `repos`)}
 #'   \item{id}{The row action or parameter identifier}
 #'   \item{depend_rows}{Character vector of row IDs this depends on (with
 #'     "rows." prefix removed), or NA}

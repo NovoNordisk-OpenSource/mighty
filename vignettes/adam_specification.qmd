@@ -329,10 +329,10 @@ Derived columns use code components to perform data transformations. A code comp
     columns:
       - id: ARM_GRP1
         component:
-          id: path/to/code_component/arm_group_01.R
+          id: arm_group_01.R
     ```
 
-    For custom code components, provide the file path. Custom R scripts should contain the data manipulation code directly as executable script code, and metadata to declare dependencies and columns created by the component. For details, see `vignette("code_components")`.
+    For custom code components, provide the component name or file name. Mighty looks it up in the repositories listed under `repos` in `_mighty.yml` (see `vignette("mighty_config")`). Custom R scripts should contain the data manipulation code directly as executable script code, and metadata to declare dependencies and columns created by the component. For details, see `vignette("code_components")`.
 
 8.  Adding a derived column using a custom code component (Mustache template)
 
@@ -340,7 +340,7 @@ Derived columns use code components to perform data transformations. A code comp
     columns:
       - id: ARM_GRP1
         component:
-          id: path/to/code_component/arm_group_01.mustache
+          id: arm_group_01.mustache
     ```
 
     Custom Mustache templates allow parameterization (see example 10).
@@ -462,26 +462,24 @@ ADLB <- ADLB |>
   con = component_file
 )
 
-invalid_columns_yml <- glue::glue(
-  "
+invalid_columns_yml <- "
 columns:
   - id: USUBJID
   - id: ASTDT
     component:
-      id: {component_file}
+      id: dtc_to_dt.mustache
       with:
         dtc_var: LBDTC
         dt_var: ASTDT
         dtf_var: ASTDTF
   - id: ASTDTF
     component:
-      id: {component_file}
+      id: dtc_to_dt.mustache
       with:
         dtc_var: LBENDTC
         dt_var: ASTDT
         dtf_var: ASTDTF
 "
-)
 ```
 
 If the same component is used twice with different parameters but both uses produce the same output columns, mighty cannot tell which parameter values should be used:
@@ -489,12 +487,7 @@ If the same component is used twice with different parameters but both uses prod
 ```{r}
 #| echo: false
 #| output: asis
-columns_display <- gsub(
-  component_file,
-  "dtc_to_dt.mustache",
-  invalid_columns_yml
-)
-cat("```yml", trimws(columns_display), "```", sep = "\n")
+cat("```yml", trimws(invalid_columns_yml), "```", sep = "\n")
 ```
 
 Mighty will abort with an error:
@@ -527,7 +520,13 @@ study_dir <- tempfile()
 dir.create(study_dir)
 writeLines(yml, file.path(study_dir, "adlb.yml"))
 writeLines(
-  "external_data:\n  - id: DM\n    keys: [STUDYID, USUBJID]",
+  c(
+    "external_data:",
+    "  - id: DM",
+    "    keys: [STUDYID, USUBJID]",
+    "repos:",
+    sprintf("  - \"%s\"", normalizePath(component_dir, winslash = "/"))
+  ),
   file.path(study_dir, "_mighty.yml")
 )
 writeLines("study_id: demo_study", file.path(study_dir, "_study.yml"))

@@ -33,11 +33,9 @@ ADLB <- ADLB |>
       ),
     by = c(\"USUBJID\", \"STUDYID\", \"LBSEQ\")
   )"
-  component_file <- withr::local_tempfile(fileext = ".R")
-  writeLines(as.character(component), component_file)
+  comp <- create_temp_component(component, filename = "convert_dtc_to_dt.R")
 
-  yaml_content_adlb <- paste0(
-    "
+  yaml_content_adlb <- "
 id: ADLB
 label: Laboratory Analysis Dataset
 class: BASIC DATA STRUCTURE
@@ -65,19 +63,18 @@ columns:
 
   - id: ASTDT
     component:
-      id: ",
-    component_file,
-    "
+      id: {{{component_file}}}
 
   - id: ASTDTF
     component:
-      id: ",
-    component_file
-  )
+      id: {{{component_file}}}
+" |>
+    whisker::whisker.render(data = list(component_file = comp$filename))
 
-  adam_specifications <- setup_study_dir(list(
-    "adlb" = yaml_content_adlb
-  ))
+  adam_specifications <- setup_study_dir(
+    list("adlb" = yaml_content_adlb),
+    extra_repos = comp$dir
+  )
 
   path_connector_config <- withr::local_tempdir()
 
