@@ -112,15 +112,16 @@ setup_study_dir <- function(
     )
   }
 
-  if (!is.null(extra_repos)) {
-    mighty_yml <- yaml::yaml.load(paste(
-      yaml_list[["_mighty"]],
-      collapse = "\n"
-    ))
-    # Prepend so test-local components win over same-named files in other repos
-    mighty_yml$repos <- c(extra_repos, mighty_yml$repos)
-    yaml_list[["_mighty"]] <- yaml::as.yaml(mighty_yml)
-  }
+  mighty_yml <- yaml::yaml.load(paste(
+    yaml_list[["_mighty"]],
+    collapse = "\n"
+  ))
+  # Prepend so test-local components win over same-named files in other repos
+  mighty_yml$repos <- c(extra_repos, mighty_yml$repos)
+  # Relative local repos resolve against the working directory, which is not
+  # tests/testthat when a test file is run interactively from the package root
+  mighty_yml$repos <- resolve_test_repos(mighty_yml$repos)
+  yaml_list[["_mighty"]] <- yaml::as.yaml(mighty_yml)
 
   # `_mighty.yml` fixtures reference component repos fetched via the `gh`
   # package. `gh` < 1.6.0 rejects the `ghs_` App-installation token that CI
@@ -143,6 +144,28 @@ setup_study_dir <- function(
   }
 
   return(dir)
+}
+
+
+#' Resolve relative local repos against the test directory
+#'
+#' @param repos A character vector of repo specs. Specs with a `type::` prefix
+#'   and absolute paths are returned unchanged.
+#'
+#' @return `repos`, with relative local paths made absolute under
+#'   `testthat::test_path()`.
+#' @noRd
+resolve_test_repos <- function(repos) {
+  if (is.null(repos)) {
+    return(NULL)
+  }
+  is_relative <- !grepl("::", repos, fixed = TRUE) &
+    !grepl("^(/|~|[A-Za-z]:)", repos)
+  repos[is_relative] <- normalizePath(
+    testthat::test_path(repos[is_relative]),
+    mustWork = FALSE
+  )
+  repos
 }
 
 
