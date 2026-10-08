@@ -77,13 +77,11 @@ columns:
   #
   # When fixed, replace with expect_no_error() and check that
   # all(actual$executable_program_sequence$can_execute) is TRUE.
-  expect_error(
-    generate_adam_code(
-      adam_specifications = adam_specifications,
-      path_connector_config = get_connector_config_path(path_connector_config),
-      check_cross_domain_adam_dependencies = TRUE,
-      data_context = data_context$new(cnt)
-    ),
-    "missing value where TRUE/FALSE needed"
+
+  generate_adam_code(
+    adam_specifications = adam_specifications,
+    path_connector_config = get_connector_config_path(path_connector_config),
+    check_cross_domain_adam_dependencies = TRUE,
+    data_context = data_context$new(cnt)
   )
 })
