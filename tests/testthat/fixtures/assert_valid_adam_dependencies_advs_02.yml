@@ -23,4 +23,4 @@ columns:
 
   - id: VISITNUM2
     component:
-      id: "{path_base}/fixtures/components/visitnum_02.R"
+      id: "visitnum_02.R"

@@ -100,7 +100,8 @@ assert_valid_depend_cols <- function(
       col_rename_actions$domain,
       col_rename_actions$depend_cols,
       function(domain, dc) paste0(domain, ".", dc$column_name)
-    ) |> unlist()
+    ) |>
+      unlist()
     outputs <- c(outputs, rename_source_outputs) |> unique()
   }
 
@@ -468,7 +469,7 @@ format_action_with_component <- function(domain, outputs, code_id) {
   )
 
   component_str <- if (!is.na(code_id)) {
-    paste0("via {.file ", basename(code_id), "}")
+    paste0("via {.file ", code_id, "}")
   } else {
     ""
   }
