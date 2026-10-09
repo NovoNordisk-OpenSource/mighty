@@ -17,10 +17,7 @@ test_that("Validation warning occurs when component uses ADSL implicitly without
       nchar(BRTHDTC) >= 10 ~ BRTHDTC
     ), by = USUBJID)
   )"
-  component_file <- withr::local_tempfile(
-    fileext = ".R"
-  )
-  writeLines(as.character(component), component_file)
+  comp <- create_temp_component(component, filename = "brdate.R")
 
   # YAML spec for ADSL with this component
   yaml_content <- paste0(
@@ -41,12 +38,13 @@ test_that("Validation warning occurs when component uses ADSL implicitly without
     - id: BRDATE
       component:
           id: ",
-    component_file
+    comp$filename
   )
 
-  adam_specifications <- setup_study_dir(list(
-    "adsl" = yaml_content
-  ))
+  adam_specifications <- setup_study_dir(
+    list("adsl" = yaml_content),
+    extra_repos = comp$dir
+  )
 
   # ACT ---------------------------------------------------------------------
   err <- expect_error(
@@ -89,10 +87,7 @@ test_that("Topology is generated correctly when component declares dependencies 
       nchar(BRTHDTC) >= 10 ~ BRTHDTC
     )
 ), by = USUBJID)"
-  component_file <- withr::local_tempfile(
-    fileext = ".R"
-  )
-  writeLines(as.character(component), component_file)
+  comp <- create_temp_component(component, filename = "brdate.R")
 
   # YAML spec for ADSL with this component
   yaml_content <- paste0(
@@ -113,12 +108,13 @@ test_that("Topology is generated correctly when component declares dependencies 
     - id: BRDATE
       component:
           id: ",
-    component_file
+    comp$filename
   )
 
-  adam_specifications <- setup_study_dir(list(
-    "adsl" = yaml_content
-  ))
+  adam_specifications <- setup_study_dir(
+    list("adsl" = yaml_content),
+    extra_repos = comp$dir
+  )
   # ACT ---------------------------------------------------------------------
 
   actual <- generate_adam_code(
@@ -164,10 +160,7 @@ test_that("Warning message lists all output columns from component with missing 
     ),
     BRDATE2 = BRDATE), by = USUBJID
   )"
-  component_file <- withr::local_tempfile(
-    fileext = ".R"
-  )
-  writeLines(as.character(component), component_file)
+  comp <- create_temp_component(component, filename = "brdate.R")
 
   # YAML spec for ADSL (with only col_copy) and ADLB with this component
   yaml_content <- paste0(
@@ -190,12 +183,12 @@ test_that("Warning message lists all output columns from component with missing 
     - id: BRDATE
       component:
           id: ",
-    component_file,
+    comp$filename,
     "
     - id: BRDATE2
       component:
           id: ",
-    component_file
+    comp$filename
   )
 
   # The ADSL domain in this test is simple in the sense that it does not create edges in
@@ -203,10 +196,13 @@ test_that("Warning message lists all output columns from component with missing 
   # edges are created for ADSL, this does not make the topology for ADSL invalid as this
   # is per design of the \code{make_edges()}
   # In this test case, there are no edges in the dependency graph.
-  adam_specifications <- setup_study_dir(list(
-    "adsl" = readLines(test_path("fixtures", "skeleton_adsl.yml")),
-    "adlb" = yaml_content
-  ))
+  adam_specifications <- setup_study_dir(
+    list(
+      "adsl" = readLines(test_path("fixtures", "skeleton_adsl.yml")),
+      "adlb" = yaml_content
+    ),
+    extra_repos = comp$dir
+  )
   # ACT ---------------------------------------------------------------------
   err <- expect_error(
     {
@@ -249,10 +245,7 @@ test_that("Warn if two domains but one has component with missing depends", {
     ),
     BRDATE2 = BRDATE), by = USUBJID
   )"
-  component_file <- withr::local_tempfile(
-    fileext = ".R"
-  )
-  writeLines(as.character(component), component_file)
+  comp <- create_temp_component(component, filename = "brdate.R")
 
   # YAML spec for ADSL (with only col_copy) and ADLB with this component
   yaml_content <- paste0(
@@ -275,34 +268,29 @@ test_that("Warn if two domains but one has component with missing depends", {
     - id: BRDATE
       component:
           id: ",
-    component_file,
+    comp$filename,
     "
     - id: BRDATE2
       component:
           id: ",
-    component_file
+    comp$filename
   )
 
   # The ADSL domain in this test is more complex and it has edges in
   # the dependency graph. It is important to check that these edges does not
   # influence the validation of the edges in the ADLB domain
-
-  # Process ADSL fixture which contains {path_base} glue placeholders
   adsl_content <- readLines(test_path(
     "fixtures",
     "supplementary_data_adsl_01.yml"
   ))
-  path_base <- test_path()
-  adsl_processed <- as.character(glue::glue(
-    paste(adsl_content, collapse = "\n"),
-    path_base = path_base
-  ))
 
-  # ADLB content has no glue placeholders, use directly
-  adam_specifications <- setup_study_dir(list(
-    "adsl" = adsl_processed,
-    "adlb" = yaml_content
-  ))
+  adam_specifications <- setup_study_dir(
+    list(
+      "adsl" = adsl_content,
+      "adlb" = yaml_content
+    ),
+    extra_repos = comp$dir
+  )
 
   # ACT ---------------------------------------------------------------------
   err <- expect_error(
@@ -345,10 +333,12 @@ test_that("Validation with mix of components warning when no @depends on compone
       nchar(BRTHDTC) >= 10 ~ BRTHDTC
     )), by = USUBJID
   )"
-  component_invalid_file <- withr::local_tempfile(
-    fileext = ".R"
+  comp_dir <- withr::local_tempdir()
+  comp_invalid <- create_temp_component(
+    component_invalid,
+    filename = "brdate_invalid.R",
+    dir = comp_dir
   )
-  writeLines(as.character(component_invalid), component_invalid_file)
 
   # Custom component that uses ADSL and declares dependency on actual and external dataset
   component_valid <- "
@@ -366,10 +356,11 @@ test_that("Validation with mix of components warning when no @depends on compone
       nchar(BRTHDTC) >= 10 ~ BRTHDTC
     )), by = USUBJID
   )"
-  component_valid_file <- withr::local_tempfile(
-    fileext = ".R"
+  comp_valid <- create_temp_component(
+    component_valid,
+    filename = "brdate_valid.R",
+    dir = comp_dir
   )
-  writeLines(as.character(component_valid), component_valid_file)
 
   # YAML spec for ADSL with this component
   yaml_content <- paste0(
@@ -390,16 +381,17 @@ test_that("Validation with mix of components warning when no @depends on compone
     - id: BRDATE
       component:
           id: ",
-    component_invalid_file,
+    comp_invalid$filename,
     "
     - id: BRDATEOK
       component:
           id: ",
-    component_valid_file
+    comp_valid$filename
   )
-  adam_specifications <- setup_study_dir(list(
-    "adsl" = yaml_content
-  ))
+  adam_specifications <- setup_study_dir(
+    list("adsl" = yaml_content),
+    extra_repos = comp_dir
+  )
   # ACT ---------------------------------------------------------------------
   err <- expect_error(
     {
@@ -440,10 +432,7 @@ test_that("Validation with two domains throws warning when no @depends on compon
 #' @outputs BRDATE
 #' @code
 'not important'"
-  component_invalid_file <- withr::local_tempfile(
-    fileext = ".R"
-  )
-  writeLines(as.character(component_invalid), component_invalid_file)
+  comp <- create_temp_component(component_invalid, filename = "brdate.R")
 
   # YAML spec for ADSL with this component
   yaml_content_ADSL <- paste0(
@@ -464,7 +453,7 @@ test_that("Validation with two domains throws warning when no @depends on compon
     - id: BRDATE
       component:
           id: ",
-    component_invalid_file
+    comp$filename
   )
 
   # YAML spec for ADLB with this component
@@ -488,12 +477,15 @@ test_that("Validation with two domains throws warning when no @depends on compon
     - id: BRDATE
       component:
           id: ",
-    component_invalid_file
+    comp$filename
   )
-  adam_specifications <- setup_study_dir(list(
-    "adsl" = yaml_content_ADSL,
-    "adlb" = yaml_content_ADLB
-  ))
+  adam_specifications <- setup_study_dir(
+    list(
+      "adsl" = yaml_content_ADSL,
+      "adlb" = yaml_content_ADLB
+    ),
+    extra_repos = comp$dir
+  )
   # ACT ---------------------------------------------------------------------
   err <- expect_error(
     {
@@ -536,8 +528,7 @@ test_that("Error when ADaM specification is missing init_domain (no population.b
 #' @code
   ADSL <- ADSL %>% dplyr::mutate(BRDATE = NA_character_)
   "
-  component_file <- withr::local_tempfile(fileext = ".R")
-  writeLines(as.character(component_brdate), component_file)
+  comp <- create_temp_component(component_brdate, filename = "brdate.R")
 
   # YAML spec for ADSL with component but NO col_copy columns
   # This means no init_domain node will be created even though population.base exists
@@ -558,12 +549,13 @@ test_that("Error when ADaM specification is missing init_domain (no population.b
     - id: BRDATE
       component:
           id: ",
-    component_file
+    comp$filename
   )
 
-  adam_specifications <- setup_study_dir(list(
-    "adsl" = yaml_content
-  ))
+  adam_specifications <- setup_study_dir(
+    list("adsl" = yaml_content),
+    extra_repos = comp$dir
+  )
 
   # ACT & EXPECT ------------------------------------------------------------
 

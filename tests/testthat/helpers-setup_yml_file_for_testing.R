@@ -55,6 +55,30 @@ create_temp_yaml <- function(
 }
 
 
+#' Create Temporary Component File for Testing
+#'
+#' Writes component code into a temporary directory so it can be resolved as a repo.
+#'
+#' @param content Component code string or character vector.
+#' @param filename File name (e.g., "my_comp.R" or "my_comp.mustache").
+#' @param dir Directory to write the component into. Defaults to a temporary directory.
+#' @param .local_envir The environment where the temporary directory should be
+#'   registered for cleanup. Defaults to the parent frame.
+#'
+#' @return A list with `dir` (directory path) and `filename` (file name for `id:`).
+#' @noRd
+create_temp_component <- function(
+  content,
+  filename = "component.R",
+  dir = withr::local_tempdir(.local_envir = .local_envir),
+  .local_envir = parent.frame()
+) {
+  path <- file.path(dir, filename)
+  writeLines(as.character(content), path)
+  list(dir = dir, filename = filename)
+}
+
+
 #' Setup Temporary Study Directory for Testing
 #'
 #' Creates a temporary directory and writes YAML files for testing purposes.
@@ -65,6 +89,9 @@ create_temp_yaml <- function(
 #'   character vector (suitable for `writeLines`). The names of the list
 #'   elements will be used as filenames (with .yml extension added if not
 #'   present).
+#' @param extra_repos An optional character vector of additional repository paths
+#'   to prepend to the `repos` section of `_mighty.yml`. Prepended repos are
+#'   searched first.
 #' @param .local_envir The environment where the temporary directory should be
 #'   registered for cleanup. Defaults to the parent frame.
 #'
@@ -72,7 +99,11 @@ create_temp_yaml <- function(
 #'
 #' @keywords internal testing
 #' @noRd
-setup_study_dir <- function(yaml_list, .local_envir = parent.frame()) {
+setup_study_dir <- function(
+  yaml_list,
+  extra_repos = NULL,
+  .local_envir = parent.frame()
+) {
   # Ensure a _mighty.yml with repos is always present
 
   if (is.null(yaml_list[["_mighty"]])) {
@@ -80,6 +111,17 @@ setup_study_dir <- function(yaml_list, .local_envir = parent.frame()) {
       testthat::test_path("fixtures", "_mighty.yml")
     )
   }
+
+  mighty_yml <- yaml::yaml.load(paste(
+    yaml_list[["_mighty"]],
+    collapse = "\n"
+  ))
+  # Prepend so test-local components win over same-named files in other repos
+  mighty_yml$repos <- c(extra_repos, mighty_yml$repos)
+  # Relative local repos resolve against the working directory, which is not
+  # tests/testthat when a test file is run interactively from the package root
+  mighty_yml$repos <- resolve_test_repos(mighty_yml$repos)
+  yaml_list[["_mighty"]] <- yaml::as.yaml(mighty_yml)
 
   # `_mighty.yml` fixtures reference component repos fetched via the `gh`
   # package. `gh` < 1.6.0 rejects the `ghs_` App-installation token that CI
@@ -105,6 +147,28 @@ setup_study_dir <- function(yaml_list, .local_envir = parent.frame()) {
 }
 
 
+#' Resolve relative local repos against the test directory
+#'
+#' @param repos A character vector of repo specs. Specs with a `type::` prefix
+#'   and absolute paths are returned unchanged.
+#'
+#' @return `repos`, with relative local paths made absolute under
+#'   `testthat::test_path()`.
+#' @noRd
+resolve_test_repos <- function(repos) {
+  if (is.null(repos)) {
+    return(NULL)
+  }
+  is_relative <- !grepl("::", repos, fixed = TRUE) &
+    !grepl("^(/|~|[A-Za-z]:)", repos)
+  repos[is_relative] <- normalizePath(
+    testthat::test_path(repos[is_relative]),
+    mustWork = FALSE
+  )
+  repos
+}
+
+
 #' Setup Study Directory from Test Fixtures
 #'
 #' Convenience function to load YAML fixtures, process glue placeholders,
@@ -114,6 +178,9 @@ setup_study_dir <- function(yaml_list, .local_envir = parent.frame()) {
 #'   "_mighty") and values are fixture filenames (e.g., "complex_adsl.yml")
 #' @param process_glue Logical. If TRUE (default), processes {path_base} glue
 #'   placeholders in the YAML files.
+#' @param extra_repos An optional character vector of additional repository paths
+#'   to prepend to the `repos` section of `_mighty.yml`. Prepended repos are
+#'   searched first.
 #' @param .local_envir Environment for cleanup. Defaults to parent frame.
 #'
 #' @return Path to temporary study directory containing processed YAML files
@@ -123,6 +190,7 @@ setup_study_dir <- function(yaml_list, .local_envir = parent.frame()) {
 setup_study_from_fixtures <- function(
   fixtures,
   process_glue = TRUE,
+  extra_repos = NULL,
   .local_envir = parent.frame()
 ) {
   path_base <- testthat::test_path()
@@ -144,5 +212,9 @@ setup_study_from_fixtures <- function(
   })
   names(yaml_list) <- names(fixtures)
 
-  setup_study_dir(yaml_list, .local_envir = .local_envir)
+  setup_study_dir(
+    yaml_list,
+    extra_repos = extra_repos,
+    .local_envir = .local_envir
+  )
 }

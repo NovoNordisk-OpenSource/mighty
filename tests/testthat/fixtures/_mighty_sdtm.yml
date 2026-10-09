@@ -6,5 +6,6 @@ external_data:
   - id: DM_VACCINE
     keys: [STUDYID, USUBJID]
 repos:
-  - "NovoNordisk-OpenSource/mighty.standards/components@dev/internal-components"
+  - "github::NovoNordisk-OpenSource/mighty.standards/components@dev/internal-components"
   - "."
+  - "fixtures/components"

@@ -34,15 +34,15 @@ columns:
 
   - id: AVAL_GRP
     component:
-      id: "{path_base}/fixtures/components/aval_grp_01.R"
+      id: "aval_grp_01.R"
 
   - id: AVAL2
     method: ADLB.AVAL
 
   - id: AVALFL
     component:
-      id: "{path_base}/fixtures/components/avalfl_01.R"
+      id: "avalfl_01.R"
 
   - id: AVALREA
     component:
-      id: "{path_base}/fixtures/components/avalfl_01.R"
+      id: "avalfl_01.R"

@@ -43,20 +43,29 @@ The `repos` field tells mighty where to look for code components. Repositories a
 
 Each entry can be:
 
-- `owner/repo` — a GitHub repository
-- `owner/repo/subdir` — a subdirectory inside a GitHub repository
-- `owner/repo/subdir@ref` — a specific branch, tag, or commit
-- A local filesystem path (absolute or relative to the study directory)
+- `github::owner/repo` — a GitHub repository
+- `github::owner/repo/subdir` — a subdirectory inside a GitHub repository
+- `github::owner/repo/subdir@ref` — a specific branch, tag, or commit
+- A local filesystem path (absolute or relative to the working directory), optionally prefixed with `local::`
 
-GitHub repositories are downloaded once per session and cached.
+mighty resolves each GitHub ref to a commit once per R session, and downloads each commit once per session. Later calls to `generate_adam_code()` reuse the cached copy. Restart R to pick up new commits on a branch.
 
 ### Example:
 
 ```yml
 repos:
-  - NovoNordisk-OpenSource/mighty.standards/components
-  - my-org/study-components@v1.0.0
+  - github::NovoNordisk-OpenSource/mighty.standards/components
+  - github::my-org/study-components@v1.0.0
   - "./local-components"
 ```
 
-**IMPORTANT:** `repos` must include a source for mighty's internal templates (typically `NovoNordisk-OpenSource/mighty.standards/components`). Without it, mighty cannot resolve the special components used during code generation.
+**IMPORTANT:** `repos` must include a source for mighty's internal templates (typically `github::NovoNordisk-OpenSource/mighty.standards/components`). Without it, mighty cannot resolve the special components used during code generation.
+
+## Component IDs
+
+The `id` of a component in an ADaM specification is looked up in `repos`. It is not a file path. Inside each repository, `id: relative_day` matches:
+
+- `relative_day.R` or `relative_day.mustache`
+- the same file names inside a `relative_day/` subdirectory
+
+If one repository has more than one match (for example both `relative_day.R` and `relative_day.mustache`), mighty stops with an error. Use the file name with its extension to select one.

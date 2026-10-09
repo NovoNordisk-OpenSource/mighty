@@ -1,6 +1,6 @@
 Package: mighty
 Title: ADaM Program Generation Through Declarative Specifications
-Version: 0.0.0.9034
+Version: 0.0.0.9036
 Authors@R: c(
     person("Matthew", "Phelps", , "mewp@novonordisk.com", role = c("aut", "cre")),
     person("Nicolai", "Skov Johnsen", , "nosj@novonordisk.com", role = "aut"),
@@ -16,9 +16,9 @@ Description: Provides tools for generating ADaM programs in clinical
     creation.
 License: Apache License (>= 2)
 URL: https://novonordisk-opensource.github.io/mighty/
-Depends: 
+Depends:
     R (>= 4.1)
-Imports: 
+Imports:
     assertthat,
     checkmate,
     cli,
@@ -26,7 +26,7 @@ Imports:
     dplyr,
     glue,
     igraph,
-    mighty.component (>= 0.1.0.9004),
+    mighty.component (>= 0.1.0.9005),
     mighty.metadata (>= 0.1.0.9006),
     purrr,
     R6,
@@ -54,11 +54,12 @@ Suggests:
     testthat (>= 3.0.0),
     tools,
     whisker,
-    withr
+    withr,
+    yaml
 VignetteBuilder: 
     knitr,
     quarto
-Remotes: 
+Remotes:
     NovoNordisk-OpenSource/mighty.component,
     NovoNordisk-OpenSource/mighty.metadata
 Config/roxygen2/version: 8.0.0
