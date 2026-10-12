@@ -7,5 +7,4 @@ external_data:
     keys: [STUDYID, USUBJID]
 repos:
   - "github::NovoNordisk-OpenSource/mighty.standards/components@dev/internal-components"
-  - "."
   - "fixtures/components"
