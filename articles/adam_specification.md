@@ -374,13 +374,16 @@ code component can be:
     columns:
       - id: ARM_GRP1
         component:
-          id: path/to/code_component/arm_group_01.R
+          id: arm_group_01.R
     ```
 
-    For custom code components, provide the file path. Custom R scripts
-    should contain the data manipulation code directly as executable
-    script code, and metadata to declare dependencies and columns
-    created by the component. For details, see
+    For custom code components, provide the component name or file name.
+    Mighty looks it up in the repositories listed under `repos` in
+    `_mighty.yml` (see
+    [`vignette("mighty_config")`](https://novonordisk-opensource.github.io/mighty/articles/mighty_config.md)).
+    Custom R scripts should contain the data manipulation code directly
+    as executable script code, and metadata to declare dependencies and
+    columns created by the component. For details, see
     [`vignette("code_components")`](https://novonordisk-opensource.github.io/mighty/articles/code_components.md).
 
 8.  Adding a derived column using a custom code component (Mustache
@@ -390,7 +393,7 @@ code component can be:
     columns:
       - id: ARM_GRP1
         component:
-          id: path/to/code_component/arm_group_01.mustache
+          id: arm_group_01.mustache
     ```
 
     Custom Mustache templates allow parameterization (see example 10).

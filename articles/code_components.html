@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">mighty</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9034</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9035</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -328,7 +328,7 @@
 <div class="sourceCode" id="cb14"><pre class="sourceCode yml"><code class="sourceCode yaml"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">columns</span><span class="kw">:</span></span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">id</span><span class="kw">:</span><span class="at"> ADYDT</span></span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">component</span><span class="kw">:</span></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">id</span><span class="kw">:</span><span class="at"> path/to/components/relative_day.mustache</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">id</span><span class="kw">:</span><span class="at"> relative_day.mustache</span></span>
 <span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">with</span><span class="kw">:</span></span>
 <span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">domain</span><span class="kw">:</span><span class="at"> ADVS</span></span>
 <span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">date</span><span class="kw">:</span><span class="at"> ADT</span></span>
@@ -424,12 +424,15 @@
 <li>Multiple columns can share a single component. If several derived columns need the same source data, group them in one component to avoid redundant reads.</li>
 <li>Compute time is rarely the bottleneck in ADaM programming. Mighty optimizes for development time, not compute time.</li>
 <li>Self-contained components are easier to test and reuse independently.</li>
-</ul></section><section class="section level2"><h2 id="standard-vs--custom-components">Standard vs. Custom Components<a class="anchor" aria-label="anchor" href="#standard-vs--custom-components"></a>
+</ul></section><section class="section level2"><h2 id="standard-vs--custom-components">Standard vs. custom components<a class="anchor" aria-label="anchor" href="#standard-vs--custom-components"></a>
 </h2>
 <p>The classification of a component as either Standard or Custom is determined only by the governance of standard components. Mighty treats all components the same. Standard components and custom components can be either <code>.mustache</code> files or <code>.R</code> files.</p>
-</section><section class="section level2"><h2 id="in-built-components">In-built Components<a class="anchor" aria-label="anchor" href="#in-built-components"></a>
+<section class="level2"><h3 id="how-mighty-finds-a-component">How mighty finds a component<a class="anchor" aria-label="anchor" href="#how-mighty-finds-a-component"></a>
+</h3>
+<p>Mighty looks up the <code>id</code> of a component in the repositories listed under <code>repos</code> in <code>_mighty.yml</code>. To use a custom component, add the directory that contains it to <code>repos</code>. See <code><a href="../articles/mighty_config.html">vignette("mighty_config")</a></code> for the lookup rules.</p>
+</section></section><section class="section level2"><h2 id="in-built-components">In-built components<a class="anchor" aria-label="anchor" href="#in-built-components"></a>
 </h2>
-<p>There are a small number of in-built components are core functionality managed by mighty itself:</p>
+<p>A small number of in-built components provide core functionality managed by mighty itself:</p>
 <ul>
 <li>Data I/O operations (reading from connectors, writing outputs)</li>
 <li>Domain initialization and filtering</li>

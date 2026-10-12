@@ -101,20 +101,30 @@ The `COMPLSFL` column points to the code component called
 
 Code components can either be validated standard components or custom
 (un-validated) components. In this example `der_complsfl` is a
-**standard component**. We can see this is the case because we simply
-refer to the component name in the `id` field.
+**standard component**.
 
-**Custom components** need to be specified with a path to their
-location:
+The `id` field holds the name of the component, not a file path. Mighty
+looks it up in the component repositories listed under `repos` in
+`_mighty.yml` (see
+[`vignette("mighty_config")`](https://novonordisk-opensource.github.io/mighty/articles/mighty_config.md)).
+To use a **custom component**, add the directory that contains it to
+`repos` and refer to it by its name or file name:
+
+``` yml
+# _mighty.yml
+repos:
+  - github::NovoNordisk-OpenSource/mighty.standards/components
+  - path/to/custom/components
+```
 
 ``` yml
   - id: COMPLSFL
     component:
-      id: path/to/custom/component/der_complsfl.R
+      id: der_complsfl.R
 ```
 
-Notice the `.R` extension. Custom components are simply R scripts that
-adhere to a few simple rules. See
+Custom components are R scripts (`.R`) or Mustache templates
+(`.mustache`) that adhere to a few simple rules. See
 [`vignette("code_components")`](https://novonordisk-opensource.github.io/mighty/articles/code_components.md)
 for more details.
 

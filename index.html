@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="index.html">mighty</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9034</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9035</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -144,16 +144,20 @@
 <div class="section level3">
 <h3 id="code-components">Code components<a class="anchor" aria-label="anchor" href="#code-components"></a>
 </h3>
-<p>Code components can either be validated standard components or custom (un-validated) components. In this example <code>der_complsfl</code> is a <strong>standard component</strong>. We can see this is the case because we simply refer to the component name in the <code>id</code> field.</p>
-<p><strong>Custom components</strong> need to be specified with a path to their location:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode yml"><code class="sourceCode yaml"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">id</span><span class="kw">:</span><span class="at"> COMPLSFL</span></span>
-<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="at">    </span><span class="fu">component</span><span class="kw">:</span></span>
-<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="at">      </span><span class="fu">id</span><span class="kw">:</span><span class="at"> path/to/custom/component/der_complsfl.R</span></span></code></pre></div>
-<p>Notice the <code>.R</code> extension. Custom components are simply R scripts that adhere to a few simple rules. See <code><a href="articles/code_components.html">vignette("code_components")</a></code> for more details.</p>
+<p>Code components can either be validated standard components or custom (un-validated) components. In this example <code>der_complsfl</code> is a <strong>standard component</strong>.</p>
+<p>The <code>id</code> field holds the name of the component, not a file path. Mighty looks it up in the component repositories listed under <code>repos</code> in <code>_mighty.yml</code> (see <code><a href="articles/mighty_config.html">vignette("mighty_config")</a></code>). To use a <strong>custom component</strong>, add the directory that contains it to <code>repos</code> and refer to it by its name or file name:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode yml"><code class="sourceCode yaml"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="co"># _mighty.yml</span></span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="fu">repos</span><span class="kw">:</span></span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> github::NovoNordisk-OpenSource/mighty.standards/components</span></span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> path/to/custom/components</span></span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode yml"><code class="sourceCode yaml"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">id</span><span class="kw">:</span><span class="at"> COMPLSFL</span></span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="at">    </span><span class="fu">component</span><span class="kw">:</span></span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a><span class="at">      </span><span class="fu">id</span><span class="kw">:</span><span class="at"> der_complsfl.R</span></span></code></pre></div>
+<p>Custom components are R scripts (<code>.R</code>) or Mustache templates (<code>.mustache</code>) that adhere to a few simple rules. See <code><a href="articles/code_components.html">vignette("code_components")</a></code> for more details.</p>
 <p>As mighty matures, more of these components will be pre-defined and ready for use, so fewer components would need to be defined by the user. Standard components are provided by <a href="https://github.com/NovoNordisk-OpenSource/mighty.standards" class="external-link"><code>mighty.standards</code></a>, while <a href="https://github.com/NovoNordisk-OpenSource/mighty.component" class="external-link"><code>mighty.component</code></a> provides utilities for rendering both standard and custom components.</p>
 <p>See <code><a href="articles/adam_specification.html">vignette("adam_specification")</a></code> for more details on the ADaM Specification data model.</p>
 <p>For now, let’s assume <code>der_complsfl</code> doesn’t exist and we have to write it ourselves:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#' @title Completion Status Flag Calculation</span></span>
 <span><span class="co">#'</span></span>
 <span><span class="co">#' @description This script adds a `COMPLSFL` column to the input data frame,</span></span>
@@ -225,7 +229,7 @@
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
 <p>Install the development version from GitHub:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Using pak (recommended)</span></span>
 <span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"NovoNordisk-OpenSource/mighty"</span><span class="op">)</span></span></code></pre></div>
 </div>

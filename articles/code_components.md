@@ -360,7 +360,7 @@ vs. triple mustache syntax.
 columns:
   - id: ADYDT
     component:
-      id: path/to/components/relative_day.mustache
+      id: relative_day.mustache
       with:
         domain: ADVS
         date: ADT
@@ -494,17 +494,25 @@ once across different components. This is an accepted trade-off:
   optimizes for development time, not compute time.
 - Self-contained components are easier to test and reuse independently.
 
-## Standard vs. Custom Components
+## Standard vs. custom components
 
 The classification of a component as either Standard or Custom is
 determined only by the governance of standard components. Mighty treats
 all components the same. Standard components and custom components can
 be either `.mustache` files or `.R` files.
 
-## In-built Components
+### How mighty finds a component
 
-There are a small number of in-built components are core functionality
-managed by mighty itself:
+Mighty looks up the `id` of a component in the repositories listed under
+`repos` in `_mighty.yml`. To use a custom component, add the directory
+that contains it to `repos`. See
+[`vignette("mighty_config")`](https://novonordisk-opensource.github.io/mighty/articles/mighty_config.md)
+for the lookup rules.
+
+## In-built components
+
+A small number of in-built components provide core functionality managed
+by mighty itself:
 
 - Data I/O operations (reading from connectors, writing outputs)
 - Domain initialization and filtering

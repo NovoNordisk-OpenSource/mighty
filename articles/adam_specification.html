@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">mighty</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9034</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9035</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -510,15 +510,15 @@
 <div class="sourceCode" id="cb14"><pre class="sourceCode yml"><code class="sourceCode yaml"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">columns</span><span class="kw">:</span></span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">id</span><span class="kw">:</span><span class="at"> ARM_GRP1</span></span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">component</span><span class="kw">:</span></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">id</span><span class="kw">:</span><span class="at"> path/to/code_component/arm_group_01.R</span></span></code></pre></div>
-<p>For custom code components, provide the file path. Custom R scripts should contain the data manipulation code directly as executable script code, and metadata to declare dependencies and columns created by the component. For details, see <code><a href="../articles/code_components.html">vignette("code_components")</a></code>.</p>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">id</span><span class="kw">:</span><span class="at"> arm_group_01.R</span></span></code></pre></div>
+<p>For custom code components, provide the component name or file name. Mighty looks it up in the repositories listed under <code>repos</code> in <code>_mighty.yml</code> (see <code><a href="../articles/mighty_config.html">vignette("mighty_config")</a></code>). Custom R scripts should contain the data manipulation code directly as executable script code, and metadata to declare dependencies and columns created by the component. For details, see <code><a href="../articles/code_components.html">vignette("code_components")</a></code>.</p>
 </li>
 <li>
 <p>Adding a derived column using a custom code component (Mustache template)</p>
 <div class="sourceCode" id="cb15"><pre class="sourceCode yml"><code class="sourceCode yaml"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">columns</span><span class="kw">:</span></span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">id</span><span class="kw">:</span><span class="at"> ARM_GRP1</span></span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">component</span><span class="kw">:</span></span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">id</span><span class="kw">:</span><span class="at"> path/to/code_component/arm_group_01.mustache</span></span></code></pre></div>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">id</span><span class="kw">:</span><span class="at"> arm_group_01.mustache</span></span></code></pre></div>
 <p>Custom Mustache templates allow parameterization (see example 10).</p>
 </li>
 <li>

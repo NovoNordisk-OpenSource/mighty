@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">mighty</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9034</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9035</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -106,24 +106,36 @@
 </section></section><section class="section level2"><h2 id="component-repositories">Component repositories<a class="anchor" aria-label="anchor" href="#component-repositories"></a>
 </h2>
 <p>The <code>repos</code> field tells mighty where to look for code components. Repositories are searched in the order listed, and the first match wins.</p>
+<p>A component with the same name in a later repository is ignored. This also applies to mighty’s internal templates (for example <code>mighty_init_domain</code>). To use your own version of an internal template, put its repository before the one with the internal templates. Otherwise, list the internal templates first.</p>
 <p>Each entry can be:</p>
 <ul>
 <li>
-<code>owner/repo</code> — a GitHub repository</li>
+<code>github::owner/repo</code> — a GitHub repository</li>
 <li>
-<code>owner/repo/subdir</code> — a subdirectory inside a GitHub repository</li>
+<code>github::owner/repo/subdir</code> — a subdirectory inside a GitHub repository</li>
 <li>
-<code>owner/repo/subdir@ref</code> — a specific branch, tag, or commit</li>
-<li>A local filesystem path (absolute or relative to the study directory)</li>
+<code>github::owner/repo/subdir@ref</code> — a specific branch, tag, or commit</li>
+<li>A local filesystem path (absolute or relative to the working directory), optionally prefixed with <code>local::</code>
+</li>
 </ul>
-<p>GitHub repositories are downloaded once per session and cached.</p>
+<p>mighty resolves each GitHub ref to a commit once per R session, and downloads each commit once per session. Later calls to <code><a href="../reference/generate_adam_code.html">generate_adam_code()</a></code> reuse the cached copy. Restart R to pick up new commits on a branch.</p>
 <section class="level3"><h4 id="example-1">Example:<a class="anchor" aria-label="anchor" href="#example-1"></a>
 </h4>
 <div class="sourceCode" id="cb2"><pre class="sourceCode yml"><code class="sourceCode yaml"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">repos</span><span class="kw">:</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> NovoNordisk-OpenSource/mighty.standards/components</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> my-org/study-components@v1.0.0</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> github::NovoNordisk-OpenSource/mighty.standards/components</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> github::my-org/study-components@v1.0.0</span></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="st">"./local-components"</span></span></code></pre></div>
-<p><strong>IMPORTANT:</strong> <code>repos</code> must include a source for mighty’s internal templates (typically <code>NovoNordisk-OpenSource/mighty.standards/components</code>). Without it, mighty cannot resolve the special components used during code generation.</p>
+<p><strong>IMPORTANT:</strong> <code>repos</code> must include a source for mighty’s internal templates (typically <code>github::NovoNordisk-OpenSource/mighty.standards/components</code>). Without it, mighty cannot resolve the special components used during code generation.</p>
+</section><section class="level2"><h3 id="component-ids">Component IDs<a class="anchor" aria-label="anchor" href="#component-ids"></a>
+</h3>
+<p>The <code>id</code> of a component in an ADaM specification is looked up in <code>repos</code>. It is not a file path. Inside each repository, <code>id: relative_day</code> matches:</p>
+<ul>
+<li>
+<code>relative_day.R</code> or <code>relative_day.mustache</code>
+</li>
+<li>the same file names inside a <code>relative_day/</code> subdirectory</li>
+</ul>
+<p>If one repository has more than one match (for example both <code>relative_day.R</code> and <code>relative_day.mustache</code>), mighty stops with an error. Use the file name with its extension to select one.</p>
 </section></section><script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
