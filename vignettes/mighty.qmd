@@ -206,6 +206,20 @@ The column `AGE_GRP1` in ADSL is derived by using a custom component that contai
 
 Save the component in the `components` directory listed under `repos`. The ADaM specification refers to it by its file name, `age_group_01.R`.
 
+Relative paths in `repos` are resolved against the working directory, not against the location of `_mighty.yml`. This example assumes R is started in the folder that contains both `study_dir/` and `components/`:
+
+```
+my_study/                 <- working directory when running example_01_main.R
+├── example_01_main.R
+├── _connector.yml
+├── study_dir/            <- adam_specifications
+│   ├── _mighty.yml
+│   ├── _study.yml
+│   └── adsl.yml
+└── components/           <- "./components" in repos
+    └── age_group_01.R
+```
+
 **age_group_01.R**
 
 ```{r}
