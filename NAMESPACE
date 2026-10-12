@@ -4,6 +4,8 @@ export(generate_adam_code)
 export(write_adam_programs)
 import(data.table)
 importFrom(R6,R6Class)
-importFrom(data.table,data.table)
-importFrom(data.table,rbindlist)
+importFrom(data.table,
+  data.table,
+  rbindlist
+)
 importFrom(rlang,.data)

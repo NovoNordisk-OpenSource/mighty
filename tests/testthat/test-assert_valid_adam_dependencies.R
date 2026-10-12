@@ -5,8 +5,7 @@ test_that("Complete spec passes when cross-domain disabled", {
     fixtures = list(
       "adlb" = "assert_valid_adam_dependencies_adlb_01.yml",
       "_mighty" = "_mighty_with_adsl_keys.yml"
-    ),
-    process_glue = FALSE
+    )
   )
   path_connector_config <- withr::local_tempdir()
 
@@ -48,8 +47,7 @@ test_that("Complete spec passes when cross-domain enabled", {
     fixtures = list(
       "adlb" = "assert_valid_adam_dependencies_adlb_01.yml",
       "_mighty" = "_mighty_with_adsl_keys.yml"
-    ),
-    process_glue = FALSE
+    )
   )
   path_connector_config <- withr::local_tempdir()
 
@@ -91,8 +89,7 @@ test_that("Incomplete cross-domain ADaM spec fails when checks enabled", {
     fixtures = list(
       "adlb" = "assert_valid_adam_dependencies_adlb_02.yml",
       "_mighty" = "_mighty_with_adsl_keys.yml"
-    ),
-    process_glue = FALSE
+    )
   )
   path_connector_config <- withr::local_tempdir()
 
@@ -128,8 +125,7 @@ test_that("Incomplete cross-domain ADaM spec passes when checks disabled", {
     fixtures = list(
       "adlb" = "assert_valid_adam_dependencies_adlb_02.yml",
       "_mighty" = "_mighty_with_adsl_keys.yml"
-    ),
-    process_glue = FALSE
+    )
   )
   path_connector_config <- withr::local_tempdir()
 
@@ -313,8 +309,7 @@ test_that("Incomplete ADSL filter spec fails when cross-domain enabled", {
     fixtures = list(
       "adlb" = "assert_valid_adam_dependencies_adlb_05.yml",
       "_mighty" = "_mighty_with_adsl_keys.yml"
-    ),
-    process_glue = FALSE
+    )
   )
   path_connector_config <- withr::local_tempdir()
 
@@ -350,8 +345,7 @@ test_that("Incomplete ADSL filter spec passes when cross-domain disabled", {
     fixtures = list(
       "adlb" = "assert_valid_adam_dependencies_adlb_05.yml",
       "_mighty" = "_mighty_with_adsl_keys.yml"
-    ),
-    process_glue = FALSE
+    )
   )
   path_connector_config <- withr::local_tempdir()
 
@@ -392,8 +386,7 @@ test_that("Incomplete ADSL filter and actions fail when checks enabled", {
     fixtures = list(
       "adlb" = "assert_valid_adam_dependencies_adlb_06.yml",
       "_mighty" = "_mighty_with_adsl_keys.yml"
-    ),
-    process_glue = FALSE
+    )
   )
   path_connector_config <- withr::local_tempdir()
 
@@ -431,8 +424,7 @@ test_that("Incomplete ADSL filter and actions pass when checks disabled", {
     fixtures = list(
       "adlb" = "assert_valid_adam_dependencies_adlb_06.yml",
       "_mighty" = "_mighty_with_adsl_keys.yml"
-    ),
-    process_glue = FALSE
+    )
   )
   path_connector_config <- withr::local_tempdir()
 
@@ -475,8 +467,7 @@ test_that("Incomplete ADSL filter in two domains fails when checks enabled", {
       "adlb" = "assert_valid_adam_dependencies_adlb_06.yml",
       "advs" = "assert_valid_adam_dependencies_advs_01.yml",
       "_mighty" = "_mighty_with_adsl_keys.yml"
-    ),
-    process_glue = FALSE
+    )
   )
   path_connector_config <- withr::local_tempdir()
 
@@ -511,8 +502,7 @@ test_that("Incomplete ADSL filter in two domains passes when checks disabled", {
       "adlb" = "assert_valid_adam_dependencies_adlb_06.yml",
       "advs" = "assert_valid_adam_dependencies_advs_01.yml",
       "_mighty" = "_mighty_with_adsl_keys.yml"
-    ),
-    process_glue = FALSE
+    )
   )
   path_connector_config <- withr::local_tempdir()
 
@@ -650,8 +640,7 @@ test_that("Incomplete filter_depend_cols fails when x-check enabled", {
     fixtures = list(
       "adlb" = "assert_valid_adam_dependencies_adlb_08.yml",
       "_mighty" = "_mighty_with_adsl_keys.yml"
-    ),
-    process_glue = FALSE
+    )
   )
   path_connector_config <- withr::local_tempdir()
 
@@ -688,8 +677,7 @@ test_that("Incomplete filter_depend_cols fails when x-check disabled", {
     fixtures = list(
       "adlb" = "assert_valid_adam_dependencies_adlb_08.yml",
       "_mighty" = "_mighty_with_adsl_keys.yml"
-    ),
-    process_glue = FALSE
+    )
   )
   path_connector_config <- withr::local_tempdir()
 

@@ -486,8 +486,7 @@ test_that("Global filter and domain filter incl. adsl dependencies", {
     fixtures = list(
       "adlb" = "column_dependencies_adlb_02.yml",
       "_mighty" = "_mighty_with_adsl_keys.yml"
-    ),
-    process_glue = FALSE
+    )
   )
   path_connector_config <- withr::local_tempdir()
 
@@ -560,8 +559,7 @@ test_that("External predecessor dependencies are handled correctly in filter and
     fixtures = list(
       "adlb" = "column_dependencies_adlb_03.yml",
       "_mighty" = "_mighty_with_adsl_keys.yml"
-    ),
-    process_glue = FALSE
+    )
   )
   path_connector_config <- withr::local_tempdir()
 

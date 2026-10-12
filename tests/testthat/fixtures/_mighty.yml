@@ -11,5 +11,4 @@ external_data:
     keys: [STUDYID, AVISITN, TOPICCD]
 repos:
   - "github::NovoNordisk-OpenSource/mighty.standards/components@dev/internal-components"
-  - "."
   - "fixtures/components"
