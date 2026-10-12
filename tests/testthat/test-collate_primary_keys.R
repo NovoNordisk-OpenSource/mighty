@@ -4,8 +4,7 @@ test_that("Error when domain keys are defined in both _mighty.yml and ADaM speci
     fixtures = list(
       "adsl" = "skeleton_adsl.yml",
       "_mighty" = "_mighty_with_adsl_keys.yml"
-    ),
-    process_glue = FALSE
+    )
   )
 
   # ACT & EXPECT ------------------------------------------------------------

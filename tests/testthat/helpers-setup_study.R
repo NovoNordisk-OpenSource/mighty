@@ -127,13 +127,11 @@ resolve_test_repos <- function(repos) {
 
 #' Setup Study Directory from Test Fixtures
 #'
-#' Convenience function to load YAML fixtures, process glue placeholders,
-#' and create a study directory for testing with mighty_study().
+#' Convenience function to load YAML fixtures and create a study directory for
+#' testing with mighty_study().
 #'
 #' @param fixtures Named list where names are file IDs (e.g., "adsl", "adlb",
 #'   "_mighty") and values are fixture filenames (e.g., "complex_adsl.yml")
-#' @param process_glue Logical. If TRUE (default), processes {path_base} glue
-#'   placeholders in the YAML files.
 #' @param extra_repos An optional character vector of additional repository paths
 #'   to prepend to the `repos` section of `_mighty.yml`. Prepended repos are
 #'   searched first.
@@ -145,26 +143,12 @@ resolve_test_repos <- function(repos) {
 #' @noRd
 setup_study_from_fixtures <- function(
   fixtures,
-  process_glue = TRUE,
   extra_repos = NULL,
   .local_envir = parent.frame()
 ) {
-  path_base <- testthat::test_path()
-
   yaml_list <- lapply(names(fixtures), function(domain_id) {
     fixture_name <- fixtures[[domain_id]]
-    content <- readLines(testthat::test_path("fixtures", fixture_name))
-
-    if (process_glue) {
-      processed <- as.character(glue::glue(
-        paste(content, collapse = "\n"),
-        path_base = path_base,
-        .trim = FALSE
-      ))
-      strsplit(processed, "\n")[[1]]
-    } else {
-      content
-    }
+    readLines(testthat::test_path("fixtures", fixture_name))
   })
   names(yaml_list) <- names(fixtures)
 
