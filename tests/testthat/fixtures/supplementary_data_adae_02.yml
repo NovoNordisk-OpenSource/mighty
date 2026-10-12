@@ -30,8 +30,8 @@ columns:
 
   - id: AESEV_GRP
     component:
-      id: "{path_base}/fixtures/components/aesev_grp_01.R"
+      id: "aesev_grp_01.R"
 
   - id: AEBODSYS_GRP
     component:
-      id: "{path_base}/fixtures/components/aebodsys_grp_01.R"
+      id: "aebodsys_grp_01.R"

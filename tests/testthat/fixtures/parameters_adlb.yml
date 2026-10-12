@@ -35,41 +35,41 @@ columns:
 
   - id: PARAM_VAR1
     component:
-      id: "{path_base}/fixtures/components/param_var1_val.mustache"
+      id: "param_var1_val.mustache"
       with:
         value: "ABC"
 
   - id: VAR2
     component:
-      id: "{path_base}/fixtures/components/param_1_new_1_val.mustache"
+      id: "param_1_new_1_val.mustache"
       with:
         new_variable: VAR2
         value: 99
 
   - id: LBSTRESN_COPY
     component:
-      id: "{path_base}/fixtures/components/param_1_new_1_var.mustache"
+      id: "param_1_new_1_var.mustache"
       with:
         old_variable: LBSTRESN
         new_variable: LBSTRESN_COPY
 
   - id: LBSTNRLO_COPY
     component:
-      id: "{path_base}/fixtures/components/param_1_new_1_var.mustache"
+      id: "param_1_new_1_var.mustache"
       with:
         old_variable: LBSTNRLO
         new_variable: LBSTNRLO_COPY
 
   - id: PARAM_VAR2
     component:
-      id: "{path_base}/fixtures/components/param_var2_2_var.mustache"
+      id: "param_var2_2_var.mustache"
       with:
         in_variable1: LBSTNRLO
         in_variable2: LBSTNRHI
 
   - id: VAR3
     component:
-      id: "{path_base}/fixtures/components/param_1_new_2_var.mustache"
+      id: "param_1_new_2_var.mustache"
       with:
         in_variable1: LBSTNRLO
         in_variable2: LBSTNRHI
@@ -77,21 +77,21 @@ columns:
 
   - id: VAR4
     component:
-      id: "{path_base}/fixtures/components/param_2_new_2_val.mustache"
+      id: "param_2_new_2_val.mustache"
       with:
         new_variable1: VAR4
         new_variable2: VAR5
 
   - id: VAR5
     component:
-      id: "{path_base}/fixtures/components/param_2_new_2_val.mustache"
+      id: "param_2_new_2_val.mustache"
       with:
         new_variable1: VAR4
         new_variable2: VAR5
 
   - id: VAR6
     component:
-      id: "{path_base}/fixtures/components/param_2_new_2_var.mustache"
+      id: "param_2_new_2_var.mustache"
       with:
         in_variable1: LBSTNRLO
         in_variable2: LBSTNRHI
@@ -100,7 +100,7 @@ columns:
 
   - id: VAR7
     component:
-      id: "{path_base}/fixtures/components/param_2_new_2_var.mustache"
+      id: "param_2_new_2_var.mustache"
       with:
         in_variable1: LBSTNRLO
         in_variable2: LBSTNRHI
@@ -109,7 +109,7 @@ columns:
 
   - id: LBSTRESN_CROP
     component:
-      id: "{path_base}/fixtures/components/param_lbstresn_crop.mustache"
+      id: "param_lbstresn_crop.mustache"
       with:
         LBSTRESN_MINVAL: 38.0
     depends:
@@ -123,17 +123,17 @@ columns:
 
   - id: AVAL_GRP
     component:
-      id: "{path_base}/fixtures/components/aval_grp_01.R"
+      id: "aval_grp_01.R"
 
 rows:
   - id: NEW_PROTEIN
     component:
-      id: "{path_base}/fixtures/components/new_lbtest07.mustache"
+      id: "new_lbtest07.mustache"
       with:
         variable: Protein
 
   - id: NEW_SPECIFIC_GRAVITY
     component:
-      id: "{path_base}/fixtures/components/new_lbtest07.mustache"
+      id: "new_lbtest07.mustache"
       with:
         variable: Specific Gravity

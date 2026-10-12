@@ -301,7 +301,7 @@ Mustache templates use triple curly braces `{{{{variable}}}}` as placeholders th
 columns:
   - id: ADYDT
     component:
-      id: path/to/components/relative_day.mustache
+      id: relative_day.mustache
       with:
         domain: ADVS
         date: ADT
@@ -414,15 +414,17 @@ This approach may cause the same source column to be joined more than once acros
 - Compute time is rarely the bottleneck in ADaM programming. Mighty optimizes for development time, not compute time.
 - Self-contained components are easier to test and reuse independently.
 
-# Standard vs. Custom Components
+# Standard vs. custom components
 
 The classification of a component as either Standard or Custom is determined only by the governance of standard components. Mighty treats all components the same. Standard components and custom components can be either `.mustache` files or `.R` files.
 
+## How mighty finds a component
 
+Mighty looks up the `id` of a component in the repositories listed under `repos` in `_mighty.yml`. To use a custom component, add the directory that contains it to `repos`. See `vignette("mighty_config")` for the lookup rules.
 
-# In-built Components
+# In-built components
 
-There are a small number of in-built components are core functionality managed by mighty itself:
+A small number of in-built components provide core functionality managed by mighty itself:
 
 - Data I/O operations (reading from connectors, writing outputs)
 - Domain initialization and filtering

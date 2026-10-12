@@ -199,8 +199,7 @@ analyze_node_validation_issue <- function(node) {
   depend_cols_highlighted <- format_dependencies_for_display(depend_cols)
 
   component_info <- if (!is.na(node$code_id) && !is.null(node$code_id)) {
-    component_name <- basename(node$code_id)
-    paste0("via {.file ", component_name, "}")
+    paste0("via {.file ", node$code_id, "}")
   } else {
     ""
   }

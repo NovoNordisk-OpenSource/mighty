@@ -40,4 +40,4 @@ columns:
 
   - id: ARM_GRP1
     component:
-      id: "{path_base}/fixtures/components/arm_group_01.R"
+      id: "arm_group_01.R"

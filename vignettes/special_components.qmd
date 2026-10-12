@@ -35,7 +35,7 @@ templates.
 library(mighty.component)
 
 options(mighty.component.verbosity_level = "quiet")
-repos <- "NovoNordisk-OpenSource/mighty.standards/components@dev/internal-components"
+repos <- "github::NovoNordisk-OpenSource/mighty.standards/components@dev/internal-components"
 
 .html_escape <- function(x) {
   x <- gsub("&", "&amp;", x, fixed = TRUE)

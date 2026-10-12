@@ -231,12 +231,3 @@ test_that("same component with different parameters across domains is allowed ev
   ))
   expect_invisible(assert_consistent_component_params(dt))
 })
-# -- display_component_id -----------------------------------------------------
-
-test_that("display_component_id returns basename for file paths", {
-  expect_equal(display_component_id("path/to/der_complsfl.R"), "der_complsfl.R")
-})
-
-test_that("display_component_id returns standard names as-is", {
-  expect_equal(display_component_id("ady"), "ady")
-})

@@ -39,39 +39,39 @@ columns:
 
   - id: ARM_GRP1
     component:
-      id: "{path_base}/fixtures/components/arm_group_01.R"
+      id: "arm_group_01.R"
 
   - id: ARM_CAT1
     component:
-      id: "{path_base}/fixtures/components/arm_category_01.R"
+      id: "arm_category_01.R"
 
   - id: ARM_MATCH
     component:
-      id: "{path_base}/fixtures/components/arm_match_01.R"
+      id: "arm_match_01.R"
 
   - id: AGE2
     component:
-      id: "{path_base}/fixtures/components/age_crop_01.R"
+      id: "age_crop_01.R"
 
   - id: AGE_DIFF1
     component:
-      id: "{path_base}/fixtures/components/age_diff_01.R"
+      id: "age_diff_01.R"
 
   - id: AGE_DIFF2
     component:
-      id: "{path_base}/fixtures/components/age_diff_02.R"
+      id: "age_diff_02.R"
 
   - id: RACE_COUNTRY
     component:
-      id: "{path_base}/fixtures/components/race_x_country_01.R"
+      id: "race_x_country_01.R"
 
   - id: NEW_ARM
     component:
-      id: "{path_base}/fixtures/components/arm_01.R"
+      id: "arm_01.R"
 
   - id: MIN_AVAL
     component:
-      id: "{path_base}/fixtures/components/min_aval_01.R"
+      id: "min_aval_01.R"
 
   - id: ARM
 
@@ -81,23 +81,23 @@ columns:
 
   - id: NEWFL01
     component:
-      id: "{path_base}/fixtures/components/newfl_01.R"
+      id: "newfl_01.R"
 
   - id: NEWREA01
     component:
-      id: "{path_base}/fixtures/components/newfl_01.R"
+      id: "newfl_01.R"
 
   - id: NEWFL02
     component:
-      id: "{path_base}/fixtures/components/newfl_02.R"
+      id: "newfl_02.R"
 
   - id: NEWFL03
     component:
-      id: "{path_base}/fixtures/components/newfl_03.R"
+      id: "newfl_03.R"
 
   - id: NEWREA03
     component:
-      id: "{path_base}/fixtures/components/newfl_03.R"
+      id: "newfl_03.R"
 
   - id: STUDYID
 
@@ -109,4 +109,4 @@ columns:
 
   - id: AGE_GRP1
     component:
-      id: "{path_base}/fixtures/components/age_group_01.R"
+      id: "age_group_01.R"

@@ -1,4 +1,4 @@
-render_components <- function(actions, repos = NULL) {
+render_components <- function(actions, repos) {
   code_component_ids <- actions[!is.na(code_id), ]
 
   rendered_components <- list()

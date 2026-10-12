@@ -38,24 +38,24 @@ columns:
 
   - id: AVAL_GRP
     component:
-      id: "{path_base}/fixtures/components/aval_grp_01.R"
+      id: "aval_grp_01.R"
 
   - id: AVAL2
     method: ADLB.AVAL
 
   - id: LBTEST
     component:
-      id: "{path_base}/fixtures/components/lbtest_01.R"
+      id: "lbtest_01.R"
 
   - id: AVALFL
     component:
-      id: "{path_base}/fixtures/components/avalfl_01.R"
+      id: "avalfl_01.R"
 
   - id: AVALREA
     component:
-      id: "{path_base}/fixtures/components/avalfl_01.R"
+      id: "avalfl_01.R"
 
 rows:
   - id: NEW_MICROCYTES
     component:
-      id: "{path_base}/fixtures/components/new_lbtest_01.R"
+      id: "new_lbtest_01.R"

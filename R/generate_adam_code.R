@@ -182,7 +182,7 @@ generate_adam_code_study <- function(
   check_cross_domain_adam_dependencies,
   data_context
 ) {
-  repos <- study@mighty$repos
+  repos <- mighty.component::mighty_repos(repos = study@mighty$repos)
   ui_yml <- study |>
     purrr::imap(process_adam_domain)
 

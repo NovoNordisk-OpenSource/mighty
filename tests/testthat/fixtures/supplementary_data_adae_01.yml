@@ -36,4 +36,4 @@ columns:
 
   - id: AETRTEM
     component:
-      id: "{path_base}/fixtures/components/supp_ae_01.R"
+      id: "supp_ae_01.R"
