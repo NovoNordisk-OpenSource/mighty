@@ -43,6 +43,12 @@ external_data:
 The `repos` field tells mighty where to look for code components.
 Repositories are searched in the order listed, and the first match wins.
 
+A component with the same name in a later repository is ignored. This
+also applies to mighty’s internal templates (for example
+`mighty_init_domain`). To use your own version of an internal template,
+put its repository before the one with the internal templates.
+Otherwise, list the internal templates first.
+
 Each entry can be:
 
 - `github::owner/repo` — a GitHub repository

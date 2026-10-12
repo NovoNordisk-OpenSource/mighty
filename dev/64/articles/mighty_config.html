@@ -106,6 +106,7 @@
 </section></section><section class="section level2"><h2 id="component-repositories">Component repositories<a class="anchor" aria-label="anchor" href="#component-repositories"></a>
 </h2>
 <p>The <code>repos</code> field tells mighty where to look for code components. Repositories are searched in the order listed, and the first match wins.</p>
+<p>A component with the same name in a later repository is ignored. This also applies to mighty’s internal templates (for example <code>mighty_init_domain</code>). To use your own version of an internal template, put its repository before the one with the internal templates. Otherwise, list the internal templates first.</p>
 <p>Each entry can be:</p>
 <ul>
 <li>
