@@ -62,8 +62,7 @@ VignetteBuilder:
 Remotes:
     NovoNordisk-OpenSource/mighty.component,
     NovoNordisk-OpenSource/mighty.metadata
-Config/roxygen2/version: 8.0.0
+Config/roxygen2/version: 8.1.1
 Config/testthat/edition: 3
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.3
