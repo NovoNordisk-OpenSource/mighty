@@ -30,7 +30,7 @@
 #' @param file_ext Character string. File extension for the written dataset,
 #'   defaults to `"parquet"`. Will be overridable via `_mighty.yml` and
 #'   per-domain YAML in a future release.
-#' @param repos A `mighty.component::mighty_repos()` collection (or `NULL`),
+#' @param repos A `mighty.component::mighty_repos()` collection,
 #'   passed through to [mighty.component::get_rendered_component()].
 #'
 #' @return
@@ -45,7 +45,7 @@ render_code <- function(
   path_connector_config,
   available_data = NULL,
   file_ext = "parquet",
-  repos = NULL
+  repos
 ) {
   actions_program_summary <- actions |>
     dplyr::group_by(domain) |>
