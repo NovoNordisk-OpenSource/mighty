@@ -1,42 +1,9 @@
-#' Validate that source and code_id are not both populated
-#'
-#' This rule checks that columns do not have both method and component.id
-#' fields populated simultaneously, as this creates ambiguous behavior.
-#'
-#' @param yaml_content Raw YAML content structure from mighty_metadata
-#' @param context Validation context (yaml_file, ruleset_name, etc.)
-#' @return List with 'valid' (logical) and 'errors' (character vector)
-#' @noRd
-val_method_and_component_id_not_both_populated <- function(
-  yaml_content,
-  context = list()
-) {
-  problem_columns <- character(0)
-  for (col in yaml_content$columns) {
-    if (has_content(col$method) && has_content(col$component$id)) {
-      problem_columns <- c(problem_columns, col$id %||% "")
-    }
-  }
-
-  if (length(problem_columns) == 0) {
-    return(list(valid = TRUE, errors = character(0)))
-  }
-
-  list(
-    valid = FALSE,
-    errors = c(
-      "The following columns have both `method` and `component.id` field populated: ",
-      paste0("  - ", problem_columns)
-    )
-  )
-}
-
-
 #' Validate that method values are domain-qualified
 #'
 #' This rule checks that every column `method` value is domain-qualified
 #' (e.g. `ADLB.LBSTRESN`), rejecting the bare form (e.g. `LBSTRESN`). Row and
-#' parameter `method` values are free text and are not checked.
+#' parameter `method` values, and column `method` values on columns with a
+#' `component`, are free text and are not checked.
 #'
 #' @param yaml_content Raw YAML content structure from mighty_metadata
 #' @param context Validation context (yaml_file, ruleset_name, etc.)
@@ -49,6 +16,10 @@ val_method_is_domain_qualified <- function(
   domain_id <- yaml_content$id %||% ""
 
   errors <- unlist(lapply(yaml_content$columns, \(col) {
+    # With a component, method is a free-text derivation description, not a source column
+    if (has_content(col$component$id)) {
+      return(NULL)
+    }
     check_domain_qualified_method(col$method, col$id, domain_id)
   }))
 
