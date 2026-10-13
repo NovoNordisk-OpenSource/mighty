@@ -49,7 +49,7 @@ parameters:
     expect_no_error()
 })
 
-test_that("Too many specifications for column fail yaml validation checks", {
+test_that("method and component can both be set on a column", {
   # SETUP ----------------------------------------------------------------------
 
   yaml_content <- "
@@ -69,26 +69,26 @@ population:
       depends:
         - SAFFL
 columns:
+  - id: USUBJID
   - id: VAR1
-    method: VAR0
+    method: Free text derivation description
     component:
       id: fnc1
   - id: VAR2
-    method: VAR0
+    method: ADSL.VAR0
     component:
       id: fnc1
-
 "
   adam_specifications <- setup_study_dir(list("adlb" = yaml_content))
 
-  # ACT / ASSERT ---------------------------------------------------------------
+  # ACT ------------------------------------------------------------------------
   study <- mighty.metadata::mighty_study(adam_specifications)
-  err_ <- process_adam_domain(study$ADLB, "ADLB") |>
-    expect_error(
-      "The following columns have both `method` and `component.id` field populated"
-    )
-  expect_match(err_$body, "- VAR1", all = FALSE)
-  expect_match(err_$body, "- VAR2", all = FALSE)
+  result <- process_adam_domain(study$ADLB, "ADLB")
+
+  # ASSERT ---------------------------------------------------------------------
+  # component drives the derivation; a domain-qualified method does not add a dependency
+  expect_equal(result$columns$VAR2$code_id, "fnc1")
+  expect_null(result$columns$VAR2$depend_cols)
 })
 
 test_that("row_depends with missing row_action definition caught", {
