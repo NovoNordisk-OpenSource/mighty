@@ -262,9 +262,30 @@ column is created:
 | Field | Description | Notes |
 |----|----|----|
 | `id` | Name of the column in the final dataset | Required |
-| `method` | Source location for simple operations | Use for copying/renaming columns |
+| `method` | Source location for simple operations, or a derivation description when `component` is set | See [The `method` field](#the-method-field) |
 | `component` | Component definition for derivations | Object with `id` and optional `with` |
 | `depends` | IDs of row or parameter operations that must complete first | Array of strings (e.g., `rows.BASELINE_FLAG`, `parameters.BMI`) |
+
+#### The `method` field
+
+`method` has two roles, which depend on whether the column also has a
+`component`:
+
+- **Without `component`**: `method` is the source of the column. It must
+  be domain-qualified (e.g., `ADSL.SAFFL`), and mighty uses it to
+  resolve the dependency.
+- **With `component`**: the component derives the column and supplies
+  its dependencies. `method` is free text that describes the derivation,
+  for use in define.xml. mighty does not use it for dependency
+  resolution.
+
+``` yml
+columns:
+  - id: COMPLSFL
+    method: Completer flag derived per protocol section 4.2
+    component:
+      id: der_complsfl.R
+```
 
 #### Component object
 
