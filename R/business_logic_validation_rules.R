@@ -15,13 +15,11 @@ val_method_is_domain_qualified <- function(
 ) {
   domain_id <- yaml_content$id %||% ""
 
-  # With a component, method is a free-text derivation description, not a source column
-  derived <- vapply(
-    yaml_content$columns,
-    \(col) has_content(col$component$id),
-    logical(1)
-  )
-  errors <- unlist(lapply(yaml_content$columns[!derived], \(col) {
+  errors <- unlist(lapply(yaml_content$columns, \(col) {
+    # With a component, method is a free-text derivation description, not a source column
+    if (has_content(col$component$id)) {
+      return(NULL)
+    }
     check_domain_qualified_method(col$method, col$id, domain_id)
   }))
 
