@@ -6,5 +6,18 @@
   "required": [
     "population"
   ],
+  "properties": {
+    "columns": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "method": {
+            "description": "Without `component`: domain-qualified source column (e.g. `ADSL.SAFFL`). With `component`: free-text derivation description"
+          }
+        }
+      }
+    }
+  },
   "additionalProperties": true
 }
