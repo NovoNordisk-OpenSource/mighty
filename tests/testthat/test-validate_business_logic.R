@@ -86,6 +86,7 @@ columns:
   result <- process_adam_domain(study$ADLB, "ADLB")
 
   # ASSERT ---------------------------------------------------------------------
+  expect_equal(result$columns$VAR1$code_id, "fnc1")
   # component drives the derivation; a domain-qualified method does not add a dependency
   expect_equal(result$columns$VAR2$code_id, "fnc1")
   expect_null(result$columns$VAR2$depend_cols)
