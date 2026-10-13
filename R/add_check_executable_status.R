@@ -544,11 +544,13 @@ handle_write_domain_action <- function(
   removed_outputs <- NA
   depend_cols <- action$depend_cols[[1]]
   removed_depend_cols <- NA
-  # Check if init_domain action was lacking outputs
+  # Check if init_domain action was lacking outputs. A program that reads back
+  # a domain written by an earlier program has no init_domain action.
   ida <- processed_actions[
     program_id == action$program_id & code_id == "mighty_init_domain"
   ][1]
-  ida_removed_outputs <- ida$removed_outputs[[1]]
+  ida_removed_outputs <- if (is.na(ida$code_id)) NULL else
+    ida$removed_outputs[[1]]
 
   if (!is.null(ida_removed_outputs)) {
     adjusted <- derive_updated_action_values(
