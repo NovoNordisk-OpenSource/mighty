@@ -559,6 +559,7 @@ columns:
 Mighty will abort with an error:
 
     #> → No `_documents.yml` file found
+    #> → No `_codelists.yml` file found
     #> Error:
     #> ! Specification validation errors found:
     #>

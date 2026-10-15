@@ -723,25 +723,33 @@ Standard template and rendered output
     #' @type internal
     #' @origin Not Available
     #' @method Not applicable
-    #' @param self Character string. Name of the primary dataset being modified; the left-hand side of the join, whose row count is preserved (e.g. `"ADLB"`).
+    #' @param self Character string. Name of the primary dataset being modified; the left-hand side of the join, whose row count is kept (e.g. `"ADLB"`). The join stops with an error when a row in `self` matches more than one row in `join_dataset`.
     #' @param join_dataset Character string. Name of the dataset to look up from; the right-hand side of the join (e.g. `"ADSL"`).
     #' @param select_expr Character string. Comma-separated column names to select from `join_dataset` before joining. Includes both join keys and the variable being added.
     #' @param by_vars Character string. Comma-separated quoted column names used as join keys, ready for `dplyr::left_join(by = c(...))` (e.g. `"\"STUDYID\", \"USUBJID\""`).
-    #' @param needs_rename Logical. `TRUE` when the variable name in `join_dataset` differs from the desired output name, triggering an appended `dplyr::rename()` call.
+    #' @param needs_rename Logical. `TRUE` when the variable name in `join_dataset` differs from the desired output name; applies `dplyr::rename()` to `join_dataset` before the join.
     #' @param output_var Character string. Desired column name in `self` after the join.
     #' @param var_to_add Character string. Column name as it exists in `join_dataset`, before any renaming. Equal to `output_var` when `needs_rename` is `FALSE`.
     #' @code
     {{{self}}} <- {{{self}}} |>
-        dplyr::left_join({{{join_dataset}}} |> dplyr::select({{{select_expr}}}),
-    by = c({{{by_vars}}})){{#needs_rename}} |>
-                         dplyr::rename({{{output_var}}} = {{{var_to_add}}}){{/needs_rename}}
+      dplyr::left_join(
+        {{{join_dataset}}} |>
+          dplyr::select({{{select_expr}}}){{#needs_rename}} |>
+          dplyr::rename({{{output_var}}} = {{{var_to_add}}}){{/needs_rename}},
+        by = c({{{by_vars}}}),
+        relationship = "many-to-one"
+      )
 
 **Rendered output**
 
 ``` r
 ADLB <- ADLB |>
-    dplyr::left_join(ADSL |> dplyr::select(STUDYID, USUBJID, SEX),
-by = c("STUDYID", "USUBJID"))
+  dplyr::left_join(
+    ADSL |>
+      dplyr::select(STUDYID, USUBJID, SEX),
+    by = c("STUDYID", "USUBJID"),
+    relationship = "many-to-one"
+  )
 ```
 
 ### Parameters
