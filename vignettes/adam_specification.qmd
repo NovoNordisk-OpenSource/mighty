@@ -451,50 +451,36 @@ Consider a component that derives both a date and its imputation flag — it pro
 #| output: false
 library(mighty)
 options(mighty.component.verbosity_level = "quiet")
-component_dir <- tempfile()
-dir.create(component_dir)
-component_file <- file.path(component_dir, "dtc_to_dt.mustache")
-writeLines(
-  "
-#' @title Convert DTC to DT
-#' @description Derives a date and date flag from a DTC variable
-#' @param dtc_var Name of the source DTC variable
-#' @param dt_var Name of the output date variable
-#' @param dtf_var Name of the output date flag variable
-#' @type column
-#' @origin Derived
-#' @method Date and date flag derived from the source DTC variable.
-#' @depends ADLB USUBJID
-#' @outputs {{{dt_var}}}
-#' @outputs {{{dtf_var}}}
-#' @code
-ADLB <- ADLB |>
-  dplyr::mutate(
-    {{{dt_var}}} = as.Date({{{dtc_var}}}),
-    {{{dtf_var}}} = ifelse(is.na({{{dtc_var}}}), 'Y', NA_character_)
-  )
-",
-  con = component_file
-)
 
-invalid_columns_yml <- "
-columns:
-  - id: USUBJID
-  - id: ASTDT
-    component:
-      id: dtc_to_dt.mustache
-      with:
-        dtc_var: LBDTC
-        dt_var: ASTDT
-        dtf_var: ASTDTF
-  - id: ASTDTF
-    component:
-      id: dtc_to_dt.mustache
-      with:
-        dtc_var: LBENDTC
-        dt_var: ASTDT
-        dtf_var: ASTDTF
-"
+# Copy the example study from inst/examples/overlapping_outputs to a temp
+# folder. Its adlb.yml is invalid on purpose: it shows the error below.
+example_dir <- tempfile("mighty_example_")
+dir.create(example_dir)
+file.copy(
+  system.file(
+    "examples",
+    "overlapping_outputs",
+    package = "mighty",
+    mustWork = TRUE
+  ),
+  example_dir,
+  recursive = TRUE
+)
+example_dir <- file.path(example_dir, "overlapping_outputs")
+
+# Print a file from the example study as a code block, starting at the first
+# line that matches `from`. A helper instead of an `{embed}` chunk (used in
+# mighty.qmd) because `{embed}` can only show the whole file.
+show_file <- function(path, lang, from = NULL) {
+  lines <- readLines(file.path(example_dir, path))
+  if (!is.null(from)) {
+    stopifnot(any(grepl(from, lines)))
+    lines <- lines[grep(from, lines)[[1]]:length(lines)]
+  }
+  cat("```", lang, "\n", sep = "")
+  cat(lines, sep = "\n")
+  cat("\n```\n")
+}
 ```
 
 If the same component is used twice with different parameters but both uses produce the same output columns, mighty cannot tell which parameter values should be used:
@@ -502,7 +488,7 @@ If the same component is used twice with different parameters but both uses prod
 ```{r}
 #| echo: false
 #| output: asis
-cat("```yml", trimws(invalid_columns_yml), "```", sep = "\n")
+show_file("study_dir/adlb.yml", "yml", from = "^columns:")
 ```
 
 Mighty will abort with an error:
@@ -510,47 +496,15 @@ Mighty will abort with an error:
 ```{r}
 #| error: true
 #| echo: false
-yml <- paste0(
-  "
-id: ADLB
-label: Laboratory Analysis Dataset
-class: BASIC DATA STRUCTURE
-structure: One record per subject per parameter per analysis visit
-keys: [USUBJID]
-population:
-  base:
-    - domain: LB
-      depends:
-        - NA
-      filter: NA
-  global:
-    - filter: NA
-      depends:
-        - NA
-",
-  invalid_columns_yml
-)
-
-study_dir <- tempfile()
-dir.create(study_dir)
-writeLines(yml, file.path(study_dir, "adlb.yml"))
-writeLines(
-  c(
-    "external_data:",
-    "  - id: DM",
-    "    keys: [STUDYID, USUBJID]",
-    "repos:",
-    sprintf("  - \"%s\"", normalizePath(component_dir, winslash = "/"))
-  ),
-  file.path(study_dir, "_mighty.yml")
-)
-writeLines("study_id: demo_study", file.path(study_dir, "_study.yml"))
-
-generate_adam_code(
-  adam_specifications = study_dir,
-  path_connector_config = file.path(tempdir(), "_connector.yml"),
-  check_cross_domain_adam_dependencies = FALSE
-)
+# `repos` in _mighty.yml has "./components", which resolves against the
+# working directory, so run from the root of the example study.
+withr::with_dir(example_dir, {
+  generate_adam_code(
+    adam_specifications = "study_dir",
+    path_connector_config = "_connector.yml",
+    check_cross_domain_adam_dependencies = FALSE
+  )
+})
 ```
 
 The fix is to ensure that each invocation of the component (that is, with different parameters) produces a distinct set of output columns.

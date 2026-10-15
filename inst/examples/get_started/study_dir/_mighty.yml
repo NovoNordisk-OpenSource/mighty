@@ -1,0 +1,8 @@
+external_data:
+  - id: DM
+    keys: [USUBJID, STUDYID]
+  - id: LB
+    keys: [USUBJID, STUDYID, LBSEQ]
+repos:
+  - "github::NovoNordisk-OpenSource/mighty.standards/components@dev/internal-components"
+  - "./components"

@@ -1,0 +1,5 @@
+external_data:
+  - id: DM
+    keys: [STUDYID, USUBJID]
+repos:
+  - "./components"
