@@ -54,7 +54,7 @@
 <li>Format: <code>air format</code> after generating or editing R code, but only format modified files, do not format the entire directory/pkg</li>
 <li>Test all: <code>devtools::test()</code>
 </li>
-<li>Test one file: <code>devtools::test_file("tests/testthat/test-filename.R")</code>
+<li>Test one file: <code>devtools::test(filter = ...)</code>
 </li>
 <li>Never use <code>devtools::test_active_file()</code> — it doesn’t work in this setup</li>
 <li>Full check: <code>devtools::check()</code>
