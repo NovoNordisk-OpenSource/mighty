@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">mighty</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9038</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9039</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -739,22 +739,30 @@ cnt &lt;- connector::connect(config = {{{connector_path_expr}}})
 #' @type internal
 #' @origin Not Available
 #' @method Not applicable
-#' @param self Character string. Name of the primary dataset being modified; the left-hand side of the join, whose row count is preserved (e.g. `"ADLB"`).
+#' @param self Character string. Name of the primary dataset being modified; the left-hand side of the join, whose row count is kept (e.g. `"ADLB"`). The join stops with an error when a row in `self` matches more than one row in `join_dataset`.
 #' @param join_dataset Character string. Name of the dataset to look up from; the right-hand side of the join (e.g. `"ADSL"`).
 #' @param select_expr Character string. Comma-separated column names to select from `join_dataset` before joining. Includes both join keys and the variable being added.
 #' @param by_vars Character string. Comma-separated quoted column names used as join keys, ready for `dplyr::left_join(by = c(...))` (e.g. `"\"STUDYID\", \"USUBJID\""`).
-#' @param needs_rename Logical. `TRUE` when the variable name in `join_dataset` differs from the desired output name, triggering an appended `dplyr::rename()` call.
+#' @param needs_rename Logical. `TRUE` when the variable name in `join_dataset` differs from the desired output name; applies `dplyr::rename()` to `join_dataset` before the join.
 #' @param output_var Character string. Desired column name in `self` after the join.
 #' @param var_to_add Character string. Column name as it exists in `join_dataset`, before any renaming. Equal to `output_var` when `needs_rename` is `FALSE`.
 #' @code
 {{{self}}} &lt;- {{{self}}} |&gt;
-    dplyr::left_join({{{join_dataset}}} |&gt; dplyr::select({{{select_expr}}}),
-by = c({{{by_vars}}})){{#needs_rename}} |&gt;
-                     dplyr::rename({{{output_var}}} = {{{var_to_add}}}){{/needs_rename}}</code></pre>
+  dplyr::left_join(
+    {{{join_dataset}}} |&gt;
+      dplyr::select({{{select_expr}}}){{#needs_rename}} |&gt;
+      dplyr::rename({{{output_var}}} = {{{var_to_add}}}){{/needs_rename}},
+    by = c({{{by_vars}}}),
+    relationship = "many-to-one"
+  )</code></pre>
 <p><strong>Rendered output</strong></p>
 <pre><code class="language-r"><span><span class="va">ADLB</span> <span class="op">&lt;-</span> <span class="va">ADLB</span> <span class="op">|&gt;</span></span>
-<span>    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">left_join</a></span><span class="op">(</span><span class="va">ADSL</span> <span class="op">|&gt;</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">STUDYID</span>, <span class="va">USUBJID</span>, <span class="va">SEX</span><span class="op">)</span>,</span>
-<span>by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"STUDYID"</span>, <span class="st">"USUBJID"</span><span class="op">)</span><span class="op">)</span></span></code></pre>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">left_join</a></span><span class="op">(</span></span>
+<span>    <span class="va">ADSL</span> <span class="op">|&gt;</span></span>
+<span>      <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">STUDYID</span>, <span class="va">USUBJID</span>, <span class="va">SEX</span><span class="op">)</span>,</span>
+<span>    by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"STUDYID"</span>, <span class="st">"USUBJID"</span><span class="op">)</span>,</span>
+<span>    relationship <span class="op">=</span> <span class="st">"many-to-one"</span></span>
+<span>  <span class="op">)</span></span></code></pre>
 </details>
 </div>
 </div>

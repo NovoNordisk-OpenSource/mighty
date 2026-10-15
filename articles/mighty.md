@@ -188,22 +188,23 @@ Printing the rendered ADaM program yields a complete program for
 generating ADSL based on the specifications
 
     #> → No `_documents.yml` file found
-    #> → Downloading repo "NovoNordisk-OpenSource/mighty.standards@f0b777bb74cf50a6f0ac592347d48822f5f7df15"
-    #> → Found "age_group_01.R" in "local::/tmp/RtmpujOc1V/mighty_example_components"
-    #> → Found "mighty_read_data" in "github::NovoNordisk-OpenSource/mighty.standards/components@f0b777bb74cf50a6f0ac592347d48822f5f7df15"
-    #> → Found "mighty_init_domain" in "github::NovoNordisk-OpenSource/mighty.standards/components@f0b777bb74cf50a6f0ac592347d48822f5f7df15"
-    #> → Found "mighty_filter_domain" in "github::NovoNordisk-OpenSource/mighty.standards/components@f0b777bb74cf50a6f0ac592347d48822f5f7df15"
-    #> → Found "age_group_01.R" in "local::/tmp/RtmpujOc1V/mighty_example_components"
-    #> → Found "mighty_col_mutate" in "github::NovoNordisk-OpenSource/mighty.standards/components@f0b777bb74cf50a6f0ac592347d48822f5f7df15"
-    #> → Found "mighty_write_data" in "github::NovoNordisk-OpenSource/mighty.standards/components@f0b777bb74cf50a6f0ac592347d48822f5f7df15"
-    #> → Found "mighty_read_data" in "github::NovoNordisk-OpenSource/mighty.standards/components@f0b777bb74cf50a6f0ac592347d48822f5f7df15"
-    #> → Found "mighty_init_domain" in "github::NovoNordisk-OpenSource/mighty.standards/components@f0b777bb74cf50a6f0ac592347d48822f5f7df15"
-    #> → Found "mighty_filter_domain" in "github::NovoNordisk-OpenSource/mighty.standards/components@f0b777bb74cf50a6f0ac592347d48822f5f7df15"
-    #> → Found "age_group_01.R" in "local::/tmp/RtmpujOc1V/mighty_example_components"
-    #> → Found "mighty_col_mutate" in "github::NovoNordisk-OpenSource/mighty.standards/components@f0b777bb74cf50a6f0ac592347d48822f5f7df15"
-    #> → Found "mighty_write_data" in "github::NovoNordisk-OpenSource/mighty.standards/components@f0b777bb74cf50a6f0ac592347d48822f5f7df15"
+    #> → No `_codelists.yml` file found
+    #> → Downloading repo "NovoNordisk-OpenSource/mighty.standards@6b702ca8bf7e5737239edcc0c3e11a1432be30ae"
+    #> → Found "age_group_01.R" in "local::/tmp/RtmpZFzndH/mighty_example_components"
+    #> → Found "mighty_read_data" in "github::NovoNordisk-OpenSource/mighty.standards/components@6b702ca8bf7e5737239edcc0c3e11a1432be30ae"
+    #> → Found "mighty_init_domain" in "github::NovoNordisk-OpenSource/mighty.standards/components@6b702ca8bf7e5737239edcc0c3e11a1432be30ae"
+    #> → Found "mighty_filter_domain" in "github::NovoNordisk-OpenSource/mighty.standards/components@6b702ca8bf7e5737239edcc0c3e11a1432be30ae"
+    #> → Found "age_group_01.R" in "local::/tmp/RtmpZFzndH/mighty_example_components"
+    #> → Found "mighty_col_mutate" in "github::NovoNordisk-OpenSource/mighty.standards/components@6b702ca8bf7e5737239edcc0c3e11a1432be30ae"
+    #> → Found "mighty_write_data" in "github::NovoNordisk-OpenSource/mighty.standards/components@6b702ca8bf7e5737239edcc0c3e11a1432be30ae"
+    #> → Found "mighty_read_data" in "github::NovoNordisk-OpenSource/mighty.standards/components@6b702ca8bf7e5737239edcc0c3e11a1432be30ae"
+    #> → Found "mighty_init_domain" in "github::NovoNordisk-OpenSource/mighty.standards/components@6b702ca8bf7e5737239edcc0c3e11a1432be30ae"
+    #> → Found "mighty_filter_domain" in "github::NovoNordisk-OpenSource/mighty.standards/components@6b702ca8bf7e5737239edcc0c3e11a1432be30ae"
+    #> → Found "age_group_01.R" in "local::/tmp/RtmpZFzndH/mighty_example_components"
+    #> → Found "mighty_col_mutate" in "github::NovoNordisk-OpenSource/mighty.standards/components@6b702ca8bf7e5737239edcc0c3e11a1432be30ae"
+    #> → Found "mighty_write_data" in "github::NovoNordisk-OpenSource/mighty.standards/components@6b702ca8bf7e5737239edcc0c3e11a1432be30ae"
     # ADSL-1-read_data -------------------------------------------------------------
-    cnt <- connector::connect(config = "/tmp/RtmpujOc1V/mighty_example_study/_connector.yml")
+    cnt <- connector::connect(config = "/tmp/RtmpZFzndH/mighty_example_study/_connector.yml")
       DM <- cnt$sdtm$read_cnt(tolower('DM')) |>
       dplyr::select(AGE, ARM, STUDYID, USUBJID)
 

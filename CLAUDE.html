@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="index.html">mighty</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9038</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9039</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -54,7 +54,7 @@
 <li>Format: <code>air format</code> after generating or editing R code, but only format modified files, do not format the entire directory/pkg</li>
 <li>Test all: <code>devtools::test()</code>
 </li>
-<li>Test one file: <code>devtools::test_file("tests/testthat/test-filename.R")</code>
+<li>Test one file: <code>devtools::test(filter = ...)</code>
 </li>
 <li>Never use <code>devtools::test_active_file()</code> — it doesn’t work in this setup</li>
 <li>Full check: <code>devtools::check()</code>
