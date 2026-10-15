@@ -14,7 +14,7 @@ test_that("params_col_echo_code returns expected structure", {
   expect_named(
     result,
     c(
-      "self",
+      "domain",
       "join_dataset",
       "select_expr",
       "by_vars",
@@ -23,7 +23,7 @@ test_that("params_col_echo_code returns expected structure", {
       "var_to_add"
     )
   )
-  expect_equal(result$self, "adlb")
+  expect_equal(result$domain, "adlb")
   expect_equal(result$join_dataset, "adsl")
   expect_equal(result$output_var, "AGE")
   expect_equal(result$var_to_add, "AGE")
