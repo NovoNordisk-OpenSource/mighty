@@ -23,7 +23,7 @@ Imports:
     checkmate,
     cli,
     data.table,
-    dplyr (>= 1.1.0),
+    dplyr,
     glue,
     igraph,
     mighty.component (>= 0.1.0.9005),
