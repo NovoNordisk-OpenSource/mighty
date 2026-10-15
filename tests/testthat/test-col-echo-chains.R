@@ -1,4 +1,8 @@
 test_that("col_echo chains work when the target column name already exists in self", {
+  # Program 4 reads the ADSL that program 3 writes. On Windows the second write fails (see
+  # remove_connector_write_step()), so the chain cannot run there.
+  skip_on_os("windows")
+
   # SETUP -------------------------------------------------------------------
 
   yaml_content_adsl <- "
@@ -82,10 +86,6 @@ columns:
     path_connector_config = get_connector_config_path(path_connector_config),
     check_cross_domain_adam_dependencies = TRUE
   )
-
-  #remove connector save step from program 3 as this will fail on Windows
-  actual$programs[3][[1]] <-
-    remove_connector_write_step(actual$programs[3][[1]])
 
   write_adam_programs(actual$programs, path_connector_config, style = TRUE)
   x <- list.files(path_connector_config, pattern = ".R", full.names = TRUE)
