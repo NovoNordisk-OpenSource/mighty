@@ -3,7 +3,7 @@
 * Run R from the console with `--quiet --vanilla`
 * Format: `air format` after generating or editing R code, but only format modified files, do not format the entire directory/pkg
 * Test all: `devtools::test()`
-* Test one file: `devtools::test_file("tests/testthat/test-filename.R")`
+* Test one file: `devtools::test(filter = ...)`
 * Never use `devtools::test_active_file()` — it doesn't work in this setup
 * Full check: `devtools::check()`
 * Docs: `devtools::document()` after any roxygen2 change, then `pkgdown::check_pkgdown()` to confirm every topic is in the reference index
