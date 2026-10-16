@@ -7,7 +7,7 @@
 #' @param outputs Character. The desired output column name in `.self`.
 #' @param domain_keys Named list. Primary keys for each domain.
 #'
-#' @return A named list with `self`, `join_dataset`, `select_expr`, `by_vars`,
+#' @return A named list with `domain`, `join_dataset`, `select_expr`, `by_vars`,
 #'   `needs_rename`, `output_var`, `var_to_add`.
 #' @noRd
 params_col_echo_code <- function(
@@ -26,7 +26,7 @@ params_col_echo_code <- function(
   )
 
   return(list(
-    self = .self,
+    domain = .self,
     join_dataset = join_specs$join_dataset,
     select_expr = paste(
       c(join_specs$by_vars, join_specs$var_to_add) |> unique(),

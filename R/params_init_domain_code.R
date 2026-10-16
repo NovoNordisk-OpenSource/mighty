@@ -17,7 +17,7 @@
 #'
 #' @return A named list containing template parameters for code generation:
 #'   \describe{
-#'     \item{self}{Character. The target ADaM domain name (same as `.self`)}
+#'     \item{domain}{Character. The target ADaM domain name (same as `.self`)}
 #'     \item{keep_vars}{Character string. Comma-separated column names to retain,
 #'       formatted for direct use in the template.}
 #'     \item{source_domain_rbind}{Character. Formatted R expression for combining
@@ -72,7 +72,7 @@ params_init_domain_code <- function(.self, keep_vars, source_domains) {
   if ("SRC_" %in% keep_vars) {
     src_mutations <- source_domains |>
       lapply(function(domain) {
-        list(domain = domain)
+        list(source_domain = domain)
       })
   }
 
@@ -87,7 +87,7 @@ params_init_domain_code <- function(.self, keep_vars, source_domains) {
   }
 
   return(list(
-    self = .self,
+    domain = .self,
     keep_vars = paste(keep_vars, collapse = ", "),
     source_domain_rbind = source_domain_rbind,
     src_mutations = src_mutations

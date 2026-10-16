@@ -10,11 +10,11 @@
 #' @param rename_var Character. The target column name (will be uppercased).
 #' @param source_var Character. The source column name (will be uppercased).
 #'
-#' @return A named list with `self`, `rename_var`, `source_var`.
+#' @return A named list with `domain`, `rename_var`, `source_var`.
 #' @noRd
 params_mutate_code <- function(.self, rename_var, source_var) {
   return(list(
-    self = .self,
+    domain = .self,
     rename_var = toupper(rename_var),
     source_var = toupper(source_var)
   ))
