@@ -278,8 +278,8 @@ temporary `SRC_` column can be added before row binding (see
 
 ```r
 src_mutations = list(
-  list(domain = "DM"),
-  list(domain = "DM_VACCINE")
+  list(source_domain = "DM"),
+  list(source_domain = "DM_VACCINE")
 )
 ```
 
@@ -320,7 +320,7 @@ column before row binding. Each element has a single field:
 
 | Field | Type | Meaning |
 |-------|------|---------|
-| `domain` | character | Name of the source domain to tag with `SRC_`. |
+| `source_domain` | character | Name of the source domain to tag with `SRC_`. |
 
 `src_mutations` is empty when `SRC_` is not in `keep_vars`.
 
