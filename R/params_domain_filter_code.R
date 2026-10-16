@@ -8,7 +8,7 @@
 #' @param domain_keys Named list. Primary keys for each domain, used to build
 #'   join `by` arguments.
 #'
-#' @return A named list with `self`, `joins`, `domain_filter`, `global_filter`,
+#' @return A named list with `domain`, `joins`, `domain_filter`, `global_filter`,
 #'   `keep_vars`. `domain_filter`, `global_filter`, and `keep_vars` are `NULL`
 #'   when absent — whisker treats `NULL` as falsy so those blocks are suppressed.
 #' @noRd
@@ -74,7 +74,7 @@ params_domain_filter_code <- function(
   keep_vars <- if (length(keep_vars) > 0) paste(keep_vars, collapse = ", ") else NULL
 
   return(list(
-    self = .self,
+    domain = .self,
     joins = joins,
     domain_filter = domain_filter,
     global_filter = global_filter,

@@ -11,7 +11,7 @@
 #'   in the pipeline, used to prefix not-yet-derived columns with `# `.
 #' @param file_ext Character. Output file extension. Defaults to `"parquet"`.
 #'
-#' @return A named list with `self`, `file_ext`, `row_order_vars`, `keep_vars`.
+#' @return A named list with `domain`, `file_ext`, `row_order_vars`, `keep_vars`.
 #'   When `is_final_pgm` is `FALSE`, `keep_vars` is `NULL`. `row_order_vars` is
 #'   a `,\n`-separated string, or `NULL` when no keys are defined — whisker
 #'   treats `NULL` as falsy so the sort block is suppressed.
@@ -60,7 +60,7 @@ params_write_domain_code <- function(
 
   return(
     list(
-      self = .self,
+      domain = .self,
       file_ext = file_ext,
       row_order_vars = row_order_vars,
       keep_vars = keep_vars
