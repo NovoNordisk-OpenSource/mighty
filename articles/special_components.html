@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">mighty</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9039</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9040</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -363,7 +363,7 @@ cnt &lt;- connector::connect(config = {{{connector_path_expr}}})
 <p>Using the same ADSL specification from <code>mighty_read_data</code>:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>  self <span class="op">=</span> <span class="st">"ADSL"</span>,</span>
+<span>  domain <span class="op">=</span> <span class="st">"ADSL"</span>,</span>
 <span>  keep_vars <span class="op">=</span> <span class="st">"ARM, STUDYID, USUBJID"</span>,</span>
 <span>  source_domain_rbind <span class="op">=</span> <span class="st">"rbind(DM,\nDM_VACCINE)"</span>,</span>
 <span>  src_mutations <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span></span>
@@ -371,8 +371,8 @@ cnt &lt;- connector::connect(config = {{{connector_path_expr}}})
 <p><code>src_mutations</code> is empty here because both source domains have <code>filter: NA</code>. When domain-specific filters are defined, mighty populates it so that a temporary <code>SRC_</code> column can be added before row binding (see <a href="adam_specification.html#filter-execution-order">ADaM specification — filter execution order</a>):</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">src_mutations</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>domain <span class="op">=</span> <span class="st">"DM"</span><span class="op">)</span>,</span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>domain <span class="op">=</span> <span class="st">"DM_VACCINE"</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>source_domain <span class="op">=</span> <span class="st">"DM"</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>source_domain <span class="op">=</span> <span class="st">"DM_VACCINE"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>The standard template and a rendered version using the parameter list above can be expanded below.</p>
 <div class="cell">
@@ -385,17 +385,17 @@ cnt &lt;- connector::connect(config = {{{connector_path_expr}}})
 #' @type internal
 #' @origin Not Available
 #' @method Not applicable
-#' @param self Character string. Name of the ADaM domain being initialised (e.g. `"ADSL"`, `"ADLB"`).
+#' @param domain Character string. Name of the ADaM domain being initialised (e.g. `"ADSL"`, `"ADLB"`).
 #' @param keep_vars Character string. Comma-separated column names to select after row binding.
 #' @param source_domain_rbind Character string. Pre-formatted R expression that combines source datasets. A single domain is passed as its name; multiple domains are wrapped in `rbind()`.
-#' @param src_mutations List of lists. Per-domain mutation specifications used to add a `SRC_` tracking column before row binding. Each element has a single field `domain` (e.g. `list(list(domain = "LB"), list(domain = "XL"))`). Empty list when `SRC_` is not needed.
+#' @param src_mutations List of lists. Per-domain mutation specifications used to add a `SRC_` tracking column before row binding. Each element has a single field `source_domain` (e.g. `list(list(source_domain = "LB"), list(source_domain = "XL"))`). Empty list when `SRC_` is not needed.
 #' @code
 {{#src_mutations}}
-{{{domain}}} &lt;- {{{domain}}} |&gt;
-  dplyr::mutate(SRC_ = "{{{domain}}}")
+{{{source_domain}}} &lt;- {{{source_domain}}} |&gt;
+  dplyr::mutate(SRC_ = "{{{source_domain}}}")
 
 {{/src_mutations}}
-{{{self}}} &lt;- {{{source_domain_rbind}}} |&gt;
+{{{domain}}} &lt;- {{{source_domain_rbind}}} |&gt;
     dplyr::select({{{keep_vars}}}) |&gt;
     admiral::convert_blanks_to_na()</code></pre>
 <p><strong>Rendered output</strong></p>
@@ -408,8 +408,8 @@ cnt &lt;- connector::connect(config = {{{connector_path_expr}}})
 </div>
 </section><section class="level2"><h3 id="parameters-1">Parameters<a class="anchor" aria-label="anchor" href="#parameters-1"></a>
 </h3>
-<section class="level3"><h4 id="self">
-<code>self</code><a class="anchor" aria-label="anchor" href="#self"></a>
+<section class="level3"><h4 id="domain">
+<code>domain</code><a class="anchor" aria-label="anchor" href="#domain"></a>
 </h4>
 <p>The name of the ADaM domain being built (e.g. <code>"ADSL"</code>, <code>"ADLB"</code>). Used as the variable name on the left-hand side of the assignment.</p>
 </section><section class="level3"><h4 id="keep_vars">
@@ -425,13 +425,18 @@ cnt &lt;- connector::connect(config = {{{connector_path_expr}}})
 </h4>
 <p>A list of per-domain mutation specifications used to add a <code>SRC_</code> tracking column before row binding. Each element has a single field:</p>
 <table class="table caption-top">
+<colgroup>
+<col style="width: 31%">
+<col style="width: 27%">
+<col style="width: 40%">
+</colgroup>
 <thead><tr class="header">
 <th>Field</th>
 <th>Type</th>
 <th>Meaning</th>
 </tr></thead>
 <tbody><tr class="odd">
-<td><code>domain</code></td>
+<td><code>source_domain</code></td>
 <td>character</td>
 <td>Name of the source domain to tag with <code>SRC_</code>.</td>
 </tr></tbody>
@@ -469,7 +474,7 @@ cnt &lt;- connector::connect(config = {{{connector_path_expr}}})
 <p>Mighty builds the following parameter list and passes it to the template:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>  self <span class="op">=</span> <span class="st">"ADLB"</span>,</span>
+<span>  domain <span class="op">=</span> <span class="st">"ADLB"</span>,</span>
 <span>  joins <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>      table <span class="op">=</span> <span class="st">"ADSL"</span>,</span>
@@ -498,7 +503,7 @@ cnt &lt;- connector::connect(config = {{{connector_path_expr}}})
 #' @type internal
 #' @origin Not Available
 #' @method Not applicable
-#' @param self Character string. Name of the ADaM domain being filtered (e.g. `"ADLB"`).
+#' @param domain Character string. Name of the ADaM domain being filtered (e.g. `"ADLB"`).
 #' @param joins List of join specifications used to bring in columns required for
 #'   filter evaluation. Each element is a list containing:
 #'   \describe{
@@ -512,24 +517,24 @@ cnt &lt;- connector::connect(config = {{{connector_path_expr}}})
 #' @param keep_vars Character string or `NULL`. Comma-separated column names to retain. `NULL` when no selection is needed — the select block is skipped. `SRC_` is excluded automatically.
 #' @code
 {{#joins}}
-{{{self}}} &lt;- {{{self}}} |&gt;
+{{{domain}}} &lt;- {{{domain}}} |&gt;
   dplyr::left_join({{{table}}} |&gt; dplyr::select({{{select_expr}}}),
                    by = c({{{keys}}}))
 
 {{/joins}}
 {{#domain_filter}}
-{{{self}}} &lt;- {{{self}}} |&gt;
+{{{domain}}} &lt;- {{{domain}}} |&gt;
   dplyr::filter({{{domain_filter}}}) |&gt;
   dplyr::select(-SRC_)
 
 {{/domain_filter}}
 {{#global_filter}}
-{{{self}}} &lt;- {{{self}}} |&gt;
+{{{domain}}} &lt;- {{{domain}}} |&gt;
   dplyr::filter({{{global_filter}}})
 
 {{/global_filter}}
 {{#keep_vars}}
-{{{self}}} &lt;- {{{self}}} |&gt;
+{{{domain}}} &lt;- {{{domain}}} |&gt;
   dplyr::select({{{keep_vars}}})
 
 {{/keep_vars}}</code></pre>
@@ -552,8 +557,8 @@ cnt &lt;- connector::connect(config = {{{connector_path_expr}}})
 </div>
 </section><section class="level2"><h3 id="parameters-2">Parameters<a class="anchor" aria-label="anchor" href="#parameters-2"></a>
 </h3>
-<section class="level3"><h4 id="self-1">
-<code>self</code><a class="anchor" aria-label="anchor" href="#self-1"></a>
+<section class="level3"><h4 id="domain-1">
+<code>domain</code><a class="anchor" aria-label="anchor" href="#domain-1"></a>
 </h4>
 <p>The name of the ADaM domain being filtered.</p>
 </section><section class="level3"><h4 id="joins">
@@ -615,7 +620,7 @@ cnt &lt;- connector::connect(config = {{{connector_path_expr}}})
 <p>Mighty builds the following parameter list and passes it to the template:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>  self <span class="op">=</span> <span class="st">"ADLB"</span>,</span>
+<span>  domain <span class="op">=</span> <span class="st">"ADLB"</span>,</span>
 <span>  rename_var <span class="op">=</span> <span class="st">"AVAL"</span>,</span>
 <span>  source_var <span class="op">=</span> <span class="st">"LBSTRESN"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -630,11 +635,11 @@ cnt &lt;- connector::connect(config = {{{connector_path_expr}}})
 #' @type internal
 #' @origin Not Available
 #' @method Not applicable
-#' @param self Character string. Name of the dataset being modified (e.g. `"ADLB"`).
+#' @param domain Character string. Name of the dataset being modified (e.g. `"ADLB"`).
 #' @param rename_var Character string. Name of the new column to create (e.g. `"AVAL"`).
 #' @param source_var Character string. Name of the existing column to copy from (e.g. `"LBSTRESN"`).
 #' @code
-{{{self}}} &lt;- {{{self}}} |&gt; dplyr::mutate({{{rename_var}}} = {{{source_var}}})</code></pre>
+{{{domain}}} &lt;- {{{domain}}} |&gt; dplyr::mutate({{{rename_var}}} = {{{source_var}}})</code></pre>
 <p><strong>Rendered output</strong></p>
 <pre><code class="language-r"><span><span class="va">ADLB</span> <span class="op">&lt;-</span> <span class="va">ADLB</span> <span class="op">|&gt;</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>AVAL <span class="op">=</span> <span class="va">LBSTRESN</span><span class="op">)</span></span></code></pre>
 </details>
@@ -642,8 +647,8 @@ cnt &lt;- connector::connect(config = {{{connector_path_expr}}})
 </div>
 </section><section class="level2"><h3 id="parameters-3">Parameters<a class="anchor" aria-label="anchor" href="#parameters-3"></a>
 </h3>
-<section class="level3"><h4 id="self-2">
-<code>self</code><a class="anchor" aria-label="anchor" href="#self-2"></a>
+<section class="level3"><h4 id="domain-2">
+<code>domain</code><a class="anchor" aria-label="anchor" href="#domain-2"></a>
 </h4>
 <p>The name of the dataset being modified.</p>
 </section><section class="level3"><h4 id="rename_var">
@@ -667,7 +672,7 @@ cnt &lt;- connector::connect(config = {{{connector_path_expr}}})
 <p>Mighty builds the following parameter list and passes it to the template:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>  self <span class="op">=</span> <span class="st">"ADLB"</span>,</span>
+<span>  domain <span class="op">=</span> <span class="st">"ADLB"</span>,</span>
 <span>  rename_var <span class="op">=</span> <span class="st">"SRCSEQ"</span>,</span>
 <span>  source_var <span class="op">=</span> <span class="st">"LBSEQ"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -683,11 +688,11 @@ cnt &lt;- connector::connect(config = {{{connector_path_expr}}})
 #' @type internal
 #' @origin Not Available
 #' @method Not applicable
-#' @param self Character string. Name of the dataset being modified (e.g. `"ADLB"`).
+#' @param domain Character string. Name of the dataset being modified (e.g. `"ADLB"`).
 #' @param rename_var Character string. New column name after renaming (e.g. `"SRCSEQ"`).
 #' @param source_var Character string. Existing column to rename (e.g. `"LBSEQ"`).
 #' @code
-{{{self}}} &lt;- {{{self}}} |&gt; dplyr::rename({{{rename_var}}} = {{{source_var}}})</code></pre>
+{{{domain}}} &lt;- {{{domain}}} |&gt; dplyr::rename({{{rename_var}}} = {{{source_var}}})</code></pre>
 <p><strong>Rendered output</strong></p>
 <pre><code class="language-r"><span><span class="va">ADLB</span> <span class="op">&lt;-</span> <span class="va">ADLB</span> <span class="op">|&gt;</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename</a></span><span class="op">(</span>SRCSEQ <span class="op">=</span> <span class="va">LBSEQ</span><span class="op">)</span></span></code></pre>
 </details>
@@ -695,8 +700,8 @@ cnt &lt;- connector::connect(config = {{{connector_path_expr}}})
 </div>
 </section><section class="level2"><h3 id="parameters-4">Parameters<a class="anchor" aria-label="anchor" href="#parameters-4"></a>
 </h3>
-<section class="level3"><h4 id="self-3">
-<code>self</code><a class="anchor" aria-label="anchor" href="#self-3"></a>
+<section class="level3"><h4 id="domain-3">
+<code>domain</code><a class="anchor" aria-label="anchor" href="#domain-3"></a>
 </h4>
 <p>The name of the dataset being modified.</p>
 </section><section class="level3"><h4 id="rename_var-1">
@@ -719,7 +724,7 @@ cnt &lt;- connector::connect(config = {{{connector_path_expr}}})
 <p>Mighty builds the following parameter list and passes it to the template:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>  self <span class="op">=</span> <span class="st">"ADLB"</span>,</span>
+<span>  domain <span class="op">=</span> <span class="st">"ADLB"</span>,</span>
 <span>  join_dataset <span class="op">=</span> <span class="st">"ADSL"</span>,</span>
 <span>  select_expr <span class="op">=</span> <span class="st">"STUDYID, USUBJID, SEX"</span>,</span>
 <span>  by_vars <span class="op">=</span> <span class="st">'"STUDYID", "USUBJID"'</span>,</span>
@@ -739,15 +744,15 @@ cnt &lt;- connector::connect(config = {{{connector_path_expr}}})
 #' @type internal
 #' @origin Not Available
 #' @method Not applicable
-#' @param self Character string. Name of the primary dataset being modified; the left-hand side of the join, whose row count is kept (e.g. `"ADLB"`). The join stops with an error when a row in `self` matches more than one row in `join_dataset`.
+#' @param domain Character string. Name of the primary dataset being modified; the left-hand side of the join, whose row count is kept (e.g. `"ADLB"`). The join stops with an error when a row in `domain` matches more than one row in `join_dataset`.
 #' @param join_dataset Character string. Name of the dataset to look up from; the right-hand side of the join (e.g. `"ADSL"`).
 #' @param select_expr Character string. Comma-separated column names to select from `join_dataset` before joining. Includes both join keys and the variable being added.
 #' @param by_vars Character string. Comma-separated quoted column names used as join keys, ready for `dplyr::left_join(by = c(...))` (e.g. `"\"STUDYID\", \"USUBJID\""`).
 #' @param needs_rename Logical. `TRUE` when the variable name in `join_dataset` differs from the desired output name; applies `dplyr::rename()` to `join_dataset` before the join.
-#' @param output_var Character string. Desired column name in `self` after the join.
+#' @param output_var Character string. Desired column name in `domain` after the join.
 #' @param var_to_add Character string. Column name as it exists in `join_dataset`, before any renaming. Equal to `output_var` when `needs_rename` is `FALSE`.
 #' @code
-{{{self}}} &lt;- {{{self}}} |&gt;
+{{{domain}}} &lt;- {{{domain}}} |&gt;
   dplyr::left_join(
     {{{join_dataset}}} |&gt;
       dplyr::select({{{select_expr}}}){{#needs_rename}} |&gt;
@@ -768,8 +773,8 @@ cnt &lt;- connector::connect(config = {{{connector_path_expr}}})
 </div>
 </section><section class="level2"><h3 id="parameters-5">Parameters<a class="anchor" aria-label="anchor" href="#parameters-5"></a>
 </h3>
-<section class="level3"><h4 id="self-4">
-<code>self</code><a class="anchor" aria-label="anchor" href="#self-4"></a>
+<section class="level3"><h4 id="domain-4">
+<code>domain</code><a class="anchor" aria-label="anchor" href="#domain-4"></a>
 </h4>
 <p>The name of the primary dataset being modified.</p>
 </section><section class="level3"><h4 id="join_dataset">
@@ -792,7 +797,7 @@ cnt &lt;- connector::connect(config = {{{connector_path_expr}}})
 <code>output_var</code> / <code>var_to_add</code>
 <a class="anchor" aria-label="anchor" href="#output_var-var_to_add"></a>
 </h4>
-<p><code>var_to_add</code> is the column name as it exists in <code>join_dataset</code>. <code>output_var</code> is the desired column name in <code>self</code>. When <code>needs_rename</code> is <code>FALSE</code> they are equal.</p>
+<p><code>var_to_add</code> is the column name as it exists in <code>join_dataset</code>. <code>output_var</code> is the desired column name in <code>domain</code>. When <code>needs_rename</code> is <code>FALSE</code> they are equal.</p>
 </section></section></section><section class="section level2"><h2 id="mighty_write_data">mighty_write_data<a class="anchor" aria-label="anchor" href="#mighty_write_data"></a>
 </h2>
 <p>Rendered at the end of every ADaM program. Sorts rows, selects columns in specification order, and persists the dataset via the connector.</p>
@@ -801,7 +806,7 @@ cnt &lt;- connector::connect(config = {{{connector_path_expr}}})
 <p>For the ADSL specification from the <code>mighty_read_data</code> example, mighty builds:</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>  self <span class="op">=</span> <span class="st">"ADSL"</span>,</span>
+<span>  domain <span class="op">=</span> <span class="st">"ADSL"</span>,</span>
 <span>  file_ext <span class="op">=</span> <span class="st">"parquet"</span>,</span>
 <span>  row_order_vars <span class="op">=</span> <span class="st">"USUBJID,\nSTUDYID"</span>,</span>
 <span>  keep_vars <span class="op">=</span> <span class="st">"USUBJID,\nSTUDYID,\nARM"</span></span>
@@ -815,7 +820,7 @@ cnt &lt;- connector::connect(config = {{{connector_path_expr}}})
 </div>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>  self <span class="op">=</span> <span class="st">"ADLB"</span>,</span>
+<span>  domain <span class="op">=</span> <span class="st">"ADLB"</span>,</span>
 <span>  file_ext <span class="op">=</span> <span class="st">"parquet"</span>,</span>
 <span>  row_order_vars <span class="op">=</span> <span class="st">"USUBJID,\nSTUDYID"</span>,</span>
 <span>  keep_vars <span class="op">=</span> <span class="st">"USUBJID,\nSTUDYID,\nPARAMCD,\nAVAL"</span></span>
@@ -831,23 +836,23 @@ cnt &lt;- connector::connect(config = {{{connector_path_expr}}})
 #' @type internal
 #' @origin Not Available
 #' @method Not applicable
-#' @param self Character string. Name of the ADaM domain to persist (e.g. `"ADSL"`, `"ADLB"`).
+#' @param domain Character string. Name of the ADaM domain to persist (e.g. `"ADSL"`, `"ADLB"`).
 #' @param row_order_vars Character string or `NULL`. Primary key columns used to sort rows, formatted as a `,\n`-separated string. `NULL` when no row order is defined — the sort block is skipped.
 #' @param keep_vars Character string or `NULL`. Output columns in specification order, formatted as a `,\n`-separated string. `NULL` for intermediate programs in multi-program domains — the select block is skipped. Columns not yet available are prefixed with `# `.
 #' @param file_ext Character string. File extension for the persisted dataset. Defaults to `"parquet"`.
 #' @code
 {{#row_order_vars}}
 # Sort rows by primary key
-{{{self}}} &lt;- {{{self}}} |&gt; dplyr::arrange({{{row_order_vars}}})
+{{{domain}}} &lt;- {{{domain}}} |&gt; dplyr::arrange({{{row_order_vars}}})
 
 {{/row_order_vars}}
 {{#keep_vars}}
 # Sort columns
-{{{self}}} &lt;- {{{self}}} |&gt; dplyr::select({{{keep_vars}}})
+{{{domain}}} &lt;- {{{domain}}} |&gt; dplyr::select({{{keep_vars}}})
 
 {{/keep_vars}}
 # Save ADaM table
-cnt$adam$write_cnt({{{self}}}, tolower("{{{self}}}.{{{file_ext}}}"), overwrite = TRUE)</code></pre>
+cnt$adam$write_cnt({{{domain}}}, tolower("{{{domain}}}.{{{file_ext}}}"), overwrite = TRUE)</code></pre>
 <p><strong>Rendered output — short column list</strong></p>
 <pre><code class="language-r"><span><span class="co"># Sort rows by primary key</span></span>
 <span><span class="va">ADSL</span> <span class="op">&lt;-</span> <span class="va">ADSL</span> <span class="op">|&gt;</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="va">USUBJID</span>,</span>
@@ -878,8 +883,8 @@ cnt$adam$write_cnt({{{self}}}, tolower("{{{self}}}.{{{file_ext}}}"), overwrite =
 </div>
 </section><section class="level2"><h3 id="parameters-6">Parameters<a class="anchor" aria-label="anchor" href="#parameters-6"></a>
 </h3>
-<section class="level3"><h4 id="self-5">
-<code>self</code><a class="anchor" aria-label="anchor" href="#self-5"></a>
+<section class="level3"><h4 id="domain-5">
+<code>domain</code><a class="anchor" aria-label="anchor" href="#domain-5"></a>
 </h4>
 <p>The name of the domain being built (e.g. <code>"ADSL"</code>, <code>"ADLB"</code>).</p>
 </section><section class="level3"><h4 id="file_ext">

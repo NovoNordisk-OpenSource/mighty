@@ -189,22 +189,22 @@ generating ADSL based on the specifications
 
     #> → No `_documents.yml` file found
     #> → No `_codelists.yml` file found
-    #> → Downloading repo "NovoNordisk-OpenSource/mighty.standards@6b702ca8bf7e5737239edcc0c3e11a1432be30ae"
-    #> → Found "age_group_01.R" in "local::/tmp/RtmpZFzndH/mighty_example_components"
-    #> → Found "mighty_read_data" in "github::NovoNordisk-OpenSource/mighty.standards/components@6b702ca8bf7e5737239edcc0c3e11a1432be30ae"
-    #> → Found "mighty_init_domain" in "github::NovoNordisk-OpenSource/mighty.standards/components@6b702ca8bf7e5737239edcc0c3e11a1432be30ae"
-    #> → Found "mighty_filter_domain" in "github::NovoNordisk-OpenSource/mighty.standards/components@6b702ca8bf7e5737239edcc0c3e11a1432be30ae"
-    #> → Found "age_group_01.R" in "local::/tmp/RtmpZFzndH/mighty_example_components"
-    #> → Found "mighty_col_mutate" in "github::NovoNordisk-OpenSource/mighty.standards/components@6b702ca8bf7e5737239edcc0c3e11a1432be30ae"
-    #> → Found "mighty_write_data" in "github::NovoNordisk-OpenSource/mighty.standards/components@6b702ca8bf7e5737239edcc0c3e11a1432be30ae"
-    #> → Found "mighty_read_data" in "github::NovoNordisk-OpenSource/mighty.standards/components@6b702ca8bf7e5737239edcc0c3e11a1432be30ae"
-    #> → Found "mighty_init_domain" in "github::NovoNordisk-OpenSource/mighty.standards/components@6b702ca8bf7e5737239edcc0c3e11a1432be30ae"
-    #> → Found "mighty_filter_domain" in "github::NovoNordisk-OpenSource/mighty.standards/components@6b702ca8bf7e5737239edcc0c3e11a1432be30ae"
-    #> → Found "age_group_01.R" in "local::/tmp/RtmpZFzndH/mighty_example_components"
-    #> → Found "mighty_col_mutate" in "github::NovoNordisk-OpenSource/mighty.standards/components@6b702ca8bf7e5737239edcc0c3e11a1432be30ae"
-    #> → Found "mighty_write_data" in "github::NovoNordisk-OpenSource/mighty.standards/components@6b702ca8bf7e5737239edcc0c3e11a1432be30ae"
+    #> → Downloading repo "NovoNordisk-OpenSource/mighty.standards@ba209ca6f44d025354792bb623405f3b260ef282"
+    #> → Found "age_group_01.R" in "local::/tmp/Rtmp6YNnSP/mighty_example_components"
+    #> → Found "mighty_read_data" in "github::NovoNordisk-OpenSource/mighty.standards/components@ba209ca6f44d025354792bb623405f3b260ef282"
+    #> → Found "mighty_init_domain" in "github::NovoNordisk-OpenSource/mighty.standards/components@ba209ca6f44d025354792bb623405f3b260ef282"
+    #> → Found "mighty_filter_domain" in "github::NovoNordisk-OpenSource/mighty.standards/components@ba209ca6f44d025354792bb623405f3b260ef282"
+    #> → Found "age_group_01.R" in "local::/tmp/Rtmp6YNnSP/mighty_example_components"
+    #> → Found "mighty_col_mutate" in "github::NovoNordisk-OpenSource/mighty.standards/components@ba209ca6f44d025354792bb623405f3b260ef282"
+    #> → Found "mighty_write_data" in "github::NovoNordisk-OpenSource/mighty.standards/components@ba209ca6f44d025354792bb623405f3b260ef282"
+    #> → Found "mighty_read_data" in "github::NovoNordisk-OpenSource/mighty.standards/components@ba209ca6f44d025354792bb623405f3b260ef282"
+    #> → Found "mighty_init_domain" in "github::NovoNordisk-OpenSource/mighty.standards/components@ba209ca6f44d025354792bb623405f3b260ef282"
+    #> → Found "mighty_filter_domain" in "github::NovoNordisk-OpenSource/mighty.standards/components@ba209ca6f44d025354792bb623405f3b260ef282"
+    #> → Found "age_group_01.R" in "local::/tmp/Rtmp6YNnSP/mighty_example_components"
+    #> → Found "mighty_col_mutate" in "github::NovoNordisk-OpenSource/mighty.standards/components@ba209ca6f44d025354792bb623405f3b260ef282"
+    #> → Found "mighty_write_data" in "github::NovoNordisk-OpenSource/mighty.standards/components@ba209ca6f44d025354792bb623405f3b260ef282"
     # ADSL-1-read_data -------------------------------------------------------------
-    cnt <- connector::connect(config = "/tmp/RtmpZFzndH/mighty_example_study/_connector.yml")
+    cnt <- connector::connect(config = "/tmp/Rtmp6YNnSP/mighty_example_study/_connector.yml")
       DM <- cnt$sdtm$read_cnt(tolower('DM')) |>
       dplyr::select(AGE, ARM, STUDYID, USUBJID)
 
