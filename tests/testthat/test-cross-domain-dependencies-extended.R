@@ -36,8 +36,9 @@ population:
   base:
     - domain: LB
       depends:
-        - NA
-      filter: NA
+        - VISITNUM
+        - LBTESTCD
+      filter: \"(VISITNUM == 13 & LBTESTCD == 'BASO')\"
   global:
     - filter: NA
       depends:
@@ -46,6 +47,10 @@ columns:
   - id: USUBJID
 
   - id: STUDYID
+
+  - id: VISITNUM
+
+  - id: LBTESTCD
 
   - id: STUDYID2
     method: ADLB.STUDYID
@@ -83,4 +88,5 @@ columns:
   expect_no_error(source(x[[2]]))
   expect_no_error(source(x[[3]]))
   expect_contains(names(ADSL), "STUDYID2")
+  expect_equal(nrow(ADSL), nrow(pharmaversesdtm::dm))
 })

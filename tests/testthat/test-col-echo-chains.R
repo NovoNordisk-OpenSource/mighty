@@ -1,4 +1,8 @@
-test_that("Known bug when doing chains of col_echos using same names", {
+test_that("col_echo chains work when the target column name already exists in self", {
+  # Program 4 reads the ADSL that program 3 writes. On Windows the second write fails (see
+  # remove_connector_write_step()), so the chain cannot run there.
+  skip_on_os("windows")
+
   # SETUP -------------------------------------------------------------------
 
   yaml_content_adsl <- "
@@ -83,10 +87,6 @@ columns:
     check_cross_domain_adam_dependencies = TRUE
   )
 
-  #remove connector save step from program 3 as this will fail on Windows
-  actual$programs[3][[1]] <-
-    remove_connector_write_step(actual$programs[3][[1]])
-
   write_adam_programs(actual$programs, path_connector_config, style = TRUE)
   x <- list.files(path_connector_config, pattern = ".R", full.names = TRUE)
 
@@ -97,7 +97,13 @@ columns:
   expect_no_error(source(x[[3]]))
   expect_contains(names(ADSL), "STUDYID2")
 
-  # This error occurs because program 4 (ADLB prog 2) contains STUDYID2 variable
-  expect_error(source(x[[4]]), "Column `STUDYID2` doesn't exist")
-  # not currently supported by mighty.
+  expect_no_error(source(x[[4]]))
+  expect_contains(names(ADLB), "STUDYID3")
+  expect_false(any(grepl("\\.(x|y)$", names(ADLB))))
+  expect_equal(
+    ADLB$STUDYID3,
+    ADSL$STUDYID2[match(ADLB$USUBJID, ADSL$USUBJID)],
+    ignore_attr = TRUE
+  )
+  expect_false(anyNA(ADLB$STUDYID3))
 })
