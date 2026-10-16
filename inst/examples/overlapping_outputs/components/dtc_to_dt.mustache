@@ -1,0 +1,17 @@
+#' @title Convert DTC to DT
+#' @description Derives a date and date flag from a DTC variable
+#' @param dtc_var Name of the source DTC variable
+#' @param dt_var Name of the output date variable
+#' @param dtf_var Name of the output date flag variable
+#' @type column
+#' @origin Derived
+#' @method Date and date flag derived from the source DTC variable.
+#' @depends ADLB USUBJID
+#' @outputs {{{dt_var}}}
+#' @outputs {{{dtf_var}}}
+#' @code
+ADLB <- ADLB |>
+  dplyr::mutate(
+    {{{dt_var}}} = as.Date({{{dtc_var}}}),
+    {{{dtf_var}}} = ifelse(is.na({{{dtc_var}}}), 'Y', NA_character_)
+  )

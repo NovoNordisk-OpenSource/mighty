@@ -149,6 +149,7 @@ Skov
 SOMECOL
 sprintf
 SRCSEQ
+stopifnot
 STUDYID
 SUBJID
 subpriorities

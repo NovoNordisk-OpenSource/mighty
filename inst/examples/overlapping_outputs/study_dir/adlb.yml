@@ -1,0 +1,32 @@
+id: ADLB
+label: Laboratory Analysis Dataset
+class: BASIC DATA STRUCTURE
+structure: One record per subject per parameter per analysis visit
+keys: [USUBJID]
+population:
+  base:
+    - domain: LB
+      depends:
+        - NA
+      filter: NA
+  global:
+    - filter: NA
+      depends:
+        - NA
+
+columns:
+  - id: USUBJID
+  - id: ASTDT
+    component:
+      id: dtc_to_dt.mustache
+      with:
+        dtc_var: LBDTC
+        dt_var: ASTDT
+        dtf_var: ASTDTF
+  - id: ASTDTF
+    component:
+      id: dtc_to_dt.mustache
+      with:
+        dtc_var: LBENDTC
+        dt_var: ASTDT
+        dtf_var: ASTDTF
