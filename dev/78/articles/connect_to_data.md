@@ -1,0 +1,44 @@
+# Connecting to Data
+
+Mighty in itself does not read any data, but the generated programs will
+need to connect to a data source to be able to execute. Thus, the
+programs will use the
+[`connector`](https://github.com/NovoNordisk-OpenSource/connector/tree/main?tab=readme-ov-file#readme)
+package to connect to study data.
+
+The `path_connector_config` argument to
+[`generate_adam_code()`](https://novonordisk-opensource.github.io/mighty/reference/generate_adam_code.md)
+is the file path to the connector config file, embedded verbatim into
+the generated programs. Mighty does not read the file itself — it only
+embeds the path into the generated code. The file is read later when the
+generated program runs. The value can be a literal file path or an
+`!expr`-prefixed R expression for runtime evaluation (e.g.,
+`!expr here::here("_connector.yml")`).
+
+An example of a generated program can be seen below, where the `cnt`
+object is
+
+- created by reading the connector config file at the path specified by
+  `path_connector_config`,
+- used to read `DM` and `DM_VACCINE`, and finally
+- save the created `ADSL` data set.
+
+``` r
+
+# LOAD all external datasets needed ------------------------------------------------
+
+cnt <- connector::connect(config = "_connector.yml")
+
+DM <- cnt$sdtm$read_cnt(tolower("DM")) |> dplyr::select(ACTARM, AGE, AGEU, ARM, COUNTRY, DOMAIN, DTHFL, RACE, SEX, STUDYID, USUBJID)
+
+DM_VACCINE <- cnt$sdtm$read_cnt(tolower("DM_VACCINE")) |> dplyr::select(ACTARM, AGE, AGEU, ARM, COUNTRY, DOMAIN, DTHFL, RACE, SEX, STUDYID, USUBJID)
+
+### Generated ADaM program code (removed for simplicity)
+
+# Save ADSL ------------------------------------------------
+
+cnt$adam$write_cnt(ADSL, "adsl.parquet", overwrite = TRUE)
+
+# Remove input tables
+rm(list = c("DM", "DM_VACCINE"))
+```
