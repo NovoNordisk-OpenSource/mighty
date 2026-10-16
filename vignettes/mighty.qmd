@@ -24,10 +24,13 @@ knitr::opts_chunk$set(
 
 ```{r}
 #| include: false
+#| eval: true
 library(mighty)
 
 # Copy the example study from inst/examples/get_started to a temp folder.
 # Its layout matches the tree shown under "Define your custom component".
+# Always evaluated (no network needed): the `{embed}` chunks below need
+# `example_dir` even when the `gh` check above turns evaluation off.
 example_dir <- tempfile("mighty_example_")
 dir.create(example_dir)
 file.copy(
