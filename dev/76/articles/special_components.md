@@ -271,8 +271,8 @@ order](https://novonordisk-opensource.github.io/mighty/articles/adam_specificati
 ``` r
 
 src_mutations = list(
-  list(domain = "DM"),
-  list(domain = "DM_VACCINE")
+  list(source_domain = "DM"),
+  list(source_domain = "DM_VACCINE")
 )
 ```
 
@@ -337,9 +337,9 @@ line breaks for readability.
 A list of per-domain mutation specifications used to add a `SRC_`
 tracking column before row binding. Each element has a single field:
 
-| Field    | Type      | Meaning                                       |
-|----------|-----------|-----------------------------------------------|
-| `domain` | character | Name of the source domain to tag with `SRC_`. |
+| Field           | Type      | Meaning                                       |
+|-----------------|-----------|-----------------------------------------------|
+| `source_domain` | character | Name of the source domain to tag with `SRC_`. |
 
 `src_mutations` is empty when `SRC_` is not in `keep_vars`.
 

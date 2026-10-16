@@ -371,8 +371,8 @@ cnt &lt;- connector::connect(config = {{{connector_path_expr}}})
 <p><code>src_mutations</code> is empty here because both source domains have <code>filter: NA</code>. When domain-specific filters are defined, mighty populates it so that a temporary <code>SRC_</code> column can be added before row binding (see <a href="adam_specification.html#filter-execution-order">ADaM specification — filter execution order</a>):</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">src_mutations</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>domain <span class="op">=</span> <span class="st">"DM"</span><span class="op">)</span>,</span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>domain <span class="op">=</span> <span class="st">"DM_VACCINE"</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>source_domain <span class="op">=</span> <span class="st">"DM"</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>source_domain <span class="op">=</span> <span class="st">"DM_VACCINE"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>The standard template and a rendered version using the parameter list above can be expanded below.</p>
 <div class="cell">
@@ -425,13 +425,18 @@ cnt &lt;- connector::connect(config = {{{connector_path_expr}}})
 </h4>
 <p>A list of per-domain mutation specifications used to add a <code>SRC_</code> tracking column before row binding. Each element has a single field:</p>
 <table class="table caption-top">
+<colgroup>
+<col style="width: 31%">
+<col style="width: 27%">
+<col style="width: 40%">
+</colgroup>
 <thead><tr class="header">
 <th>Field</th>
 <th>Type</th>
 <th>Meaning</th>
 </tr></thead>
 <tbody><tr class="odd">
-<td><code>domain</code></td>
+<td><code>source_domain</code></td>
 <td>character</td>
 <td>Name of the source domain to tag with <code>SRC_</code>.</td>
 </tr></tbody>
