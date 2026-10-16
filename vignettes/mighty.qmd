@@ -24,124 +24,14 @@ knitr::opts_chunk$set(
 
 ```{r}
 #| include: false
+#| eval: true
 library(mighty)
 
-# Create study directory structure
-study_dir <- file.path(tempdir(), "mighty_example_study")
-dir.create(study_dir, showWarnings = FALSE, recursive = TRUE)
-assign("study_dir", study_dir, envir = .GlobalEnv)
-
-# Custom components live outside the specifications directory
-components_dir <- file.path(tempdir(), "mighty_example_components")
-dir.create(components_dir, showWarnings = FALSE, recursive = TRUE)
-
-
-# Create _study.yml with study-level properties
-writeLines("study_id: example_study", file.path(study_dir, "_study.yml"))
-
-# Create _mighty.yml with external data specifications
-mighty_yaml <- 'external_data:
-  - id: DM
-    keys: [USUBJID, STUDYID]
-  - id: LB
-    keys: [USUBJID, STUDYID, LBSEQ]
-repos:
-  - "github::NovoNordisk-OpenSource/mighty.standards/components@dev/internal-components"
-  - "./components"
-'
-# The components repo needs to be an absolute path when the vignette is
-# rendered by `pkgdown`, but we don't want to show that ugly tmp path to the
-# users
-mighty_yaml_with_abspath <- gsub(
-  '"./components"',
-  sprintf('"%s"', normalizePath(components_dir, winslash = "/")),
-  mighty_yaml,
-  fixed = TRUE
-)
-writeLines(mighty_yaml_with_abspath, file.path(study_dir, "_mighty.yml"))
-assign("mighty_yaml", mighty_yaml, envir = .GlobalEnv)
-
-
-# Create ADSL domain specification
-adsl_yaml <- 'id: ADSL
-label: Subject Level Analysis Dataset
-class: SUBJECT LEVEL ANALYSIS DATASET
-structure: One record per subject
-keys: [USUBJID, STUDYID]
-
-population:
-  base:
-    - domain: DM
-      depends:
-        - AGE
-      filter: \'!is.na(AGE)\'
-  global:
-    - filter: NA
-      depends:
-        - NA
-
-columns:
-  - id: USUBJID
-
-  - id: STUDYID
-
-  - id: ARM
-
-  - id: PLANNED_ARM
-    method: ADSL.ARM
-
-  - id: AGE
-
-  - id: AGE_GRP1
-    component:
-      id: "age_group_01.R"
-'
-writeLines(adsl_yaml, file.path(study_dir, "adsl.yml"))
-assign("adsl_yaml", adsl_yaml, envir = .GlobalEnv)
-
-
-component_code <- "#' @title Age group 01
-#' @description Grouping of age
-#' @type column
-#' @origin Derived
-#' @method Age cut into the groups < 18, 18-64, 65-74 and >= 75 years.
-#' @depends ADSL AGE
-#' @outputs AGE_GRP1
-#' @returns `ADSL`
-#' @code
-ADSL <- ADSL |>
-  dplyr::mutate(
-    AGE_GRP1 = cut(
-      AGE,
-      breaks = c(-Inf, 18, 65, 75, Inf),
-      labels = c(\"< 18 years\", \"18 - 64 years\", \"65 - 74 years\", \">= 75 years\"),
-      right = FALSE
-    )
-  )
-"
-writeLines(component_code, file.path(components_dir, "age_group_01.R"))
-assign("component_code", component_code, envir = .GlobalEnv)
-
-
-main_script_content <- "# ADSL with 1 base domain
-#   - 4 predecessors
-#   - 1 renamed predecessor
-#   - 1 derivation
-
-# Load mighty
-library(mighty)
-
-# Generate ADaM program
-results <- mighty::generate_adam_code(
-  adam_specifications = \"study_dir\",
-  path_connector_config = \"_connector.yml\"
-)
-
-# Print rendered ADaM program
-results$programs$`1_ADSL` |> cat()
-"
-writeLines(main_script_content, file.path(study_dir, "example_01_main.R"))
-assign("main_script_content", main_script_content, envir = .GlobalEnv)
+# The example study in inst/examples/get_started. Its layout matches the tree
+# shown under "Define your custom component".
+# Always evaluated (no network needed): the `{embed}` chunks below need
+# `example_dir` even when the `gh` check above turns evaluation off.
+example_dir <- system.file("examples", "get_started", package = "mighty", mustWork = TRUE)
 ```
 
 # Your first mighty ADaM program
@@ -176,12 +66,8 @@ The `repos` field lists where mighty looks for code components. The first entry 
 
 **\_mighty.yml**
 
-```{r}
-#| echo: false
-#| results: asis
-cat("```yml\n")
-cat(mighty_yaml)
-cat("```")
+```{embed}
+#| file: !expr file.path(example_dir, "study_dir/_mighty.yml")
 ```
 
 ## Set up your ADaM specification
@@ -192,12 +78,8 @@ This ADSL table contains 6 columns: 4 simple columns from the base domain, 1 ren
 
 **adsl.yml**
 
-```{r}
-#| echo: false
-#| results: asis
-cat("```yml\n")
-cat(adsl_yaml)
-cat("```")
+```{embed}
+#| file: !expr file.path(example_dir, "study_dir/adsl.yml")
 ```
 
 ## Define your custom component
@@ -222,12 +104,8 @@ my_study/                 <- working directory when running example_01_main.R
 
 **age_group_01.R**
 
-```{r}
-#| echo: false
-#| results: asis
-cat("```r\n")
-cat(component_code)
-cat("```")
+```{embed}
+#| file: !expr file.path(example_dir, "components/age_group_01.R")
 ```
 
 ## Render the ADaM program
@@ -236,12 +114,8 @@ Call mighty to consolidate, analyze and render your ADSL program:
 
 **example_01_main.R**
 
-```{r}
-#| echo: false
-#| results: asis
-cat("```r\n")
-cat(main_script_content)
-cat("\n```")
+```{embed}
+#| file: !expr file.path(example_dir, "example_01_main.R")
 ```
 
 Printing the rendered ADaM program yields a complete program for generating ADSL based on the specifications
@@ -249,14 +123,11 @@ Printing the rendered ADaM program yields a complete program for generating ADSL
 ```{r}
 #| echo: false
 #| results: asis
-# Execute the code generation
-results <- mighty::generate_adam_code(
-  adam_specifications = study_dir,
-  path_connector_config = file.path(study_dir, "_connector.yml")
-)
-
-# Display the generated program with R formatting
-cat("```r\n")
-cat(results$programs$`1_ADSL`)
-cat("\n```")
+# Run example_01_main.R, which prints the generated program. The relative paths
+# in the script and in `repos` ("./components") resolve against the working
+# directory, so run it from the root of the example study.
+program <- withr::with_dir(example_dir, {
+  utils::capture.output(source("example_01_main.R", local = new.env()))
+})
+cat("```r", program, "```", sep = "\n")
 ```

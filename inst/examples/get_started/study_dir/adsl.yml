@@ -1,0 +1,32 @@
+id: ADSL
+label: Subject Level Analysis Dataset
+class: SUBJECT LEVEL ANALYSIS DATASET
+structure: One record per subject
+keys: [USUBJID, STUDYID]
+
+population:
+  base:
+    - domain: DM
+      depends:
+        - AGE
+      filter: '!is.na(AGE)'
+  global:
+    - filter: NA
+      depends:
+        - NA
+
+columns:
+  - id: USUBJID
+
+  - id: STUDYID
+
+  - id: ARM
+
+  - id: PLANNED_ARM
+    method: ADSL.ARM
+
+  - id: AGE
+
+  - id: AGE_GRP1
+    component:
+      id: "age_group_01.R"
