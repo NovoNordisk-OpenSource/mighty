@@ -64,7 +64,7 @@ params_domain_filter_code <- function(
   }
 
   global_filter <- if (!is.null(global_filter) && any(!is.na(global_filter))) {
-    global_filter
+    paste(global_filter, collapse = ", ")
   } else {
     NULL
   }
