@@ -27,18 +27,11 @@ knitr::opts_chunk$set(
 #| eval: true
 library(mighty)
 
-# Copy the example study from inst/examples/get_started to a temp folder.
-# Its layout matches the tree shown under "Define your custom component".
+# The example study in inst/examples/get_started. Its layout matches the tree
+# shown under "Define your custom component".
 # Always evaluated (no network needed): the `{embed}` chunks below need
 # `example_dir` even when the `gh` check above turns evaluation off.
-example_dir <- tempfile("mighty_example_")
-dir.create(example_dir)
-file.copy(
-  system.file("examples", "get_started", package = "mighty", mustWork = TRUE),
-  example_dir,
-  recursive = TRUE
-)
-example_dir <- file.path(example_dir, "get_started")
+example_dir <- system.file("examples", "get_started", package = "mighty", mustWork = TRUE)
 ```
 
 # Your first mighty ADaM program
