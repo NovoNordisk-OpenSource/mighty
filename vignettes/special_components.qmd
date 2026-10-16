@@ -264,7 +264,7 @@ Using the same ADSL specification from `mighty_read_data`:
 
 ```r
 list(
-  self = "ADSL",
+  domain = "ADSL",
   keep_vars = "ARM, STUDYID, USUBJID",
   source_domain_rbind = "rbind(DM,\nDM_VACCINE)",
   src_mutations = list()
@@ -288,7 +288,7 @@ The standard template and a rendered version using the parameter list above can 
 ```{r}
 #| echo: false
 component_detail("mighty_init_domain", list(
-  self = "ADSL",
+  domain = "ADSL",
   keep_vars = "ARM, STUDYID, USUBJID",
   source_domain_rbind = "rbind(DM,\nDM_VACCINE)",
   src_mutations = list()
@@ -297,7 +297,7 @@ component_detail("mighty_init_domain", list(
 
 ## Parameters
 
-### `self`
+### `domain`
 
 The name of the ADaM domain being built (e.g. `"ADSL"`, `"ADLB"`). Used as
 the variable name on the left-hand side of the assignment.
@@ -367,7 +367,7 @@ Mighty builds the following parameter list and passes it to the template:
 
 ```r
 list(
-  self = "ADLB",
+  domain = "ADLB",
   joins = list(
     list(
       table = "ADSL",
@@ -395,7 +395,7 @@ The standard template and a rendered version using the parameter list above can 
 ```{r}
 #| echo: false
 component_detail("mighty_filter_domain", list(
-  self = "ADLB",
+  domain = "ADLB",
   joins = list(
     list(table = "ADSL", select_expr = "SEX, STUDYID, USUBJID", keys = '"STUDYID", "USUBJID"')
   ),
@@ -407,7 +407,7 @@ component_detail("mighty_filter_domain", list(
 
 ## Parameters
 
-### `self`
+### `domain`
 
 The name of the ADaM domain being filtered.
 
@@ -464,7 +464,7 @@ Mighty builds the following parameter list and passes it to the template:
 
 ```r
 list(
-  self = "ADLB",
+  domain = "ADLB",
   rename_var = "AVAL",
   source_var = "LBSTRESN"
 )
@@ -475,13 +475,13 @@ The standard template and a rendered version using the parameter list above can 
 ```{r}
 #| echo: false
 component_detail("mighty_col_mutate",
-  list(self = "ADLB", rename_var = "AVAL", source_var = "LBSTRESN")
+  list(domain = "ADLB", rename_var = "AVAL", source_var = "LBSTRESN")
 )
 ```
 
 ## Parameters
 
-### `self`
+### `domain`
 
 The name of the dataset being modified.
 
@@ -516,7 +516,7 @@ Mighty builds the following parameter list and passes it to the template:
 
 ```r
 list(
-  self = "ADLB",
+  domain = "ADLB",
   rename_var = "SRCSEQ",
   source_var = "LBSEQ"
 )
@@ -527,13 +527,13 @@ The standard template and a rendered version using the parameter list above can 
 ```{r}
 #| echo: false
 component_detail("mighty_col_rename",
-  list(self = "ADLB", rename_var = "SRCSEQ", source_var = "LBSEQ")
+  list(domain = "ADLB", rename_var = "SRCSEQ", source_var = "LBSEQ")
 )
 ```
 
 ## Parameters
 
-### `self`
+### `domain`
 
 The name of the dataset being modified.
 
@@ -566,7 +566,7 @@ Mighty builds the following parameter list and passes it to the template:
 
 ```r
 list(
-  self = "ADLB",
+  domain = "ADLB",
   join_dataset = "ADSL",
   select_expr = "STUDYID, USUBJID, SEX",
   by_vars = '"STUDYID", "USUBJID"',
@@ -584,7 +584,7 @@ The standard template and a rendered version using the parameter list above can 
 ```{r}
 #| echo: false
 component_detail("mighty_col_echo", list(
-  self = "ADLB",
+  domain = "ADLB",
   join_dataset = "ADSL",
   select_expr = "STUDYID, USUBJID, SEX",
   by_vars = '"STUDYID", "USUBJID"',
@@ -596,7 +596,7 @@ component_detail("mighty_col_echo", list(
 
 ## Parameters
 
-### `self`
+### `domain`
 
 The name of the primary dataset being modified.
 
@@ -622,7 +622,7 @@ output name. When `TRUE`, a `dplyr::rename()` call is appended.
 ### `output_var` / `var_to_add`
 
 `var_to_add` is the column name as it exists in `join_dataset`. `output_var` is
-the desired column name in `self`. When `needs_rename` is `FALSE` they are
+the desired column name in `domain`. When `needs_rename` is `FALSE` they are
 equal.
 
 # mighty_write_data
@@ -636,7 +636,7 @@ For the ADSL specification from the `mighty_read_data` example, mighty builds:
 
 ```r
 list(
-  self = "ADSL",
+  domain = "ADSL",
   file_ext = "parquet",
   row_order_vars = "USUBJID,\nSTUDYID",
   keep_vars = "USUBJID,\nSTUDYID,\nARM"
@@ -657,7 +657,7 @@ does not affect the template itself.
 
 ```r
 list(
-  self = "ADLB",
+  domain = "ADLB",
   file_ext = "parquet",
   row_order_vars = "USUBJID,\nSTUDYID",
   keep_vars = "USUBJID,\nSTUDYID,\nPARAMCD,\nAVAL"
@@ -673,7 +673,7 @@ component_detail("mighty_write_data",
     list(
       label = "Rendered output — short column list",
       params = list(
-        self = "ADSL",
+        domain = "ADSL",
         file_ext = "parquet",
         row_order_vars = "USUBJID,\nSTUDYID",
         keep_vars = "USUBJID,\nSTUDYID,\nARM"
@@ -682,7 +682,7 @@ component_detail("mighty_write_data",
     list(
       label = "Rendered output — long column list",
       params = list(
-        self = "ADLB",
+        domain = "ADLB",
         file_ext = "parquet",
         row_order_vars = "USUBJID,\nSTUDYID",
         keep_vars = "USUBJID,\nSTUDYID,\nPARAMCD,\nAVAL"
@@ -694,7 +694,7 @@ component_detail("mighty_write_data",
 
 ## Parameters
 
-### `self`
+### `domain`
 
 The name of the domain being built (e.g. `"ADSL"`, `"ADLB"`).
 
