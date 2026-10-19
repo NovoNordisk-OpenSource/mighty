@@ -507,7 +507,11 @@ the filter block is suppressed.
 
 #### `global_filter`
 
-Raw filter expression string from the YAML spec (e.g. `"!is.na(SEX)"`).
+Filter expressions from the YAML spec, as one string
+(e.g. `"!is.na(SEX)"`). When the spec has more than one global filter,
+the expressions are joined with `", "` (e.g. `"!is.na(SEX), AGE > 18"`)
+so that each one is a separate argument to
+[`dplyr::filter()`](https://dplyr.tidyverse.org/reference/filter.html).
 `NULL` when no global filter is defined — the filter block is
 suppressed.
 

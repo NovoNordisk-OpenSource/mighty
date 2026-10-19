@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">mighty</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9041</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9042</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -602,7 +602,7 @@ cnt &lt;- connector::connect(config = {{{connector_path_expr}}})
 </section><section class="level3"><h4 id="global_filter">
 <code>global_filter</code><a class="anchor" aria-label="anchor" href="#global_filter"></a>
 </h4>
-<p>Raw filter expression string from the YAML spec (e.g. <code>"!is.na(SEX)"</code>). <code>NULL</code> when no global filter is defined — the filter block is suppressed.</p>
+<p>Filter expressions from the YAML spec, as one string (e.g. <code>"!is.na(SEX)"</code>). When the spec has more than one global filter, the expressions are joined with <code>", "</code> (e.g. <code>"!is.na(SEX), AGE &gt; 18"</code>) so that each one is a separate argument to <code><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">dplyr::filter()</a></code>. <code>NULL</code> when no global filter is defined — the filter block is suppressed.</p>
 </section><section class="level3"><h4 id="keep_vars-1">
 <code>keep_vars</code><a class="anchor" aria-label="anchor" href="#keep_vars-1"></a>
 </h4>
