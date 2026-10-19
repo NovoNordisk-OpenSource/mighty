@@ -8,7 +8,8 @@
 #' @param domain_keys Named list. Primary keys for each domain.
 #'
 #' @return A named list with `domain`, `join_dataset`, `select_expr`, `by_vars`,
-#'   `needs_rename`, `output_var`, `var_to_add`.
+#'   `needs_rename`, `output_var`, `var_to_add`. `select_expr` and `by_vars`
+#'   are character vectors.
 #' @noRd
 params_col_echo_code <- function(
   .self,
@@ -28,11 +29,8 @@ params_col_echo_code <- function(
   return(list(
     domain = .self,
     join_dataset = join_specs$join_dataset,
-    select_expr = paste(
-      c(join_specs$by_vars, join_specs$var_to_add) |> unique(),
-      collapse = ", "
-    ),
-    by_vars = paste(sprintf('"%s"', join_specs$by_vars), collapse = ", "),
+    select_expr = unique(c(join_specs$by_vars, join_specs$var_to_add)),
+    by_vars = join_specs$by_vars,
     needs_rename = join_specs$var_to_add != join_specs$output_var,
     output_var = join_specs$output_var,
     var_to_add = join_specs$var_to_add

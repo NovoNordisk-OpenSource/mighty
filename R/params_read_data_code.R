@@ -93,14 +93,15 @@ make_connector_path_expr <- function(path_connector_config) {
 #' @param domain_name Character. Source domain name.
 #' @param .self Character. Target domain for self-reference detection.
 #'
-#' @return Named list with domain reading specifications.
+#' @return Named list with domain reading specifications:
+#'   \code{is_current_domain}, \code{domain_name}, \code{data_type},
+#'   and \code{keep_vars} (character vector of column names).
 #' @noRd
 prepare_domain_data <- function(domain_data, domain_name, .self) {
   keep_vars <- domain_data[["column_name"]] |>
     toupper() |>
     unique() |>
-    sort() |>
-    paste0(collapse = ", ")
+    sort()
 
   data_type <- switch(
     domain_data$domain_type[[1]],
