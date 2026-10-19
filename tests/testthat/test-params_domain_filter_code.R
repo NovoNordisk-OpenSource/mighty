@@ -39,3 +39,42 @@ test_that("SRC_ is excluded from keep_vars", {
   expect_match(result$keep_vars, "USUBJID")
   expect_match(result$keep_vars, "PARAMCD")
 })
+
+test_that("multiple global filters are collapsed into one string", {
+  init_metadata <- init_metadata_simple
+  init_metadata$filter_global <- c("!is.na(SEX)", "AGE > 18")
+
+  result <- params_domain_filter_code(
+    .self = "ADLB",
+    init_metadata = init_metadata,
+    keep_vars = character(0),
+    domain_keys = domain_keys
+  )
+
+  expect_equal(result$global_filter, "!is.na(SEX), AGE > 18")
+})
+
+test_that("a single global filter is returned unchanged", {
+  init_metadata <- init_metadata_simple
+  init_metadata$filter_global <- "!is.na(SEX)"
+
+  result <- params_domain_filter_code(
+    .self = "ADLB",
+    init_metadata = init_metadata,
+    keep_vars = character(0),
+    domain_keys = domain_keys
+  )
+
+  expect_equal(result$global_filter, "!is.na(SEX)")
+})
+
+test_that("an NA global filter returns NULL", {
+  result <- params_domain_filter_code(
+    .self = "ADLB",
+    init_metadata = init_metadata_simple,
+    keep_vars = character(0),
+    domain_keys = domain_keys
+  )
+
+  expect_null(result$global_filter)
+})
