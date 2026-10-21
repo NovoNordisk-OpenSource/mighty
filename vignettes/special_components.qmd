@@ -184,13 +184,13 @@ list(
       is_current_domain = FALSE,
       domain_name = "DM",
       data_type = "sdtm",
-      keep_vars = "ARM, STUDYID, USUBJID"
+      keep_vars = c("ARM", "STUDYID", "USUBJID")
     ),
     list(
       is_current_domain = FALSE,
       domain_name = "DM_VACCINE",
       data_type = "sdtm",
-      keep_vars = "ARM, STUDYID, USUBJID"
+      keep_vars = c("ARM", "STUDYID", "USUBJID")
     )
   )
 )
@@ -203,8 +203,8 @@ The standard template and a rendered version using the parameter list above can 
 component_detail("mighty_read_data", list(
   connector_path_expr = '"_connector.yml"',
   domains = list(
-    list(is_current_domain = FALSE, domain_name = "DM", data_type = "sdtm", keep_vars = "ARM, STUDYID, USUBJID"),
-    list(is_current_domain = FALSE, domain_name = "DM_VACCINE", data_type = "sdtm", keep_vars = "ARM, STUDYID, USUBJID")
+    list(is_current_domain = FALSE, domain_name = "DM", data_type = "sdtm", keep_vars = c("ARM", "STUDYID", "USUBJID")),
+    list(is_current_domain = FALSE, domain_name = "DM_VACCINE", data_type = "sdtm", keep_vars = c("ARM", "STUDYID", "USUBJID"))
   )
 ))
 ```
@@ -234,7 +234,7 @@ is a named list with the following fields:
 |-------|------|---------|
 | `domain_name` | character | Source dataset name, uppercase (e.g. `"DM"`, `"ADSL"`). |
 | `data_type` | character | Which connector data source to use: `"sdtm"`, `"adam"`, or `"metadata"`. |
-| `keep_vars` | character | Comma-separated column names to select, sorted alphabetically and uppercased. Only used when `is_current_domain` is `FALSE`. Column order in the final dataset is controlled by `keep_vars` in `mighty_write_data`, not by this field. |
+| `keep_vars` | character | Column names to select, sorted alphabetically and uppercased. Only used when `is_current_domain` is `FALSE`. Column order in the final dataset is controlled by `keep_vars` in `mighty_write_data`, not by this field. |
 | `is_current_domain` | logical | `TRUE` when the domain being read is the same one being built. When `TRUE`, `keep_vars` should be ignored. |
 
 #### How `data_type` is determined
@@ -265,7 +265,7 @@ Using the same ADSL specification from `mighty_read_data`:
 ```r
 list(
   domain = "ADSL",
-  keep_vars = "ARM, STUDYID, USUBJID",
+  keep_vars = c("ARM", "STUDYID", "USUBJID"),
   source_domain_rbind = "rbind(DM,\nDM_VACCINE)",
   src_mutations = list()
 )
@@ -289,7 +289,7 @@ The standard template and a rendered version using the parameter list above can 
 #| echo: false
 component_detail("mighty_init_domain", list(
   domain = "ADSL",
-  keep_vars = "ARM, STUDYID, USUBJID",
+  keep_vars = c("ARM", "STUDYID", "USUBJID"),
   source_domain_rbind = "rbind(DM,\nDM_VACCINE)",
   src_mutations = list()
 ))
@@ -304,8 +304,7 @@ the variable name on the left-hand side of the assignment.
 
 ### `keep_vars`
 
-Comma-separated column names to retain after row binding. Pre-formatted in R
-before being passed to the template.
+Character vector of column names to retain after row binding.
 
 ### `source_domain_rbind`
 
@@ -371,13 +370,14 @@ list(
   joins = list(
     list(
       table = "ADSL",
-      select_expr = "SEX, STUDYID, USUBJID",
-      keys = '"STUDYID", "USUBJID"'
+      select_expr = c("SEX", "STUDYID", "USUBJID"),
+      keys = c("STUDYID", "USUBJID")
     )
   ),
   domain_filter = "(SRC_ == 'LB') | (SRC_ == 'XL' & LBCAT == 'CHEMISTRY')",
   global_filter = "!is.na(SEX)",
-  keep_vars = "LBCAT, PARAMCD, STUDYID, USUBJID"
+  keep_vars = c("LBCAT", "PARAMCD", "STUDYID", "USUBJID"),
+  has_keep_vars = TRUE
 )
 ```
 
@@ -397,11 +397,12 @@ The standard template and a rendered version using the parameter list above can 
 component_detail("mighty_filter_domain", list(
   domain = "ADLB",
   joins = list(
-    list(table = "ADSL", select_expr = "SEX, STUDYID, USUBJID", keys = '"STUDYID", "USUBJID"')
+    list(table = "ADSL", select_expr = c("SEX", "STUDYID", "USUBJID"), keys = c("STUDYID", "USUBJID"))
   ),
   domain_filter = "(SRC_ == 'LB') | (SRC_ == 'XL' & LBCAT == 'CHEMISTRY')",
   global_filter = "!is.na(SEX)",
-  keep_vars = "LBCAT, PARAMCD, STUDYID, USUBJID"
+  keep_vars = c("LBCAT", "PARAMCD", "STUDYID", "USUBJID"),
+  has_keep_vars = TRUE
 ))
 ```
 
@@ -418,8 +419,8 @@ A list of join specifications. Each element is a named list:
 | Field | Type | Meaning |
 |-------|------|---------|
 | `table` | character | Name of the dataset to join with. |
-| `select_expr` | character | Comma-separated column names to select from the join dataset. |
-| `keys` | character | Comma-separated quoted column names used as join keys. |
+| `select_expr` | character | Column names to select from the join dataset. |
+| `keys` | character | Column names used as join keys, for use in `dplyr::join_by()`. |
 
 `joins` is empty when no filter depends on an external dataset.
 
@@ -440,9 +441,14 @@ suppressed.
 
 ### `keep_vars`
 
-A comma-separated string of column names to retain. `NULL` when no selection
-is needed — whisker treats `NULL` as falsy so the `dplyr::select()` call is
-suppressed. `SRC_` is excluded because it is only used during filtering.
+Character vector of column names to retain. `NULL` when no selection is
+needed. `SRC_` is excluded because it is only used during filtering.
+
+### `has_keep_vars`
+
+`TRUE` when `keep_vars` is not empty. The template uses this flag as the
+condition for the `dplyr::select()` call. `keep_vars` cannot be the condition,
+because a Mustache section over a vector repeats once for each element.
 
 # mighty_col_mutate
 
@@ -571,8 +577,8 @@ Mighty builds the following parameter list and passes it to the template:
 list(
   domain = "ADLB",
   join_dataset = "ADSL",
-  select_expr = "STUDYID, USUBJID, SEX",
-  by_vars = '"STUDYID", "USUBJID"',
+  select_expr = c("STUDYID", "USUBJID", "SEX"),
+  by_vars = c("STUDYID", "USUBJID"),
   needs_rename = FALSE,
   output_var = "SEX",
   var_to_add = "SEX"
@@ -589,8 +595,8 @@ The standard template and a rendered version using the parameter list above can 
 component_detail("mighty_col_echo", list(
   domain = "ADLB",
   join_dataset = "ADSL",
-  select_expr = "STUDYID, USUBJID, SEX",
-  by_vars = '"STUDYID", "USUBJID"',
+  select_expr = c("STUDYID", "USUBJID", "SEX"),
+  by_vars = c("STUDYID", "USUBJID"),
   needs_rename = FALSE,
   output_var = "SEX",
   var_to_add = "SEX"
@@ -609,13 +615,13 @@ The name of the dataset to join with (right-hand side of the join).
 
 ### `select_expr`
 
-Comma-separated column names to select from `join_dataset` before joining.
+Character vector of column names to select from `join_dataset` before joining.
 Includes both the join keys and the variable being added.
 
 ### `by_vars`
 
-Comma-separated quoted column names used as join keys, ready for use in
-`dplyr::left_join(by = c(...))`.
+Character vector of column names used as join keys, for use in
+`dplyr::join_by()`.
 
 ### `needs_rename`
 

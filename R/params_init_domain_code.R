@@ -9,8 +9,7 @@
 #'   uppercase for data set labels and references.
 #' @param keep_vars Character vector. Column names to retain in the initialized
 #'   ADaM domain. If `"SRC_"` is included, source domain tracking variables will
-#'   be generated for each contributing SDTM domain. Formatted as a
-#'   comma-separated string in the returned list.
+#'   be generated for each contributing SDTM domain.
 #' @param source_domains Character vector. Names of source SDTM domains to combine
 #'   (e.g., c("DM", "VS", "LB")). These domains will be row-bound together to
 #'   create the initial ADaM data set structure.
@@ -18,8 +17,8 @@
 #' @return A named list containing template parameters for code generation:
 #'   \describe{
 #'     \item{domain}{Character. The target ADaM domain name (same as `.self`)}
-#'     \item{keep_vars}{Character string. Comma-separated column names to retain,
-#'       formatted for direct use in the template.}
+#'     \item{keep_vars}{Character vector. Column names to retain, formatted
+#'       for direct use in the template.}
 #'     \item{source_domain_rbind}{Character. Formatted R expression for combining
 #'       source domains. Single domain returns the domain name; multiple domains
 #'       return a formatted `rbind()` call}
@@ -88,7 +87,7 @@ params_init_domain_code <- function(.self, keep_vars, source_domains) {
 
   return(list(
     domain = .self,
-    keep_vars = paste(keep_vars, collapse = ", "),
+    keep_vars = keep_vars,
     source_domain_rbind = source_domain_rbind,
     src_mutations = src_mutations
   ))

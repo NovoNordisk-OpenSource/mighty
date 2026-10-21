@@ -9,8 +9,10 @@
 #'   join `by` arguments.
 #'
 #' @return A named list with `domain`, `joins`, `domain_filter`, `global_filter`,
-#'   `keep_vars`. `domain_filter`, `global_filter`, and `keep_vars` are `NULL`
-#'   when absent — whisker treats `NULL` as falsy so those blocks are suppressed.
+#'   `keep_vars`, `has_keep_vars`. `domain_filter`, `global_filter`, and `keep_vars`
+#'   are `NULL` when absent — whisker treats `NULL` as falsy so those blocks are
+#'   suppressed. `keep_vars` is a character vector when present. `has_keep_vars`
+#'   is a logical flag indicating whether `keep_vars` is non-empty.
 #' @noRd
 params_domain_filter_code <- function(
   .self,
@@ -38,14 +40,8 @@ params_domain_filter_code <- function(
         table = i,
         select_expr = c(filter_cols[i], keys_by_domain[toupper(i)]) |>
           unlist() |>
-          unname() |>
-          paste(collapse = ", "),
-        keys = paste0(
-          '"',
-          keys_by_domain[toupper(i)] |> unlist(),
-          '"',
-          collapse = ", "
-        )
+          unname(),
+        keys = unname(unlist(keys_by_domain[toupper(i)]))
       )
     })
   }
@@ -71,14 +67,16 @@ params_domain_filter_code <- function(
 
   # SRC_ is only used for domain filters, no longer relevant for the keep step
   keep_vars <- setdiff(keep_vars, "SRC_")
-  keep_vars <- if (length(keep_vars) > 0) paste(keep_vars, collapse = ", ") else NULL
+  has_keep_vars <- length(keep_vars) > 0
+  keep_vars <- if (has_keep_vars) keep_vars else NULL
 
   return(list(
     domain = .self,
     joins = joins,
     domain_filter = domain_filter,
     global_filter = global_filter,
-    keep_vars = keep_vars
+    keep_vars = keep_vars,
+    has_keep_vars = has_keep_vars
   ))
 }
 
