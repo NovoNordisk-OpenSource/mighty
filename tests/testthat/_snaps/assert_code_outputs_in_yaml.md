@@ -20,3 +20,25 @@
     * Align the component's @outputs tag with the YAML specification
     * Remove columns from @outputs or add them to the YAML as needed
 
+# Error when a code component and a straight copy produce the same column
+
+    Specification validation errors found:
+    
+    [Component output mismatches]
+    i ADSL - 'ady.mustache': produces A and B, YAML expects A
+    
+    Suggestions:
+    * Align the component's @outputs tag with the YAML specification
+    * Remove columns from @outputs or add them to the YAML as needed
+
+# Error when two code components produce the same column
+
+    Specification validation errors found:
+    
+    [Component output mismatches]
+    i ADSL - 'ady.mustache': produces A and B, YAML expects A
+    
+    Suggestions:
+    * Align the component's @outputs tag with the YAML specification
+    * Remove columns from @outputs or add them to the YAML as needed
+
