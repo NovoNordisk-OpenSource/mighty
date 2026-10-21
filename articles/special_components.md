@@ -121,13 +121,13 @@ list(
       is_current_domain = FALSE,
       domain_name = "DM",
       data_type = "sdtm",
-      keep_vars = "ARM, STUDYID, USUBJID"
+      keep_vars = c("ARM", "STUDYID", "USUBJID")
     ),
     list(
       is_current_domain = FALSE,
       domain_name = "DM_VACCINE",
       data_type = "sdtm",
-      keep_vars = "ARM, STUDYID, USUBJID"
+      keep_vars = c("ARM", "STUDYID", "USUBJID")
     )
   )
 )
@@ -155,7 +155,7 @@ Standard template and rendered output
     #'     \item{is_current_domain}{Logical. `TRUE` to read the entire dataset (e.g. an ADSL update program reading its own earlier output); `FALSE` to apply column selection.}
     #'     \item{domain_name}{Character string. Name of the domain to read, uppercase (e.g. `"DM"`, `"ADSL"`).}
     #'     \item{data_type}{Character string. Connector data source to use: `"sdtm"`, `"adam"`, or `"metadata"`.}
-    #'     \item{keep_vars}{Character string. Comma-separated column names to select. Ignored when `is_current_domain` is `TRUE`.}
+    #'     \item{keep_vars}{Character vector. Column names to select. Ignored when `is_current_domain` is `TRUE`.}
     #'   }
     #'
     #'   Example:
@@ -165,13 +165,13 @@ Standard template and rendered output
     #'       is_current_domain = TRUE,
     #'       domain_name = "ADSL",
     #'       data_type = "adam",
-    #'       keep_vars = "ARM_MATCH, COUNTRY, NEWFL01, USUBJID"
+    #'       keep_vars = c("ARM_MATCH", "COUNTRY", "NEWFL01", "USUBJID")
     #'     ),
     #'     list(
     #'       is_current_domain = FALSE,
     #'       domain_name = "ADLB",
     #'       data_type = "adam",
-    #'       keep_vars = "AVAL, LBTEST, USUBJID"
+    #'       keep_vars = c("AVAL", "LBTEST", "USUBJID")
     #'     )
     #'   )
     #'   }
@@ -192,9 +192,9 @@ Standard template and rendered output
 ``` r
 cnt <- connector::connect(config = "_connector.yml")
   DM <- cnt$sdtm$read_cnt(tolower('DM')) |>
-  dplyr::select(ARM, STUDYID, USUBJID)
+  dplyr::select(ARM,STUDYID,USUBJID)
   DM_VACCINE <- cnt$sdtm$read_cnt(tolower('DM_VACCINE')) |>
-  dplyr::select(ARM, STUDYID, USUBJID)
+  dplyr::select(ARM,STUDYID,USUBJID)
 ```
 
 ### Parameters
@@ -222,7 +222,7 @@ element is a named list with the following fields:
 |----|----|----|
 | `domain_name` | character | Source dataset name, uppercase (e.g. `"DM"`, `"ADSL"`). |
 | `data_type` | character | Which connector data source to use: `"sdtm"`, `"adam"`, or `"metadata"`. |
-| `keep_vars` | character | Comma-separated column names to select, sorted alphabetically and uppercased. Only used when `is_current_domain` is `FALSE`. Column order in the final dataset is controlled by `keep_vars` in `mighty_write_data`, not by this field. |
+| `keep_vars` | character | Column names to select, sorted alphabetically and uppercased. Only used when `is_current_domain` is `FALSE`. Column order in the final dataset is controlled by `keep_vars` in `mighty_write_data`, not by this field. |
 | `is_current_domain` | logical | `TRUE` when the domain being read is the same one being built. When `TRUE`, `keep_vars` should be ignored. |
 
 ##### How `data_type` is determined
@@ -256,7 +256,7 @@ Using the same ADSL specification from `mighty_read_data`:
 
 list(
   domain = "ADSL",
-  keep_vars = "ARM, STUDYID, USUBJID",
+  keep_vars = c("ARM", "STUDYID", "USUBJID"),
   source_domain_rbind = "rbind(DM,\nDM_VACCINE)",
   src_mutations = list()
 )
@@ -291,7 +291,7 @@ Standard template and rendered output
     #' @origin Not Available
     #' @method Not applicable
     #' @param domain Character string. Name of the ADaM domain being initialised (e.g. `"ADSL"`, `"ADLB"`).
-    #' @param keep_vars Character string. Comma-separated column names to select after row binding.
+    #' @param keep_vars Character vector. Column names to select after row binding.
     #' @param source_domain_rbind Character string. Pre-formatted R expression that combines source datasets. A single domain is passed as its name; multiple domains are wrapped in `rbind()`.
     #' @param src_mutations List of lists. Per-domain mutation specifications used to add a `SRC_` tracking column before row binding. Each element has a single field `source_domain` (e.g. `list(list(source_domain = "LB"), list(source_domain = "XL"))`). Empty list when `SRC_` is not needed.
     #' @code
@@ -309,7 +309,7 @@ Standard template and rendered output
 ``` r
 ADSL <- rbind(DM,
 DM_VACCINE) |>
-    dplyr::select(ARM, STUDYID, USUBJID) |>
+    dplyr::select(ARM,STUDYID,USUBJID) |>
     admiral::convert_blanks_to_na()
 ```
 
@@ -322,8 +322,7 @@ as the variable name on the left-hand side of the assignment.
 
 #### `keep_vars`
 
-Comma-separated column names to retain after row binding. Pre-formatted
-in R before being passed to the template.
+Character vector of column names to retain after row binding.
 
 #### `source_domain_rbind`
 
@@ -393,13 +392,14 @@ list(
   joins = list(
     list(
       table = "ADSL",
-      select_expr = "SEX, STUDYID, USUBJID",
-      keys = '"STUDYID", "USUBJID"'
+      select_expr = c("SEX", "STUDYID", "USUBJID"),
+      keys = c("STUDYID", "USUBJID")
     )
   ),
   domain_filter = "(SRC_ == 'LB') | (SRC_ == 'XL' & LBCAT == 'CHEMISTRY')",
   global_filter = "!is.na(SEX)",
-  keep_vars = "LBCAT, PARAMCD, STUDYID, USUBJID"
+  keep_vars = c("LBCAT", "PARAMCD", "STUDYID", "USUBJID"),
+  has_keep_vars = TRUE
 )
 ```
 
@@ -431,18 +431,20 @@ Standard template and rendered output
     #'   filter evaluation. Each element is a list containing:
     #'   \describe{
     #'     \item{table}{Character string. Name of the dataset to join with.}
-    #'     \item{select_expr}{Character string. Comma-separated column names to select from the join dataset.}
-    #'     \item{keys}{Character string. Comma-separated quoted column names used as join keys (e.g. `"\"STUDYID\", \"USUBJID\""`).}
+    #'     \item{select_expr}{Character vector. Column names to select from the join dataset.}
+    #'     \item{keys}{Character vector. Column names used as join keys (e.g. `c("STUDYID", "USUBJID")`), used in `dplyr::join_by()`.}
     #'   }
-    #'   Empty list when no filter depends on an external dataset.
+    #'   Empty list when no filter depends on an external dataset. Each join keeps the row count of `domain`. The join stops
+    #'   with an error when a row in `domain` matches more than one row in the join dataset (duplicate keys).
     #' @param domain_filter Character string or `NULL`. Pre-formatted R expression filtering on `SRC_` (e.g. `"(SRC_ == 'LB') | (SRC_ == 'XL' & LBCAT == 'CHEMISTRY')"`). `NULL` when no domain-specific filter is defined — the filter block is skipped.
     #' @param global_filter Character string or `NULL`. Raw filter expression from the YAML spec (e.g. `"!is.na(SEX)"`). `NULL` when no global filter is defined — the filter block is skipped.
-    #' @param keep_vars Character string or `NULL`. Comma-separated column names to retain. `NULL` when no selection is needed — the select block is skipped. `SRC_` is excluded automatically.
+    #' @param keep_vars Character vector or `NULL`. Column names to retain. `NULL` when no selection is needed. `SRC_` is excluded automatically.
+    #' @param has_keep_vars Logical. `TRUE` when `keep_vars` has columns; the select block is skipped when `FALSE`.
     #' @code
     {{#joins}}
     {{{domain}}} <- {{{domain}}} |>
       dplyr::left_join({{{table}}} |> dplyr::select({{{select_expr}}}),
-                       by = c({{{keys}}}))
+                       by = dplyr::join_by({{{keys}}}), relationship = "many-to-one")
 
     {{/joins}}
     {{#domain_filter}}
@@ -456,18 +458,18 @@ Standard template and rendered output
       dplyr::filter({{{global_filter}}})
 
     {{/global_filter}}
-    {{#keep_vars}}
+    {{#has_keep_vars}}
     {{{domain}}} <- {{{domain}}} |>
       dplyr::select({{{keep_vars}}})
 
-    {{/keep_vars}}
+    {{/has_keep_vars}}
 
 **Rendered output**
 
 ``` r
 ADLB <- ADLB |>
-  dplyr::left_join(ADSL |> dplyr::select(SEX, STUDYID, USUBJID),
-                   by = c("STUDYID", "USUBJID"))
+  dplyr::left_join(ADSL |> dplyr::select(SEX,STUDYID,USUBJID),
+                   by = dplyr::join_by(STUDYID,USUBJID), relationship = "many-to-one")
 
 ADLB <- ADLB |>
   dplyr::filter((SRC_ == 'LB') | (SRC_ == 'XL' & LBCAT == 'CHEMISTRY')) |>
@@ -477,7 +479,7 @@ ADLB <- ADLB |>
   dplyr::filter(!is.na(SEX))
 
 ADLB <- ADLB |>
-  dplyr::select(LBCAT, PARAMCD, STUDYID, USUBJID)
+  dplyr::select(LBCAT,PARAMCD,STUDYID,USUBJID)
 ```
 
 ### Parameters
@@ -493,8 +495,8 @@ A list of join specifications. Each element is a named list:
 | Field | Type | Meaning |
 |----|----|----|
 | `table` | character | Name of the dataset to join with. |
-| `select_expr` | character | Comma-separated column names to select from the join dataset. |
-| `keys` | character | Comma-separated quoted column names used as join keys. |
+| `select_expr` | character | Column names to select from the join dataset. |
+| `keys` | character | Column names used as join keys, for use in [`dplyr::join_by()`](https://dplyr.tidyverse.org/reference/join_by.html). |
 
 `joins` is empty when no filter depends on an external dataset.
 
@@ -517,11 +519,16 @@ suppressed.
 
 #### `keep_vars`
 
-A comma-separated string of column names to retain. `NULL` when no
-selection is needed — whisker treats `NULL` as falsy so the
+Character vector of column names to retain. `NULL` when no selection is
+needed. `SRC_` is excluded because it is only used during filtering.
+
+#### `has_keep_vars`
+
+`TRUE` when `keep_vars` is not empty. The template uses this flag as the
+condition for the
 [`dplyr::select()`](https://dplyr.tidyverse.org/reference/select.html)
-call is suppressed. `SRC_` is excluded because it is only used during
-filtering.
+call. `keep_vars` cannot be the condition, because a Mustache section
+over a vector repeats once for each element.
 
 ## mighty_col_mutate
 
@@ -701,8 +708,8 @@ template:
 list(
   domain = "ADLB",
   join_dataset = "ADSL",
-  select_expr = "STUDYID, USUBJID, SEX",
-  by_vars = '"STUDYID", "USUBJID"',
+  select_expr = c("STUDYID", "USUBJID", "SEX"),
+  by_vars = c("STUDYID", "USUBJID"),
   needs_rename = FALSE,
   output_var = "SEX",
   var_to_add = "SEX"
@@ -729,8 +736,8 @@ Standard template and rendered output
     #' @method Not applicable
     #' @param domain Character string. Name of the primary dataset being modified; the left-hand side of the join, whose row count is kept (e.g. `"ADLB"`). The join stops with an error when a row in `domain` matches more than one row in `join_dataset`.
     #' @param join_dataset Character string. Name of the dataset to look up from; the right-hand side of the join (e.g. `"ADSL"`).
-    #' @param select_expr Character string. Comma-separated column names to select from `join_dataset` before joining. Includes both join keys and the variable being added.
-    #' @param by_vars Character string. Comma-separated quoted column names used as join keys, ready for `dplyr::left_join(by = c(...))` (e.g. `"\"STUDYID\", \"USUBJID\""`).
+    #' @param select_expr Character vector. Column names to select from `join_dataset` before joining. Includes both join keys and the variable being added.
+    #' @param by_vars Character vector. Column names used as join keys (e.g. `c("STUDYID", "USUBJID")`), used in `dplyr::join_by()`.
     #' @param needs_rename Logical. `TRUE` when the variable name in `join_dataset` differs from the desired output name; applies `dplyr::rename()` to `join_dataset` before the join.
     #' @param output_var Character string. Desired column name in `domain` after the join.
     #' @param var_to_add Character string. Column name as it exists in `join_dataset`, before any renaming. Equal to `output_var` when `needs_rename` is `FALSE`.
@@ -740,7 +747,7 @@ Standard template and rendered output
         {{{join_dataset}}} |>
           dplyr::select({{{select_expr}}}){{#needs_rename}} |>
           dplyr::rename({{{output_var}}} = {{{var_to_add}}}){{/needs_rename}},
-        by = c({{{by_vars}}}),
+        by = dplyr::join_by({{{by_vars}}}),
         relationship = "many-to-one"
       )
 
@@ -750,8 +757,8 @@ Standard template and rendered output
 ADLB <- ADLB |>
   dplyr::left_join(
     ADSL |>
-      dplyr::select(STUDYID, USUBJID, SEX),
-    by = c("STUDYID", "USUBJID"),
+      dplyr::select(STUDYID,USUBJID,SEX),
+    by = dplyr::join_by(STUDYID,USUBJID),
     relationship = "many-to-one"
   )
 ```
@@ -768,13 +775,13 @@ The name of the dataset to join with (right-hand side of the join).
 
 #### `select_expr`
 
-Comma-separated column names to select from `join_dataset` before
+Character vector of column names to select from `join_dataset` before
 joining. Includes both the join keys and the variable being added.
 
 #### `by_vars`
 
-Comma-separated quoted column names used as join keys, ready for use in
-`dplyr::left_join(by = c(...))`.
+Character vector of column names used as join keys, for use in
+[`dplyr::join_by()`](https://dplyr.tidyverse.org/reference/join_by.html).
 
 #### `needs_rename`
 

@@ -189,31 +189,31 @@ generating ADSL based on the specifications
 
     #> → No `_documents.yml` file found
     #> → No `_codelists.yml` file found
-    #> → Downloading repo "NovoNordisk-OpenSource/mighty.standards@ba209ca6f44d025354792bb623405f3b260ef282"
+    #> → Downloading repo "NovoNordisk-OpenSource/mighty.standards@f375a3550735b2c40372fd7276b127af7e69b139"
     #> → Found "age_group_01.R" in "local::./components"
-    #> → Found "mighty_read_data" in "github::NovoNordisk-OpenSource/mighty.standards/components@ba209ca6f44d025354792bb623405f3b260ef282"
-    #> → Found "mighty_init_domain" in "github::NovoNordisk-OpenSource/mighty.standards/components@ba209ca6f44d025354792bb623405f3b260ef282"
-    #> → Found "mighty_filter_domain" in "github::NovoNordisk-OpenSource/mighty.standards/components@ba209ca6f44d025354792bb623405f3b260ef282"
+    #> → Found "mighty_read_data" in "github::NovoNordisk-OpenSource/mighty.standards/components@f375a3550735b2c40372fd7276b127af7e69b139"
+    #> → Found "mighty_init_domain" in "github::NovoNordisk-OpenSource/mighty.standards/components@f375a3550735b2c40372fd7276b127af7e69b139"
+    #> → Found "mighty_filter_domain" in "github::NovoNordisk-OpenSource/mighty.standards/components@f375a3550735b2c40372fd7276b127af7e69b139"
     #> → Found "age_group_01.R" in "local::./components"
-    #> → Found "mighty_col_mutate" in "github::NovoNordisk-OpenSource/mighty.standards/components@ba209ca6f44d025354792bb623405f3b260ef282"
-    #> → Found "mighty_write_data" in "github::NovoNordisk-OpenSource/mighty.standards/components@ba209ca6f44d025354792bb623405f3b260ef282"
-    #> → Found "mighty_read_data" in "github::NovoNordisk-OpenSource/mighty.standards/components@ba209ca6f44d025354792bb623405f3b260ef282"
-    #> → Found "mighty_init_domain" in "github::NovoNordisk-OpenSource/mighty.standards/components@ba209ca6f44d025354792bb623405f3b260ef282"
-    #> → Found "mighty_filter_domain" in "github::NovoNordisk-OpenSource/mighty.standards/components@ba209ca6f44d025354792bb623405f3b260ef282"
+    #> → Found "mighty_col_mutate" in "github::NovoNordisk-OpenSource/mighty.standards/components@f375a3550735b2c40372fd7276b127af7e69b139"
+    #> → Found "mighty_write_data" in "github::NovoNordisk-OpenSource/mighty.standards/components@f375a3550735b2c40372fd7276b127af7e69b139"
+    #> → Found "mighty_read_data" in "github::NovoNordisk-OpenSource/mighty.standards/components@f375a3550735b2c40372fd7276b127af7e69b139"
+    #> → Found "mighty_init_domain" in "github::NovoNordisk-OpenSource/mighty.standards/components@f375a3550735b2c40372fd7276b127af7e69b139"
+    #> → Found "mighty_filter_domain" in "github::NovoNordisk-OpenSource/mighty.standards/components@f375a3550735b2c40372fd7276b127af7e69b139"
     #> → Found "age_group_01.R" in "local::./components"
-    #> → Found "mighty_col_mutate" in "github::NovoNordisk-OpenSource/mighty.standards/components@ba209ca6f44d025354792bb623405f3b260ef282"
-    #> → Found "mighty_write_data" in "github::NovoNordisk-OpenSource/mighty.standards/components@ba209ca6f44d025354792bb623405f3b260ef282"
+    #> → Found "mighty_col_mutate" in "github::NovoNordisk-OpenSource/mighty.standards/components@f375a3550735b2c40372fd7276b127af7e69b139"
+    #> → Found "mighty_write_data" in "github::NovoNordisk-OpenSource/mighty.standards/components@f375a3550735b2c40372fd7276b127af7e69b139"
     # ADSL-1-read_data -------------------------------------------------------------
     cnt <- connector::connect(config = "_connector.yml")
       DM <- cnt$sdtm$read_cnt(tolower('DM')) |>
-      dplyr::select(AGE, ARM, STUDYID, USUBJID)
+      dplyr::select(AGE,ARM,STUDYID,USUBJID)
 
     # ADSL-init_domain -------------------------------------------------------------
     DM <- DM |>
       dplyr::mutate(SRC_ = "DM")
 
     ADSL <- DM |>
-        dplyr::select(AGE, ARM, STUDYID, USUBJID, SRC_) |>
+        dplyr::select(AGE,ARM,STUDYID,USUBJID,SRC_) |>
         admiral::convert_blanks_to_na()
 
     # ADSL-filter_domain -----------------------------------------------------------
@@ -222,7 +222,7 @@ generating ADSL based on the specifications
       dplyr::select(-SRC_)
 
     ADSL <- ADSL |>
-      dplyr::select(AGE, ARM, STUDYID, USUBJID)
+      dplyr::select(AGE,ARM,STUDYID,USUBJID)
 
 
     # ADSL-AGE_GRP1 ----------------------------------------------------------------
