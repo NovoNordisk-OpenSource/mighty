@@ -28,11 +28,8 @@ test_that("params_col_echo_code returns expected structure", {
   expect_equal(result$output_var, "AGE")
   expect_equal(result$var_to_add, "AGE")
   expect_false(result$needs_rename)
-  expect_match(result$select_expr, "STUDYID")
-  expect_match(result$select_expr, "USUBJID")
-  expect_match(result$select_expr, "AGE")
-  expect_match(result$by_vars, '"STUDYID"')
-  expect_match(result$by_vars, '"USUBJID"')
+  expect_equal(result$select_expr, c("STUDYID", "USUBJID", "AGE"))
+  expect_equal(result$by_vars, c("STUDYID", "USUBJID"))
 })
 
 test_that("params_col_echo_code handles rename case", {
