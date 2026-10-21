@@ -186,13 +186,13 @@
 <span>      is_current_domain <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>      domain_name <span class="op">=</span> <span class="st">"DM"</span>,</span>
 <span>      data_type <span class="op">=</span> <span class="st">"sdtm"</span>,</span>
-<span>      keep_vars <span class="op">=</span> <span class="st">"ARM, STUDYID, USUBJID"</span></span>
+<span>      keep_vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ARM"</span>, <span class="st">"STUDYID"</span>, <span class="st">"USUBJID"</span><span class="op">)</span></span>
 <span>    <span class="op">)</span>,</span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>      is_current_domain <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>      domain_name <span class="op">=</span> <span class="st">"DM_VACCINE"</span>,</span>
 <span>      data_type <span class="op">=</span> <span class="st">"sdtm"</span>,</span>
-<span>      keep_vars <span class="op">=</span> <span class="st">"ARM, STUDYID, USUBJID"</span></span>
+<span>      keep_vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ARM"</span>, <span class="st">"STUDYID"</span>, <span class="st">"USUBJID"</span><span class="op">)</span></span>
 <span>    <span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -215,7 +215,7 @@
 #'     \item{is_current_domain}{Logical. `TRUE` to read the entire dataset (e.g. an ADSL update program reading its own earlier output); `FALSE` to apply column selection.}
 #'     \item{domain_name}{Character string. Name of the domain to read, uppercase (e.g. `"DM"`, `"ADSL"`).}
 #'     \item{data_type}{Character string. Connector data source to use: `"sdtm"`, `"adam"`, or `"metadata"`.}
-#'     \item{keep_vars}{Character string. Comma-separated column names to select. Ignored when `is_current_domain` is `TRUE`.}
+#'     \item{keep_vars}{Character vector. Column names to select. Ignored when `is_current_domain` is `TRUE`.}
 #'   }
 #'
 #'   Example:
@@ -225,13 +225,13 @@
 #'       is_current_domain = TRUE,
 #'       domain_name = "ADSL",
 #'       data_type = "adam",
-#'       keep_vars = "ARM_MATCH, COUNTRY, NEWFL01, USUBJID"
+#'       keep_vars = c("ARM_MATCH", "COUNTRY", "NEWFL01", "USUBJID")
 #'     ),
 #'     list(
 #'       is_current_domain = FALSE,
 #'       domain_name = "ADLB",
 #'       data_type = "adam",
-#'       keep_vars = "AVAL, LBTEST, USUBJID"
+#'       keep_vars = c("AVAL", "LBTEST", "USUBJID")
 #'     )
 #'   )
 #'   }
@@ -249,9 +249,9 @@ cnt &lt;- connector::connect(config = {{{connector_path_expr}}})
 <p><strong>Rendered output</strong></p>
 <pre><code class="language-r"><span><span class="va">cnt</span> <span class="op">&lt;-</span> <span class="fu">connector</span><span class="fu">::</span><span class="fu"><a href="https://novonordisk-opensource.github.io/connector/reference/connect.html" class="external-link">connect</a></span><span class="op">(</span>config <span class="op">=</span> <span class="st">"_connector.yml"</span><span class="op">)</span></span>
 <span>  <span class="va">DM</span> <span class="op">&lt;-</span> <span class="va">cnt</span><span class="op">$</span><span class="va">sdtm</span><span class="op">$</span><span class="fu">read_cnt</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/chartr.html" class="external-link">tolower</a></span><span class="op">(</span><span class="st">'DM'</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">ARM</span>, <span class="va">STUDYID</span>, <span class="va">USUBJID</span><span class="op">)</span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">ARM</span>,<span class="va">STUDYID</span>,<span class="va">USUBJID</span><span class="op">)</span></span>
 <span>  <span class="va">DM_VACCINE</span> <span class="op">&lt;-</span> <span class="va">cnt</span><span class="op">$</span><span class="va">sdtm</span><span class="op">$</span><span class="fu">read_cnt</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/chartr.html" class="external-link">tolower</a></span><span class="op">(</span><span class="st">'DM_VACCINE'</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">ARM</span>, <span class="va">STUDYID</span>, <span class="va">USUBJID</span><span class="op">)</span></span></code></pre>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">ARM</span>,<span class="va">STUDYID</span>,<span class="va">USUBJID</span><span class="op">)</span></span></code></pre>
 </details>
 </div>
 </div>
@@ -313,7 +313,7 @@ cnt &lt;- connector::connect(config = {{{connector_path_expr}}})
 <tr class="odd">
 <td><code>keep_vars</code></td>
 <td>character</td>
-<td>Comma-separated column names to select, sorted alphabetically and uppercased. Only used when <code>is_current_domain</code> is <code>FALSE</code>. Column order in the final dataset is controlled by <code>keep_vars</code> in <code>mighty_write_data</code>, not by this field.</td>
+<td>Column names to select, sorted alphabetically and uppercased. Only used when <code>is_current_domain</code> is <code>FALSE</code>. Column order in the final dataset is controlled by <code>keep_vars</code> in <code>mighty_write_data</code>, not by this field.</td>
 </tr>
 <tr class="even">
 <td><code>is_current_domain</code></td>
@@ -364,7 +364,7 @@ cnt &lt;- connector::connect(config = {{{connector_path_expr}}})
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>  domain <span class="op">=</span> <span class="st">"ADSL"</span>,</span>
-<span>  keep_vars <span class="op">=</span> <span class="st">"ARM, STUDYID, USUBJID"</span>,</span>
+<span>  keep_vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ARM"</span>, <span class="st">"STUDYID"</span>, <span class="st">"USUBJID"</span><span class="op">)</span>,</span>
 <span>  source_domain_rbind <span class="op">=</span> <span class="st">"rbind(DM,\nDM_VACCINE)"</span>,</span>
 <span>  src_mutations <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -386,7 +386,7 @@ cnt &lt;- connector::connect(config = {{{connector_path_expr}}})
 #' @origin Not Available
 #' @method Not applicable
 #' @param domain Character string. Name of the ADaM domain being initialised (e.g. `"ADSL"`, `"ADLB"`).
-#' @param keep_vars Character string. Comma-separated column names to select after row binding.
+#' @param keep_vars Character vector. Column names to select after row binding.
 #' @param source_domain_rbind Character string. Pre-formatted R expression that combines source datasets. A single domain is passed as its name; multiple domains are wrapped in `rbind()`.
 #' @param src_mutations List of lists. Per-domain mutation specifications used to add a `SRC_` tracking column before row binding. Each element has a single field `source_domain` (e.g. `list(list(source_domain = "LB"), list(source_domain = "XL"))`). Empty list when `SRC_` is not needed.
 #' @code
@@ -401,7 +401,7 @@ cnt &lt;- connector::connect(config = {{{connector_path_expr}}})
 <p><strong>Rendered output</strong></p>
 <pre><code class="language-r"><span><span class="va">ADSL</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">DM</span>,</span>
 <span><span class="va">DM_VACCINE</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">ARM</span>, <span class="va">STUDYID</span>, <span class="va">USUBJID</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">ARM</span>,<span class="va">STUDYID</span>,<span class="va">USUBJID</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu">admiral</span><span class="fu">::</span><span class="fu"><a href="https:/pharmaverse.github.io/admiral/v1.5.0/cran-release/reference/convert_blanks_to_na.html">convert_blanks_to_na</a></span><span class="op">(</span><span class="op">)</span></span></code></pre>
 </details>
 </div>
@@ -415,7 +415,7 @@ cnt &lt;- connector::connect(config = {{{connector_path_expr}}})
 </section><section class="level3"><h4 id="keep_vars">
 <code>keep_vars</code><a class="anchor" aria-label="anchor" href="#keep_vars"></a>
 </h4>
-<p>Comma-separated column names to retain after row binding. Pre-formatted in R before being passed to the template.</p>
+<p>Character vector of column names to retain after row binding.</p>
 </section><section class="level3"><h4 id="source_domain_rbind">
 <code>source_domain_rbind</code><a class="anchor" aria-label="anchor" href="#source_domain_rbind"></a>
 </h4>
@@ -478,13 +478,14 @@ cnt &lt;- connector::connect(config = {{{connector_path_expr}}})
 <span>  joins <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>      table <span class="op">=</span> <span class="st">"ADSL"</span>,</span>
-<span>      select_expr <span class="op">=</span> <span class="st">"SEX, STUDYID, USUBJID"</span>,</span>
-<span>      keys <span class="op">=</span> <span class="st">'"STUDYID", "USUBJID"'</span></span>
+<span>      select_expr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"SEX"</span>, <span class="st">"STUDYID"</span>, <span class="st">"USUBJID"</span><span class="op">)</span>,</span>
+<span>      keys <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"STUDYID"</span>, <span class="st">"USUBJID"</span><span class="op">)</span></span>
 <span>    <span class="op">)</span></span>
 <span>  <span class="op">)</span>,</span>
 <span>  domain_filter <span class="op">=</span> <span class="st">"(SRC_ == 'LB') | (SRC_ == 'XL' &amp; LBCAT == 'CHEMISTRY')"</span>,</span>
 <span>  global_filter <span class="op">=</span> <span class="st">"!is.na(SEX)"</span>,</span>
-<span>  keep_vars <span class="op">=</span> <span class="st">"LBCAT, PARAMCD, STUDYID, USUBJID"</span></span>
+<span>  keep_vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"LBCAT"</span>, <span class="st">"PARAMCD"</span>, <span class="st">"STUDYID"</span>, <span class="st">"USUBJID"</span><span class="op">)</span>,</span>
+<span>  has_keep_vars <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <div>
 <blockquote>
@@ -508,19 +509,20 @@ cnt &lt;- connector::connect(config = {{{connector_path_expr}}})
 #'   filter evaluation. Each element is a list containing:
 #'   \describe{
 #'     \item{table}{Character string. Name of the dataset to join with.}
-#'     \item{select_expr}{Character string. Comma-separated column names to select from the join dataset.}
-#'     \item{keys}{Character string. Comma-separated quoted column names used as join keys (e.g. `"\"STUDYID\", \"USUBJID\""`).}
+#'     \item{select_expr}{Character vector. Column names to select from the join dataset.}
+#'     \item{keys}{Character vector. Column names used as join keys (e.g. `c("STUDYID", "USUBJID")`), used in `dplyr::join_by()`.}
 #'   }
 #'   Empty list when no filter depends on an external dataset. Each join keeps the row count of `domain`. The join stops
 #'   with an error when a row in `domain` matches more than one row in the join dataset (duplicate keys).
 #' @param domain_filter Character string or `NULL`. Pre-formatted R expression filtering on `SRC_` (e.g. `"(SRC_ == 'LB') | (SRC_ == 'XL' &amp; LBCAT == 'CHEMISTRY')"`). `NULL` when no domain-specific filter is defined — the filter block is skipped.
 #' @param global_filter Character string or `NULL`. Raw filter expression from the YAML spec (e.g. `"!is.na(SEX)"`). `NULL` when no global filter is defined — the filter block is skipped.
-#' @param keep_vars Character string or `NULL`. Comma-separated column names to retain. `NULL` when no selection is needed — the select block is skipped. `SRC_` is excluded automatically.
+#' @param keep_vars Character vector or `NULL`. Column names to retain. `NULL` when no selection is needed. `SRC_` is excluded automatically.
+#' @param has_keep_vars Logical. `TRUE` when `keep_vars` has columns; the select block is skipped when `FALSE`.
 #' @code
 {{#joins}}
 {{{domain}}} &lt;- {{{domain}}} |&gt;
   dplyr::left_join({{{table}}} |&gt; dplyr::select({{{select_expr}}}),
-                   by = c({{{keys}}}), relationship = "many-to-one")
+                   by = dplyr::join_by({{{keys}}}), relationship = "many-to-one")
 
 {{/joins}}
 {{#domain_filter}}
@@ -534,15 +536,15 @@ cnt &lt;- connector::connect(config = {{{connector_path_expr}}})
   dplyr::filter({{{global_filter}}})
 
 {{/global_filter}}
-{{#keep_vars}}
+{{#has_keep_vars}}
 {{{domain}}} &lt;- {{{domain}}} |&gt;
   dplyr::select({{{keep_vars}}})
 
-{{/keep_vars}}</code></pre>
+{{/has_keep_vars}}</code></pre>
 <p><strong>Rendered output</strong></p>
 <pre><code class="language-r"><span><span class="va">ADLB</span> <span class="op">&lt;-</span> <span class="va">ADLB</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">left_join</a></span><span class="op">(</span><span class="va">ADSL</span> <span class="op">|&gt;</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">SEX</span>, <span class="va">STUDYID</span>, <span class="va">USUBJID</span><span class="op">)</span>,</span>
-<span>                   by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"STUDYID"</span>, <span class="st">"USUBJID"</span><span class="op">)</span>, relationship <span class="op">=</span> <span class="st">"many-to-one"</span><span class="op">)</span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">left_join</a></span><span class="op">(</span><span class="va">ADSL</span> <span class="op">|&gt;</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">SEX</span>,<span class="va">STUDYID</span>,<span class="va">USUBJID</span><span class="op">)</span>,</span>
+<span>                   by <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/join_by.html" class="external-link">join_by</a></span><span class="op">(</span><span class="va">STUDYID</span>,<span class="va">USUBJID</span><span class="op">)</span>, relationship <span class="op">=</span> <span class="st">"many-to-one"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">ADLB</span> <span class="op">&lt;-</span> <span class="va">ADLB</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="op">(</span><span class="va">SRC_</span> <span class="op">==</span> <span class="st">'LB'</span><span class="op">)</span> <span class="op">|</span> <span class="op">(</span><span class="va">SRC_</span> <span class="op">==</span> <span class="st">'XL'</span> <span class="op">&amp;</span> <span class="va">LBCAT</span> <span class="op">==</span> <span class="st">'CHEMISTRY'</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -552,7 +554,7 @@ cnt &lt;- connector::connect(config = {{{connector_path_expr}}})
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">SEX</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">ADLB</span> <span class="op">&lt;-</span> <span class="va">ADLB</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">LBCAT</span>, <span class="va">PARAMCD</span>, <span class="va">STUDYID</span>, <span class="va">USUBJID</span><span class="op">)</span></span></code></pre>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">LBCAT</span>,<span class="va">PARAMCD</span>,<span class="va">STUDYID</span>,<span class="va">USUBJID</span><span class="op">)</span></span></code></pre>
 </details>
 </div>
 </div>
@@ -586,12 +588,12 @@ cnt &lt;- connector::connect(config = {{{connector_path_expr}}})
 <tr class="even">
 <td><code>select_expr</code></td>
 <td>character</td>
-<td>Comma-separated column names to select from the join dataset.</td>
+<td>Column names to select from the join dataset.</td>
 </tr>
 <tr class="odd">
 <td><code>keys</code></td>
 <td>character</td>
-<td>Comma-separated quoted column names used as join keys.</td>
+<td>Column names used as join keys, for use in <code><a href="https://dplyr.tidyverse.org/reference/join_by.html" class="external-link">dplyr::join_by()</a></code>.</td>
 </tr>
 </tbody>
 </table>
@@ -607,7 +609,11 @@ cnt &lt;- connector::connect(config = {{{connector_path_expr}}})
 </section><section class="level3"><h4 id="keep_vars-1">
 <code>keep_vars</code><a class="anchor" aria-label="anchor" href="#keep_vars-1"></a>
 </h4>
-<p>A comma-separated string of column names to retain. <code>NULL</code> when no selection is needed — whisker treats <code>NULL</code> as falsy so the <code><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">dplyr::select()</a></code> call is suppressed. <code>SRC_</code> is excluded because it is only used during filtering.</p>
+<p>Character vector of column names to retain. <code>NULL</code> when no selection is needed. <code>SRC_</code> is excluded because it is only used during filtering.</p>
+</section><section class="level3"><h4 id="has_keep_vars">
+<code>has_keep_vars</code><a class="anchor" aria-label="anchor" href="#has_keep_vars"></a>
+</h4>
+<p><code>TRUE</code> when <code>keep_vars</code> is not empty. The template uses this flag as the condition for the <code><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">dplyr::select()</a></code> call. <code>keep_vars</code> cannot be the condition, because a Mustache section over a vector repeats once for each element.</p>
 </section></section></section><section class="section level2"><h2 id="mighty_col_mutate">mighty_col_mutate<a class="anchor" aria-label="anchor" href="#mighty_col_mutate"></a>
 </h2>
 <p>Rendered for each <code>col_copy</code> action — variables copied verbatim from one column to another, typically with an ADaM-standard rename (e.g. <code>LBSTRESN</code> → <code>AVAL</code>).</p>
@@ -727,8 +733,8 @@ cnt &lt;- connector::connect(config = {{{connector_path_expr}}})
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>  domain <span class="op">=</span> <span class="st">"ADLB"</span>,</span>
 <span>  join_dataset <span class="op">=</span> <span class="st">"ADSL"</span>,</span>
-<span>  select_expr <span class="op">=</span> <span class="st">"STUDYID, USUBJID, SEX"</span>,</span>
-<span>  by_vars <span class="op">=</span> <span class="st">'"STUDYID", "USUBJID"'</span>,</span>
+<span>  select_expr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"STUDYID"</span>, <span class="st">"USUBJID"</span>, <span class="st">"SEX"</span><span class="op">)</span>,</span>
+<span>  by_vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"STUDYID"</span>, <span class="st">"USUBJID"</span><span class="op">)</span>,</span>
 <span>  needs_rename <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  output_var <span class="op">=</span> <span class="st">"SEX"</span>,</span>
 <span>  var_to_add <span class="op">=</span> <span class="st">"SEX"</span></span>
@@ -747,8 +753,8 @@ cnt &lt;- connector::connect(config = {{{connector_path_expr}}})
 #' @method Not applicable
 #' @param domain Character string. Name of the primary dataset being modified; the left-hand side of the join, whose row count is kept (e.g. `"ADLB"`). The join stops with an error when a row in `domain` matches more than one row in `join_dataset`.
 #' @param join_dataset Character string. Name of the dataset to look up from; the right-hand side of the join (e.g. `"ADSL"`).
-#' @param select_expr Character string. Comma-separated column names to select from `join_dataset` before joining. Includes both join keys and the variable being added.
-#' @param by_vars Character string. Comma-separated quoted column names used as join keys, ready for `dplyr::left_join(by = c(...))` (e.g. `"\"STUDYID\", \"USUBJID\""`).
+#' @param select_expr Character vector. Column names to select from `join_dataset` before joining. Includes both join keys and the variable being added.
+#' @param by_vars Character vector. Column names used as join keys (e.g. `c("STUDYID", "USUBJID")`), used in `dplyr::join_by()`.
 #' @param needs_rename Logical. `TRUE` when the variable name in `join_dataset` differs from the desired output name; applies `dplyr::rename()` to `join_dataset` before the join.
 #' @param output_var Character string. Desired column name in `domain` after the join.
 #' @param var_to_add Character string. Column name as it exists in `join_dataset`, before any renaming. Equal to `output_var` when `needs_rename` is `FALSE`.
@@ -758,15 +764,15 @@ cnt &lt;- connector::connect(config = {{{connector_path_expr}}})
     {{{join_dataset}}} |&gt;
       dplyr::select({{{select_expr}}}){{#needs_rename}} |&gt;
       dplyr::rename({{{output_var}}} = {{{var_to_add}}}){{/needs_rename}},
-    by = c({{{by_vars}}}),
+    by = dplyr::join_by({{{by_vars}}}),
     relationship = "many-to-one"
   )</code></pre>
 <p><strong>Rendered output</strong></p>
 <pre><code class="language-r"><span><span class="va">ADLB</span> <span class="op">&lt;-</span> <span class="va">ADLB</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">left_join</a></span><span class="op">(</span></span>
 <span>    <span class="va">ADSL</span> <span class="op">|&gt;</span></span>
-<span>      <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">STUDYID</span>, <span class="va">USUBJID</span>, <span class="va">SEX</span><span class="op">)</span>,</span>
-<span>    by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"STUDYID"</span>, <span class="st">"USUBJID"</span><span class="op">)</span>,</span>
+<span>      <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">STUDYID</span>,<span class="va">USUBJID</span>,<span class="va">SEX</span><span class="op">)</span>,</span>
+<span>    by <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/join_by.html" class="external-link">join_by</a></span><span class="op">(</span><span class="va">STUDYID</span>,<span class="va">USUBJID</span><span class="op">)</span>,</span>
 <span>    relationship <span class="op">=</span> <span class="st">"many-to-one"</span></span>
 <span>  <span class="op">)</span></span></code></pre>
 </details>
@@ -785,11 +791,11 @@ cnt &lt;- connector::connect(config = {{{connector_path_expr}}})
 </section><section class="level3"><h4 id="select_expr">
 <code>select_expr</code><a class="anchor" aria-label="anchor" href="#select_expr"></a>
 </h4>
-<p>Comma-separated column names to select from <code>join_dataset</code> before joining. Includes both the join keys and the variable being added.</p>
+<p>Character vector of column names to select from <code>join_dataset</code> before joining. Includes both the join keys and the variable being added.</p>
 </section><section class="level3"><h4 id="by_vars">
 <code>by_vars</code><a class="anchor" aria-label="anchor" href="#by_vars"></a>
 </h4>
-<p>Comma-separated quoted column names used as join keys, ready for use in <code>dplyr::left_join(by = c(...))</code>.</p>
+<p>Character vector of column names used as join keys, for use in <code><a href="https://dplyr.tidyverse.org/reference/join_by.html" class="external-link">dplyr::join_by()</a></code>.</p>
 </section><section class="level3"><h4 id="needs_rename">
 <code>needs_rename</code><a class="anchor" aria-label="anchor" href="#needs_rename"></a>
 </h4>
