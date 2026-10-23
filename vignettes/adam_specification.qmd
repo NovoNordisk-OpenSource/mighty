@@ -12,8 +12,7 @@ knitr:
 
 # Overview
 
-<!-- COMMENT: "Changed due to: 'mighty.metadata format' was unexplained (clarity 4.2)" -->
-The specification format is defined by the [mighty.metadata](https://github.com/NovoNordisk-OpenSource/mighty.metadata) package, which also checks each file before mighty reads it. This article covers the fields mighty uses; mighty ignores any other fields.
+The specification format is defined by the [mighty.metadata](https://github.com/NovoNordisk-OpenSource/mighty.metadata) package, which also checks each file before mighty reads it. This article covers the fields mighty uses. Other fields are ignored by mighty.
 
 ## General structure
 
@@ -29,7 +28,6 @@ Each ADaM domain is defined in its own YAML file with these main sections:
 5.  **Rows** - Operations that add, modify, or delete rows
 6.  **Parameters** (BDS only) - Parameter-level derivations
 
-<!-- COMMENT: "Changed due to: no complete spec anywhere in the article (clarity 4.3)" -->
 Here is a complete specification, from the Get started example:
 
 ```{r}
@@ -45,8 +43,8 @@ example_dir <- system.file("examples", "get_started", package = "mighty", mustWo
 # Domain identifier
 
 The domain identifier is specified at the top level of the YAML file.
-<!-- COMMENT: "Changed due to: 'domain' was not explained (clarity 1.3)" -->
-A domain is one dataset; see [Key terms](mighty.html#key-terms).
+
+A domain is one dataset (see [Key terms](mighty.html#key-terms)).
 
 ## Required Field
 
@@ -132,8 +130,7 @@ This section defines how to create the base population for your ADaM table from 
 
 ## Structure
 
-<!-- COMMENT: "Changed due to: base/global not explained before the table (clarity 5.1)" -->
-The population is built in two steps. First, mighty reads each domain listed under `base`, applies that domain's own filter, and stacks the results into one dataset. Then the filters under `global` are applied to all stacked rows; they can use columns from other domains, such as `ADSL.ARMNRS`.
+The population is built in two steps. First, mighty reads each domain listed under `base`, applies that domain's own filter, and stacks the results into one dataset. Then the filters under `global` are applied to every row of that stacked dataset. A global filter can also use a column from a dataset that isn't in `base`, such as `ARMNRS` from ADSL. In such case, list it in `depends` with a prefix (`ADSL.ARMNRS`) - mighty joins it in first, then filtering occurs.
 
 The `population` section has two subsections:
 
@@ -166,13 +163,12 @@ Each entry in the `base` array specifies a source domain:
 | `depends`| Columns needed for filtering this domain                            | Use `NA` for no dependency |
 | `filter` | Filter specification. Must be an R expression that can be evaluated | Can be `NA` |
 
-<!-- COMMENT: "Changed due to: reason for depends not explained (clarity 5.2)" -->
 mighty does not read the filter expression itself, so `depends` must list every column the filter uses. mighty uses this list to make those columns available before the filter runs. Columns from another domain use a domain prefix (e.g. `ADSL.ARMNRS`), and mighty joins that domain first.
 
 ### Domain-specific filtering
 
 Domain-specific filters allow you to apply different inclusion criteria to different source domains before they are combined.
-<!-- COMMENT: "Changed due to: internal SRC_ detail not needed by spec authors (clarity 5.3)" -->
+
 A domain's filter only removes rows that came from that domain; rows from the other base domains are not affected. If a domain has several filter expressions, a row must meet all of them to be kept. In the generated program you will see a temporary `SRC_` column used for this; mighty adds and removes it automatically (see [Special components](special_components.html)).
 
 This is useful when:
@@ -268,7 +264,7 @@ Each column specification uses different fields depending on how the column is c
 - **Without `component`**: `method` is the source of the column. It must be domain-qualified (e.g., `ADSL.SAFFL`), and mighty uses it to resolve the dependency.
 - **With `component`**: the component derives the column and supplies its dependencies. `method` is free text that describes the derivation, for use in define.xml. mighty does not use it for dependency resolution.
 
-<!-- COMMENT: "Question: a component's `@method` tag (code_components.qmd:105) is also described as the define.xml method. Which wins when the spec's `method` is also set?" -->
+<!-- COMMENT: Question: a component's `@method` tag (code_components.qmd:105) is also described as the define.xml method. Which wins when the spec's `method` is also set? -->
 define.xml is the document that describes each ADaM column for regulatory submission. mighty does not create it; mighty.toolbox builds it from the same specifications. Without `component`, the same `DOMAIN.COLUMN` value also tells mighty.metadata that the column is a copy of that source (origin "Predecessor"), so it inherits the source's label and other metadata for define.xml.
 
 ``` yml
@@ -344,7 +340,6 @@ All examples below are from the ADLB specification (`id: ADLB`), whose base doma
         method: ADLB.LBSTRESN
     ```
 
-    <!-- COMMENT: "Changed due to: 'columns section' unclear and read like a requirement (clarity 6.2)" -->
     Creates a new column `AVAL` by copying the content of LBSTRESN from the base domain. `- id: LBSTRESN` without `method` keeps `LBSTRESN` from LB; `ADLB.LBSTRESN` refers to that same column, which is already in ADLB because ADLB is built from LB. `LBSTRESN` is also listed under `columns:`, so both columns are kept (a copy). Copy or rename depends only on whether the source column is also listed under `columns:`
 
 5.  Renaming a column from the base domain
@@ -360,7 +355,6 @@ All examples below are from the ADLB specification (`id: ADLB`), whose base doma
 
     With a single base domain, `LB.LBSTRESN` works the same as `ADLB.LBSTRESN`. With several base domains, use `ADLB.`, because `LB.` would join the column from LB.
 
-    <!-- COMMENT: "Changed due to: prefix does not decide copy vs rename (correctness A7). The removed note said to use ADLB.LBSTRESN when LBSTRESN is kept in ADLB and LB.LBSTRESN when it only exists in LB. In the generated program ADLB starts as a copy of LB's rows, so LBSTRESN is in ADLB either way and both prefixes produce the same line. Only listing `- id: LBSTRESN` decides copy (mutate, both columns kept) vs rename (only AVAL kept). Checked with one base domain (R/update_ui_data.R:81-98); with several base domains LB.X becomes a join." -->
 
 ### Derived columns
 
@@ -370,7 +364,6 @@ Derived columns use code components to perform data transformations. A code comp
 2.  Custom component (plain R script)
 3.  Custom component (Mustache template)
 
-<!-- COMMENT: "Changed due to: component id lookup and extension not explained (clarity 7.1)" -->
 The component `id` is a file name. mighty looks for it in the locations listed under `repos` in `_mighty.yml`, in order, and uses the first match. With an extension (`arm_group_01.R`), mighty looks for exactly that file; without one (`arm_group_01`), it looks for `arm_group_01.mustache` or `arm_group_01.R`. A `.R` file is plain R code; a `.mustache` file is a template whose placeholders are filled from `with:` (see example 10).
 
 #### Examples (continued):
@@ -472,7 +465,8 @@ The component `id` is a file name. mighty looks for it in the locations listed u
 
 ## Summary of column rules
 
-1.  A single component can produce multiple columns in the ADaM dataset. All columns generated by that component must have an entry under `columns:`.<!-- COMMENT: "Changed due to: 'columns section' unclear (clarity 6.2)" --> The number of columns a component produces is determined by the component's code, not by the ADaM specification.
+1.  A single component can produce multiple columns in the ADaM dataset. All columns generated by that component must have an entry under `columns:`.
+The number of columns a component produces is determined by the component's code, not by the ADaM specification.
 2.  All parameters expected by the component need to be specified in the `with` section of the component specification.
 3.  Dependencies must use appropriate prefixes: `rows.` for row operations (e.g., `rows.BASELINE_IMPUTATION`) or `parameters.` for parameter-level operations in BDS datasets (e.g., `parameters.BMI`).
 
