@@ -12,7 +12,8 @@ knitr:
 
 # Overview
 
-The ADaM specification required by mighty follows the mighty.metadata format. This article discusses the structure and fields used to define ADaM datasets. Additional fields beyond those discussed here are ignored by mighty.
+<!-- COMMENT: "Changed due to: 'mighty.metadata format' was unexplained (clarity 4.2)" -->
+The specification format is defined by the [mighty.metadata](https://github.com/NovoNordisk-OpenSource/mighty.metadata) package, which also checks each file before mighty reads it. This article covers the fields mighty uses; mighty ignores any other fields.
 
 ## General structure
 
@@ -28,9 +29,24 @@ Each ADaM domain is defined in its own YAML file with these main sections:
 5.  **Rows** - Operations that add, modify, or delete rows
 6.  **Parameters** (BDS only) - Parameter-level derivations
 
+<!-- COMMENT: "Changed due to: no complete spec anywhere in the article (clarity 4.3)" -->
+Here is a complete specification, from the Get started example:
+
+```{r}
+#| include: false
+#| eval: true
+example_dir <- system.file("examples", "get_started", package = "mighty", mustWork = TRUE)
+```
+
+```{embed}
+#| file: !expr file.path(example_dir, "study_dir/adsl.yml")
+```
+
 # Domain identifier
 
 The domain identifier is specified at the top level of the YAML file.
+<!-- COMMENT: "Changed due to: 'domain' was not explained (clarity 1.3)" -->
+A domain is one dataset; see [Key terms](mighty.html#key-terms).
 
 ## Required Field
 
@@ -116,6 +132,9 @@ This section defines how to create the base population for your ADaM table from 
 
 ## Structure
 
+<!-- COMMENT: "Changed due to: base/global not explained before the table (clarity 5.1)" -->
+The population is built in two steps. First, mighty reads each domain listed under `base`, applies that domain's own filter, and stacks the results into one dataset. Then the filters under `global` are applied to all stacked rows; they can use columns from other domains, such as `ADSL.ARMNRS`.
+
 The `population` section has two subsections:
 
 | Field    | Description                                        |
@@ -147,9 +166,14 @@ Each entry in the `base` array specifies a source domain:
 | `depends`| Columns needed for filtering this domain                            | Use `NA` for no dependency |
 | `filter` | Filter specification. Must be an R expression that can be evaluated | Can be `NA` |
 
+<!-- COMMENT: "Changed due to: reason for depends not explained (clarity 5.2)" -->
+mighty does not read the filter expression itself, so `depends` must list every column the filter uses. mighty uses this list to make those columns available before the filter runs. Columns from another domain use a domain prefix (e.g. `ADSL.ARMNRS`), and mighty joins that domain first.
+
 ### Domain-specific filtering
 
-Domain-specific filters allow you to apply different inclusion criteria to different source domains before they are combined. Each domain's filter expressions are combined with `&` (AND logic) and wrapped with `(SRC_ == 'domain_name' & conditions)`. Multiple domains' filter conditions are then combined with `|` (OR logic).
+Domain-specific filters allow you to apply different inclusion criteria to different source domains before they are combined.
+<!-- COMMENT: "Changed due to: internal SRC_ detail not needed by spec authors (clarity 5.3)" -->
+A domain's filter only removes rows that came from that domain; rows from the other base domains are not affected. If a domain has several filter expressions, a row must meet all of them to be kept. In the generated program you will see a temporary `SRC_` column used for this; mighty adds and removes it automatically (see [Special components](special_components.html)).
 
 This is useful when:
 
@@ -244,6 +268,9 @@ Each column specification uses different fields depending on how the column is c
 - **Without `component`**: `method` is the source of the column. It must be domain-qualified (e.g., `ADSL.SAFFL`), and mighty uses it to resolve the dependency.
 - **With `component`**: the component derives the column and supplies its dependencies. `method` is free text that describes the derivation, for use in define.xml. mighty does not use it for dependency resolution.
 
+<!-- COMMENT: "Question: a component's `@method` tag (code_components.qmd:105) is also described as the define.xml method. Which wins when the spec's `method` is also set?" -->
+define.xml is the document that describes each ADaM column for regulatory submission. mighty does not create it; mighty.toolbox builds it from the same specifications. Without `component`, the same `DOMAIN.COLUMN` value also tells mighty.metadata that the column is a copy of that source (origin "Predecessor"), so it inherits the source's label and other metadata for define.xml.
+
 ``` yml
 columns:
   - id: COMPLSFL
@@ -265,49 +292,65 @@ When using `component`, it has these subfields:
 
 ### Simple column operations
 
+Note: `method` always needs a domain prefix.
+
+All examples below are from the ADLB specification (`id: ADLB`), whose base domain is LB. ADLB is built from LB, so LB's columns are already in ADLB. The domain prefix in `method:` decides where a column comes from:
+
+| You write | Source | What mighty does | Examples |
+|-----------|--------|------------------|----------|
+| `- id: USUBJID` (no `method`) | Base domain (LB) | Keeps the column | 1 |
+| `method: ADSL.SAFFL` | A different domain | Joins the column in on the common keys | 2, 3 |
+| `method: ADLB.LBSTRESN` | The domain being built | No join; copies or renames the column already in ADLB | 4, 5 |
+
 1.  Adding a column from the base domain:
 
     ``` yml
+    id: ADLB
     columns:
       - id: USUBJID
     ```
 
-    Retains the USUBJID variable from your base SDTM domain (e.g., LB.USUBJID).
+    Retains the `USUBJID` variable from your base `SDTM` domain (e.g., `LB.USUBJID`).
 
 2.  Adding a column from another ADaM domain
 
     ``` yml
+    id: ADLB
     columns:
       - id: SAFFL
         method: ADSL.SAFFL
     ```
 
-    Joins the SAFFL variable from ADSL onto your current ADaM table using common keys.
+    Joins the SAFFL variable from ADSL onto your current ADaM table. The join is done via the common keys of the current dataset and ADSL.
 
 3.  Adding a column from another ADaM domain and renaming it
 
     ``` yml
+    id: ADLB
     columns:
       - id: ARM
         method: ADSL.PLANNED_ARM
     ```
 
-    Merges PLANNED_ARM from ADSL and names it as ARM in your table. The join is done via the common keys of the current dataset and ADSL.
+    Joins `PLANNED_ARM` from `ADSL` and renames it as `ARM` in your table. 
 
 4.  Copying a column from the base domain with a new name
 
     ``` yml
+    id: ADLB
     columns:
       - id: LBSTRESN
       - id: AVAL
         method: ADLB.LBSTRESN
     ```
 
-    Creates a new column AVAL by copying the content of LBSTRESN from the base domain. Note that LBSTRESN must also be specified in the columns section. Both columns will exist in the resulting dataset.
+    <!-- COMMENT: "Changed due to: 'columns section' unclear and read like a requirement (clarity 6.2)" -->
+    Creates a new column `AVAL` by copying the content of LBSTRESN from the base domain. `- id: LBSTRESN` without `method` keeps `LBSTRESN` from LB; `ADLB.LBSTRESN` refers to that same column, which is already in ADLB because ADLB is built from LB. `LBSTRESN` is also listed under `columns:`, so both columns are kept (a copy). Copy or rename depends only on whether the source column is also listed under `columns:`
 
 5.  Renaming a column from the base domain
 
     ``` yml
+    id: ADLB
     columns:
       - id: AVAL
         method: LB.LBSTRESN
@@ -315,7 +358,9 @@ When using `component`, it has these subfields:
 
     Renames `LBSTRESN` from the base domain to `AVAL`. Unlike copying (example 4), the source column `LBSTRESN` is **not** listed separately in `columns`, so only the renamed column `AVAL` appears in the final dataset.
 
-    Note that example 4 qualifies `LBSTRESN` with `ADLB` while example 5 qualifies it with `LB`. This is because example 4 copies a column that is also retained in ADLB (`LBSTRESN` is listed as its own column, so it exists in ADLB's own output), while in example 5 the source column being renamed only exists in the `base` dataset (`LB`) — it's never listed as its own ADLB column.
+    With a single base domain, `LB.LBSTRESN` works the same as `ADLB.LBSTRESN`. With several base domains, use `ADLB.`, because `LB.` would join the column from LB.
+
+    <!-- COMMENT: "Changed due to: prefix does not decide copy vs rename (correctness A7). The removed note said to use ADLB.LBSTRESN when LBSTRESN is kept in ADLB and LB.LBSTRESN when it only exists in LB. In the generated program ADLB starts as a copy of LB's rows, so LBSTRESN is in ADLB either way and both prefixes produce the same line. Only listing `- id: LBSTRESN` decides copy (mutate, both columns kept) vs rename (only AVAL kept). Checked with one base domain (R/update_ui_data.R:81-98); with several base domains LB.X becomes a join." -->
 
 ### Derived columns
 
@@ -324,6 +369,9 @@ Derived columns use code components to perform data transformations. A code comp
 1.  Standard code component (Mustache template)
 2.  Custom component (plain R script)
 3.  Custom component (Mustache template)
+
+<!-- COMMENT: "Changed due to: component id lookup and extension not explained (clarity 7.1)" -->
+The component `id` is a file name. mighty looks for it in the locations listed under `repos` in `_mighty.yml`, in order, and uses the first match. With an extension (`arm_group_01.R`), mighty looks for exactly that file; without one (`arm_group_01`), it looks for `arm_group_01.mustache` or `arm_group_01.R`. A `.R` file is plain R code; a `.mustache` file is a template whose placeholders are filled from `with:` (see example 10).
 
 #### Examples (continued):
 
@@ -347,7 +395,7 @@ Derived columns use code components to perform data transformations. A code comp
           id: arm_group_01.R
     ```
 
-    For custom code components, provide the component name or file name. Mighty looks it up in the repositories listed under `repos` in `_mighty.yml` (see `vignette("mighty_config")`). Custom R scripts should contain the data manipulation code directly as executable script code, and metadata to declare dependencies and columns created by the component. For details, see `vignette("code_components")`.
+    For custom code components, provide the component name or file name. mighty looks it up in the repositories listed under `repos` in `_mighty.yml` (see `vignette("mighty_config")`). Custom R scripts should contain the data manipulation code directly as executable script code, and metadata to declare dependencies and columns created by the component. For details, see `vignette("code_components")`.
 
 8.  Adding a derived column using a custom code component (Mustache template)
 
@@ -424,7 +472,7 @@ Derived columns use code components to perform data transformations. A code comp
 
 ## Summary of column rules
 
-1.  A single component can produce multiple columns in the ADaM dataset. All columns generated by that component must have a corresponding entry in the columns section. The number of columns a component produces is determined by the component's code, not by the ADaM specification.
+1.  A single component can produce multiple columns in the ADaM dataset. All columns generated by that component must have an entry under `columns:`.<!-- COMMENT: "Changed due to: 'columns section' unclear (clarity 6.2)" --> The number of columns a component produces is determined by the component's code, not by the ADaM specification.
 2.  All parameters expected by the component need to be specified in the `with` section of the component specification.
 3.  Dependencies must use appropriate prefixes: `rows.` for row operations (e.g., `rows.BASELINE_IMPUTATION`) or `parameters.` for parameter-level operations in BDS datasets (e.g., `parameters.BMI`).
 
@@ -438,7 +486,7 @@ A component with multiple `@outputs` appears under several column entries in the
 
 ### Same component, different parameters
 
-The same template can be invoked multiple times with different parameter values to produce different output columns. Mighty calls the component once per unique parameter set. This is valid as long as each invocation produces disjoint output columns — **no two invocations may share an output column**.
+The same template can be invoked multiple times with different parameter values to produce different output columns. mighty calls the component once per unique parameter set. This is valid as long as each invocation produces disjoint output columns — **no two invocations may share an output column**.
 
 ### Overlapping outputs cause an error
 
@@ -479,7 +527,7 @@ If the same component is used twice with different parameters but both uses prod
 show_file("study_dir/adlb.yml", "yml", from = "^columns:")
 ```
 
-Mighty will abort with an error:
+mighty will abort with an error:
 
 ```{r}
 #| error: true
@@ -505,9 +553,9 @@ Cross-domain reuse is not affected by these rules. The same component can appear
 
 The YAML specification describes only columns that appear in the final ADaM dataset and in the define.xml. There is no mechanism to declare intermediate or temporary variables — columns used during derivation but excluded from the final output. This affects two situations:
 
-**Source columns not in the final dataset.** A component may need a column from a source domain that does not belong in the output (e.g., `LBDTC` for deriving `ADT`). Declare these as `@depends` in the component's metadata header. Mighty ensures the column is read and available at execution time without it appearing in the specification. See [Handling external dependencies](code_components.html#handling-external-dependencies) for details.
+**Source columns not in the final dataset.** A component may need a column from a source domain that does not belong in the output (e.g., `LBDTC` for deriving `ADT`). Declare these as `@depends` in the component's metadata header. mighty ensures the column is read and available at execution time without it appearing in the specification. See [Handling external dependencies](code_components.html#handling-external-dependencies) for details.
 
-**Intermediate derived values shared across final columns.** In traditional ADaM programming, a temporary column might be calculated once, used by several downstream derivations, and then dropped. Mighty does not support this pattern — there is no way to declare a column that exists only during execution. Instead, either group the final columns that share the intermediate calculation into a single component (using multiple `@outputs`), or recalculate the intermediate value within each component that needs it.
+**Intermediate derived values shared across final columns.** In traditional ADaM programming, a temporary column might be calculated once, used by several downstream derivations, and then dropped. mighty does not support this pattern — there is no way to declare a column that exists only during execution. Instead, either group the final columns that share the intermediate calculation into a single component (using multiple `@outputs`), or recalculate the intermediate value within each component that needs it.
 Recalculating intermediate values across multiple components may reduce computational efficiency, but this is not a primary concern. The paramount goal of ADaM programs is clarity and transparency for regulatory review. Therefore, group derivations into shared components only when it improves the logical flow and understanding of the analysis, not simply to optimize performance.
 
 # Row operations
