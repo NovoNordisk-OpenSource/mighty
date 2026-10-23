@@ -19,12 +19,12 @@ and functionality to change.
 With mighty, you specify exactly what belongs in your ADaM
 datasets—including columns, derivations, and row transformations—and
 point to existing code implementations (or your own custom ones) that
-handle the actual data manipulations. mighty orchestrates and compiles
+handle the actual data manipulations. Mighty orchestrates and compiles
 these instructions into executable ADaM programs.
 
 ### Single Source of Truth
 
-mighty ensures metadata required for your define.xml always matches the
+Mighty ensures metadata required for your define.xml always matches the
 code implementation. Components and specifications are consolidated into
 a single representation, ensuring any changes automatically propagate
 throughout your ADaM programs and keeping documentation synchronized
@@ -32,9 +32,7 @@ with implementation.
 
 ### Dependency Analysis
 
-<!-- COMMENT: "Changed due to: jargon (clarity 1.5)" -->
-
-mighty tracks column and row dependencies for every derivation and works
+Mighty tracks column and row dependencies for every derivation and works
 out the order to run them in. This ensures that derived variables are
 created in the correct sequence, with prerequisite calculations
 completed before dependent operations. Dependency validation alerts you
@@ -107,7 +105,7 @@ Code components can either be validated standard components or custom
 (un-validated) components. In this example `der_complsfl` is a
 **standard component**.
 
-The `id` field holds the name of the component, not a file path. mighty
+The `id` field holds the name of the component, not a file path. Mighty
 looks it up in the component repositories listed under `repos` in
 `_mighty.yml` (see `vignette("mighty_config")`). To use a **custom
 component**, add the directory that contains it to `repos` and refer to
@@ -172,8 +170,6 @@ ADSL <- ADSL |> dplyr::mutate(
 
 ## How it works
 
-<!-- COMMENT: "Changed due to: list did not match Inputs overview; _mighty.yml was missing (clarity 1.6)" -->
-
 mighty uses these inputs to generate ADaM programs:
 
 1.  **ADaM specifications**: one YAML file per dataset, describing its
@@ -182,12 +178,11 @@ mighty uses these inputs to generate ADaM programs:
     mighty reads, and where to find components
 3.  **Code components**: reusable building blocks referenced in
     specifications
-4.  **Available data (optional)**: which SDTM/ADaM domains and columns
-    exist today, to generate programs that run on the current data
+4.  **Data availability (optional)**: which SDTM/ADaM domains and
+    columns exist today, to generate programs that run on the current
+    data
 
 See `vignette("inputs_overview")` for details.
-
-<!-- COMMENT: "Changed due to: jargon (clarity 1.5)" -->
 
 mighty puts the derivations, parameters and imputations in the right
 order and writes them out as structured, production-ready ADaM programs.
