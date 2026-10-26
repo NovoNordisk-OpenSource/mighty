@@ -281,7 +281,7 @@ When using `component`, it has these subfields:
 
 | Field | Description                                      | Notes |
 |-------|--------------------------------------------------|-------|
-| `id`  | Name of standard component or path to custom one | Required |
+| `id`  | Component file name, with or without extension   | Required |
 | `with`| Parameters to pass to the component              | Object of key-value pairs |
 
 ## Examples
@@ -377,9 +377,9 @@ The component `id` is a file name. mighty looks for it in the locations listed u
           id: arm_group_01
     ```
 
-    Creates `ARM_GRP1` using the standard code component `arm_group_01`. The component's metadata defines which columns it depends on.
+    Creates `ARM_GRP1` using the code component `arm_group_01`. The component's metadata defines which columns it depends on.
 
-7.  Adding a derived column using a custom code component (plain R script)
+7.  Adding a derived column using an R script custom component
 
     ``` yml
     columns:
@@ -388,9 +388,11 @@ The component `id` is a file name. mighty looks for it in the locations listed u
           id: arm_group_01.R
     ```
 
-    For custom code components, provide the component name or file name. mighty looks it up in the repositories listed under `repos` in `_mighty.yml` (see `vignette("mighty_config")`). Custom R scripts should contain the data manipulation code directly as executable script code, and metadata to declare dependencies and columns created by the component. For details, see `vignette("code_components")`.
+    R script components must contain the data manipulation code directly as executable script code, and metadata to declare dependencies and columns created by the component. For details, see `vignette("code_components")`.
 
-8.  Adding a derived column using a custom code component (Mustache template)
+    For custom code components, provide the component name or file name. mighty looks it up in the repositories listed under `repos` in `_mighty.yml` (see `vignette("mighty_config")`).
+
+8.  Adding a derived column using a custom Mustache template component
 
     ``` yml
     columns:
@@ -399,9 +401,9 @@ The component `id` is a file name. mighty looks for it in the locations listed u
           id: arm_group_01.mustache
     ```
 
-    Custom Mustache templates allow parameterization (see example 10).
+    Mustache template components allow parameterization (see example 10).
 
-9.  Adding multiple derived columns with a single standard code component
+9.  Adding multiple derived columns with a single code component
 
     ``` yml
     columns:
@@ -413,7 +415,7 @@ The component `id` is a file name. mighty looks for it in the locations listed u
           id: newfl_01
     ```
 
-    Adds both `NEWFL01` and `NEWREA01` columns by calling the standard code component `newfl_01`. The component must be designed to output both variables.
+    Adds both `NEWFL01` and `NEWREA01` columns by calling the code component `newfl_01`. The component must be designed to output both variables.
 
 10. Adding a derived column using a parameterized code component
 
@@ -426,7 +428,7 @@ The component `id` is a file name. mighty looks for it in the locations listed u
             cut_points: c(20, 45)
     ```
 
-    Creates `AGE_GRP1` using `age_group_01` code component with custom parameters. Parameters can only be passed to Mustache templates (standard components and custom Mustache components), not to plain R script components.
+    Creates `AGE_GRP1` using `age_group_01` code component with custom parameters. Parameters can only be passed to Mustache templates, not to plain R script components.
 
 11. Adding multiple derived columns with a single, parameterized code component
 
@@ -523,6 +525,7 @@ show_file("study_dir/adlb.yml", "yml", from = "^columns:")
 
 mighty will abort with an error:
 
+<!-- COMMENT: "Question: this hidden chunk passes check_cross_domain_adam_dependencies = FALSE, but the default (TRUE) gives the same error. Can we remove the argument?" -->
 ```{r}
 #| error: true
 #| echo: false
@@ -547,7 +550,7 @@ Cross-domain reuse is not affected by these rules. The same component can appear
 
 The YAML specification describes only columns that appear in the final ADaM dataset and in the define.xml. There is no mechanism to declare intermediate or temporary variables — columns used during derivation but excluded from the final output. This affects two situations:
 
-**Source columns not in the final dataset.** A component may need a column from a source domain that does not belong in the output (e.g., `LBDTC` for deriving `ADT`). Declare these as `@depends` in the component's metadata header. mighty ensures the column is read and available at execution time without it appearing in the specification. See [Handling external dependencies](code_components.html#handling-external-dependencies) for details.
+**Source columns not in the final dataset.** A component may need a column from a source domain that does not belong in the output (e.g., `LBDTC` for deriving `ADT`). Declare these as `@depends` in the component's metadata header. mighty ensures the column is read and available at execution time without it appearing in the specification. See [Source columns not in the final dataset](code_components.html#source-columns-not-in-the-final-dataset) for details.
 
 **Intermediate derived values shared across final columns.** In traditional ADaM programming, a temporary column might be calculated once, used by several downstream derivations, and then dropped. mighty does not support this pattern — there is no way to declare a column that exists only during execution. Instead, either group the final columns that share the intermediate calculation into a single component (using multiple `@outputs`), or recalculate the intermediate value within each component that needs it.
 Recalculating intermediate values across multiple components may reduce computational efficiency, but this is not a primary concern. The paramount goal of ADaM programs is clarity and transparency for regulatory review. Therefore, group derivations into shared components only when it improves the logical flow and understanding of the analysis, not simply to optimize performance.
@@ -571,7 +574,7 @@ Row operations have an `id` field (user-specified identifier) and a `component` 
           id: add_baseline_visit
     ```
 
-    Executes the `add_baseline_visit` standard code component. The specific actions depend on the code component's implementation.
+    Executes the `add_baseline_visit` code component. The specific actions depend on the code component's implementation.
 
 2.  Row operation with parameterized code component
 

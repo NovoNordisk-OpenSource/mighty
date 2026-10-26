@@ -124,6 +124,8 @@ Relative paths in `repos` are resolved against the working directory, not agains
 #| file: !expr file.path(example_dir, "components/age_group_01.R")
 ```
 
+The `#'` header tells mighty what the component needs (`@depends ADSL AGE`) and what it creates (`@outputs AGE_GRP1`). The code after `@code` is inserted into the ADSL program as it is. See `vignette("code_components")` for all tags.
+
 ## Render the ADaM program
 
 Call mighty to consolidate, analyze and render your ADSL program:
