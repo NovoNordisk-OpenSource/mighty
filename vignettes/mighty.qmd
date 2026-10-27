@@ -48,9 +48,9 @@ In this minimal example you build ADSL with mighty. You will:
 - **Domain**: one dataset, e.g. `DM` (SDTM) or `ADSL` (ADaM).
 - **Specification**: a YAML file describing one ADaM domain you want mighty to build, e.g. `adsl.yml`. mighty generates the program for every domain that has a specification.
 - **External domain**: a dataset the program reads but mighty doesn't build: SDTM, metadata, or ADaM made elsewhere.
-- **Keys**: the columns that identify one row in table. mighty uses them to join domains. A generated domain lists its keys in its specification; external domains list them in `_mighty.yml`.
+- **Keys**: the columns that identify one row in a table. mighty uses them to join domains. A generated domain lists its keys in its specification; external domains list them in `_mighty.yml`.
 - **Component**: an R script or Mustache template with the code for one derivation, e.g. `age_group_01.R`.
-- **`repos`**: the folders or GitHub repositories, where mighty looks for components, listed in `_mighty.yml`.
+- **`repos`**: the folders or GitHub repositories where mighty looks for components, listed in `_mighty.yml`.
 - **define.xml**: the document that describes each ADaM column for regulatory submission. mighty does not create it; mighty.toolbox builds it from the same specifications.
 
 ## Study directory guidelines
@@ -71,9 +71,10 @@ my_study/                 <- working directory when running example_01_main.R
 
 `study_dir/` holds only YAML files:
 
-- one specification per each ADaM domain (e.g. `adsl.yml`)
-- `_mighty.yml`: [framework configuration](mighty_config.qmd) (keys of external datasets and component repositories)
+- one specification per ADaM domain (e.g. `adsl.yml`)
+- `_mighty.yml`: [framework configuration](mighty_config.html) (keys of external datasets and component repositories)
 - `_study.yml`: study-level properties (optional, used by mighty.toolbox for define.xml)
+- `_documents.yml`, `_codelists.yml`: optional, read by mighty.metadata
 
 mighty reads every other `.yml` file in `study_dir/` as a specification. Keep other files outside it: the [connector config](https://novonordisk-opensource.github.io/connector/) (`_connector.yml`), which tells the generated programs where your data is; your custom components; and the folder you save the generated programs to.
 
@@ -100,7 +101,7 @@ The specification has a header describing ADSL, a `population` section saying th
 - `PLANNED_ARM`: `method: ADSL.ARM` makes a copy of `ARM` under a new name.
 - `AGE_GRP1`: `component` means it's derived by the custom component `age_group_01.R` (see next section).
 
-Listing only columns that belong in the final dataset is a good practise that helps in keeping things tidy. See `vignette("adam_specification")` for everything a specification can contain.
+Listing only columns that belong in the final dataset is a good practice that helps in keeping things tidy. See `vignette("adam_specification")` for everything a specification can contain.
 
 **adsl.yml**
 
@@ -130,7 +131,7 @@ The `#'` header tells mighty what the component needs (`@depends ADSL AGE`) and 
 
 Call mighty to consolidate, analyze and render your ADSL program:
 
-`path_connector_config` argument is the path to your connector config; mighty copies it into the generated programs.
+`path_connector_config` is the path to your connector config. mighty writes this path into the generated programs, which read the file when they run.
 
 **example_01_main.R**
 
@@ -138,7 +139,7 @@ Call mighty to consolidate, analyze and render your ADSL program:
 #| file: !expr file.path(example_dir, "example_01_main.R")
 ```
 
-Printing the rendered ADaM program yields a complete program for generating ADSL based on the specifications
+`generate_adam_code()` returns a list. Its `programs` element holds the generated R programs, each one a character string. Each name starts with the order to run the programs in, so here there is a single program, `1_ADSL`. When a study has several domains, a domain that uses ADSL comes after it (e.g. `2_ADAE`). If ADSL itself needs columns from another domain, ADSL is split into two programs (e.g. `1_ADSL`, `2_ADLB`, `3_ADSL`). Printing `1_ADSL` shows the full program that builds ADSL:
 
 ```{r}
 #| echo: false
@@ -151,6 +152,18 @@ program <- withr::with_dir(example_dir, {
 })
 cat("```r", program, "```", sep = "\n")
 ```
+
+## Save the programs
+
+To save the programs as `.R` files, pass them to `write_adam_programs()`. The folder must already exist:
+
+```r
+dir.create("programs")
+write_adam_programs(results$programs, dir = "programs")
+# Creates programs/1_ADSL.R
+```
+
+Use `style = TRUE` to format the files with styler. We recommend saving the programs outside `study_dir/`, so that folder holds only specifications (see [Study directory guidelines](#study-directory-guidelines)).
 
 ## Next steps
 

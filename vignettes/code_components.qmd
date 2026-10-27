@@ -27,7 +27,7 @@ Beyond their technical format, components are classified by what they do to your
 - Can depend on columns from multiple datasets
 - Build on top of each other - one component's output can be another's input
 - Are the most common type of component
-- Are referenced in the `column` section of your YAML ADaM specification
+- Are referenced in the `columns` section of your YAML ADaM specification
 
 **Row components** (`@type row`) add new rows to your dataset or modify existing rows. For example, computing summary statistics that create new observation rows. Row components:
 
@@ -36,14 +36,14 @@ Beyond their technical format, components are classified by what they do to your
 - May modify existing rows (i.e. with a subset operation)
 - List any modified columns in `@outputs`
 - Do not create new columns - they only populate values in existing column structures
-- Are referenced in the `row` section of your YAML ADaM specification
+- Are referenced in the `rows` section of your YAML ADaM specification
 
 **Parameter components** (`@type parameter`) create BDS parameter records, such as adding a new PARAMCD to a BDS dataset. They are processed the same way as row components. Parameter components:
 
 - Add new parameter records to the dataset
 - May modify column values in the newly created rows
 - List any modified columns in `@outputs`
-- Are referenced in the `parameter` section of your YAML ADaM specification
+- Are referenced in the `parameters` section of your YAML ADaM specification
 
 **Internal components** (`@type internal`) implement mighty's own internal machinery, such as reading source data or initializing a domain. They are not referenced from a column, row, or parameter section of a YAML ADaM specification, and are not typically written by end users.
 
@@ -135,7 +135,7 @@ The generated program reads only the columns that the specification or a compone
 
 ### `@outputs`
 If the component is a column derivation, this specifies which column(s) the component creates.
-If the component is a row/parameter action, this specifies which column(s) the component modifies
+If the component is a row or parameter operation, this specifies which column(s) the component modifies
 
 Multiple outputs are listed on separate lines.
 
@@ -268,7 +268,7 @@ Use Mustache template components when:
 
 ## Template Syntax
 
-Mustache templates use triple curly braces `{{{{variable}}}}` as placeholders that get replaced with actual values when mighty renders the component. Triple braces avoid HTML escaping, which would corrupt R operators such as `<-` and `>` in generated code. See [Template syntax](special_components.html#template-syntax) in the special components vignette for a full explanation of double vs. triple mustache syntax.
+Mustache templates use triple curly braces `{{{{variable}}}}` as placeholders that get replaced with actual values when mighty renders the component. Triple braces avoid HTML escaping, which would corrupt R operators such as `<-` and `>` in generated code. See [Template syntax](special_components.html#template-syntax) in the internal components vignette for a full explanation of double vs. triple mustache syntax.
 
 - Parameters are specified in the `with:` section of your YAML specification
 - Both metadata and code sections can contain placeholders
@@ -277,7 +277,7 @@ Mustache templates use triple curly braces `{{{{variable}}}}` as placeholders th
 
 - Metadata header uses `@param` tags to document expected parameters
 - Placeholders can appear in `@depends`, `@outputs`, and the code body
-- Mighty (via mighty.components) renders the template before execution, replacing all placeholders
+- Mighty (via mighty.component) renders the template before execution, replacing all placeholders
 - The rendered output is plain R code
 - mighty passes only the values under `with:`. To use `{{{{domain}}}}`, pass `domain` there (see the example below).
 
@@ -439,9 +439,9 @@ The classification of a component as either Standard or Custom is determined onl
 
 Mighty looks up the `id` of a component in the repositories listed under `repos` in `_mighty.yml`. To use a custom component, add the directory that contains it to `repos`. See `vignette("mighty_config")` for the lookup rules.
 
-# In-built components
+# Internal components
 
-A small number of in-built components provide core functionality managed by mighty itself:
+A small number of internal components provide core functionality managed by mighty itself:
 
 - Data I/O operations (reading from connectors, writing outputs)
 - Domain initialization and filtering

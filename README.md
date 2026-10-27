@@ -41,10 +41,9 @@ detected, to aide debugging.
 
 ### Missing Data Analysis
 
-Identification of discrepancies between specified ADaM requirements and
-available SDTM/ADaM data, enables generation of executable programs that
-gracefully adapt to current data availability. See
-`vignette("missing_data_analysis")` for more details.
+If some SDTM or ADaM data doesn’t exist yet, mighty can also generate
+programs that run on the data available today, with the steps that can’t
+run commented out. See `vignette("missing_data_analysis")`.
 
 ## Example: Deriving COMPLSFL in ADSL
 

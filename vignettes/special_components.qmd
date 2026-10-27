@@ -1,7 +1,7 @@
 ---
-title: "Special components"
+title: "Internal components"
 vignette: >
-  %\VignetteIndexEntry{Special components}
+  %\VignetteIndexEntry{Internal components}
   %\VignetteEngine{quarto::html}
   %\VignetteEncoding{UTF-8}
 knitr:
@@ -22,11 +22,13 @@ knitr::opts_chunk$set(
 )
 ```
 
-Special components are Mustache templates (prefixed with `mighty_`) that mighty
+<!-- COMMENT: "Question: to improve consistency, we renamed all special, in-built and internal components to internal components (this page was titled Special components). Do you agree? The file name special_components.qmd is unchanged." -->
+
+Internal components are Mustache templates (prefixed with `mighty_`) that mighty
 inserts automatically into every generated ADaM program. They live in
 mighty.standards and are resolved via the `repos` mechanism. Users never
 reference them in YAML specs. This vignette documents the parameter contract for
-each special component so that template authors can understand (and modify) the
+each internal component so that template authors can understand (and modify) the
 templates.
 
 ```{r}
