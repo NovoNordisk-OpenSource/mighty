@@ -22,7 +22,6 @@ knitr::opts_chunk$set(
 )
 ```
 
-<!-- COMMENT: "Question: to improve consistency, we renamed all special, in-built and internal components to internal components (this page was titled Special components). Do you agree? The file name special_components.qmd is unchanged." -->
 
 Internal components are Mustache templates (prefixed with `mighty_`) that mighty
 inserts automatically into every generated ADaM program. They live in

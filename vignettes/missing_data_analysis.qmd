@@ -34,8 +34,6 @@ mighty handles 1 and 2. Your code components must handle 3, for example with a s
 
 # Workflow
 
-<!-- COMMENT: "Question: data_context is internal (@noRd, not exported), so users need mighty:::data_context$new(cnt). Should we export it, or say it is not available yet? (clarity 11.1, correctness A17)" -->
-
 1. **Write the full specification.** Include every column and row operation you want, whether or not the data exists yet.
 2. **Describe the available data.** Build a `data_context` from a [`connector`](https://github.com/NovoNordisk-OpenSource/connector) object and pass it to `generate_adam_code(data_context = ...)`. mighty reads only which tables and columns exist, not the values. ADaM domains that mighty builds itself don't need to be in the `data_context`, because their columns come from the specifications.
 3. **Compare the specification with the data.** mighty checks every step, meaning each derivation, row operation and parameter, against the available data. A step can't run if a domain or column it needs is missing, or if it depends on another step that can't run.

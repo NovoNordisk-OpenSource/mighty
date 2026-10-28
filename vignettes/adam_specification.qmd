@@ -207,8 +207,6 @@ population:
 
 ## Complex example
 
-<!-- COMMENT: "Question: columns in a filter's depends (no prefix) must also be listed under columns:, otherwise 'Missing columns: ADLB.LBCAT … Required by: ADLB filter'. This conflicts with 'only final columns in the spec'. Is it intended? If yes, the docs and this example need to show it." -->
-
 ``` yml
 population:
   base:
@@ -261,7 +259,6 @@ Each column specification uses different fields depending on how the column is c
 - **Without `component`**: `method` is the source of the column. It must be domain-qualified (e.g., `ADSL.SAFFL`), and mighty uses it to resolve the dependency.
 - **With `component`**: the component derives the column and supplies its dependencies. `method` is free text that describes the derivation, for use in define.xml. mighty does not use it for dependency resolution.
 
-<!-- COMMENT: Question: a component's `@method` tag (code_components.qmd:105) is also described as the define.xml method. Which wins when the spec's `method` is also set? -->
 define.xml is the document that describes each ADaM column for regulatory submission. mighty does not create it; mighty.toolbox builds it from the same specifications. Without `component`, the same `DOMAIN.COLUMN` value also tells mighty.metadata that the column is a copy of that source (origin "Predecessor"), so it inherits the source's label and other metadata for define.xml.
 
 ``` yml
@@ -522,7 +519,6 @@ show_file("study_dir/adlb.yml", "yml", from = "^columns:")
 
 mighty will abort with an error:
 
-<!-- COMMENT: "Question: this hidden chunk passes check_cross_domain_adam_dependencies = FALSE, but the default (TRUE) gives the same error. Can we remove the argument?" -->
 ```{r}
 #| error: true
 #| echo: false
