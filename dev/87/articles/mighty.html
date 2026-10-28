@@ -242,20 +242,20 @@
 <p><code><a href="../reference/generate_adam_code.html">generate_adam_code()</a></code> returns a list. Its <code>programs</code> element holds the generated R programs, each one a character string. Each name starts with the order to run the programs in, so here there is a single program, <code>1_ADSL</code>. When a study has several domains, a domain that uses ADSL comes after it (e.g. <code>2_ADAE</code>). If ADSL itself needs columns from another domain, ADSL is split into two programs (e.g. <code>1_ADSL</code>, <code>2_ADLB</code>, <code>3_ADSL</code>). Printing <code>1_ADSL</code> shows the full program that builds ADSL:</p>
 <pre><code><span><span class="co">#&gt; → No `_documents.yml` file found</span></span>
 <span><span class="co">#&gt; → No `_codelists.yml` file found</span></span>
-<span><span class="co">#&gt; → Downloading repo "NovoNordisk-OpenSource/mighty.standards@004543ab2562dd948a29fd2530f143a7cf337a59"</span></span>
+<span><span class="co">#&gt; → Downloading repo "NovoNordisk-OpenSource/mighty.standards@91ce52c339369b584001c3bffdfd65ee564b5f61"</span></span>
 <span><span class="co">#&gt; → Found "age_group_01.R" in "local::./components"</span></span>
-<span><span class="co">#&gt; → Found "mighty_read_data" in "github::NovoNordisk-OpenSource/mighty.standards/components@004543ab2562dd948a29fd2530f143a7cf337a59"</span></span>
-<span><span class="co">#&gt; → Found "mighty_init_domain" in "github::NovoNordisk-OpenSource/mighty.standards/components@004543ab2562dd948a29fd2530f143a7cf337a59"</span></span>
-<span><span class="co">#&gt; → Found "mighty_filter_domain" in "github::NovoNordisk-OpenSource/mighty.standards/components@004543ab2562dd948a29fd2530f143a7cf337a59"</span></span>
+<span><span class="co">#&gt; → Found "mighty_read_data" in "github::NovoNordisk-OpenSource/mighty.standards/components@91ce52c339369b584001c3bffdfd65ee564b5f61"</span></span>
+<span><span class="co">#&gt; → Found "mighty_init_domain" in "github::NovoNordisk-OpenSource/mighty.standards/components@91ce52c339369b584001c3bffdfd65ee564b5f61"</span></span>
+<span><span class="co">#&gt; → Found "mighty_filter_domain" in "github::NovoNordisk-OpenSource/mighty.standards/components@91ce52c339369b584001c3bffdfd65ee564b5f61"</span></span>
 <span><span class="co">#&gt; → Found "age_group_01.R" in "local::./components"</span></span>
-<span><span class="co">#&gt; → Found "mighty_col_mutate" in "github::NovoNordisk-OpenSource/mighty.standards/components@004543ab2562dd948a29fd2530f143a7cf337a59"</span></span>
-<span><span class="co">#&gt; → Found "mighty_write_data" in "github::NovoNordisk-OpenSource/mighty.standards/components@004543ab2562dd948a29fd2530f143a7cf337a59"</span></span>
-<span><span class="co">#&gt; → Found "mighty_read_data" in "github::NovoNordisk-OpenSource/mighty.standards/components@004543ab2562dd948a29fd2530f143a7cf337a59"</span></span>
-<span><span class="co">#&gt; → Found "mighty_init_domain" in "github::NovoNordisk-OpenSource/mighty.standards/components@004543ab2562dd948a29fd2530f143a7cf337a59"</span></span>
-<span><span class="co">#&gt; → Found "mighty_filter_domain" in "github::NovoNordisk-OpenSource/mighty.standards/components@004543ab2562dd948a29fd2530f143a7cf337a59"</span></span>
+<span><span class="co">#&gt; → Found "mighty_col_mutate" in "github::NovoNordisk-OpenSource/mighty.standards/components@91ce52c339369b584001c3bffdfd65ee564b5f61"</span></span>
+<span><span class="co">#&gt; → Found "mighty_write_data" in "github::NovoNordisk-OpenSource/mighty.standards/components@91ce52c339369b584001c3bffdfd65ee564b5f61"</span></span>
+<span><span class="co">#&gt; → Found "mighty_read_data" in "github::NovoNordisk-OpenSource/mighty.standards/components@91ce52c339369b584001c3bffdfd65ee564b5f61"</span></span>
+<span><span class="co">#&gt; → Found "mighty_init_domain" in "github::NovoNordisk-OpenSource/mighty.standards/components@91ce52c339369b584001c3bffdfd65ee564b5f61"</span></span>
+<span><span class="co">#&gt; → Found "mighty_filter_domain" in "github::NovoNordisk-OpenSource/mighty.standards/components@91ce52c339369b584001c3bffdfd65ee564b5f61"</span></span>
 <span><span class="co">#&gt; → Found "age_group_01.R" in "local::./components"</span></span>
-<span><span class="co">#&gt; → Found "mighty_col_mutate" in "github::NovoNordisk-OpenSource/mighty.standards/components@004543ab2562dd948a29fd2530f143a7cf337a59"</span></span>
-<span><span class="co">#&gt; → Found "mighty_write_data" in "github::NovoNordisk-OpenSource/mighty.standards/components@004543ab2562dd948a29fd2530f143a7cf337a59"</span></span>
+<span><span class="co">#&gt; → Found "mighty_col_mutate" in "github::NovoNordisk-OpenSource/mighty.standards/components@91ce52c339369b584001c3bffdfd65ee564b5f61"</span></span>
+<span><span class="co">#&gt; → Found "mighty_write_data" in "github::NovoNordisk-OpenSource/mighty.standards/components@91ce52c339369b584001c3bffdfd65ee564b5f61"</span></span>
 <span><span class="co"># ADSL-1-read_data -------------------------------------------------------------</span></span>
 <span><span class="va">cnt</span> <span class="op">&lt;-</span> <span class="fu">connector</span><span class="fu">::</span><span class="fu"><a href="https://novonordisk-opensource.github.io/connector/reference/connect.html" class="external-link">connect</a></span><span class="op">(</span>config <span class="op">=</span> <span class="st">"_connector.yml"</span><span class="op">)</span></span>
 <span>  <span class="va">DM</span> <span class="op">&lt;-</span> <span class="va">cnt</span><span class="op">$</span><span class="va">sdtm</span><span class="op">$</span><span class="fu">read_cnt</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/chartr.html" class="external-link">tolower</a></span><span class="op">(</span><span class="st">'DM'</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>

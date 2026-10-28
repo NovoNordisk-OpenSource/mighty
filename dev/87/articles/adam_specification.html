@@ -390,7 +390,6 @@
 <span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">depends</span><span class="kw">:</span><span class="at"> NA</span></span></code></pre></div>
 </section><section class="level2"><h3 id="complex-example">Complex example<a class="anchor" aria-label="anchor" href="#complex-example"></a>
 </h3>
-<!-- COMMENT: "Question: columns in a filter's depends (no prefix) must also be listed under columns:, otherwise 'Missing columns: ADLB.LBCAT … Required by: ADLB filter'. This conflicts with 'only final columns in the spec'. Is it intended? If yes, the docs and this example need to show it." -->
 <div class="sourceCode" id="cb8"><pre class="sourceCode yml"><code class="sourceCode yaml"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">population</span><span class="kw">:</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">base</span><span class="kw">:</span></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="kw">-</span><span class="at"> </span><span class="fu">domain</span><span class="kw">:</span><span class="at"> LB</span></span>
@@ -462,7 +461,7 @@
 <li>
 <strong>With <code>component</code></strong>: the component derives the column and supplies its dependencies. <code>method</code> is free text that describes the derivation, for use in define.xml. mighty does not use it for dependency resolution.</li>
 </ul>
-<!-- COMMENT: Question: a component's `@method` tag (code_components.qmd:105) is also described as the define.xml method. Which wins when the spec's `method` is also set? --><p>define.xml is the document that describes each ADaM column for regulatory submission. mighty does not create it; mighty.toolbox builds it from the same specifications. Without <code>component</code>, the same <code>DOMAIN.COLUMN</code> value also tells mighty.metadata that the column is a copy of that source (origin “Predecessor”), so it inherits the source’s label and other metadata for define.xml.</p>
+<p>define.xml is the document that describes each ADaM column for regulatory submission. mighty does not create it; mighty.toolbox builds it from the same specifications. Without <code>component</code>, the same <code>DOMAIN.COLUMN</code> value also tells mighty.metadata that the column is a copy of that source (origin “Predecessor”), so it inherits the source’s label and other metadata for define.xml.</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode yml"><code class="sourceCode yaml"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">columns</span><span class="kw">:</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">id</span><span class="kw">:</span><span class="at"> COMPLSFL</span></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">method</span><span class="kw">:</span><span class="at"> Completer flag derived per protocol section 4.2</span></span>
@@ -701,7 +700,6 @@
 <span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">dt_var</span><span class="kw">:</span><span class="at"> ASTDT</span></span>
 <span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">dtf_var</span><span class="kw">:</span><span class="at"> ASTDTF</span></span></code></pre></div>
 <p>mighty will abort with an error:</p>
-<!-- COMMENT: "Question: this hidden chunk passes check_cross_domain_adam_dependencies = FALSE, but the default (TRUE) gives the same error. Can we remove the argument?" -->
 <div class="cell">
 <pre><code><span><span class="co">#&gt; → No `_documents.yml` file found</span></span>
 <span><span class="co">#&gt; → No `_codelists.yml` file found</span></span>

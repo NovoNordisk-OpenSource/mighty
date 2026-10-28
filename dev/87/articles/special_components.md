@@ -144,22 +144,18 @@ Standard template and rendered output
     #' @description Opens a connector and reads each source dataset into memory,
     #'   retaining only the columns needed downstream. Rendered once at the top of
     #'   every generated ADaM program.
-    #' @type internal
-    #' @origin Not Available
-    #' @method Not applicable
-    #' @param connector_path_expr Character string. R expression that evaluates to
-    #'   the connector configuration file path. Either a quoted literal path or a
-    #'   bare R expression evaluated at runtime (e.g. `here::here("_connector.yml")`).
-    #' @param domains List of lists. Each element represents a domain/dataset to be read, containing the following components:
-    #'   \describe{
-    #'     \item{is_current_domain}{Logical. `TRUE` to read the entire dataset (e.g. an ADSL update program reading its own earlier output); `FALSE` to apply column selection.}
-    #'     \item{domain_name}{Character string. Name of the domain to read, uppercase (e.g. `"DM"`, `"ADSL"`).}
-    #'     \item{data_type}{Character string. Connector data source to use: `"sdtm"`, `"adam"`, or `"metadata"`.}
-    #'     \item{keep_vars}{Character vector. Column names to select. Ignored when `is_current_domain` is `TRUE`.}
-    #'   }
+    #'
+    #'   Each element of `domains` is a list with these components:
+    #'
+    #'   * `is_current_domain`: Logical. `TRUE` to read the entire dataset (e.g. an ADSL update program reading its own
+    #'     earlier output); `FALSE` to apply column selection.
+    #'   * `domain_name`: Character string. Name of the domain to read, uppercase (e.g. `"DM"`, `"ADSL"`).
+    #'   * `data_type`: Character string. Connector data source to use: `"sdtm"`, `"adam"`, or `"metadata"`.
+    #'   * `keep_vars`: Character vector. Column names to select. Ignored when `is_current_domain` is `TRUE`.
     #'
     #'   Example:
-    #'   \preformatted{
+    #'
+    #'   ```r
     #'   domains <- list(
     #'     list(
     #'       is_current_domain = TRUE,
@@ -174,7 +170,14 @@ Standard template and rendered output
     #'       keep_vars = c("AVAL", "LBTEST", "USUBJID")
     #'     )
     #'   )
-    #'   }
+    #'   ```
+    #' @type internal
+    #' @origin Not Available
+    #' @method Not applicable
+    #' @param connector_path_expr Character string. R expression that evaluates to
+    #'   the connector configuration file path. Either a quoted literal path or a
+    #'   bare R expression evaluated at runtime (e.g. `here::here("_connector.yml")`).
+    #' @param domains List of lists. Each element describes a domain/dataset to read (see Description).
     #' @code
     cnt <- connector::connect(config = {{{connector_path_expr}}})
     {{#domains}}
