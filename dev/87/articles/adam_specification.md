@@ -1,0 +1,860 @@
+# ADaM Specification
+
+## Overview
+
+The specification format is defined by the
+[mighty.metadata](https://github.com/NovoNordisk-OpenSource/mighty.metadata)
+package, which also checks each file before mighty reads it. This
+article covers the fields mighty uses. Other fields are ignored by
+mighty.
+
+### General structure
+
+Each ADaM domain is defined in its own YAML file with these main
+sections:
+
+1.  **Domain identifier** - The ADaM domain name
+2.  **Primary keys** - Unique identifiers for the dataset
+3.  **Label** - Label of the ADaM dataset
+4.  **Class** - CDISC class of the dataset
+5.  **Structure** - Text description of the structure of the dataset
+6.  **Population** - How to build the base table from SDTM domains
+7.  **Columns** - Which columns to include and how to create them
+8.  **Rows** - Operations that add, modify, or delete rows
+9.  **Parameters** (BDS only) - Parameter-level derivations
+
+Here is a complete specification, from the Get started example:
+
+``` yml
+id: ADSL
+label: Subject Level Analysis Dataset
+class: SUBJECT LEVEL ANALYSIS DATASET
+structure: One record per subject
+keys: [USUBJID, STUDYID]
+
+population:
+  base:
+    - domain: DM
+      depends:
+        - AGE
+      filter: '!is.na(AGE)'
+  global:
+    - filter: NA
+      depends:
+        - NA
+
+columns:
+  - id: USUBJID
+
+  - id: STUDYID
+
+  - id: ARM
+
+  - id: PLANNED_ARM
+    method: ADSL.ARM
+
+  - id: AGE
+
+  - id: AGE_GRP1
+    component:
+      id: "age_group_01.R"
+```
+
+## Domain identifier
+
+The domain identifier is specified at the top level of the YAML file.
+
+A domain is one dataset (see [Key
+terms](https://novonordisk-opensource.github.io/mighty/articles/mighty.html#key-terms)).
+
+### Required Field
+
+| Field | Description             | Example |
+|-------|-------------------------|---------|
+| `id`  | Name of the ADaM domain | `ADLB`  |
+
+### Example
+
+``` yml
+id: ADLB
+```
+
+## Primary keys
+
+Define the primary key variables that uniquely identify each row in your
+ADaM dataset.
+
+### Required Field
+
+| Field | Description | Example |
+|----|----|----|
+| `keys` | Array of variable names forming the primary key | `[USUBJID, PARAMCD]` |
+
+### Example
+
+``` yml
+keys: [USUBJID, PARAMCD, AVISIT]
+```
+
+## Label
+
+A descriptive label for the ADaM domain.
+
+### Required Field
+
+| Field   | Description                       | Example                       |
+|---------|-----------------------------------|-------------------------------|
+| `label` | Human-readable domain description | `Laboratory Analysis Dataset` |
+
+### Example
+
+``` yml
+label: Laboratory Analysis Dataset
+```
+
+## Class
+
+The ADaM dataset class according to ADaM standards.
+
+### Required Field
+
+| Field   | Description               | Example                |
+|---------|---------------------------|------------------------|
+| `class` | ADaM class of the dataset | `BASIC DATA STRUCTURE` |
+
+### Common values
+
+- `SUBJECT LEVEL ANALYSIS DATASET` - For ADSL
+- `BASIC DATA STRUCTURE` - For BDS datasets (ADLB, ADVS, etc.)
+- `OCCURRENCE DATA STRUCTURE` - For OCCDS datasets (ADAE, ADCM, etc.)
+
+### Example
+
+``` yml
+class: BASIC DATA STRUCTURE
+```
+
+## Structure
+
+A description of the dataset structure that specifies the grain/level of
+the data.
+
+### Required Field
+
+| Field | Description | Example |
+|----|----|----|
+| `structure` | Description of dataset granularity | `One record per subject per parameter per analysis visit` |
+
+### Example
+
+``` yml
+structure: One record per subject per parameter per analysis visit
+```
+
+## Population
+
+This section defines how to create the base population for your ADaM
+table from source SDTM domains and apply filters.
+
+### Structure
+
+The population is built in two steps. First, mighty reads each domain
+listed under `base`, applies that domain’s own filter, and stacks the
+results into one dataset. Then the filters under `global` are applied to
+every row of that stacked dataset. A global filter can also use a column
+from a dataset that isn’t in `base`, such as `ARMNRS` from ADSL. In such
+case, list it in `depends` with a prefix (`ADSL.ARMNRS`) - mighty joins
+it in first, then filtering occurs.
+
+The `population` section has two subsections:
+
+| Field | Description |
+|----|----|
+| `base` | Required. Array of base SDTM domains with domain-specific filters |
+| `global` | Optional. Array of filters applied to the combined dataset |
+
+### Filter execution order
+
+Understanding when filters are applied is essential for writing correct
+specifications. The generated program filters in this order:
+
+1.  **Read data**: the base domains, and any domains the filters use,
+    are read.
+2.  **Combine**: the base domains are stacked into one dataset.
+3.  **Join**: if a filter uses columns from another domain
+    (e.g. `ADSL.SEX`), that domain is joined by its keys.
+4.  **Apply domain-specific filters**: each `base.filter` removes rows
+    only from its own domain (tracked with a temporary `SRC_` column).
+5.  **Apply global filters**: all `global.filter` expressions are
+    applied together; a row must meet all of them.
+6.  **Keep needed columns**: columns the program doesn’t need are
+    dropped.
+7.  **Continue with derivations**: column and row operations proceed.
+
+Domain-specific filters allow different inclusion criteria for different
+source domains, while global filters apply uniform criteria across the
+combined dataset.
+
+### Base domains
+
+Each entry in the `base` array specifies a source domain:
+
+| Field | Description | Notes |
+|----|----|----|
+| `domain` | SDTM domain name | Uppercase (e.g. `LB`) |
+| `depends` | Columns needed for filtering this domain | Use `NA` for no dependency |
+| `filter` | Filter specification. Must be an R expression that can be evaluated | Can be `NA` |
+
+mighty does not read the filter expression itself, so `depends` must
+list every column the filter uses. mighty uses this list to make those
+columns available before the filter runs. Columns from another domain
+use a domain prefix (e.g. `ADSL.ARMNRS`), and mighty joins that domain
+first.
+
+#### Domain-specific filtering
+
+Domain-specific filters allow you to apply different inclusion criteria
+to different source domains before they are combined.
+
+A domain’s filter only removes rows that came from that domain; rows
+from the other base domains are not affected. Each base domain has one
+filter string. To combine conditions, use `&` inside it. In the
+generated program you will see a temporary `SRC_` column used for this;
+mighty adds and removes it automatically (see [Internal
+components](https://novonordisk-opensource.github.io/mighty/articles/special_components.md)).
+
+This is useful when:
+
+- Different domains need different inclusion criteria
+- You want to exclude specific records from one domain but keep all
+  records from another
+- Filtering logic depends on the source domain
+
+### Global filters
+
+Global filters are applied after row-binding and domain-specific
+filtering.
+
+| Field | Description | Notes |
+|----|----|----|
+| `depends` | Array of columns needed for global filtering | Include domain prefix (e.g., `ADSL.SAFFL`) when referencing a column outside the current domain |
+| `filter` | Filter specification. Must be an R expression that can be evaluated | Applied to combined dataset. |
+
+#### Using external domains in global filters
+
+Global filters can reference columns from external ADaM or SDTM domains
+by:
+
+1.  Listing required columns in `global.depends` with domain prefix
+    (e.g., `ADSL.SAFFL`)
+2.  Writing filter expressions that reference the columns without the
+    prefix (e.g., `SAFFL == "Y"`)
+
+mighty joins the domain in automatically, using that domain’s keys: from
+its specification (`keys:`) if mighty builds it, such as ADSL, otherwise
+from `external_data` in `_mighty.yml`.
+
+### Simple example
+
+``` yml
+population:
+  base:
+    - domain: LB
+      filter: NA
+      depends: NA
+```
+
+### Complex example
+
+``` yml
+population:
+  base:
+    - domain: LB
+      filter: NA
+      depends: NA
+    - domain: XL
+      filter: 'grepl("_CONV", TOPICCD)'
+      depends:
+        - TOPICCD
+  global:
+    - filter: 'LBCAT != "ANTIBODIES"'
+      depends:
+        - LBCAT
+    - filter: '!ARMNRS %in% c("SCREEN FAILURE")'
+      depends:
+        - ADSL.ARMNRS
+```
+
+### Key Points
+
+- Multiple base domains are row-bound together
+- Base filters apply to specific domains before combining
+- Global filters apply to the combined dataset
+- Column dependencies must include domain prefixes when from external
+  domains (e.g., `ADSL.ARMNRS`)
+
+## Columns
+
+Define which columns to include in your ADaM dataset and how to create
+them.
+
+Column operations cannot modify the number of rows in the ADaM table. To
+modify rows, use the `rows` section (see below).
+
+The `columns` section is an array where each element defines one or more
+columns.
+
+### Fields
+
+Each column specification uses different fields depending on how the
+column is created:
+
+| Field | Description | Notes |
+|----|----|----|
+| `id` | Name of the column in the final dataset | Required |
+| `method` | Source location for simple operations, or a derivation description when `component` is set | See [The `method` field](#the-method-field) |
+| `component` | Component definition for derivations | Object with `id` and optional `with` |
+| `depends` | IDs of row or parameter operations that must complete first | Array of strings (e.g., `rows.BASELINE_FLAG`, `parameters.BMI`) |
+
+#### The `method` field
+
+`method` has two roles, which depend on whether the column also has a
+`component`:
+
+- **Without `component`**: `method` is the source of the column. It must
+  be domain-qualified (e.g., `ADSL.SAFFL`), and mighty uses it to
+  resolve the dependency.
+- **With `component`**: the component derives the column and supplies
+  its dependencies. `method` is free text that describes the derivation,
+  for use in define.xml. mighty does not use it for dependency
+  resolution.
+
+define.xml is the document that describes each ADaM column for
+regulatory submission. mighty does not create it; mighty.toolbox builds
+it from the same specifications. Without `component`, the same
+`DOMAIN.COLUMN` value also tells mighty.metadata that the column is a
+copy of that source (origin “Predecessor”), so it inherits the source’s
+label and other metadata for define.xml.
+
+``` yml
+columns:
+  - id: COMPLSFL
+    method: Completer flag derived per protocol section 4.2
+    component:
+      id: der_complsfl.R
+```
+
+#### Component object
+
+When using `component`, it has these subfields:
+
+| Field | Description | Notes |
+|----|----|----|
+| `id` | Component file name, with or without extension | Required |
+| `with` | Parameters to pass to the component | Object of key-value pairs |
+
+### Examples
+
+#### Simple column operations
+
+Note: `method` always needs a domain prefix.
+
+All examples below are from the ADLB specification (`id: ADLB`), whose
+base domain is LB. ADLB is built from LB, so LB’s columns are already in
+ADLB. The domain prefix in `method:` decides where a column comes from:
+
+| You write | Source | What mighty does | Examples |
+|----|----|----|----|
+| `- id: USUBJID` (no `method`) | Base domain (LB) | Keeps the column | 1 |
+| `method: ADSL.SAFFL` | A different domain | Joins the column in, matching on that domain’s keys | 2, 3 |
+| `method: ADLB.LBSTRESN` | The domain being built | No join; copies or renames the column already in ADLB | 4, 5 |
+
+1.  Adding a column from the base domain:
+
+    ``` yml
+    id: ADLB
+    columns:
+      - id: USUBJID
+    ```
+
+    Retains the `USUBJID` variable from your base `SDTM` domain (e.g.,
+    `LB.USUBJID`).
+
+2.  Adding a column from another ADaM domain
+
+    ``` yml
+    id: ADLB
+    columns:
+      - id: SAFFL
+        method: ADSL.SAFFL
+    ```
+
+    Joins `SAFFL` from ADSL onto your table, matching rows on ADSL’s
+    keys (its `keys:`). Those key columns must also be in your table.
+
+3.  Adding a column from another ADaM domain and renaming it
+
+    ``` yml
+    id: ADLB
+    columns:
+      - id: ARM
+        method: ADSL.PLANNED_ARM
+    ```
+
+    Joins `PLANNED_ARM` from `ADSL` and renames it as `ARM` in your
+    table.
+
+4.  Copying a column from the base domain with a new name
+
+    ``` yml
+    id: ADLB
+    columns:
+      - id: LBSTRESN
+      - id: AVAL
+        method: ADLB.LBSTRESN
+    ```
+
+    Creates a new column `AVAL` by copying the content of LBSTRESN from
+    the base domain. `- id: LBSTRESN` without `method` keeps `LBSTRESN`
+    from LB; `ADLB.LBSTRESN` refers to that same column, which is
+    already in ADLB because ADLB is built from LB. `LBSTRESN` is also
+    listed under `columns:`, so both columns are kept (a copy). Copy or
+    rename depends only on whether the source column is also listed
+    under `columns:`
+
+5.  Renaming a column from the base domain
+
+    ``` yml
+    id: ADLB
+    columns:
+      - id: AVAL
+        method: LB.LBSTRESN
+    ```
+
+    Renames `LBSTRESN` from the base domain to `AVAL`. Unlike copying
+    (example 4), the source column `LBSTRESN` is **not** listed
+    separately in `columns`, so only the renamed column `AVAL` appears
+    in the final dataset.
+
+    With a single base domain, `LB.LBSTRESN` works the same as
+    `ADLB.LBSTRESN`. With several base domains, use `ADLB.`, because
+    `LB.` would join the column from LB.
+
+#### Derived columns
+
+Derived columns use code components to perform data transformations. A
+code component can be:
+
+1.  Standard code component (Mustache template)
+2.  Custom component (plain R script)
+3.  Custom component (Mustache template)
+
+The component `id` is a file name. mighty looks for it in the locations
+listed under `repos` in `_mighty.yml`, in order, and uses the first
+match. With an extension (`arm_group_01.R`), mighty looks for exactly
+that file; without one (`arm_group_01`), it looks for
+`arm_group_01.mustache` or `arm_group_01.R`. A `.R` file is plain R
+code; a `.mustache` file is a template whose placeholders are filled
+from `with:` (see example 10).
+
+##### Examples (continued):
+
+6.  Adding a derived column using a standard code component
+
+    ``` yml
+    columns:
+      - id: ARM_GRP1
+        component:
+          id: arm_group_01
+    ```
+
+    Creates `ARM_GRP1` using the code component `arm_group_01`. The
+    component’s metadata defines which columns it depends on.
+
+7.  Adding a derived column using an R script custom component
+
+    ``` yml
+    columns:
+      - id: ARM_GRP1
+        component:
+          id: arm_group_01.R
+    ```
+
+    R script components must contain the data manipulation code directly
+    as executable script code, and metadata to declare dependencies and
+    columns created by the component. For details, see
+    [`vignette("code_components")`](https://novonordisk-opensource.github.io/mighty/articles/code_components.md).
+
+    For custom code components, provide the component name or file name.
+    mighty looks it up in the repositories listed under `repos` in
+    `_mighty.yml` (see
+    [`vignette("mighty_config")`](https://novonordisk-opensource.github.io/mighty/articles/mighty_config.md)).
+
+8.  Adding a derived column using a custom Mustache template component
+
+    ``` yml
+    columns:
+      - id: ARM_GRP1
+        component:
+          id: arm_group_01.mustache
+    ```
+
+    Mustache template components allow parameterization (see example
+    10).
+
+9.  Adding multiple derived columns with a single code component
+
+    ``` yml
+    columns:
+      - id: NEWFL01
+        component:
+          id: newfl_01
+      - id: NEWREA01
+        component:
+          id: newfl_01
+    ```
+
+    Adds both `NEWFL01` and `NEWREA01` columns by calling the code
+    component `newfl_01`. The component must be designed to output both
+    variables.
+
+10. Adding a derived column using a parameterized code component
+
+    ``` yml
+    columns:
+      - id: AGE_GRP1
+        component:
+          id: age_group_01
+          with:
+            cut_points: c(20, 45)
+    ```
+
+    Creates `AGE_GRP1` using `age_group_01` code component with custom
+    parameters. Parameters can only be passed to Mustache templates, not
+    to plain R script components.
+
+11. Adding multiple derived columns with a single, parameterized code
+    component
+
+    ``` yml
+    columns:
+      - id: A
+        component:
+          id: fn_AB
+          with:
+            param_1: 100
+            param_2: "This is a regular string"
+            param_3: min(1, 100)
+      - id: B
+        component:
+          id: fn_AB
+          with:
+            param_1: 100
+            param_2: "This is a regular string"
+            param_3: min(1, 100)
+    ```
+
+    Adds columns `A` and `B` using the same parameterized code component
+    `fn_AB`. When one code component creates multiple columns, all
+    columns **must** use identical parameter values.
+
+12. Adding a derived column that has a row dependency
+
+    ``` yml
+    columns:
+      - id: BASETYPE
+        component:
+          id: basetype_derivation
+        depends:
+          - rows.BASELINE_FLAG
+    ```
+
+    Creates `BASETYPE` using `basetype_derivation` code component, but
+    only after the row operation `BASELINE_FLAG` completes. Note the
+    `rows.` prefix for row dependencies.
+
+### Summary of column rules
+
+1.  A single component can produce multiple columns in the ADaM dataset.
+    All columns generated by that component must have an entry under
+    `columns:`. The number of columns a component produces is determined
+    by the component’s code, not by the ADaM specification.
+2.  All parameters expected by the component need to be specified in the
+    `with` section of the component specification.
+3.  Dependencies must use appropriate prefixes: `rows.` for row
+    operations (e.g., `rows.BASELINE_IMPUTATION`) or `parameters.` for
+    parameter-level operations in BDS datasets (e.g., `parameters.BMI`).
+
+### Component reuse rules
+
+Components can appear more than once in a domain’s `columns` section.
+There are two distinct scenarios.
+
+#### One component, multiple output columns
+
+A component with multiple `@outputs` appears under several column
+entries in the YAML. Because mighty calls the component once, all
+entries must use **identical** `with:` values. See examples 9 and 11
+above for this pattern.
+
+#### Same component, different parameters
+
+The same template can be invoked multiple times with different parameter
+values to produce different output columns. mighty calls the component
+once per unique parameter set. This is valid as long as each invocation
+produces disjoint output columns — **no two invocations may share an
+output column**.
+
+#### Overlapping outputs cause an error
+
+When two invocations with different parameters produce overlapping
+output columns, the derivation is ambiguous and mighty raises an error.
+
+Consider a component that derives both a date and its imputation flag —
+it produces two output columns from one invocation:
+
+If the same component is used twice with different parameters but both
+uses produce the same output columns, mighty cannot tell which parameter
+values should be used:
+
+``` yml
+columns:
+  - id: USUBJID
+  - id: ASTDT
+    component:
+      id: dtc_to_dt.mustache
+      with:
+        dtc_var: LBDTC
+        dt_var: ASTDT
+        dtf_var: ASTDTF
+  - id: ASTDTF
+    component:
+      id: dtc_to_dt.mustache
+      with:
+        dtc_var: LBENDTC
+        dt_var: ASTDT
+        dtf_var: ASTDTF
+```
+
+mighty will abort with an error:
+
+    #> → No `_documents.yml` file found
+    #> → No `_codelists.yml` file found
+    #> Error:
+    #> ! Specification validation errors found:
+    #>
+    #> [Overlapping component outputs]
+    #> ℹ ADLB - 'dtc_to_dt.mustache': ASTDT and ASTDTF would be derived with different
+    #>   parameter values
+    #>
+    #> Suggestions:
+    #> • Ensure each use of the same component produces different output columns
+    #> • Use distinct @outputs (via template parameters) for each set of parameter
+    #>   values
+
+The fix is to ensure that each invocation of the component (that is,
+with different parameters) produces a distinct set of output columns.
+
+#### Cross-domain reuse
+
+Cross-domain reuse is not affected by these rules. The same component
+can appear in different domains with different parameters even if the
+output column names overlap, because each domain is independent.
+
+### No intermediate columns
+
+The YAML specification describes only columns that appear in the final
+ADaM dataset and in the define.xml. There is no mechanism to declare
+intermediate or temporary variables — columns used during derivation but
+excluded from the final output. This affects two situations:
+
+**Source columns not in the final dataset.** A component may need a
+column from a source domain that does not belong in the output (e.g.,
+`LBDTC` for deriving `ADT`). Declare these as `@depends` in the
+component’s metadata header. mighty ensures the column is read and
+available at execution time without it appearing in the specification.
+See [Source columns not in the final
+dataset](https://novonordisk-opensource.github.io/mighty/articles/code_components.html#source-columns-not-in-the-final-dataset)
+for details.
+
+**Intermediate derived values shared across final columns.** In
+traditional ADaM programming, a temporary column might be calculated
+once, used by several downstream derivations, and then dropped. mighty
+does not support this pattern — there is no way to declare a column that
+exists only during execution. Instead, either group the final columns
+that share the intermediate calculation into a single component (using
+multiple `@outputs`), or recalculate the intermediate value within each
+component that needs it. Recalculating intermediate values across
+multiple components may reduce computational efficiency, but this is not
+a primary concern. The paramount goal of ADaM programs is clarity and
+transparency for regulatory review. Therefore, group derivations into
+shared components only when it improves the logical flow and
+understanding of the analysis, not simply to optimize performance.
+
+## Row operations
+
+Row operations are specified in the `rows` section of the ADaM domain
+YAML as an array.
+
+Like column derivations, row operations can use either standard
+components, custom Mustache templates, or custom R components.
+
+Row operations have an `id` field (user-specified identifier) and a
+`component` field. The `id` is needed because the same component can be
+used with different parameter values, and the `id` allows you to refer
+to a specific implementation when specifying dependencies.
+
+### Examples
+
+1.  Simple row operation
+
+    ``` yml
+    rows:
+      - id: BASELINE_FLAG
+        component:
+          id: add_baseline_visit
+    ```
+
+    Executes the `add_baseline_visit` code component. The specific
+    actions depend on the code component’s implementation.
+
+2.  Row operation with parameterized code component
+
+    ``` yml
+    rows:
+      - id: BASELINE_FLAG
+        component:
+          id: add_baseline_visit
+          with:
+            first_treatment_visit: n
+    ```
+
+    Specifies `add_baseline_visit` and passes the parameter
+    `first_treatment_visit = n`.
+
+3.  Multiple row operations referencing the same code component
+
+    ``` yml
+    rows:
+      - id: LOCF_IMPUTATION
+        component:
+          id: impute_values
+          with:
+            method: LOCF
+      - id: NOCB_IMPUTATION
+        component:
+          id: impute_values
+          with:
+            method: NOCB
+    ```
+
+    Uses the same code component `impute_values` twice with different
+    parameter values. Unlike column operations, row operations allow the
+    same code component to be called multiple times with different
+    parameters.
+
+4.  Row operation depending on another row operation
+
+    ``` yml
+    rows:
+      - id: BASELINE_FLAG
+        component:
+          id: add_baseline_visit
+      - id: CHANGE_FROM_BASELINE
+        component:
+          id: calculate_chg
+        depends:
+          - rows.BASELINE_FLAG
+    ```
+
+    Runs `calculate_chg` only after `BASELINE_FLAG` is executed. Use
+    this when operations must happen in a specific order. Note the
+    `rows.` prefix in the dependency.
+
+## Parameters
+
+The `parameters` section is used primarily in BDS (Basic Data Structure)
+datasets to define parameter-level operations. These operations create
+new parameter records (e.g., adding BMI as a new PARAMCD) by deriving
+values across existing parameters.
+
+Parameters are specified as an array, similar to rows and columns.
+
+### Examples
+
+1.  Simple parameter operation
+
+    ``` yml
+    parameters:
+      - id: BMI
+        component:
+          id: bds_bmi
+    ```
+
+    Creates a new parameter (BMI) using the `bds_bmi` component. This
+    typically derives BMI values from HEIGHT and WEIGHT parameters.
+
+2.  Parameter operation with parameters
+
+    ``` yml
+    parameters:
+      - id: BMI
+        component:
+          id: bds_bmi
+          with:
+            height: HEIGHT
+            weight: WEIGHT
+            by: [USUBJID, AVISITN]
+    ```
+
+    Creates BMI parameter with explicit specification of input
+    parameters and grouping variables.
+
+3.  Parameter operation with dependencies
+
+    ``` yml
+    parameters:
+      - id: BMI
+        component:
+          id: bds_bmi
+      - id: BMI_CATEGORY
+        component:
+          id: bds_groups
+          with:
+            input: BMI
+            output: BMIGRP
+            bins: [0, 20, 25, 30, 100]
+            labels: ["<20", "20-<25", "25-<30", "30+"]
+        depends:
+          - parameters.BMI
+    ```
+
+    Creates a BMI category parameter that depends on the BMI parameter
+    being derived first. Note the `parameters.` prefix in the
+    dependency.
+
+4.  Multiple parameters using the same component
+
+    ``` yml
+    parameters:
+      - id: PROTEIN
+        component:
+          id: add_lab_parameter
+          with:
+            test_name: Protein
+      - id: ALBUMIN
+        component:
+          id: add_lab_parameter
+          with:
+            test_name: Albumin
+    ```
+
+    Uses the same component to add multiple lab parameters with
+    different test names.
+
+## Row vs. parameter operations
+
+The difference between row and parameter operations is entirely for the
+benefit of generating the define.xml document with mighty.toolbox. In
+mighty both operate the same way and follow the same rules for the ADaM
+specifications.

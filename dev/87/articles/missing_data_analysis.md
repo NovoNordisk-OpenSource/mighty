@@ -1,0 +1,66 @@
+# Missing Data Analysis
+
+## Overview
+
+Work on an ADaM specification starts early in a project. A trial
+specification is often ready before first patient first visit (FPFV). It
+then keeps changing during the trial, and some rules may only be defined
+at a high level at first.
+
+The SDTM data changes over the same period. Some domains are well
+defined early. Others are missing because the setup isn’t finished or
+the data hasn’t been collected yet. Protocol amendments or a new SDTM
+version can also change SDTM during the trial.
+
+So at any point during the trial, the specification may describe more
+than the current SDTM data can produce. A specification written this way
+is still valid. But a program built from it fails when a domain or
+column it uses doesn’t exist yet. Keeping template programs in line with
+both the specification and the current data takes a lot of manual work.
+Meanwhile, output programming needs ADaM data it can rely on throughout
+the trial.
+
+To deal with this, mighty can generate two sets of programs:
+
+- **Complete programs** that follow the full specification. They run
+  once all data has been collected, usually after database lock (DBL).
+- **Executable programs** that run on the data available today. Steps
+  that can’t run are kept but commented out, with a comment above each
+  one explaining which data is missing.
+
+## Types of missing data
+
+1.  Missing domains (SDTM, ADaM or metadata)
+2.  Missing columns in an existing domain
+3.  Missing or incomplete values in a column
+
+mighty handles 1 and 2. Your code components must handle 3, for example
+with a standard or custom component that copes with `NA` values.
+
+## Workflow
+
+1.  **Write the full specification.** Include every column and row
+    operation you want, whether or not the data exists yet.
+2.  **Describe the available data.** Build a `data_context` from a
+    [`connector`](https://github.com/NovoNordisk-OpenSource/connector)
+    object and pass it to `generate_adam_code(data_context = ...)`.
+    mighty reads only which tables and columns exist, not the values.
+    ADaM domains that mighty builds itself don’t need to be in the
+    `data_context`, because their columns come from the specifications.
+3.  **Compare the specification with the data.** mighty checks every
+    step, meaning each derivation, row operation and parameter, against
+    the available data. A step can’t run if a domain or column it needs
+    is missing, or if it depends on another step that can’t run.
+4.  **Generate both sets of programs.**
+    [`generate_adam_code()`](https://novonordisk-opensource.github.io/mighty/reference/generate_adam_code.md)
+    returns:
+    - `result$programs`: the complete programs, built from the full
+      specification.
+    - `result$executable_programs`: the same programs, with every step
+      that can’t run commented out. The comment above each step lists
+      the missing data, and which columns can’t be created because of
+      it. If only some of the columns a program reads are missing, the
+      step still runs without them, and the comment lists the columns
+      that were skipped.
+
+If you don’t pass a `data_context`, both sets of programs are the same.
