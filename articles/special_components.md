@@ -144,22 +144,18 @@ Standard template and rendered output
     #' @description Opens a connector and reads each source dataset into memory,
     #'   retaining only the columns needed downstream. Rendered once at the top of
     #'   every generated ADaM program.
-    #' @type internal
-    #' @origin Not Available
-    #' @method Not applicable
-    #' @param connector_path_expr Character string. R expression that evaluates to
-    #'   the connector configuration file path. Either a quoted literal path or a
-    #'   bare R expression evaluated at runtime (e.g. `here::here("_connector.yml")`).
-    #' @param domains List of lists. Each element represents a domain/dataset to be read, containing the following components:
-    #'   \describe{
-    #'     \item{is_current_domain}{Logical. `TRUE` to read the entire dataset (e.g. an ADSL update program reading its own earlier output); `FALSE` to apply column selection.}
-    #'     \item{domain_name}{Character string. Name of the domain to read, uppercase (e.g. `"DM"`, `"ADSL"`).}
-    #'     \item{data_type}{Character string. Connector data source to use: `"sdtm"`, `"adam"`, or `"metadata"`.}
-    #'     \item{keep_vars}{Character vector. Column names to select. Ignored when `is_current_domain` is `TRUE`.}
-    #'   }
+    #'
+    #'   Each element of `domains` is a list with these components:
+    #'
+    #'   * `is_current_domain`: Logical. `TRUE` to read the entire dataset (e.g. an ADSL update program reading its own
+    #'     earlier output); `FALSE` to apply column selection.
+    #'   * `domain_name`: Character string. Name of the domain to read, uppercase (e.g. `"DM"`, `"ADSL"`).
+    #'   * `data_type`: Character string. Connector data source to use: `"sdtm"`, `"adam"`, or `"metadata"`.
+    #'   * `keep_vars`: Character vector. Column names to select. Ignored when `is_current_domain` is `TRUE`.
     #'
     #'   Example:
-    #'   \preformatted{
+    #'
+    #'   ```r
     #'   domains <- list(
     #'     list(
     #'       is_current_domain = TRUE,
@@ -174,7 +170,14 @@ Standard template and rendered output
     #'       keep_vars = c("AVAL", "LBTEST", "USUBJID")
     #'     )
     #'   )
-    #'   }
+    #'   ```
+    #' @type internal
+    #' @origin Not Available
+    #' @method Not applicable
+    #' @param connector_path_expr Character string. R expression that evaluates to
+    #'   the connector configuration file path. Either a quoted literal path or a
+    #'   bare R expression evaluated at runtime (e.g. `here::here("_connector.yml")`).
+    #' @param domains List of lists. Each element describes a domain/dataset to read (see Description).
     #' @code
     cnt <- connector::connect(config = {{{connector_path_expr}}})
     {{#domains}}
@@ -286,7 +289,7 @@ Standard template and rendered output
     #' @title Initialize ADaM domain
     #' @description Combines one or more source datasets by row binding, optionally
     #'   tagging each row with a `SRC_` tracking column, and selects the columns
-    #'   needed for the domain. Rendered once per program, after `_read_data`.
+    #'   needed for the domain. Rendered once per program, after `mighty_read_data`.
     #' @type internal
     #' @origin Not Available
     #' @method Not applicable
@@ -422,7 +425,7 @@ Standard template and rendered output
     #' @title Filter ADaM domain
     #' @description Applies joins needed for filter evaluation, domain-specific row
     #'   filters (via the internal `SRC_` column), global row filters, and final
-    #'   column selection. Rendered after `_init_domain`.
+    #'   column selection. Rendered after `mighty_init_domain`.
     #' @type internal
     #' @origin Not Available
     #' @method Not applicable
@@ -431,7 +434,7 @@ Standard template and rendered output
     #'   filter evaluation. Each element is a list containing:
     #'   \describe{
     #'     \item{table}{Character string. Name of the dataset to join with.}
-    #'     \item{select_expr}{Character vector. Column names to select from the join dataset.}
+    #'     \item{select_expr}{Character vector. Column names to select from the join dataset. Columns other than `keys` must not already exist in `domain`; otherwise `dplyr::left_join()` adds `.x`/`.y` suffixes and the original names are lost.}
     #'     \item{keys}{Character vector. Column names used as join keys (e.g. `c("STUDYID", "USUBJID")`), used in `dplyr::join_by()`.}
     #'   }
     #'   Empty list when no filter depends on an external dataset. Each join keeps the row count of `domain`. The join stops
@@ -572,7 +575,7 @@ Standard template and rendered output
     #' @title Copy column
     #' @description Copies values from an existing column into a new column using
     #'   `dplyr::mutate()`. Used when the source column is also retained in the
-    #'   output; see `_col_rename` when the source column should be replaced.
+    #'   output; see `mighty_col_rename` when the source column should be replaced.
     #' @type internal
     #' @origin Not Available
     #' @method Not applicable
@@ -652,7 +655,7 @@ Standard template and rendered output
     #' @title Rename column
     #' @description Renames an existing column in-place using `dplyr::rename()`,
     #'   leaving no extra column behind. Used when the source column has no
-    #'   independent entry in the YAML spec; see `_col_mutate` when the source
+    #'   independent entry in the YAML spec; see `mighty_col_mutate` when the source
     #'   column is also retained in the output.
     #' @type internal
     #' @origin Not Available
