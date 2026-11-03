@@ -177,6 +177,7 @@ Use R script components when:
 - Each dataset is a data frame named after its domain (`ADSL`, `DM`, `LB`). Your code must update the data frame of the domain it belongs to, e.g. `ADSL <- ADSL |> dplyr::mutate(...)`. 
 - Other domains listed in `@depends` are available as data frames under their own names. For example, an ADLB component with `@depends LB LBTEST` can read the SDTM `LB` data frame and join it into `ADLB`.
 - A column component must not change the number of rows.
+- A row/parameter component must not change the number of columns
 
 
 ## Example: Simple Column Derivation

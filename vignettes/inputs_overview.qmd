@@ -17,7 +17,7 @@ mighty uses these inputs:
 - **ADaM specification**: one YAML file per ADaM domain, describing what the dataset contains
 - **Framework configuration (\_mighty.yml)**: keys of external domains and where to find components
 - **Code components**: the code for derivations, referenced from the specifications
-- **Study properties (\_study.yml)**: study-level properties such as `study_id`, used by mighty.toolbox for define.xml generation (optional)
+- **Study properties (\_study.yml)**: (optional) study-level properties such as `study_id`, used for for define.xml generation 
 
 This modular approach separates the *what* (specifications) from the *how* (code components), enabling efficient and consistent ADaM development.
 By providing these building blocks, mighty takes care of organizing and rendering ADaM programs.
