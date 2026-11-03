@@ -73,7 +73,7 @@ See `vignette("code_components")` and `vignette("special_components")`.
 
 ## Study properties (\_study.yml)
 
-The optional `_study.yml` holds study-level properties. While mighty does not use it to generate code, mighty.toolbox uses it for define.xml. If the file is missing, mighty shows a message and continues. If it exists, it must contain a `study_id` field; otherwise mighty.metadata stops with an error.
+The optional `_study.yml` holds study-level properties. While mighty does not use it to generate code, it is used for define.xml. If the file is missing, mighty shows a message and continues. If it exists, it must contain a `study_id` field; otherwise mighty.metadata stops with an error.
 
 ## Available data (optional)
 

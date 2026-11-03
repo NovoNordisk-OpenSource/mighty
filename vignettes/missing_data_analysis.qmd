@@ -17,11 +17,11 @@ Work on an ADaM specification starts early in a project. A trial specification i
 
 The SDTM data changes over the same period. Some domains are well defined early. Others are missing because the setup isn't finished or the data hasn't been collected yet. Protocol amendments or a new SDTM version can also change SDTM during the trial.
 
-So at any point during the trial, the specification may describe more than the current SDTM data can produce. A specification written this way is still valid. But a program built from it fails when a domain or column it uses doesn't exist yet. Keeping template programs in line with both the specification and the current data takes a lot of manual work. Meanwhile, output programming needs ADaM data it can rely on throughout the trial.
+So at any point during the trial, the specification may describe more than the current SDTM data can produce. A specification written this way is still valid, but a program built from it fails when a domain or column it uses doesn't exist yet. Keeping template programs in line with both the specification and the current data would take a lot of manual work.
 
 To deal with this, mighty can generate two sets of programs:
 
-- **Complete programs** that follow the full specification. They run once all data has been collected, usually after database lock (DBL).
+- **Complete programs** that follow the full specification. They run once all SDTM domains and columns have been populated
 - **Executable programs** that run on the data available today. Steps that can't run are kept but commented out, with a comment above each one explaining which data is missing.
 
 # Types of missing data
@@ -30,7 +30,7 @@ To deal with this, mighty can generate two sets of programs:
 2. Missing columns in an existing domain
 3. Missing or incomplete values in a column
 
-mighty handles 1 and 2. Your code components must handle 3, for example with a standard or custom component that copes with `NA` values.
+mighty handles 1 and 2. Your code components must handle 3, for example with a component that copes with `NA` values.
 
 # Workflow
 

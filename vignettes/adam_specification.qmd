@@ -379,9 +379,7 @@ The component `id` is a file name. mighty looks for it in the locations listed u
           id: arm_group_01.R
     ```
 
-    R script components must contain the data manipulation code directly as executable script code, and metadata to declare dependencies and columns created by the component. For details, see `vignette("code_components")`.
 
-    For custom code components, provide the component name or file name. mighty looks it up in the repositories listed under `repos` in `_mighty.yml` (see `vignette("mighty_config")`).
 
 8.  Adding a derived column using a Mustache template component
 
