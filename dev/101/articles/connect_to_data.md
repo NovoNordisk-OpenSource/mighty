@@ -9,10 +9,14 @@ package to connect to study data.
 The `path_connector_config` argument to
 [`generate_adam_code()`](https://novonordisk-opensource.github.io/mighty/reference/generate_adam_code.md)
 is the file path to the connector config file, embedded verbatim into
-the generated programs. Mighty does not read the file itself — it only
-embeds the path into the generated code. The file is read later when the
-generated program runs. The value can be a literal file path or an
-`!expr`-prefixed R expression for runtime evaluation (e.g.,
+the generated programs. It defaults to `"_connector.yml"`, the same
+default as
+[`connector::connect()`](https://novonordisk-opensource.github.io/connector/reference/connect.html).
+Mighty does not read the file itself — it only embeds the path into the
+generated code. The file is read later when the generated program runs,
+and a relative path is resolved from the working directory of the
+program. The value can be a literal file path or an `!expr`-prefixed R
+expression for runtime evaluation (e.g.,
 `!expr here::here("_connector.yml")`).
 
 An example of a generated program can be seen below, where the `cnt`
