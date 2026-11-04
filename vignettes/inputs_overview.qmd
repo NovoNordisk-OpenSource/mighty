@@ -50,18 +50,13 @@ For detailed information about the ADaM specification data model and syntax, see
 
 Code components hold the code for the derivations that ADaM specifications refer to. Each component is an R script (`.R`) or a Mustache template (`.mustache`). A template has placeholders that are filled from the `with:` parameters in the specification. Specifications refer to components by name, and mighty finds them in the repositories listed under `repos` in `_mighty.yml`.
 
-There are three sources of components:
+There are two kinds of components:
 
-**Standard components (mighty.standards)**
+**User components**
 
-- Common derivations and calculations, reused across studies
-- Thoroughly tested and validated
-
-**Custom Components**
-
-- Trial-specific derivations developed during study conduct
-- Tailored to unique protocol requirements
-- Maintained within the trial repository
+- Supplied through the repositories listed under `repos` in `_mighty.yml`, searched in order; the first match wins
+- Can come from a shared library (e.g. mighty.standards) or from the trial repository
+- Referenced in the specification by `component: id:`
 
 **Internal components**
 
