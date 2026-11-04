@@ -6,7 +6,7 @@
 \usage{
 generate_adam_code(
   adam_specifications,
-  path_connector_config,
+  path_connector_config = "_connector.yml",
   check_cross_domain_adam_dependencies = TRUE,
   data_context = NULL
 )
@@ -17,11 +17,13 @@ specification YAML files (one per domain) and optionally a \verb{_mighty.yml}
 framework configuration file with external dataset definitions and keys.}
 
 \item{path_connector_config}{Character string. File path to the connector
-configuration file (e.g., \code{"_connector.yml"}).
+configuration file. Defaults to \code{"_connector.yml"}, the same default as
+\code{connector::connect()}.
 This path is inserted exactly as written into the generated programs
 (no validation or transformation is performed). The generated programs
-use this path to connect to data when they execute - mighty itself
-does not read or validate the connector configuration file.
+use this path to connect to data when they execute, so a relative path
+is resolved from the working directory of the program at that time.
+Mighty itself does not read or validate the connector configuration file.
 Prefix with \code{!expr } to embed an R expression that is evaluated at
 runtime by the generated program (e.g., \code{'!expr here::here("_connector.yml")'}).}
 
