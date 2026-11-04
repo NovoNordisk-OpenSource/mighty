@@ -83,7 +83,7 @@ There are two kinds of components:
 See
 [`vignette("code_components")`](https://novonordisk-opensource.github.io/mighty/articles/code_components.md)
 and
-[`vignette("special_components")`](https://novonordisk-opensource.github.io/mighty/articles/special_components.md).
+[`vignette("internal_components")`](https://novonordisk-opensource.github.io/mighty/articles/internal_components.md).
 
 ## Study properties (\_study.yml)
 

@@ -47,7 +47,7 @@
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Technical stuff</h6></li>
     <li><a class="dropdown-item" href="../articles/dev_documentation.html">Developers Documentation</a></li>
-    <li><a class="dropdown-item" href="../articles/special_components.html">Internal components</a></li>
+    <li><a class="dropdown-item" href="../articles/internal_components.html">Internal components</a></li>
   </ul>
 </li>
       </ul>
@@ -79,7 +79,7 @@
 
 
     <p>Mighty in itself does not read any data, but the generated programs will need to connect to a data source to be able to execute. Thus, the programs will use the <a href="https://github.com/NovoNordisk-OpenSource/connector/tree/main?tab=readme-ov-file#readme" class="external-link"><code>connector</code></a> package to connect to study data.</p>
-<p>The <code>path_connector_config</code> argument to <code><a href="../reference/generate_adam_code.html">generate_adam_code()</a></code> is the file path to the connector config file, embedded verbatim into the generated programs. Mighty does not read the file itself — it only embeds the path into the generated code. The file is read later when the generated program runs. The value can be a literal file path or an <code>!expr</code>-prefixed R expression for runtime evaluation (e.g., <code>!expr here::here("_connector.yml")</code>).</p>
+<p>The <code>path_connector_config</code> argument to <code><a href="../reference/generate_adam_code.html">generate_adam_code()</a></code> is the file path to the connector config file, embedded verbatim into the generated programs. It defaults to <code>"_connector.yml"</code>, the same default as <code><a href="https://novonordisk-opensource.github.io/connector/reference/connect.html" class="external-link">connector::connect()</a></code>. Mighty does not read the file itself — it only embeds the path into the generated code. The file is read later when the generated program runs, and a relative path is resolved from the working directory of the program. The value can be a literal file path or an <code>!expr</code>-prefixed R expression for runtime evaluation (e.g., <code>!expr here::here("_connector.yml")</code>).</p>
 <p>An example of a generated program can be seen below, where the <code>cnt</code> object is</p>
 <ul>
 <li>created by reading the connector config file at the path specified by <code>path_connector_config</code>,</li>

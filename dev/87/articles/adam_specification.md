@@ -223,7 +223,7 @@ from the other base domains are not affected. Each base domain has one
 filter string. To combine conditions, use `&` inside it. In the
 generated program you will see a temporary `SRC_` column used for this;
 mighty adds and removes it automatically (see [Internal
-components](https://novonordisk-opensource.github.io/mighty/articles/special_components.md)).
+components](https://novonordisk-opensource.github.io/mighty/articles/internal_components.md)).
 
 This is useful when:
 

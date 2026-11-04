@@ -20,4 +20,4 @@
 - [Developers
   Documentation](https://novonordisk-opensource.github.io/mighty/articles/dev_documentation.md):
 - [Internal
-  components](https://novonordisk-opensource.github.io/mighty/articles/special_components.md):
+  components](https://novonordisk-opensource.github.io/mighty/articles/internal_components.md):

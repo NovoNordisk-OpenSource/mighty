@@ -47,7 +47,7 @@
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Technical stuff</h6></li>
     <li><a class="dropdown-item" href="../articles/dev_documentation.html">Developers Documentation</a></li>
-    <li><a class="dropdown-item" href="../articles/special_components.html">Internal components</a></li>
+    <li><a class="dropdown-item" href="../articles/internal_components.html">Internal components</a></li>
   </ul>
 </li>
       </ul>
@@ -340,7 +340,7 @@
 <section class="level3"><h4 id="domain-specific-filtering">Domain-specific filtering<a class="anchor" aria-label="anchor" href="#domain-specific-filtering"></a>
 </h4>
 <p>Domain-specific filters allow you to apply different inclusion criteria to different source domains before they are combined.</p>
-<p>A domain’s filter only removes rows that came from that domain; rows from the other base domains are not affected. Each base domain has one filter string. To combine conditions, use <code>&amp;</code> inside it. In the generated program you will see a temporary <code>SRC_</code> column used for this; mighty adds and removes it automatically (see <a href="special_components.html">Internal components</a>).</p>
+<p>A domain’s filter only removes rows that came from that domain; rows from the other base domains are not affected. Each base domain has one filter string. To combine conditions, use <code>&amp;</code> inside it. In the generated program you will see a temporary <code>SRC_</code> column used for this; mighty adds and removes it automatically (see <a href="internal_components.html">Internal components</a>).</p>
 <p>This is useful when:</p>
 <ul>
 <li>Different domains need different inclusion criteria</li>

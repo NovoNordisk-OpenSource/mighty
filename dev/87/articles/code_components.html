@@ -47,7 +47,7 @@
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Technical stuff</h6></li>
     <li><a class="dropdown-item" href="../articles/dev_documentation.html">Developers Documentation</a></li>
-    <li><a class="dropdown-item" href="../articles/special_components.html">Internal components</a></li>
+    <li><a class="dropdown-item" href="../articles/internal_components.html">Internal components</a></li>
   </ul>
 </li>
       </ul>
@@ -308,11 +308,35 @@
 <li>The same derivation logic needs to work with different parameters</li>
 </ul></section><section class="level2"><h3 id="template-syntax">Template Syntax<a class="anchor" aria-label="anchor" href="#template-syntax"></a>
 </h3>
-<p>Mustache templates use triple curly braces <code>{{{variable}}}</code> as placeholders that get replaced with actual values when mighty renders the component. Triple braces avoid HTML escaping, which would corrupt R operators such as <code>&lt;-</code> and <code>&gt;</code> in generated code. See <a href="special_components.html#template-syntax">Template syntax</a> in the internal components vignette for a full explanation of double vs. triple mustache syntax.</p>
+<p>Mustache templates use triple curly braces <code>{{{variable}}}</code> as placeholders that get replaced with actual values when mighty renders the component. Triple braces avoid HTML escaping, which would corrupt R operators such as <code>&lt;-</code> and <code>&gt;</code> in generated code.</p>
 <ul>
 <li>Parameters are specified in the <code>with:</code> section of your YAML specification</li>
 <li>Both metadata and code sections can contain placeholders</li>
-</ul></section><section class="level2"><h3 id="code-structure-1">Code Structure<a class="anchor" aria-label="anchor" href="#code-structure-1"></a>
+</ul>
+<p>Mustache has two interpolation forms:</p>
+<table class="table caption-top">
+<colgroup>
+<col style="width: 42%">
+<col style="width: 57%">
+</colgroup>
+<thead><tr class="header">
+<th>Syntax</th>
+<th>Behavior</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td><code>{{variable}}</code></td>
+<td>Inserts the value with HTML escaping — <code>"</code> becomes <code>&amp;quot;</code>, <code>&lt;</code> becomes <code>&amp;lt;</code>, etc.</td>
+</tr>
+<tr class="even">
+<td><code>{{{variable}}}</code></td>
+<td>Inserts the value verbatim — no escaping</td>
+</tr>
+</tbody>
+</table>
+<p>All variable interpolations in templates use triple-mustache <code>{{{variable}}}</code>, in both <code>@code</code> sections and documentation headers (<code>@title</code>, <code>@description</code>, <code>@param</code>, <code>@depends</code>, <code>@outputs</code>). This avoids HTML escaping in generated code and defers any format-specific rendering to mighty.component.</p>
+<p>The only exception is <strong>section tags</strong> (<code>{{#condition}}</code>, <code>{{/condition}}</code>, <code>{{^condition}}</code>), which are always double-mustache — this is a Mustache language requirement.</p>
+</section><section class="level2"><h3 id="code-structure-1">Code Structure<a class="anchor" aria-label="anchor" href="#code-structure-1"></a>
 </h3>
 <ul>
 <li>Metadata header uses <code>@param</code> tags to document expected parameters</li>
