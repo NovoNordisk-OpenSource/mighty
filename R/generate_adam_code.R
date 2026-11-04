@@ -9,11 +9,13 @@
 #'   specification YAML files (one per domain) and optionally a `_mighty.yml`
 #'   framework configuration file with external dataset definitions and keys.
 #' @param path_connector_config Character string. File path to the connector
-#'   configuration file (e.g., `"_connector.yml"`).
+#'   configuration file. Defaults to `"_connector.yml"`, the same default as
+#'   `connector::connect()`.
 #'   This path is inserted exactly as written into the generated programs
 #'   (no validation or transformation is performed). The generated programs
-#'   use this path to connect to data when they execute - mighty itself
-#'   does not read or validate the connector configuration file.
+#'   use this path to connect to data when they execute, so a relative path
+#'   is resolved from the working directory of the program at that time.
+#'   Mighty itself does not read or validate the connector configuration file.
 #'   Prefix with `!expr ` to embed an R expression that is evaluated at
 #'   runtime by the generated program (e.g., `'!expr here::here("_connector.yml")'`).
 #' @param check_cross_domain_adam_dependencies Logical. If `TRUE` (default),
@@ -121,7 +123,7 @@ generate_adam_code <- S7::new_generic(
   dispatch_args = "adam_specifications",
   fun = function(
     adam_specifications,
-    path_connector_config,
+    path_connector_config = "_connector.yml",
     check_cross_domain_adam_dependencies = TRUE,
     data_context = NULL
   ) {
@@ -132,7 +134,7 @@ generate_adam_code <- S7::new_generic(
 #' @noRd
 S7::method(generate_adam_code, S7::class_character) <- function(
   adam_specifications,
-  path_connector_config,
+  path_connector_config = "_connector.yml",
   check_cross_domain_adam_dependencies = TRUE,
   data_context = NULL
 ) {
@@ -147,7 +149,7 @@ S7::method(generate_adam_code, S7::class_character) <- function(
 #' @noRd
 S7::method(generate_adam_code, mighty.metadata::mighty_study) <- function(
   adam_specifications,
-  path_connector_config,
+  path_connector_config = "_connector.yml",
   check_cross_domain_adam_dependencies = TRUE,
   data_context = NULL
 ) {
