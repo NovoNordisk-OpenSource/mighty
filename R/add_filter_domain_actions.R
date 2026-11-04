@@ -86,6 +86,14 @@ add_filter_domain_actions <- function(
   }) |>
     rbindlist()
 
+  assert_no_filter_name_clash(
+    domain_filter_actions,
+    actions,
+    filter_depend_cols,
+    filter_domain,
+    domain_keys
+  )
+
   # Add domain_filter actions to existing actions
   rbind(actions, domain_filter_actions)
 }

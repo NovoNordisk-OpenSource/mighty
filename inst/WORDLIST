@@ -110,6 +110,8 @@ Nordisk
 notboth
 nzchar
 OCCDS
+oldfl
+OLDFL
 PARAMCD
 PARAMVAL
 pharmaverse
@@ -175,6 +177,7 @@ uppercased
 upstr
 usethis
 USUBJID
+VISFL
 VISITNUM
 VSSEQ
 VSTESTCD
