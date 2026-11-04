@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">mighty</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9044</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9048</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -262,7 +262,7 @@
 <p>This section defines how to create the base population for your ADaM table from source SDTM domains and apply filters.</p>
 <section class="level2"><h3 id="structure-1">Structure<a class="anchor" aria-label="anchor" href="#structure-1"></a>
 </h3>
-<p>The population is built in two steps. First, mighty reads each domain listed under <code>base</code>, applies that domain’s own filter, and stacks the results into one dataset. Then the filters under <code>global</code> are applied to every row of that stacked dataset. A global filter can also use a column from a dataset that isn’t in <code>base</code>, such as <code>ARMNRS</code> from ADSL. In such case, list it in <code>depends</code> with a prefix (<code>ADSL.ARMNRS</code>) - mighty joins it in first, then filtering occurs.</p>
+<p>The population is built in two steps. First, mighty reads each domain listed under <code>base</code>, applies that domain’s own filter, and stacks the results into one dataset. Then the filters under <code>global</code> are applied to every row of that stacked dataset. A global filter can also use a column from a domain that isn’t in <code>base</code>. For example, when you build ADLB from LB, you can remove screen failures by filtering on <code>ARMNRS</code> (Reason Arm and/or Actual Arm is Null) from ADSL. To do this, list the column in <code>depends</code> with a domain prefix (<code>ADSL.ARMNRS</code>). mighty joins ADSL to the LB data first, then applies the filter.</p>
 <p>The <code>population</code> section has two subsections:</p>
 <table class="table caption-top">
 <colgroup>
@@ -336,7 +336,7 @@
 </tr>
 </tbody>
 </table>
-<p>mighty does not read the filter expression itself, so <code>depends</code> must list every column the filter uses. mighty uses this list to make those columns available before the filter runs. Columns from another domain use a domain prefix (e.g. <code>ADSL.ARMNRS</code>), and mighty joins that domain first.</p>
+<p>mighty does not read the filter expression itself, so <code>depends</code> must list every column the filter uses. mighty uses this list to make those columns available in the generated program before the filter runs. Columns from another domain use a domain prefix (e.g. <code>ADSL.ARMNRS</code>), and mighty joins that domain first.</p>
 <section class="level3"><h4 id="domain-specific-filtering">Domain-specific filtering<a class="anchor" aria-label="anchor" href="#domain-specific-filtering"></a>
 </h4>
 <p>Domain-specific filters allow you to apply different inclusion criteria to different source domains before they are combined.</p>
@@ -457,11 +457,10 @@
 <p><code>method</code> has two roles, which depend on whether the column also has a <code>component</code>:</p>
 <ul>
 <li>
-<strong>Without <code>component</code></strong>: <code>method</code> is the source of the column. It must be domain-qualified (e.g., <code>ADSL.SAFFL</code>), and mighty uses it to resolve the dependency.</li>
+<strong>Without <code>component</code></strong>: <code>method</code> is the source of the column. It must be domain-qualified (e.g., <code>ADSL.SAFFL</code>). mighty uses it to resolve the dependency. The column is also recorded as a copy of that source (origin “Predecessor”), so it inherits the source’s label and other metadata for define.xml.</li>
 <li>
 <strong>With <code>component</code></strong>: the component derives the column and supplies its dependencies. <code>method</code> is free text that describes the derivation, for use in define.xml. mighty does not use it for dependency resolution.</li>
 </ul>
-<p>define.xml is the document that describes each ADaM column for regulatory submission. mighty does not create it; mighty.toolbox builds it from the same specifications. Without <code>component</code>, the same <code>DOMAIN.COLUMN</code> value also tells mighty.metadata that the column is a copy of that source (origin “Predecessor”), so it inherits the source’s label and other metadata for define.xml.</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode yml"><code class="sourceCode yaml"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">columns</span><span class="kw">:</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">id</span><span class="kw">:</span><span class="at"> COMPLSFL</span></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">method</span><span class="kw">:</span><span class="at"> Completer flag derived per protocol section 4.2</span></span>
@@ -497,8 +496,8 @@
 </h3>
 <section class="level3"><h4 id="simple-column-operations">Simple column operations<a class="anchor" aria-label="anchor" href="#simple-column-operations"></a>
 </h4>
-<p>Note: <code>method</code> always needs a domain prefix.</p>
-<p>All examples below are from the ADLB specification (<code>id: ADLB</code>), whose base domain is LB. ADLB is built from LB, so LB’s columns are already in ADLB. The domain prefix in <code>method:</code> decides where a column comes from:</p>
+<p>Note: <code>method</code> used on columns with no <code>component</code> field always needs a domain prefix.</p>
+<p>All examples below are from a fictional ADLB specification (<code>id: ADLB</code>), whose base domain is LB. ADLB is built from LB, so LB’s columns are already in ADLB. The domain prefix in <code>method:</code> decides where a column comes from:</p>
 <table class="table caption-top">
 <colgroup>
 <col style="width: 23%">
@@ -548,7 +547,7 @@
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">columns</span><span class="kw">:</span></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">id</span><span class="kw">:</span><span class="at"> SAFFL</span></span>
 <span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">method</span><span class="kw">:</span><span class="at"> ADSL.SAFFL</span></span></code></pre></div>
-<p>Joins <code>SAFFL</code> from ADSL onto your table, matching rows on ADSL’s keys (its <code>keys:</code>). Those key columns must also be in your table.</p>
+<p>Joins <code>SAFFL</code> from ADSL onto ADLB, matching rows on ADSL’s keys (its <code>keys:</code>). Those key columns must also be in ADLB.</p>
 </li>
 <li>
 <p>Adding a column from another ADaM domain and renaming it</p>
@@ -565,8 +564,10 @@
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">id</span><span class="kw">:</span><span class="at"> LBSTRESN</span></span>
 <span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">id</span><span class="kw">:</span><span class="at"> AVAL</span></span>
 <span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">method</span><span class="kw">:</span><span class="at"> ADLB.LBSTRESN</span></span></code></pre></div>
-<p>Creates a new column <code>AVAL</code> by copying the content of LBSTRESN from the base domain. <code>- id: LBSTRESN</code> without <code>method</code> keeps <code>LBSTRESN</code> from LB; <code>ADLB.LBSTRESN</code> refers to that same column, which is already in ADLB because ADLB is built from LB. <code>LBSTRESN</code> is also listed under <code>columns:</code>, so both columns are kept (a copy). Copy or rename depends only on whether the source column is also listed under <code>columns:</code></p>
 </li>
+</ol>
+<p>Creates a new column <code>AVAL</code> with a copy of <code>LBSTRESN</code>. Because <code>LBSTRESN</code> is also listed under <code>columns:</code>, the dataset keeps both columns. If you do not list <code>LBSTRESN</code>, it is renamed instead (see example 5).</p>
+<ol start="5" type="1">
 <li>
 <p>Renaming a column from the base domain</p>
 <div class="sourceCode" id="cb14"><pre class="sourceCode yml"><code class="sourceCode yaml"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">id</span><span class="kw">:</span><span class="at"> ADLB</span></span>
@@ -574,9 +575,10 @@
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">id</span><span class="kw">:</span><span class="at"> AVAL</span></span>
 <span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">method</span><span class="kw">:</span><span class="at"> LB.LBSTRESN</span></span></code></pre></div>
 <p>Renames <code>LBSTRESN</code> from the base domain to <code>AVAL</code>. Unlike copying (example 4), the source column <code>LBSTRESN</code> is <strong>not</strong> listed separately in <code>columns</code>, so only the renamed column <code>AVAL</code> appears in the final dataset.</p>
-<p>With a single base domain, <code>LB.LBSTRESN</code> works the same as <code>ADLB.LBSTRESN</code>. With several base domains, use <code>ADLB.</code>, because <code>LB.</code> would join the column from LB.</p>
 </li>
-</ol></section><section class="level3"><h4 id="derived-columns">Derived columns<a class="anchor" aria-label="anchor" href="#derived-columns"></a>
+</ol>
+<p>With one base domain, mighty treats LB.LBSTRESN as the column already in ADLB, so it works the same as ADLB.LBSTRESN. With more than one base domain (e.g. LB and XL), LB.LBSTRESN makes mighty join LB again on LB’s keys, and those keys must be in ADLB. To use the column already in ADLB, write ADLB.LBSTRESN.</p>
+</section><section class="level3"><h4 id="derived-columns">Derived columns<a class="anchor" aria-label="anchor" href="#derived-columns"></a>
 </h4>
 <p>Derived columns use code components to perform data transformations. A code component can be:</p>
 <ol type="1">
@@ -589,7 +591,7 @@
 </h5>
 <ol start="6" type="1">
 <li>
-<p>Adding a derived column using a standard code component</p>
+<p>Adding a derived column using a component without any parameters</p>
 <div class="sourceCode" id="cb15"><pre class="sourceCode yml"><code class="sourceCode yaml"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">columns</span><span class="kw">:</span></span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">id</span><span class="kw">:</span><span class="at"> ARM_GRP1</span></span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">component</span><span class="kw">:</span></span>
@@ -597,16 +599,14 @@
 <p>Creates <code>ARM_GRP1</code> using the code component <code>arm_group_01</code>. The component’s metadata defines which columns it depends on.</p>
 </li>
 <li>
-<p>Adding a derived column using an R script custom component</p>
+<p>Adding a derived column using an <code>.R</code> component</p>
 <div class="sourceCode" id="cb16"><pre class="sourceCode yml"><code class="sourceCode yaml"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">columns</span><span class="kw">:</span></span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">id</span><span class="kw">:</span><span class="at"> ARM_GRP1</span></span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">component</span><span class="kw">:</span></span>
 <span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">id</span><span class="kw">:</span><span class="at"> arm_group_01.R</span></span></code></pre></div>
-<p>R script components must contain the data manipulation code directly as executable script code, and metadata to declare dependencies and columns created by the component. For details, see <code><a href="../articles/code_components.html">vignette("code_components")</a></code>.</p>
-<p>For custom code components, provide the component name or file name. mighty looks it up in the repositories listed under <code>repos</code> in <code>_mighty.yml</code> (see <code><a href="../articles/mighty_config.html">vignette("mighty_config")</a></code>).</p>
 </li>
 <li>
-<p>Adding a derived column using a custom Mustache template component</p>
+<p>Adding a derived column using a Mustache template component</p>
 <div class="sourceCode" id="cb17"><pre class="sourceCode yml"><code class="sourceCode yaml"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">columns</span><span class="kw">:</span></span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">id</span><span class="kw">:</span><span class="at"> ARM_GRP1</span></span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">component</span><span class="kw">:</span></span>
@@ -677,7 +677,7 @@
 <p>A component with multiple <code>@outputs</code> appears under several column entries in the YAML. Because mighty calls the component once, all entries must use <strong>identical</strong> <code>with:</code> values. See examples 9 and 11 above for this pattern.</p>
 </section><section class="level3"><h4 id="same-component-different-parameters">Same component, different parameters<a class="anchor" aria-label="anchor" href="#same-component-different-parameters"></a>
 </h4>
-<p>The same template can be invoked multiple times with different parameter values to produce different output columns. mighty calls the component once per unique parameter set. This is valid as long as each invocation produces disjoint output columns — <strong>no two invocations may share an output column</strong>.</p>
+<p>The same mustache component can be invoked multiple times with different parameter values to produce different output columns. mighty calls the component once per unique parameter set. This is valid as long as each invocation produces disjoint output columns — <strong>no two invocations may share an output column</strong>.</p>
 </section><section class="level3"><h4 id="overlapping-outputs-cause-an-error">Overlapping outputs cause an error<a class="anchor" aria-label="anchor" href="#overlapping-outputs-cause-an-error"></a>
 </h4>
 <p>When two invocations with different parameters produce overlapping output columns, the derivation is ambiguous and mighty raises an error.</p>
@@ -850,7 +850,8 @@
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
       // Inspect non-navigation links and adorn them if external
-     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      window.quartoDecorateExternalLinks = function (root) {
+     var links = (root || window.document).querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
       for (var i=0; i<links.length; i++) {
         const link = links[i];
         if (!isInternal(link.href)) {
@@ -859,8 +860,69 @@
           if (link.dataset.originalHref !== undefined) {
             link.href = link.dataset.originalHref;
           }
+          if (!link.classList.contains('no-external-icon')) {
+          }
         }
       }
+      };
+      window.quartoDecorateExternalLinks(window.document);
+    // Esc closes the popup (WCAG 1.4.13) and focus leaving both trigger and
+    // popup closes it (WCAG 2.4.11); tippy handles neither for interactive popups.
+    const hideOnEscAndFocusOut = {
+      name: 'hideOnEscAndFocusOut',
+      defaultValue: true,
+      fn(instance) {
+        const dismiss = () => {
+          // A show scheduled by the trigger delay would otherwise reopen it
+          instance.clearDelayTimeouts();
+          instance.hide();
+        };
+        const onKeyDown = (event) => {
+          if (event.key !== 'Escape') {
+            return;
+          }
+          // Keep Esc from also reaching page handlers (e.g. reveal.js overview),
+          // except an open reveal.js slide menu, which Esc should close too.
+          // The menu handles keys only when its keyboard option is on.
+          const menuHandlesEsc = window.Reveal?.getPlugin?.('menu')?.isOpen() &&
+            window.Reveal.getConfig().menu?.keyboard !== false;
+          if (!menuHandlesEsc) {
+            event.stopPropagation();
+          }
+          if (instance.popper.contains(window.document.activeElement)) {
+            // Disabled while refocusing so the focus trigger does not reopen it
+            instance.disable();
+            instance.reference.focus();
+            instance.enable();
+          }
+          dismiss();
+        };
+        const onFocusOut = (event) => {
+          const target = event.relatedTarget;
+          if (target && !instance.reference.contains(target) &&
+              !instance.popper.contains(target)) {
+            dismiss();
+          }
+        };
+        // On the trigger too: a click trigger (code-annotations: select) has no
+        // blur handling. Attached for the instance's lifetime so leaving the
+        // trigger also cancels a show still pending on the trigger delay.
+        instance.reference.addEventListener('focusout', onFocusOut);
+        return {
+          onShow() {
+            window.document.addEventListener('keydown', onKeyDown, true);
+            instance.popper.addEventListener('focusout', onFocusOut);
+          },
+          onHide() {
+            window.document.removeEventListener('keydown', onKeyDown, true);
+            instance.popper.removeEventListener('focusout', onFocusOut);
+          },
+          onDestroy() {
+            instance.reference.removeEventListener('focusout', onFocusOut);
+          },
+        };
+      },
+    };
     function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
       const config = {
         allowHTML: true,
@@ -874,6 +936,7 @@
         interactiveBorder: 10,
         theme: 'light-border',
         placement: 'bottom-start',
+        plugins: [hideOnEscAndFocusOut],
       };
       if (contentFn) {
         config.content = contentFn;

@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">mighty</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9044</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9048</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -84,7 +84,7 @@
 <ol type="1">
 <li>set up the study config (<code>_mighty.yml</code>),</li>
 <li>describe ADSL in a specification (<code>adsl.yml</code>),</li>
-<li>write one custom component for a derived column,</li>
+<li>write one component for a derived column,</li>
 <li>call <code><a href="../reference/generate_adam_code.html">generate_adam_code()</a></code>, which returns the R program that builds ADSL.</li>
 </ol>
 <section class="level2"><h3 id="key-terms">Key terms<a class="anchor" aria-label="anchor" href="#key-terms"></a>
@@ -122,7 +122,7 @@
 <li>
 <code>_mighty.yml</code>: <a href="mighty_config.html">framework configuration</a> (keys of external datasets and component repositories)</li>
 <li>
-<code>_study.yml</code>: study-level properties (optional, used by mighty.toolbox for define.xml)</li>
+<code>_study.yml</code>: study-level properties (optional, used for define.xml)</li>
 <li>
 <code>_documents.yml</code>, <code>_codelists.yml</code>: optional, read by mighty.metadata</li>
 </ul>
@@ -144,7 +144,7 @@
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">id</span><span class="kw">:</span><span class="at"> LB</span></span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">keys</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="at">USUBJID</span><span class="kw">,</span><span class="at"> STUDYID</span><span class="kw">,</span><span class="at"> LBSEQ</span><span class="kw">]</span></span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="fu">repos</span><span class="kw">:</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="st">"github::NovoNordisk-OpenSource/mighty.standards/components@dev/internal-components"</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="st">"github::NovoNordisk-OpenSource/mighty.standards/components"</span></span>
 <span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="st">"./components"</span></span></code></pre></div>
 </section><section class="level2"><h3 id="set-up-your-adam-specification">Set up your ADaM specification<a class="anchor" aria-label="anchor" href="#set-up-your-adam-specification"></a>
 </h3>
@@ -157,7 +157,7 @@
 <li>
 <code>AGE_GRP1</code>: <code>component</code> means it’s derived by the custom component <code>age_group_01.R</code> (see next section).</li>
 </ul>
-<p>Listing only columns that belong in the final dataset is a good practice that helps in keeping things tidy. See <code><a href="../articles/adam_specification.html">vignette("adam_specification")</a></code> for everything a specification can contain.</p>
+<p>The <code>columns</code> list defines the final dataset, so mighty keeps only the listed columns when it writes ADSL. See <code><a href="../articles/adam_specification.html">vignette("adam_specification")</a></code> for everything a specification can contain.</p>
 <p><strong>adsl.yml</strong></p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode yml"><code class="sourceCode yaml"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">id</span><span class="kw">:</span><span class="at"> ADSL</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">label</span><span class="kw">:</span><span class="at"> Subject Level Analysis Dataset</span></span>
@@ -239,23 +239,24 @@
 <span></span>
 <span><span class="co"># Print rendered ADaM program</span></span>
 <span><span class="va">results</span><span class="op">$</span><span class="va">programs</span><span class="op">$</span><span class="va">`1_ADSL`</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><code><a href="../reference/generate_adam_code.html">generate_adam_code()</a></code> returns a list. Its <code>programs</code> element holds the generated R programs, each one a character string. Each name starts with the order to run the programs in, so here there is a single program, <code>1_ADSL</code>. When a study has several domains, a domain that uses ADSL comes after it (e.g. <code>2_ADAE</code>). If ADSL itself needs columns from another domain, ADSL is split into two programs (e.g. <code>1_ADSL</code>, <code>2_ADLB</code>, <code>3_ADSL</code>). Printing <code>1_ADSL</code> shows the full program that builds ADSL:</p>
+<p><code><a href="../reference/generate_adam_code.html">generate_adam_code()</a></code> returns a list. Its <code>programs</code> element holds the generated R programs, each one a character string. Each name starts with the order to run the programs in, so here there is a single program, <code>1_ADSL</code>. When a study has several domains, a domain that uses ADSL comes after it (e.g. <code>2_ADAE</code>). If ADSL itself needs columns from another domain, ADSL is split into multiple programs (e.g. <code>1_ADSL</code>, <code>2_ADLB</code>, <code>3_ADSL</code>).</p>
+<p>In this example, there is only a single ADSL program, so printing <code>1_ADSL</code> shows the full program that builds ADSL:</p>
 <pre><code><span><span class="co">#&gt; → No `_documents.yml` file found</span></span>
 <span><span class="co">#&gt; → No `_codelists.yml` file found</span></span>
-<span><span class="co">#&gt; → Downloading repo "NovoNordisk-OpenSource/mighty.standards@91ce52c339369b584001c3bffdfd65ee564b5f61"</span></span>
+<span><span class="co">#&gt; → Downloading repo "NovoNordisk-OpenSource/mighty.standards@b3eb6a3833736f015c2fd919ca9f51f22b5cc323"</span></span>
 <span><span class="co">#&gt; → Found "age_group_01.R" in "local::./components"</span></span>
-<span><span class="co">#&gt; → Found "mighty_read_data" in "github::NovoNordisk-OpenSource/mighty.standards/components@91ce52c339369b584001c3bffdfd65ee564b5f61"</span></span>
-<span><span class="co">#&gt; → Found "mighty_init_domain" in "github::NovoNordisk-OpenSource/mighty.standards/components@91ce52c339369b584001c3bffdfd65ee564b5f61"</span></span>
-<span><span class="co">#&gt; → Found "mighty_filter_domain" in "github::NovoNordisk-OpenSource/mighty.standards/components@91ce52c339369b584001c3bffdfd65ee564b5f61"</span></span>
+<span><span class="co">#&gt; → Found "mighty_read_data" in "github::NovoNordisk-OpenSource/mighty.standards/components@b3eb6a3833736f015c2fd919ca9f51f22b5cc323"</span></span>
+<span><span class="co">#&gt; → Found "mighty_init_domain" in "github::NovoNordisk-OpenSource/mighty.standards/components@b3eb6a3833736f015c2fd919ca9f51f22b5cc323"</span></span>
+<span><span class="co">#&gt; → Found "mighty_filter_domain" in "github::NovoNordisk-OpenSource/mighty.standards/components@b3eb6a3833736f015c2fd919ca9f51f22b5cc323"</span></span>
 <span><span class="co">#&gt; → Found "age_group_01.R" in "local::./components"</span></span>
-<span><span class="co">#&gt; → Found "mighty_col_mutate" in "github::NovoNordisk-OpenSource/mighty.standards/components@91ce52c339369b584001c3bffdfd65ee564b5f61"</span></span>
-<span><span class="co">#&gt; → Found "mighty_write_data" in "github::NovoNordisk-OpenSource/mighty.standards/components@91ce52c339369b584001c3bffdfd65ee564b5f61"</span></span>
-<span><span class="co">#&gt; → Found "mighty_read_data" in "github::NovoNordisk-OpenSource/mighty.standards/components@91ce52c339369b584001c3bffdfd65ee564b5f61"</span></span>
-<span><span class="co">#&gt; → Found "mighty_init_domain" in "github::NovoNordisk-OpenSource/mighty.standards/components@91ce52c339369b584001c3bffdfd65ee564b5f61"</span></span>
-<span><span class="co">#&gt; → Found "mighty_filter_domain" in "github::NovoNordisk-OpenSource/mighty.standards/components@91ce52c339369b584001c3bffdfd65ee564b5f61"</span></span>
+<span><span class="co">#&gt; → Found "mighty_col_mutate" in "github::NovoNordisk-OpenSource/mighty.standards/components@b3eb6a3833736f015c2fd919ca9f51f22b5cc323"</span></span>
+<span><span class="co">#&gt; → Found "mighty_write_data" in "github::NovoNordisk-OpenSource/mighty.standards/components@b3eb6a3833736f015c2fd919ca9f51f22b5cc323"</span></span>
+<span><span class="co">#&gt; → Found "mighty_read_data" in "github::NovoNordisk-OpenSource/mighty.standards/components@b3eb6a3833736f015c2fd919ca9f51f22b5cc323"</span></span>
+<span><span class="co">#&gt; → Found "mighty_init_domain" in "github::NovoNordisk-OpenSource/mighty.standards/components@b3eb6a3833736f015c2fd919ca9f51f22b5cc323"</span></span>
+<span><span class="co">#&gt; → Found "mighty_filter_domain" in "github::NovoNordisk-OpenSource/mighty.standards/components@b3eb6a3833736f015c2fd919ca9f51f22b5cc323"</span></span>
 <span><span class="co">#&gt; → Found "age_group_01.R" in "local::./components"</span></span>
-<span><span class="co">#&gt; → Found "mighty_col_mutate" in "github::NovoNordisk-OpenSource/mighty.standards/components@91ce52c339369b584001c3bffdfd65ee564b5f61"</span></span>
-<span><span class="co">#&gt; → Found "mighty_write_data" in "github::NovoNordisk-OpenSource/mighty.standards/components@91ce52c339369b584001c3bffdfd65ee564b5f61"</span></span>
+<span><span class="co">#&gt; → Found "mighty_col_mutate" in "github::NovoNordisk-OpenSource/mighty.standards/components@b3eb6a3833736f015c2fd919ca9f51f22b5cc323"</span></span>
+<span><span class="co">#&gt; → Found "mighty_write_data" in "github::NovoNordisk-OpenSource/mighty.standards/components@b3eb6a3833736f015c2fd919ca9f51f22b5cc323"</span></span>
 <span><span class="co"># ADSL-1-read_data -------------------------------------------------------------</span></span>
 <span><span class="va">cnt</span> <span class="op">&lt;-</span> <span class="fu">connector</span><span class="fu">::</span><span class="fu"><a href="https://novonordisk-opensource.github.io/connector/reference/connect.html" class="external-link">connect</a></span><span class="op">(</span>config <span class="op">=</span> <span class="st">"_connector.yml"</span><span class="op">)</span></span>
 <span>  <span class="va">DM</span> <span class="op">&lt;-</span> <span class="va">cnt</span><span class="op">$</span><span class="va">sdtm</span><span class="op">$</span><span class="fu">read_cnt</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/chartr.html" class="external-link">tolower</a></span><span class="op">(</span><span class="st">'DM'</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -340,7 +341,8 @@
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
       // Inspect non-navigation links and adorn them if external
-     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      window.quartoDecorateExternalLinks = function (root) {
+     var links = (root || window.document).querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
       for (var i=0; i<links.length; i++) {
         const link = links[i];
         if (!isInternal(link.href)) {
@@ -349,8 +351,69 @@
           if (link.dataset.originalHref !== undefined) {
             link.href = link.dataset.originalHref;
           }
+          if (!link.classList.contains('no-external-icon')) {
+          }
         }
       }
+      };
+      window.quartoDecorateExternalLinks(window.document);
+    // Esc closes the popup (WCAG 1.4.13) and focus leaving both trigger and
+    // popup closes it (WCAG 2.4.11); tippy handles neither for interactive popups.
+    const hideOnEscAndFocusOut = {
+      name: 'hideOnEscAndFocusOut',
+      defaultValue: true,
+      fn(instance) {
+        const dismiss = () => {
+          // A show scheduled by the trigger delay would otherwise reopen it
+          instance.clearDelayTimeouts();
+          instance.hide();
+        };
+        const onKeyDown = (event) => {
+          if (event.key !== 'Escape') {
+            return;
+          }
+          // Keep Esc from also reaching page handlers (e.g. reveal.js overview),
+          // except an open reveal.js slide menu, which Esc should close too.
+          // The menu handles keys only when its keyboard option is on.
+          const menuHandlesEsc = window.Reveal?.getPlugin?.('menu')?.isOpen() &&
+            window.Reveal.getConfig().menu?.keyboard !== false;
+          if (!menuHandlesEsc) {
+            event.stopPropagation();
+          }
+          if (instance.popper.contains(window.document.activeElement)) {
+            // Disabled while refocusing so the focus trigger does not reopen it
+            instance.disable();
+            instance.reference.focus();
+            instance.enable();
+          }
+          dismiss();
+        };
+        const onFocusOut = (event) => {
+          const target = event.relatedTarget;
+          if (target && !instance.reference.contains(target) &&
+              !instance.popper.contains(target)) {
+            dismiss();
+          }
+        };
+        // On the trigger too: a click trigger (code-annotations: select) has no
+        // blur handling. Attached for the instance's lifetime so leaving the
+        // trigger also cancels a show still pending on the trigger delay.
+        instance.reference.addEventListener('focusout', onFocusOut);
+        return {
+          onShow() {
+            window.document.addEventListener('keydown', onKeyDown, true);
+            instance.popper.addEventListener('focusout', onFocusOut);
+          },
+          onHide() {
+            window.document.removeEventListener('keydown', onKeyDown, true);
+            instance.popper.removeEventListener('focusout', onFocusOut);
+          },
+          onDestroy() {
+            instance.reference.removeEventListener('focusout', onFocusOut);
+          },
+        };
+      },
+    };
     function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
       const config = {
         allowHTML: true,
@@ -364,6 +427,7 @@
         interactiveBorder: 10,
         theme: 'light-border',
         placement: 'bottom-start',
+        plugins: [hideOnEscAndFocusOut],
       };
       if (contentFn) {
         config.content = contentFn;

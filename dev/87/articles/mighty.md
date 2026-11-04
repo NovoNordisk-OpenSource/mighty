@@ -6,7 +6,7 @@ In this minimal example you build ADSL with mighty. You will:
 
 1.  set up the study config (`_mighty.yml`),
 2.  describe ADSL in a specification (`adsl.yml`),
-3.  write one custom component for a derived column,
+3.  write one component for a derived column,
 4.  call
     [`generate_adam_code()`](https://novonordisk-opensource.github.io/mighty/reference/generate_adam_code.md),
     which returns the R program that builds ADSL.
@@ -50,8 +50,7 @@ A mighty study looks like this:
 - `_mighty.yml`: [framework
   configuration](https://novonordisk-opensource.github.io/mighty/articles/mighty_config.md)
   (keys of external datasets and component repositories)
-- `_study.yml`: study-level properties (optional, used by mighty.toolbox
-  for define.xml)
+- `_study.yml`: study-level properties (optional, used for define.xml)
 - `_documents.yml`, `_codelists.yml`: optional, read by mighty.metadata
 
 mighty reads every other `.yml` file in `study_dir/` as a specification.
@@ -83,7 +82,7 @@ external_data:
   - id: LB
     keys: [USUBJID, STUDYID, LBSEQ]
 repos:
-  - "github::NovoNordisk-OpenSource/mighty.standards/components@dev/internal-components"
+  - "github::NovoNordisk-OpenSource/mighty.standards/components"
   - "./components"
 ```
 
@@ -100,8 +99,8 @@ and a `columns` list with every column of the final dataset:
 - `AGE_GRP1`: `component` means it’s derived by the custom component
   `age_group_01.R` (see next section).
 
-Listing only columns that belong in the final dataset is a good practice
-that helps in keeping things tidy. See
+The `columns` list defines the final dataset, so mighty keeps only the
+listed columns when it writes ADSL. See
 [`vignette("adam_specification")`](https://novonordisk-opensource.github.io/mighty/articles/adam_specification.md)
 for everything a specification can contain.
 
@@ -223,25 +222,27 @@ each one a character string. Each name starts with the order to run the
 programs in, so here there is a single program, `1_ADSL`. When a study
 has several domains, a domain that uses ADSL comes after it
 (e.g. `2_ADAE`). If ADSL itself needs columns from another domain, ADSL
-is split into two programs (e.g. `1_ADSL`, `2_ADLB`, `3_ADSL`). Printing
+is split into multiple programs (e.g. `1_ADSL`, `2_ADLB`, `3_ADSL`).
+
+In this example, there is only a single ADSL program, so printing
 `1_ADSL` shows the full program that builds ADSL:
 
     #> → No `_documents.yml` file found
     #> → No `_codelists.yml` file found
-    #> → Downloading repo "NovoNordisk-OpenSource/mighty.standards@91ce52c339369b584001c3bffdfd65ee564b5f61"
+    #> → Downloading repo "NovoNordisk-OpenSource/mighty.standards@b3eb6a3833736f015c2fd919ca9f51f22b5cc323"
     #> → Found "age_group_01.R" in "local::./components"
-    #> → Found "mighty_read_data" in "github::NovoNordisk-OpenSource/mighty.standards/components@91ce52c339369b584001c3bffdfd65ee564b5f61"
-    #> → Found "mighty_init_domain" in "github::NovoNordisk-OpenSource/mighty.standards/components@91ce52c339369b584001c3bffdfd65ee564b5f61"
-    #> → Found "mighty_filter_domain" in "github::NovoNordisk-OpenSource/mighty.standards/components@91ce52c339369b584001c3bffdfd65ee564b5f61"
+    #> → Found "mighty_read_data" in "github::NovoNordisk-OpenSource/mighty.standards/components@b3eb6a3833736f015c2fd919ca9f51f22b5cc323"
+    #> → Found "mighty_init_domain" in "github::NovoNordisk-OpenSource/mighty.standards/components@b3eb6a3833736f015c2fd919ca9f51f22b5cc323"
+    #> → Found "mighty_filter_domain" in "github::NovoNordisk-OpenSource/mighty.standards/components@b3eb6a3833736f015c2fd919ca9f51f22b5cc323"
     #> → Found "age_group_01.R" in "local::./components"
-    #> → Found "mighty_col_mutate" in "github::NovoNordisk-OpenSource/mighty.standards/components@91ce52c339369b584001c3bffdfd65ee564b5f61"
-    #> → Found "mighty_write_data" in "github::NovoNordisk-OpenSource/mighty.standards/components@91ce52c339369b584001c3bffdfd65ee564b5f61"
-    #> → Found "mighty_read_data" in "github::NovoNordisk-OpenSource/mighty.standards/components@91ce52c339369b584001c3bffdfd65ee564b5f61"
-    #> → Found "mighty_init_domain" in "github::NovoNordisk-OpenSource/mighty.standards/components@91ce52c339369b584001c3bffdfd65ee564b5f61"
-    #> → Found "mighty_filter_domain" in "github::NovoNordisk-OpenSource/mighty.standards/components@91ce52c339369b584001c3bffdfd65ee564b5f61"
+    #> → Found "mighty_col_mutate" in "github::NovoNordisk-OpenSource/mighty.standards/components@b3eb6a3833736f015c2fd919ca9f51f22b5cc323"
+    #> → Found "mighty_write_data" in "github::NovoNordisk-OpenSource/mighty.standards/components@b3eb6a3833736f015c2fd919ca9f51f22b5cc323"
+    #> → Found "mighty_read_data" in "github::NovoNordisk-OpenSource/mighty.standards/components@b3eb6a3833736f015c2fd919ca9f51f22b5cc323"
+    #> → Found "mighty_init_domain" in "github::NovoNordisk-OpenSource/mighty.standards/components@b3eb6a3833736f015c2fd919ca9f51f22b5cc323"
+    #> → Found "mighty_filter_domain" in "github::NovoNordisk-OpenSource/mighty.standards/components@b3eb6a3833736f015c2fd919ca9f51f22b5cc323"
     #> → Found "age_group_01.R" in "local::./components"
-    #> → Found "mighty_col_mutate" in "github::NovoNordisk-OpenSource/mighty.standards/components@91ce52c339369b584001c3bffdfd65ee564b5f61"
-    #> → Found "mighty_write_data" in "github::NovoNordisk-OpenSource/mighty.standards/components@91ce52c339369b584001c3bffdfd65ee564b5f61"
+    #> → Found "mighty_col_mutate" in "github::NovoNordisk-OpenSource/mighty.standards/components@b3eb6a3833736f015c2fd919ca9f51f22b5cc323"
+    #> → Found "mighty_write_data" in "github::NovoNordisk-OpenSource/mighty.standards/components@b3eb6a3833736f015c2fd919ca9f51f22b5cc323"
     # ADSL-1-read_data -------------------------------------------------------------
     cnt <- connector::connect(config = "_connector.yml")
       DM <- cnt$sdtm$read_cnt(tolower('DM')) |>

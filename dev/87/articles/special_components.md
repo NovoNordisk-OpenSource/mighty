@@ -434,7 +434,7 @@ Standard template and rendered output
     #'   filter evaluation. Each element is a list containing:
     #'   \describe{
     #'     \item{table}{Character string. Name of the dataset to join with.}
-    #'     \item{select_expr}{Character vector. Column names to select from the join dataset.}
+    #'     \item{select_expr}{Character vector. Column names to select from the join dataset. Columns other than `keys` must not already exist in `domain`; otherwise `dplyr::left_join()` adds `.x`/`.y` suffixes and the original names are lost.}
     #'     \item{keys}{Character vector. Column names used as join keys (e.g. `c("STUDYID", "USUBJID")`), used in `dplyr::join_by()`.}
     #'   }
     #'   Empty list when no filter depends on an external dataset. Each join keeps the row count of `domain`. The join stops

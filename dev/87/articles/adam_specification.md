@@ -162,9 +162,11 @@ The population is built in two steps. First, mighty reads each domain
 listed under `base`, applies that domain’s own filter, and stacks the
 results into one dataset. Then the filters under `global` are applied to
 every row of that stacked dataset. A global filter can also use a column
-from a dataset that isn’t in `base`, such as `ARMNRS` from ADSL. In such
-case, list it in `depends` with a prefix (`ADSL.ARMNRS`) - mighty joins
-it in first, then filtering occurs.
+from a domain that isn’t in `base`. For example, when you build ADLB
+from LB, you can remove screen failures by filtering on `ARMNRS` (Reason
+Arm and/or Actual Arm is Null) from ADSL. To do this, list the column in
+`depends` with a domain prefix (`ADSL.ARMNRS`). mighty joins ADSL to the
+LB data first, then applies the filter.
 
 The `population` section has two subsections:
 
@@ -207,9 +209,9 @@ Each entry in the `base` array specifies a source domain:
 
 mighty does not read the filter expression itself, so `depends` must
 list every column the filter uses. mighty uses this list to make those
-columns available before the filter runs. Columns from another domain
-use a domain prefix (e.g. `ADSL.ARMNRS`), and mighty joins that domain
-first.
+columns available in the generated program before the filter runs.
+Columns from another domain use a domain prefix (e.g. `ADSL.ARMNRS`),
+and mighty joins that domain first.
 
 #### Domain-specific filtering
 
@@ -322,19 +324,14 @@ column is created:
 `component`:
 
 - **Without `component`**: `method` is the source of the column. It must
-  be domain-qualified (e.g., `ADSL.SAFFL`), and mighty uses it to
-  resolve the dependency.
+  be domain-qualified (e.g., `ADSL.SAFFL`). mighty uses it to resolve
+  the dependency. The column is also recorded as a copy of that source
+  (origin “Predecessor”), so it inherits the source’s label and other
+  metadata for define.xml.
 - **With `component`**: the component derives the column and supplies
   its dependencies. `method` is free text that describes the derivation,
   for use in define.xml. mighty does not use it for dependency
   resolution.
-
-define.xml is the document that describes each ADaM column for
-regulatory submission. mighty does not create it; mighty.toolbox builds
-it from the same specifications. Without `component`, the same
-`DOMAIN.COLUMN` value also tells mighty.metadata that the column is a
-copy of that source (origin “Predecessor”), so it inherits the source’s
-label and other metadata for define.xml.
 
 ``` yml
 columns:
@@ -357,11 +354,13 @@ When using `component`, it has these subfields:
 
 #### Simple column operations
 
-Note: `method` always needs a domain prefix.
+Note: `method` used on columns with no `component` field always needs a
+domain prefix.
 
-All examples below are from the ADLB specification (`id: ADLB`), whose
-base domain is LB. ADLB is built from LB, so LB’s columns are already in
-ADLB. The domain prefix in `method:` decides where a column comes from:
+All examples below are from a fictional ADLB specification (`id: ADLB`),
+whose base domain is LB. ADLB is built from LB, so LB’s columns are
+already in ADLB. The domain prefix in `method:` decides where a column
+comes from:
 
 | You write | Source | What mighty does | Examples |
 |----|----|----|----|
@@ -389,8 +388,8 @@ ADLB. The domain prefix in `method:` decides where a column comes from:
         method: ADSL.SAFFL
     ```
 
-    Joins `SAFFL` from ADSL onto your table, matching rows on ADSL’s
-    keys (its `keys:`). Those key columns must also be in your table.
+    Joins `SAFFL` from ADSL onto ADLB, matching rows on ADSL’s keys (its
+    `keys:`). Those key columns must also be in ADLB.
 
 3.  Adding a column from another ADaM domain and renaming it
 
@@ -414,13 +413,10 @@ ADLB. The domain prefix in `method:` decides where a column comes from:
         method: ADLB.LBSTRESN
     ```
 
-    Creates a new column `AVAL` by copying the content of LBSTRESN from
-    the base domain. `- id: LBSTRESN` without `method` keeps `LBSTRESN`
-    from LB; `ADLB.LBSTRESN` refers to that same column, which is
-    already in ADLB because ADLB is built from LB. `LBSTRESN` is also
-    listed under `columns:`, so both columns are kept (a copy). Copy or
-    rename depends only on whether the source column is also listed
-    under `columns:`
+Creates a new column `AVAL` with a copy of `LBSTRESN`. Because
+`LBSTRESN` is also listed under `columns:`, the dataset keeps both
+columns. If you do not list `LBSTRESN`, it is renamed instead (see
+example 5).
 
 5.  Renaming a column from the base domain
 
@@ -436,9 +432,11 @@ ADLB. The domain prefix in `method:` decides where a column comes from:
     separately in `columns`, so only the renamed column `AVAL` appears
     in the final dataset.
 
-    With a single base domain, `LB.LBSTRESN` works the same as
-    `ADLB.LBSTRESN`. With several base domains, use `ADLB.`, because
-    `LB.` would join the column from LB.
+With one base domain, mighty treats LB.LBSTRESN as the column already in
+ADLB, so it works the same as ADLB.LBSTRESN. With more than one base
+domain (e.g. LB and XL), LB.LBSTRESN makes mighty join LB again on LB’s
+keys, and those keys must be in ADLB. To use the column already in ADLB,
+write ADLB.LBSTRESN.
 
 #### Derived columns
 
@@ -459,7 +457,7 @@ from `with:` (see example 10).
 
 ##### Examples (continued):
 
-6.  Adding a derived column using a standard code component
+6.  Adding a derived column using a component without any parameters
 
     ``` yml
     columns:
@@ -471,7 +469,7 @@ from `with:` (see example 10).
     Creates `ARM_GRP1` using the code component `arm_group_01`. The
     component’s metadata defines which columns it depends on.
 
-7.  Adding a derived column using an R script custom component
+7.  Adding a derived column using an `.R` component
 
     ``` yml
     columns:
@@ -480,17 +478,7 @@ from `with:` (see example 10).
           id: arm_group_01.R
     ```
 
-    R script components must contain the data manipulation code directly
-    as executable script code, and metadata to declare dependencies and
-    columns created by the component. For details, see
-    [`vignette("code_components")`](https://novonordisk-opensource.github.io/mighty/articles/code_components.md).
-
-    For custom code components, provide the component name or file name.
-    mighty looks it up in the repositories listed under `repos` in
-    `_mighty.yml` (see
-    [`vignette("mighty_config")`](https://novonordisk-opensource.github.io/mighty/articles/mighty_config.md)).
-
-8.  Adding a derived column using a custom Mustache template component
+8.  Adding a derived column using a Mustache template component
 
     ``` yml
     columns:
@@ -599,11 +587,11 @@ above for this pattern.
 
 #### Same component, different parameters
 
-The same template can be invoked multiple times with different parameter
-values to produce different output columns. mighty calls the component
-once per unique parameter set. This is valid as long as each invocation
-produces disjoint output columns — **no two invocations may share an
-output column**.
+The same mustache component can be invoked multiple times with different
+parameter values to produce different output columns. mighty calls the
+component once per unique parameter set. This is valid as long as each
+invocation produces disjoint output columns — **no two invocations may
+share an output column**.
 
 #### Overlapping outputs cause an error
 

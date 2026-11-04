@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">mighty</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9044</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9048</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -187,8 +187,13 @@
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#' @depends ADSL AGE</span></span>
 <span><span class="co">#' @depends ADLB LBSTRESN</span></span></code></pre></div>
-<p>The generated program reads only the columns that the specification or a component declares. List every column your code uses, including source columns that are not in the final dataset (see <a href="#source-columns-not-in-the-final-dataset">Source columns not in the final dataset</a>). mighty also uses <code>@depends</code> to run components in the right order.</p>
-</section><section class="level3"><h4 id="outputs">
+<p>mighty uses <code>@depends</code> for two things:</p>
+<ul>
+<li>
+<strong>Reading data.</strong> The generated program reads only the columns listed in the YAML specification and in <code>@depends</code> tags. If your code uses a column that is in neither, mighty does not report an error, but the generated ADaM program fails at run-time because the column was not read. List every column your code uses in <code>@depends</code>, including any source columns that are not in the final dataset (see <a href="#source-columns-not-in-the-final-dataset">Source columns not in the final dataset</a>).</li>
+<li>
+<strong>Run order.</strong> mighty runs a component only after the components that create its <code>@depends</code> columns.</li>
+</ul></section><section class="level3"><h4 id="outputs">
 <code>@outputs</code><a class="anchor" aria-label="anchor" href="#outputs"></a>
 </h4>
 <p>If the component is a column derivation, this specifies which column(s) the component creates. If the component is a row or parameter operation, this specifies which column(s) the component modifies</p>
@@ -225,6 +230,7 @@
 <li>Each dataset is a data frame named after its domain (<code>ADSL</code>, <code>DM</code>, <code>LB</code>). Your code must update the data frame of the domain it belongs to, e.g. <code>ADSL &lt;- ADSL |&gt; dplyr::mutate(...)</code>.</li>
 <li>Other domains listed in <code>@depends</code> are available as data frames under their own names. For example, an ADLB component with <code>@depends LB LBTEST</code> can read the SDTM <code>LB</code> data frame and join it into <code>ADLB</code>.</li>
 <li>A column component must not change the number of rows.</li>
+<li>A row/parameter component must not change the number of columns</li>
 </ul></section><section class="level2"><h3 id="example-simple-column-derivation">Example: Simple Column Derivation<a class="anchor" aria-label="anchor" href="#example-simple-column-derivation"></a>
 </h3>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
@@ -467,7 +473,8 @@
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
       // Inspect non-navigation links and adorn them if external
-     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      window.quartoDecorateExternalLinks = function (root) {
+     var links = (root || window.document).querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
       for (var i=0; i<links.length; i++) {
         const link = links[i];
         if (!isInternal(link.href)) {
@@ -476,8 +483,69 @@
           if (link.dataset.originalHref !== undefined) {
             link.href = link.dataset.originalHref;
           }
+          if (!link.classList.contains('no-external-icon')) {
+          }
         }
       }
+      };
+      window.quartoDecorateExternalLinks(window.document);
+    // Esc closes the popup (WCAG 1.4.13) and focus leaving both trigger and
+    // popup closes it (WCAG 2.4.11); tippy handles neither for interactive popups.
+    const hideOnEscAndFocusOut = {
+      name: 'hideOnEscAndFocusOut',
+      defaultValue: true,
+      fn(instance) {
+        const dismiss = () => {
+          // A show scheduled by the trigger delay would otherwise reopen it
+          instance.clearDelayTimeouts();
+          instance.hide();
+        };
+        const onKeyDown = (event) => {
+          if (event.key !== 'Escape') {
+            return;
+          }
+          // Keep Esc from also reaching page handlers (e.g. reveal.js overview),
+          // except an open reveal.js slide menu, which Esc should close too.
+          // The menu handles keys only when its keyboard option is on.
+          const menuHandlesEsc = window.Reveal?.getPlugin?.('menu')?.isOpen() &&
+            window.Reveal.getConfig().menu?.keyboard !== false;
+          if (!menuHandlesEsc) {
+            event.stopPropagation();
+          }
+          if (instance.popper.contains(window.document.activeElement)) {
+            // Disabled while refocusing so the focus trigger does not reopen it
+            instance.disable();
+            instance.reference.focus();
+            instance.enable();
+          }
+          dismiss();
+        };
+        const onFocusOut = (event) => {
+          const target = event.relatedTarget;
+          if (target && !instance.reference.contains(target) &&
+              !instance.popper.contains(target)) {
+            dismiss();
+          }
+        };
+        // On the trigger too: a click trigger (code-annotations: select) has no
+        // blur handling. Attached for the instance's lifetime so leaving the
+        // trigger also cancels a show still pending on the trigger delay.
+        instance.reference.addEventListener('focusout', onFocusOut);
+        return {
+          onShow() {
+            window.document.addEventListener('keydown', onKeyDown, true);
+            instance.popper.addEventListener('focusout', onFocusOut);
+          },
+          onHide() {
+            window.document.removeEventListener('keydown', onKeyDown, true);
+            instance.popper.removeEventListener('focusout', onFocusOut);
+          },
+          onDestroy() {
+            instance.reference.removeEventListener('focusout', onFocusOut);
+          },
+        };
+      },
+    };
     function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
       const config = {
         allowHTML: true,
@@ -491,6 +559,7 @@
         interactiveBorder: 10,
         theme: 'light-border',
         placement: 'bottom-start',
+        plugins: [hideOnEscAndFocusOut],
       };
       if (contentFn) {
         config.content = contentFn;

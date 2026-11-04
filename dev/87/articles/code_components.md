@@ -176,11 +176,17 @@ Multiple depends are listed on separate lines:
 #' @depends ADLB LBSTRESN
 ```
 
-The generated program reads only the columns that the specification or a
-component declares. List every column your code uses, including source
-columns that are not in the final dataset (see [Source columns not in
-the final dataset](#source-columns-not-in-the-final-dataset)). mighty
-also uses `@depends` to run components in the right order.
+mighty uses `@depends` for two things:
+
+- **Reading data.** The generated program reads only the columns listed
+  in the YAML specification and in `@depends` tags. If your code uses a
+  column that is in neither, mighty does not report an error, but the
+  generated ADaM program fails at run-time because the column was not
+  read. List every column your code uses in `@depends`, including any
+  source columns that are not in the final dataset (see [Source columns
+  not in the final dataset](#source-columns-not-in-the-final-dataset)).
+- **Run order.** mighty runs a component only after the components that
+  create its `@depends` columns.
 
 #### `@outputs`
 
@@ -239,6 +245,7 @@ Use R script components when:
   `@depends LB LBTEST` can read the SDTM `LB` data frame and join it
   into `ADLB`.
 - A column component must not change the number of rows.
+- A row/parameter component must not change the number of columns
 
 ### Example: Simple Column Derivation
 

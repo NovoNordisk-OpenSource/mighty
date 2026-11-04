@@ -10,9 +10,8 @@ mighty uses these inputs:
   and where to find components
 - **Code components**: the code for derivations, referenced from the
   specifications
-- **Study properties (\_study.yml)**: study-level properties such as
-  `study_id`, used by mighty.toolbox for define.xml generation
-  (optional)
+- **Study properties (\_study.yml)**: (optional) study-level properties
+  such as `study_id`, used for for define.xml generation
 
 This modular approach separates the *what* (specifications) from the
 *how* (code components), enabling efficient and consistent ADaM
@@ -63,18 +62,15 @@ filled from the `with:` parameters in the specification. Specifications
 refer to components by name, and mighty finds them in the repositories
 listed under `repos` in `_mighty.yml`.
 
-There are three sources of components:
+There are two kinds of components:
 
-**Standard components (mighty.standards)**
+**User components**
 
-- Common derivations and calculations, reused across studies
-- Thoroughly tested and validated
-
-**Custom Components**
-
-- Trial-specific derivations developed during study conduct
-- Tailored to unique protocol requirements
-- Maintained within the trial repository
+- Supplied through the repositories listed under `repos` in
+  `_mighty.yml`, searched in order; the first match wins
+- Can come from a shared library (e.g. mighty.standards) or from the
+  trial repository
+- Referenced in the specification by `component: id:`
 
 **Internal components**
 
@@ -92,10 +88,10 @@ and
 ## Study properties (\_study.yml)
 
 The optional `_study.yml` holds study-level properties. While mighty
-does not use it to generate code, mighty.toolbox uses it for define.xml.
-If the file is missing, mighty shows a message and continues. If it
-exists, it must contain a `study_id` field; otherwise mighty.metadata
-stops with an error.
+does not use it to generate code, it is used for define.xml. If the file
+is missing, mighty shows a message and continues. If it exists, it must
+contain a `study_id` field; otherwise mighty.metadata stops with an
+error.
 
 ## Available data (optional)
 

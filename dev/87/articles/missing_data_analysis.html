@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">mighty</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9044</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9048</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -80,13 +80,12 @@
 
     <section class="section level2"><h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
 </h2>
-<p>Work on an ADaM specification starts early in a project. A trial specification is often ready before first patient first visit (FPFV). It then keeps changing during the trial, and some rules may only be defined at a high level at first.</p>
-<p>The SDTM data changes over the same period. Some domains are well defined early. Others are missing because the setup isn’t finished or the data hasn’t been collected yet. Protocol amendments or a new SDTM version can also change SDTM during the trial.</p>
-<p>So at any point during the trial, the specification may describe more than the current SDTM data can produce. A specification written this way is still valid. But a program built from it fails when a domain or column it uses doesn’t exist yet. Keeping template programs in line with both the specification and the current data takes a lot of manual work. Meanwhile, output programming needs ADaM data it can rely on throughout the trial.</p>
+<p>ADaM specification work starts early, often before the SDTM data is complete. Some domains have data early; others are empty until later in the study.</p>
+<p>So at any point during the trial, the specification may describe more than the current SDTM data can produce. A specification written this way is still valid, but a program built from it fails when a domain or column it uses doesn’t exist yet. Keeping template programs in line with both the specification and the current data would take a lot of manual work.</p>
 <p>To deal with this, mighty can generate two sets of programs:</p>
 <ul>
 <li>
-<strong>Complete programs</strong> that follow the full specification. They run once all data has been collected, usually after database lock (DBL).</li>
+<strong>Complete programs</strong> that follow the full specification. They run once all SDTM domains and columns have been populated</li>
 <li>
 <strong>Executable programs</strong> that run on the data available today. Steps that can’t run are kept but commented out, with a comment above each one explaining which data is missing.</li>
 </ul></section><section class="section level2"><h2 id="types-of-missing-data">Types of missing data<a class="anchor" aria-label="anchor" href="#types-of-missing-data"></a>
@@ -96,7 +95,7 @@
 <li>Missing columns in an existing domain</li>
 <li>Missing or incomplete values in a column</li>
 </ol>
-<p>mighty handles 1 and 2. Your code components must handle 3, for example with a standard or custom component that copes with <code>NA</code> values.</p>
+<p>mighty handles 1 and 2. Your code components must handle 3, for example with a component that copes with <code>NA</code> values.</p>
 </section><section class="section level2"><h2 id="workflow">Workflow<a class="anchor" aria-label="anchor" href="#workflow"></a>
 </h2>
 <ol type="1">
@@ -126,7 +125,8 @@
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
       // Inspect non-navigation links and adorn them if external
-     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      window.quartoDecorateExternalLinks = function (root) {
+     var links = (root || window.document).querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
       for (var i=0; i<links.length; i++) {
         const link = links[i];
         if (!isInternal(link.href)) {
@@ -135,8 +135,69 @@
           if (link.dataset.originalHref !== undefined) {
             link.href = link.dataset.originalHref;
           }
+          if (!link.classList.contains('no-external-icon')) {
+          }
         }
       }
+      };
+      window.quartoDecorateExternalLinks(window.document);
+    // Esc closes the popup (WCAG 1.4.13) and focus leaving both trigger and
+    // popup closes it (WCAG 2.4.11); tippy handles neither for interactive popups.
+    const hideOnEscAndFocusOut = {
+      name: 'hideOnEscAndFocusOut',
+      defaultValue: true,
+      fn(instance) {
+        const dismiss = () => {
+          // A show scheduled by the trigger delay would otherwise reopen it
+          instance.clearDelayTimeouts();
+          instance.hide();
+        };
+        const onKeyDown = (event) => {
+          if (event.key !== 'Escape') {
+            return;
+          }
+          // Keep Esc from also reaching page handlers (e.g. reveal.js overview),
+          // except an open reveal.js slide menu, which Esc should close too.
+          // The menu handles keys only when its keyboard option is on.
+          const menuHandlesEsc = window.Reveal?.getPlugin?.('menu')?.isOpen() &&
+            window.Reveal.getConfig().menu?.keyboard !== false;
+          if (!menuHandlesEsc) {
+            event.stopPropagation();
+          }
+          if (instance.popper.contains(window.document.activeElement)) {
+            // Disabled while refocusing so the focus trigger does not reopen it
+            instance.disable();
+            instance.reference.focus();
+            instance.enable();
+          }
+          dismiss();
+        };
+        const onFocusOut = (event) => {
+          const target = event.relatedTarget;
+          if (target && !instance.reference.contains(target) &&
+              !instance.popper.contains(target)) {
+            dismiss();
+          }
+        };
+        // On the trigger too: a click trigger (code-annotations: select) has no
+        // blur handling. Attached for the instance's lifetime so leaving the
+        // trigger also cancels a show still pending on the trigger delay.
+        instance.reference.addEventListener('focusout', onFocusOut);
+        return {
+          onShow() {
+            window.document.addEventListener('keydown', onKeyDown, true);
+            instance.popper.addEventListener('focusout', onFocusOut);
+          },
+          onHide() {
+            window.document.removeEventListener('keydown', onKeyDown, true);
+            instance.popper.removeEventListener('focusout', onFocusOut);
+          },
+          onDestroy() {
+            instance.reference.removeEventListener('focusout', onFocusOut);
+          },
+        };
+      },
+    };
     function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
       const config = {
         allowHTML: true,
@@ -150,6 +211,7 @@
         interactiveBorder: 10,
         theme: 'light-border',
         placement: 'bottom-start',
+        plugins: [hideOnEscAndFocusOut],
       };
       if (contentFn) {
         config.content = contentFn;

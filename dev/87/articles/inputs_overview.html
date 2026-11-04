@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">mighty</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9044</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9048</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -89,7 +89,7 @@
 <li>
 <strong>Code components</strong>: the code for derivations, referenced from the specifications</li>
 <li>
-<strong>Study properties (_study.yml)</strong>: study-level properties such as <code>study_id</code>, used by mighty.toolbox for define.xml generation (optional)</li>
+<strong>Study properties (_study.yml)</strong>: (optional) study-level properties such as <code>study_id</code>, used for for define.xml generation</li>
 </ul>
 <p>This modular approach separates the <em>what</em> (specifications) from the <em>how</em> (code components), enabling efficient and consistent ADaM development. By providing these building blocks, mighty takes care of organizing and rendering ADaM programs.</p>
 <p>Additionally (and optional), mighty can render programs that are executable, based on the available data:</p>
@@ -123,17 +123,13 @@
 </section><section class="level2"><h2 id="code-components">Code Components<a class="anchor" aria-label="anchor" href="#code-components"></a>
 </h2>
 <p>Code components hold the code for the derivations that ADaM specifications refer to. Each component is an R script (<code>.R</code>) or a Mustache template (<code>.mustache</code>). A template has placeholders that are filled from the <code>with:</code> parameters in the specification. Specifications refer to components by name, and mighty finds them in the repositories listed under <code>repos</code> in <code>_mighty.yml</code>.</p>
-<p>There are three sources of components:</p>
-<p><strong>Standard components (mighty.standards)</strong></p>
+<p>There are two kinds of components:</p>
+<p><strong>User components</strong></p>
 <ul>
-<li>Common derivations and calculations, reused across studies</li>
-<li>Thoroughly tested and validated</li>
-</ul>
-<p><strong>Custom Components</strong></p>
-<ul>
-<li>Trial-specific derivations developed during study conduct</li>
-<li>Tailored to unique protocol requirements</li>
-<li>Maintained within the trial repository</li>
+<li>Supplied through the repositories listed under <code>repos</code> in <code>_mighty.yml</code>, searched in order; the first match wins</li>
+<li>Can come from a shared library (e.g. mighty.standards) or from the trial repository</li>
+<li>Referenced in the specification by <code>component: id:</code>
+</li>
 </ul>
 <p><strong>Internal components</strong></p>
 <ul>
@@ -144,7 +140,7 @@
 <p>See <code><a href="../articles/code_components.html">vignette("code_components")</a></code> and <code><a href="../articles/special_components.html">vignette("special_components")</a></code>.</p>
 </section><section class="level2"><h2 id="study-properties-_study-yml">Study properties (_study.yml)<a class="anchor" aria-label="anchor" href="#study-properties-_study-yml"></a>
 </h2>
-<p>The optional <code>_study.yml</code> holds study-level properties. While mighty does not use it to generate code, mighty.toolbox uses it for define.xml. If the file is missing, mighty shows a message and continues. If it exists, it must contain a <code>study_id</code> field; otherwise mighty.metadata stops with an error.</p>
+<p>The optional <code>_study.yml</code> holds study-level properties. While mighty does not use it to generate code, it is used for define.xml. If the file is missing, mighty shows a message and continues. If it exists, it must contain a <code>study_id</code> field; otherwise mighty.metadata stops with an error.</p>
 </section><section class="level2"><h2 id="available-data-optional">Available data (optional)<a class="anchor" aria-label="anchor" href="#available-data-optional"></a>
 </h2>
 <p>While a trial is running, the available data keeps changing until database lock: new SDTM datasets are added, columns appear in existing ones, supplemental qualifier datasets are created or updated, and protocol amendments can add new data points. The programs mighty generates always follow the full ADaM specification, so they fail if a domain or column they use does not exist yet.</p>
@@ -158,7 +154,8 @@
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
       // Inspect non-navigation links and adorn them if external
-     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      window.quartoDecorateExternalLinks = function (root) {
+     var links = (root || window.document).querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
       for (var i=0; i<links.length; i++) {
         const link = links[i];
         if (!isInternal(link.href)) {
@@ -167,8 +164,69 @@
           if (link.dataset.originalHref !== undefined) {
             link.href = link.dataset.originalHref;
           }
+          if (!link.classList.contains('no-external-icon')) {
+          }
         }
       }
+      };
+      window.quartoDecorateExternalLinks(window.document);
+    // Esc closes the popup (WCAG 1.4.13) and focus leaving both trigger and
+    // popup closes it (WCAG 2.4.11); tippy handles neither for interactive popups.
+    const hideOnEscAndFocusOut = {
+      name: 'hideOnEscAndFocusOut',
+      defaultValue: true,
+      fn(instance) {
+        const dismiss = () => {
+          // A show scheduled by the trigger delay would otherwise reopen it
+          instance.clearDelayTimeouts();
+          instance.hide();
+        };
+        const onKeyDown = (event) => {
+          if (event.key !== 'Escape') {
+            return;
+          }
+          // Keep Esc from also reaching page handlers (e.g. reveal.js overview),
+          // except an open reveal.js slide menu, which Esc should close too.
+          // The menu handles keys only when its keyboard option is on.
+          const menuHandlesEsc = window.Reveal?.getPlugin?.('menu')?.isOpen() &&
+            window.Reveal.getConfig().menu?.keyboard !== false;
+          if (!menuHandlesEsc) {
+            event.stopPropagation();
+          }
+          if (instance.popper.contains(window.document.activeElement)) {
+            // Disabled while refocusing so the focus trigger does not reopen it
+            instance.disable();
+            instance.reference.focus();
+            instance.enable();
+          }
+          dismiss();
+        };
+        const onFocusOut = (event) => {
+          const target = event.relatedTarget;
+          if (target && !instance.reference.contains(target) &&
+              !instance.popper.contains(target)) {
+            dismiss();
+          }
+        };
+        // On the trigger too: a click trigger (code-annotations: select) has no
+        // blur handling. Attached for the instance's lifetime so leaving the
+        // trigger also cancels a show still pending on the trigger delay.
+        instance.reference.addEventListener('focusout', onFocusOut);
+        return {
+          onShow() {
+            window.document.addEventListener('keydown', onKeyDown, true);
+            instance.popper.addEventListener('focusout', onFocusOut);
+          },
+          onHide() {
+            window.document.removeEventListener('keydown', onKeyDown, true);
+            instance.popper.removeEventListener('focusout', onFocusOut);
+          },
+          onDestroy() {
+            instance.reference.removeEventListener('focusout', onFocusOut);
+          },
+        };
+      },
+    };
     function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
       const config = {
         allowHTML: true,
@@ -182,6 +240,7 @@
         interactiveBorder: 10,
         theme: 'light-border',
         placement: 'bottom-start',
+        plugins: [hideOnEscAndFocusOut],
       };
       if (contentFn) {
         config.content = contentFn;
