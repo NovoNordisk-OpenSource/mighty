@@ -4,5 +4,5 @@ external_data:
   - id: LB
     keys: [USUBJID, STUDYID, LBSEQ]
 repos:
-  - "github::NovoNordisk-OpenSource/mighty.standards/components@dev/internal-components"
+  - "github::NovoNordisk-OpenSource/mighty.standards/components"
   - "./components"
