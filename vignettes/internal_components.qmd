@@ -109,18 +109,8 @@ rendering stage.
 # Template syntax
 
 The parameter examples in later sections show values that get substituted into
-Mustache placeholders. Here's how interpolation works in these templates.
-
-Mustache has two interpolation forms:
-
-| Syntax | Behavior |
-|--------|-----------|
-| `{{{variable}}}` | Inserts the value with HTML escaping — `"` becomes `&quot;`, `<` becomes `&lt;`, etc. |
-| `{{{{variable}}}}` | Inserts the value verbatim — no escaping |
-
-All variable interpolations in these templates use triple-mustache `{{{{variable}}}}`, in both `@code` sections and documentation headers (`@title`, `@description`, `@param`, `@depends`, `@outputs`). This avoids HTML escaping in generated code and defers any format-specific rendering to mighty.component.
-
-The only exception is **section tags** (`{{{#condition}}}`, `{{{/condition}}}`, `{{{^condition}}}`), which are always double-mustache — this is a Mustache language requirement.
+Mustache placeholders. See [Template syntax](code_components.html#template-syntax)
+for how interpolation works in these templates.
 
 # The `keep_vars` pipeline
 

@@ -272,10 +272,21 @@ Use Mustache template components when:
 
 ## Template Syntax
 
-Mustache templates use triple curly braces `{{{{variable}}}}` as placeholders that get replaced with actual values when mighty renders the component. Triple braces avoid HTML escaping, which would corrupt R operators such as `<-` and `>` in generated code. See [Template syntax](special_components.html#template-syntax) in the internal components vignette for a full explanation of double vs. triple mustache syntax.
+Mustache templates use triple curly braces `{{{{variable}}}}` as placeholders that get replaced with actual values when mighty renders the component. Triple braces avoid HTML escaping, which would corrupt R operators such as `<-` and `>` in generated code.
 
 - Parameters are specified in the `with:` section of your YAML specification
 - Both metadata and code sections can contain placeholders
+
+Mustache has two interpolation forms:
+
+| Syntax | Behavior |
+|--------|-----------|
+| `{{{variable}}}` | Inserts the value with HTML escaping — `"` becomes `&quot;`, `<` becomes `&lt;`, etc. |
+| `{{{{variable}}}}` | Inserts the value verbatim — no escaping |
+
+All variable interpolations in templates use triple-mustache `{{{{variable}}}}`, in both `@code` sections and documentation headers (`@title`, `@description`, `@param`, `@depends`, `@outputs`). This avoids HTML escaping in generated code and defers any format-specific rendering to mighty.component.
+
+The only exception is **section tags** (`{{{#condition}}}`, `{{{/condition}}}`, `{{{^condition}}}`), which are always double-mustache — this is a Mustache language requirement.
 
 ## Code Structure
 

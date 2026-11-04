@@ -169,7 +169,7 @@ mighty does not read the filter expression itself, so `depends` must list every 
 
 Domain-specific filters allow you to apply different inclusion criteria to different source domains before they are combined.
 
-A domain's filter only removes rows that came from that domain; rows from the other base domains are not affected. Each base domain has one filter string. To combine conditions, use `&` inside it. In the generated program you will see a temporary `SRC_` column used for this; mighty adds and removes it automatically (see [Internal components](special_components.html)).
+A domain's filter only removes rows that came from that domain; rows from the other base domains are not affected. Each base domain has one filter string. To combine conditions, use `&` inside it. In the generated program you will see a temporary `SRC_` column used for this; mighty adds and removes it automatically (see [Internal components](internal_components.html)).
 
 This is useful when:
 
@@ -378,8 +378,6 @@ The component `id` is a file name. mighty looks for it in the locations listed u
         component:
           id: arm_group_01.R
     ```
-
-
 
 8.  Adding a derived column using a Mustache template component
 

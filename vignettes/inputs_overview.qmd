@@ -64,7 +64,7 @@ There are two kinds of components:
 - Read source data, set up each domain, filter rows, and write the output
 - Join other domains using the keys defined in `_mighty.yml` or in their specifications
 
-See `vignette("code_components")` and `vignette("special_components")`.
+See `vignette("code_components")` and `vignette("internal_components")`.
 
 ## Study properties (\_study.yml)
 
