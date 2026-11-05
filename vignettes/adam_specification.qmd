@@ -545,7 +545,7 @@ Recalculating intermediate values across multiple components may reduce computat
 
 Row operations are specified in the `rows` section of the ADaM domain YAML as an array.
 
-Like column derivations, row operations can use either standard components, custom Mustache templates, or custom R components.
+Like column derivations, row operations can use either R script or Mustache template components.
 
 Row operations have an `id` field (user-specified identifier) and a `component` field. The `id` is needed because the same component can be used with different parameter values, and the `id` allows you to refer to a specific implementation when specifying dependencies.
 
