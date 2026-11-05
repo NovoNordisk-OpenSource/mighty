@@ -106,8 +106,8 @@ The `id` field holds the name of the component, not a file path. Mighty
 looks it up in the component repositories listed under `repos` in
 `_mighty.yml` (see
 [`vignette("mighty_config")`](https://novonordisk-opensource.github.io/mighty/articles/mighty_config.md)).
-To use a **custom component**, add the directory that contains it to
-`repos` and refer to it by its name or file name:
+To use **your own components**, add the directory that contains them to
+`repos` and refer to each one by its name or file name:
 
 ``` yml
 # _mighty.yml

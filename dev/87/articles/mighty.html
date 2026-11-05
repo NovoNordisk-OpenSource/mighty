@@ -103,7 +103,7 @@
 <li>
 <strong><code>repos</code></strong>: the folders or GitHub repositories where mighty looks for components, listed in <code>_mighty.yml</code>.</li>
 <li>
-<strong>define.xml</strong>: the document that describes each ADaM column for regulatory submission. mighty does not create it; mighty.toolbox builds it from the same specifications.</li>
+<strong>define.xml</strong>: the document that describes each ADaM column for regulatory submission. mighty does not create it</li>
 </ul></section><section class="level2"><h3 id="study-directory-guidelines">Study directory guidelines<a class="anchor" aria-label="anchor" href="#study-directory-guidelines"></a>
 </h3>
 <p>A mighty study looks like this:</p>
@@ -126,7 +126,7 @@
 <li>
 <code>_documents.yml</code>, <code>_codelists.yml</code>: optional, read by mighty.metadata</li>
 </ul>
-<p>mighty reads every other <code>.yml</code> file in <code>study_dir/</code> as a specification. Keep other files outside it: the <a href="https://novonordisk-opensource.github.io/connector/" class="external-link">connector config</a> (<code>_connector.yml</code>), which tells the generated programs where your data is; your custom components; and the folder you save the generated programs to.</p>
+<p>mighty reads every other <code>.yml</code> file in <code>study_dir/</code> as a specification. Keep other files outside it: the <a href="https://novonordisk-opensource.github.io/connector/" class="external-link">connector config</a> (<code>_connector.yml</code>), which tells the generated programs where your data is; your own components; and the folder you save the generated programs to.</p>
 </section><section class="level2"><h3 id="set-up-your-framework-configuration-file">Set up your framework configuration file<a class="anchor" aria-label="anchor" href="#set-up-your-framework-configuration-file"></a>
 </h3>
 <p><code>_mighty.yml</code> holds the study-wide settings. It has two parts:</p>
@@ -136,7 +136,7 @@
 <li>
 <code>repos</code>: where mighty looks for components (see below).</li>
 </ul>
-<p>The <code>repos</code> field lists where mighty looks for code components. The first entry points to the standard components repo; the second is a local directory with the study-specific custom components.</p>
+<p>The <code>repos</code> field lists where mighty looks for code components. The first entry points to the mighty.standards components repository; the second is a local directory with your own components.</p>
 <p><strong>_mighty.yml</strong></p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode yml"><code class="sourceCode yaml"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">external_data</span><span class="kw">:</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">id</span><span class="kw">:</span><span class="at"> DM</span></span>
@@ -191,9 +191,9 @@
 <span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">id</span><span class="kw">:</span><span class="at"> AGE_GRP1</span></span>
 <span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">component</span><span class="kw">:</span></span>
 <span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">id</span><span class="kw">:</span><span class="at"> </span><span class="st">"age_group_01.R"</span></span></code></pre></div>
-</section><section class="level2"><h3 id="define-your-custom-component">Define your custom component<a class="anchor" aria-label="anchor" href="#define-your-custom-component"></a>
+</section><section class="level2"><h3 id="write-your-own-component">Write your own component<a class="anchor" aria-label="anchor" href="#write-your-own-component"></a>
 </h3>
-<p>The column <code>AGE_GRP1</code> in ADSL is derived by using a custom component that contains the R logic to process the ADSL table by deriving the additional column <code>AGE_GRP1</code>.</p>
+<p>The column <code>AGE_GRP1</code> in ADSL is derived by a component you write yourself. It contains the R logic to process the ADSL table by deriving the additional column <code>AGE_GRP1</code>.</p>
 <p>Save the component in the <code>components</code> directory listed under <code>repos</code>. The ADaM specification refers to it by its file name, <code>age_group_01.R</code>.</p>
 <p>Relative paths in <code>repos</code> are resolved against the working directory, not against the location of <code>_mighty.yml</code>. This example assumes R is started in <code>my_study/</code>, the folder that contains both <code>study_dir/</code> and <code>components/</code> (see the tree under <a href="#study-directory-guidelines">Study directory guidelines</a>).</p>
 <p><strong>age_group_01.R</strong></p>

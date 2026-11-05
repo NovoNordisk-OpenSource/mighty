@@ -27,8 +27,7 @@ In this minimal example you build ADSL with mighty. You will:
 - **`repos`**: the folders or GitHub repositories where mighty looks for
   components, listed in `_mighty.yml`.
 - **define.xml**: the document that describes each ADaM column for
-  regulatory submission. mighty does not create it; mighty.toolbox
-  builds it from the same specifications.
+  regulatory submission. mighty does not create it
 
 ### Study directory guidelines
 
@@ -57,8 +56,8 @@ mighty reads every other `.yml` file in `study_dir/` as a specification.
 Keep other files outside it: the [connector
 config](https://novonordisk-opensource.github.io/connector/)
 (`_connector.yml`), which tells the generated programs where your data
-is; your custom components; and the folder you save the generated
-programs to.
+is; your own components; and the folder you save the generated programs
+to.
 
 ### Set up your framework configuration file
 
@@ -70,8 +69,8 @@ programs to.
 - `repos`: where mighty looks for components (see below).
 
 The `repos` field lists where mighty looks for code components. The
-first entry points to the standard components repo; the second is a
-local directory with the study-specific custom components.
+first entry points to the mighty.standards components repository; the
+second is a local directory with your own components.
 
 **\_mighty.yml**
 
@@ -141,11 +140,11 @@ columns:
       id: "age_group_01.R"
 ```
 
-### Define your custom component
+### Write your own component
 
-The column `AGE_GRP1` in ADSL is derived by using a custom component
-that contains the R logic to process the ADSL table by deriving the
-additional column `AGE_GRP1`.
+The column `AGE_GRP1` in ADSL is derived by a component you write
+yourself. It contains the R logic to process the ADSL table by deriving
+the additional column `AGE_GRP1`.
 
 Save the component in the `components` directory listed under `repos`.
 The ADaM specification refers to it by its file name, `age_group_01.R`.

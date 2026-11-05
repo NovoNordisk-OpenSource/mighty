@@ -145,7 +145,7 @@
 <h3 id="code-components">Code components<a class="anchor" aria-label="anchor" href="#code-components"></a>
 </h3>
 <p>Code components can either be validated standard components or custom (un-validated) components. In this example <code>der_complsfl</code> is a <strong>standard component</strong>.</p>
-<p>The <code>id</code> field holds the name of the component, not a file path. Mighty looks it up in the component repositories listed under <code>repos</code> in <code>_mighty.yml</code> (see <code><a href="articles/mighty_config.html">vignette("mighty_config")</a></code>). To use a <strong>custom component</strong>, add the directory that contains it to <code>repos</code> and refer to it by its name or file name:</p>
+<p>The <code>id</code> field holds the name of the component, not a file path. Mighty looks it up in the component repositories listed under <code>repos</code> in <code>_mighty.yml</code> (see <code><a href="articles/mighty_config.html">vignette("mighty_config")</a></code>). To use <strong>your own components</strong>, add the directory that contains them to <code>repos</code> and refer to each one by its name or file name:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode yml"><code class="sourceCode yaml"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="co"># _mighty.yml</span></span>
 <span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="fu">repos</span><span class="kw">:</span></span>
 <span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> github::NovoNordisk-OpenSource/mighty.standards/components</span></span>

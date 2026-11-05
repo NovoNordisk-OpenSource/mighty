@@ -548,18 +548,11 @@ once across different components. This is an accepted trade-off:
   optimizes for development time, not compute time.
 - Self-contained components are easier to test and reuse independently.
 
-## Standard vs. custom components
-
-The classification of a component as either Standard or Custom is
-determined only by the governance of standard components. Mighty treats
-all components the same. Standard components and custom components can
-be either `.mustache` files or `.R` files.
-
-### How mighty finds a component
+## How mighty finds a component
 
 Mighty looks up the `id` of a component in the repositories listed under
-`repos` in `_mighty.yml`. To use a custom component, add the directory
-that contains it to `repos`. See
+`repos` in `_mighty.yml`. To use your own components, add the directory
+that contains them to `repos`. See
 [`vignette("mighty_config")`](https://novonordisk-opensource.github.io/mighty/articles/mighty_config.md)
 for the lookup rules.
 

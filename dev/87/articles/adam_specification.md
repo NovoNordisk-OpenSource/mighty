@@ -684,8 +684,8 @@ understanding of the analysis, not simply to optimize performance.
 Row operations are specified in the `rows` section of the ADaM domain
 YAML as an array.
 
-Like column derivations, row operations can use either standard
-components, custom Mustache templates, or custom R components.
+Like column derivations, row operations can use either R script or
+Mustache template components.
 
 Row operations have an `id` field (user-specified identifier) and a
 `component` field. The `id` is needed because the same component can be
@@ -843,6 +843,5 @@ Parameters are specified as an array, similar to rows and columns.
 ## Row vs. parameter operations
 
 The difference between row and parameter operations is entirely for the
-benefit of generating the define.xml document with mighty.toolbox. In
-mighty both operate the same way and follow the same rules for the ADaM
-specifications.
+benefit of generating the define.xml document. In mighty both operate
+the same way and follow the same rules for the ADaM specifications.
