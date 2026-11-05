@@ -51,7 +51,7 @@ In this minimal example you build ADSL with mighty. You will:
 - **Keys**: the columns that identify one row in a table. mighty uses them to join domains. A generated domain lists its keys in its specification; external domains list them in `_mighty.yml`.
 - **Component**: an R script or Mustache template with the code for one derivation, e.g. `age_group_01.R`.
 - **`repos`**: the folders or GitHub repositories where mighty looks for components, listed in `_mighty.yml`.
-- **define.xml**: the document that describes each ADaM column for regulatory submission. mighty does not create it; mighty.toolbox builds it from the same specifications.
+- **define.xml**: the document that describes each ADaM column for regulatory submission. mighty does not create it
 
 ## Study directory guidelines
 

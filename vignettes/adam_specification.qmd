@@ -683,5 +683,4 @@ Parameters are specified as an array, similar to rows and columns.
     Uses the same component to add multiple lab parameters with different test names.
 
 # Row vs. parameter operations
-
-The difference between row and parameter operations is entirely for the benefit of generating the define.xml document with mighty.toolbox. In mighty both operate the same way and follow the same rules for the ADaM specifications.
+The difference between row and parameter operations is entirely for the benefit of generating the define.xml document. In mighty both operate the same way and follow the same rules for the ADaM specifications.
