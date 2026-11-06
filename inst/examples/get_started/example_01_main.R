@@ -1,7 +1,7 @@
-# ADSL with 1 base domain
-#   - 4 predecessors
-#   - 1 renamed predecessor
-#   - 1 derivation
+# ADSL with 1 base domain (DM)
+#   - 4 columns kept from DM
+#   - 1 copied column (PLANNED_ARM)
+#   - 1 derived column (AGE_GRP1)
 
 # Load mighty
 library(mighty)
