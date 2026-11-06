@@ -30,7 +30,8 @@ day from two dates. Column components:
 - Build on top of each other - one component’s output can be another’s
   input
 - Are the most common type of component
-- Are referenced in the `column` section of your YAML ADaM specification
+- Are referenced in the `columns` section of your YAML ADaM
+  specification
 
 **Row components** (`@type row`) add new rows to your dataset or modify
 existing rows. For example, computing summary statistics that create new
@@ -42,7 +43,7 @@ observation rows. Row components:
 - List any modified columns in `@outputs`
 - Do not create new columns - they only populate values in existing
   column structures
-- Are referenced in the `row` section of your YAML ADaM specification
+- Are referenced in the `rows` section of your YAML ADaM specification
 
 **Parameter components** (`@type parameter`) create BDS parameter
 records, such as adding a new PARAMCD to a BDS dataset. They are
@@ -51,7 +52,7 @@ processed the same way as row components. Parameter components:
 - Add new parameter records to the dataset
 - May modify column values in the newly created rows
 - List any modified columns in `@outputs`
-- Are referenced in the `parameter` section of your YAML ADaM
+- Are referenced in the `parameters` section of your YAML ADaM
   specification
 
 **Internal components** (`@type internal`) implement mighty’s own
@@ -66,10 +67,27 @@ parameter components expand it vertically (more records).
 
 ## Component Structure
 
-All components share a common structure:
+A component is one file with two parts. Here is a complete R component:
 
-- A roxygen-like metadata header
-- A body containing the business logic
+``` r
+
+#' @title Age group
+#' @description Groups subjects into under 65 and 65 or over
+#' @type column
+#' @origin Derived
+#' @method AGE below 65 vs 65 and over.
+#' @depends ADSL AGE
+#' @outputs AGEGR1
+#' @code
+ADSL <- ADSL |>
+  dplyr::mutate(AGEGR1 = dplyr::if_else(AGE < 65, "<65", ">=65"))
+```
+
+- **Header**: the lines starting with `#'`. They describe the component
+  and say which columns it needs (`@depends`) and creates (`@outputs`).
+  Each tag is described below.
+- **Body**: the R code after `@code`. mighty inserts it into the
+  generated program.
 
 The format you choose depends on whether your derivation logic needs
 parameterization. R scripts execute fixed logic, while Mustache
@@ -158,13 +176,23 @@ Multiple depends are listed on separate lines:
 #' @depends ADLB LBSTRESN
 ```
 
-Mighty uses this for dependency analysis and execution ordering.
+mighty uses `@depends` for two things:
+
+- **Reading data.** The generated program reads only the columns listed
+  in the YAML specification and in `@depends` tags. If your code uses a
+  column that is in neither, mighty does not report an error, but the
+  generated ADaM program fails at run-time because the column was not
+  read. List every column your code uses in `@depends`, including any
+  source columns that are not in the final dataset (see [Source columns
+  not in the final dataset](#source-columns-not-in-the-final-dataset)).
+- **Run order.** mighty runs a component only after the components that
+  create its `@depends` columns.
 
 #### `@outputs`
 
 If the component is a column derivation, this specifies which column(s)
-the component creates. If the component is a row/parameter action, this
-specifies which column(s) the component modifies
+the component creates. If the component is a row or parameter operation,
+this specifies which column(s) the component modifies
 
 Multiple outputs are listed on separate lines.
 
@@ -205,9 +233,19 @@ Use R script components when:
 
 ### Code Structure
 
-- All executable code must come after the `@code` tag
+- All executable code must come after the `@code` tag. mighty does not
+  change anything in your R code.
 - Use roxygen2 comment style (`#'`) for metadata
 - Regular R comments (`#`) can be used within the code
+- Each dataset is a data frame named after its domain (`ADSL`, `DM`,
+  `LB`). Your code must update the data frame of the domain it belongs
+  to, e.g. `ADSL <- ADSL |> dplyr::mutate(...)`.
+- Other domains listed in `@depends` are available as data frames under
+  their own names. For example, an ADLB component with
+  `@depends LB LBTEST` can read the SDTM `LB` data frame and join it
+  into `ADLB`.
+- A column component must not change the number of rows.
+- A row/parameter component must not change the number of columns
 
 ### Example: Simple Column Derivation
 
@@ -306,22 +344,38 @@ Use Mustache template components when:
 Mustache templates use triple curly braces `{{{variable}}}` as
 placeholders that get replaced with actual values when mighty renders
 the component. Triple braces avoid HTML escaping, which would corrupt R
-operators such as `<-` and `>` in generated code. See [Template
-syntax](https://novonordisk-opensource.github.io/mighty/articles/special_components.html#template-syntax)
-in the special components vignette for a full explanation of double
-vs. triple mustache syntax.
+operators such as `<-` and `>` in generated code.
 
 - Parameters are specified in the `with:` section of your YAML
   specification
 - Both metadata and code sections can contain placeholders
 
+Mustache has two interpolation forms:
+
+| Syntax | Behavior |
+|----|----|
+| `{{variable}}` | Inserts the value with HTML escaping — `"` becomes `&quot;`, `<` becomes `&lt;`, etc. |
+| `{{{variable}}}` | Inserts the value verbatim — no escaping |
+
+All variable interpolations in templates use triple-mustache
+`{{{variable}}}`, in both `@code` sections and documentation headers
+(`@title`, `@description`, `@param`, `@depends`, `@outputs`). This
+avoids HTML escaping in generated code and defers any format-specific
+rendering to mighty.component.
+
+The only exception is **section tags** (`{{#condition}}`,
+`{{/condition}}`, `{{^condition}}`), which are always double-mustache —
+this is a Mustache language requirement.
+
 ### Code Structure
 
 - Metadata header uses `@param` tags to document expected parameters
 - Placeholders can appear in `@depends`, `@outputs`, and the code body
-- Mighty (via mighty.components) renders the template before execution,
+- Mighty (via mighty.component) renders the template before execution,
   replacing all placeholders
 - The rendered output is plain R code
+- mighty passes only the values under `with:`. To use `{{{domain}}}`,
+  pass `domain` there (see the example below).
 
 ### Example: Parameterized Column Derivation
 
@@ -427,7 +481,7 @@ specifications — including restrictions on overlapping outputs — see
 [Component reuse
 rules](https://novonordisk-opensource.github.io/mighty/articles/adam_specification.html#component-reuse-rules).
 
-## Handling external dependencies
+## Source columns not in the final dataset
 
 The YAML specification contains only columns that appear in the final
 ADaM dataset (see [No intermediate
@@ -494,24 +548,17 @@ once across different components. This is an accepted trade-off:
   optimizes for development time, not compute time.
 - Self-contained components are easier to test and reuse independently.
 
-## Standard vs. custom components
-
-The classification of a component as either Standard or Custom is
-determined only by the governance of standard components. Mighty treats
-all components the same. Standard components and custom components can
-be either `.mustache` files or `.R` files.
-
-### How mighty finds a component
+## How mighty finds a component
 
 Mighty looks up the `id` of a component in the repositories listed under
-`repos` in `_mighty.yml`. To use a custom component, add the directory
-that contains it to `repos`. See
+`repos` in `_mighty.yml`. To use your own components, add the directory
+that contains them to `repos`. See
 [`vignette("mighty_config")`](https://novonordisk-opensource.github.io/mighty/articles/mighty_config.md)
 for the lookup rules.
 
-## In-built components
+## Internal components
 
-A small number of in-built components provide core functionality managed
+A small number of internal components provide core functionality managed
 by mighty itself:
 
 - Data I/O operations (reading from connectors, writing outputs)

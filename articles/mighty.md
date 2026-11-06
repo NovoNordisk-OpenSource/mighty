@@ -2,52 +2,75 @@
 
 ## Your first mighty ADaM program
 
-Here is a minimal example that demonstrates how to specify and render a
-simple ADSL program with mighty to get you acquainted with the core
-concepts of the framework.
+In this minimal example you build ADSL with mighty. You will:
+
+1.  set up the study config (`_mighty.yml`),
+2.  describe ADSL in a specification (`adsl.yml`),
+3.  write one component for a derived column,
+4.  call
+    [`generate_adam_code()`](https://novonordisk-opensource.github.io/mighty/reference/generate_adam_code.md),
+    which returns the R program that builds ADSL.
+
+### Key terms
+
+- **Domain**: one dataset, e.g. `DM` (SDTM) or `ADSL` (ADaM).
+- **Specification**: a YAML file describing one ADaM domain you want
+  mighty to build, e.g. `adsl.yml`. mighty generates the program for
+  every domain that has a specification.
+- **External domain**: a dataset the program reads but mighty doesn’t
+  build: SDTM, metadata, or ADaM made elsewhere.
+- **Keys**: the columns that identify one row in a table. mighty uses
+  them to join domains. A generated domain lists its keys in its
+  specification; external domains list them in `_mighty.yml`.
+- **Component**: an R script or Mustache template with the code for one
+  derivation, e.g. `age_group_01.R`.
+- **`repos`**: the folders or GitHub repositories where mighty looks for
+  components, listed in `_mighty.yml`.
+- **define.xml**: the document that describes each ADaM column for
+  regulatory submission. mighty does not create it
 
 ### Study directory guidelines
 
-The only constraints mighty has on the directory structure is the
-presence of a directory that contains **only** the following YAML
-specification files:
+A mighty study looks like this:
 
-- Domain specifications (e.g., `adsl.yml`, `adae.yml`, `adlb.yml`)
-- `_mighty.yml` — [framework
-  configuration](https://novonordisk-opensource.github.io/mighty/articles/mighty_config.qmd)
-  (external dataset keys and component repos)
-- `_study.yml` — study-level properties (optional, used by
-  mighty.toolbox for define.xml)
+    my_study/                 <- working directory when running example_01_main.R
+    ├── example_01_main.R
+    ├── _connector.yml
+    ├── study_dir/            <- mighty specifications
+    │   ├── _mighty.yml
+    │   ├── _study.yml
+    │   └── adsl.yml
+    └── components/           <- "./components" in repos
+        └── age_group_01.R
 
-All `.yml`/`.yaml` files in this directory (except `_mighty.yml` and
-`_study.yml`) are parsed as domain specifications. Placing
-non-specification YAML files (such as a connector config) in the
-specifications directory will cause validation errors.
+`study_dir/` holds only YAML files:
 
-Other files should live outside the specifications directory:
+- one specification per ADaM domain (e.g. `adsl.yml`)
+- `_mighty.yml`: [framework
+  configuration](https://novonordisk-opensource.github.io/mighty/articles/mighty_config.md)
+  (keys of external datasets and component repositories)
+- `_study.yml`: study-level properties (optional, used for define.xml)
+- `_documents.yml`, `_codelists.yml`: optional, read by mighty.metadata
 
-- A [connector config
-  file](https://novonordisk-opensource.github.io/connector/) that
-  specifies where your trial data is located (SDTM, metadata, and ADaM).
-  The `path_connector_config` argument to
-  [`generate_adam_code()`](https://novonordisk-opensource.github.io/mighty/reference/generate_adam_code.md)
-  is the file path to the connector config file, embedded verbatim into
-  the generated programs.
-- Study-specific custom components
-- A location where the compiled ADaM programs can be written out to
+mighty reads every other `.yml` file in `study_dir/` as a specification.
+Keep other files outside it: the [connector
+config](https://novonordisk-opensource.github.io/connector/)
+(`_connector.yml`), which tells the generated programs where your data
+is; your own components; and the folder you save the generated programs
+to.
 
 ### Set up your framework configuration file
 
-The `_mighty.yml` file provides framework configuration that spans
-across all ADaM domains. This includes primary keys for external
-datasets that are used for joining tables.
+`_mighty.yml` holds the study-wide settings. It has two parts:
 
-For this example, we will focus on a simple ADSL table and only provide
-keys related to that domain.
+- `external_data`: the keys of each [external domain](#key-terms) the
+  programs read. mighty uses them when it joins domains. Here that is
+  `DM`, the source of ADSL. ADSL’s own keys are in `adsl.yml`.
+- `repos`: where mighty looks for components (see below).
 
 The `repos` field lists where mighty looks for code components. The
-first entry points to the standard components repo; the second is a
-local directory with the study-specific custom components.
+first entry points to the mighty.standards components repository; the
+second is a local directory with your own components.
 
 **\_mighty.yml**
 
@@ -64,15 +87,21 @@ repos:
 
 ### Set up your ADaM specification
 
-Provide a YAML file that specifies which columns to include in ADSL and
-how they are derived. The specification **only contains columns that
-belong in the final dataset**; source columns needed only during
-derivation are handled through component dependencies instead. See
-[`vignette("adam_specification")`](https://novonordisk-opensource.github.io/mighty/articles/adam_specification.md)
-for details.
+The specification has a header describing ADSL, a `population` section
+saying the rows come from `DM` (keeping subjects with a known `AGE`),
+and a `columns` list with every column of the final dataset:
 
-This ADSL table contains 6 columns: 4 simple columns from the base
-domain, 1 renamed column, and 1 derivation using a custom component.
+- `USUBJID`, `STUDYID`, `ARM`, `AGE`: listed as an `id`, so they’re kept
+  from `DM` as they are.
+- `PLANNED_ARM`: `method: ADSL.ARM` makes a copy of `ARM` under a new
+  name.
+- `AGE_GRP1`: `component` means it’s derived by the custom component
+  `age_group_01.R` (see next section).
+
+The `columns` list defines the final dataset, so mighty keeps only the
+listed columns when it writes ADSL. See
+[`vignette("adam_specification")`](https://novonordisk-opensource.github.io/mighty/articles/adam_specification.md)
+for everything a specification can contain.
 
 **adsl.yml**
 
@@ -111,28 +140,20 @@ columns:
       id: "age_group_01.R"
 ```
 
-### Define your custom component
+### Write your own component
 
-The column `AGE_GRP1` in ADSL is derived by using a custom component
-that contains the logic to process the ADSL table by deriving the
-additional column `AGE_GRP1`.
+The column `AGE_GRP1` in ADSL is derived by a component you write
+yourself. It contains the R logic to process the ADSL table by deriving
+the additional column `AGE_GRP1`.
 
 Save the component in the `components` directory listed under `repos`.
 The ADaM specification refers to it by its file name, `age_group_01.R`.
 
 Relative paths in `repos` are resolved against the working directory,
 not against the location of `_mighty.yml`. This example assumes R is
-started in the folder that contains both `study_dir/` and `components/`:
-
-    my_study/                 <- working directory when running example_01_main.R
-    ├── example_01_main.R
-    ├── _connector.yml
-    ├── study_dir/            <- adam_specifications
-    │   ├── _mighty.yml
-    │   ├── _study.yml
-    │   └── adsl.yml
-    └── components/           <- "./components" in repos
-        └── age_group_01.R
+started in `my_study/`, the folder that contains both `study_dir/` and
+`components/` (see the tree under [Study directory
+guidelines](#study-directory-guidelines)).
 
 **age_group_01.R**
 
@@ -158,18 +179,28 @@ ADSL <- ADSL |>
   )
 ```
 
+The `#'` header tells mighty what the component needs
+(`@depends ADSL AGE`) and what it creates (`@outputs AGE_GRP1`). The
+code after `@code` is inserted into the ADSL program as it is. See
+[`vignette("code_components")`](https://novonordisk-opensource.github.io/mighty/articles/code_components.md)
+for all tags.
+
 ### Render the ADaM program
 
 Call mighty to consolidate, analyze and render your ADSL program:
+
+`path_connector_config` is the path to your connector config. mighty
+writes this path into the generated programs, which read the file when
+they run.
 
 **example_01_main.R**
 
 ``` r
 
-# ADSL with 1 base domain
-#   - 4 predecessors
-#   - 1 renamed predecessor
-#   - 1 derivation
+# ADSL with 1 base domain (DM)
+#   - 4 columns kept from DM
+#   - 1 copied column (PLANNED_ARM)
+#   - 1 derived column (AGE_GRP1)
 
 # Load mighty
 library(mighty)
@@ -184,8 +215,16 @@ results <- mighty::generate_adam_code(
 results$programs$`1_ADSL` |> cat()
 ```
 
-Printing the rendered ADaM program yields a complete program for
-generating ADSL based on the specifications
+[`generate_adam_code()`](https://novonordisk-opensource.github.io/mighty/reference/generate_adam_code.md)
+returns a list. Its `programs` element holds the generated R programs,
+each one a character string. Each name starts with the order to run the
+programs in, so here there is a single program, `1_ADSL`. When a study
+has several domains, a domain that uses ADSL comes after it
+(e.g. `2_ADAE`). If ADSL itself needs columns from another domain, ADSL
+is split into multiple programs (e.g. `1_ADSL`, `2_ADLB`, `3_ADSL`).
+
+In this example, there is only a single ADSL program, so printing
+`1_ADSL` shows the full program that builds ADSL:
 
     #> → No `_documents.yml` file found
     #> → No `_codelists.yml` file found
@@ -254,3 +293,37 @@ generating ADSL based on the specifications
 
     # Save ADaM table
     cnt$adam$write_cnt(ADSL, tolower("ADSL.parquet"), overwrite = TRUE)
+
+### Save the programs
+
+To save the programs as `.R` files, pass them to
+[`write_adam_programs()`](https://novonordisk-opensource.github.io/mighty/reference/write_adam_programs.md).
+The folder must already exist:
+
+``` r
+
+dir.create("programs")
+write_adam_programs(results$programs, dir = "programs")
+# Creates programs/1_ADSL.R
+```
+
+Use `style = TRUE` to format the files with styler. We recommend saving
+the programs outside `study_dir/`, so that folder holds only
+specifications (see [Study directory
+guidelines](#study-directory-guidelines)).
+
+### Next steps
+
+- [`vignette("inputs_overview")`](https://novonordisk-opensource.github.io/mighty/articles/inputs_overview.md):
+  all inputs mighty uses, in one place
+- [`vignette("mighty_config")`](https://novonordisk-opensource.github.io/mighty/articles/mighty_config.md):
+  keys and component repositories in `_mighty.yml`
+- [`vignette("adam_specification")`](https://novonordisk-opensource.github.io/mighty/articles/adam_specification.md):
+  everything a specification can contain: population, columns, rows,
+  parameters
+- [`vignette("code_components")`](https://novonordisk-opensource.github.io/mighty/articles/code_components.md):
+  how to write your own components
+- [`vignette("connect_to_data")`](https://novonordisk-opensource.github.io/mighty/articles/connect_to_data.md):
+  how the generated programs read and write data
+- [`vignette("missing_data_analysis")`](https://novonordisk-opensource.github.io/mighty/articles/missing_data_analysis.md):
+  generating programs that run on the data available today

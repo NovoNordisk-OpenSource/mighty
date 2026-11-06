@@ -57,10 +57,12 @@ A named list containing the complete ADaM program generation results:
 
 - programs:
 
-  Named list of complete R programs, one per ADaM domain. Each element
-  is a character string containing a fully executable R script. Programs
-  include all dependency-ordered actions and are ready to execute
-  independently. Names are prefixed with the required execution order.
+  Named list of complete R programs, one per run of a domain (a domain
+  is split into several programs when it depends on a domain that
+  depends on it). Each element is a character string containing a fully
+  executable R script. Programs include all dependency-ordered actions
+  and are ready to execute independently. Names are prefixed with the
+  required execution order.
 
 - program_sequence:
 
@@ -181,7 +183,7 @@ result <- generate_adam_code(
 )
 
 # Access generated programs
-adsl_program <- result$programs$ADSL
+adsl_program <- result$programs$`1_ADSL`
 executable_programs <- result$executable_programs
 } # }
 ```

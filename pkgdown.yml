@@ -7,11 +7,11 @@ articles:
   connect_to_data: connect_to_data.html
   dev_documentation: dev_documentation.html
   inputs_overview: inputs_overview.html
+  internal_components: internal_components.html
   mighty_config: mighty_config.html
   mighty: mighty.html
   missing_data_analysis: missing_data_analysis.html
-  special_components: special_components.html
-last_built: 2026-11-04T12:11Z
+last_built: 2026-11-06T12:48Z
 urls:
   reference: https://novonordisk-opensource.github.io/mighty/reference
   article: https://novonordisk-opensource.github.io/mighty/articles

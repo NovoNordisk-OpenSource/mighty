@@ -29,7 +29,7 @@ object is
 
 ``` r
 
-# LOAD all external datasets needed ------------------------------------------------
+# ADSL-1-read_data -------------------------------------------------------------
 
 cnt <- connector::connect(config = "_connector.yml")
 
@@ -39,10 +39,7 @@ DM_VACCINE <- cnt$sdtm$read_cnt(tolower("DM_VACCINE")) |> dplyr::select(ACTARM, 
 
 ### Generated ADaM program code (removed for simplicity)
 
-# Save ADSL ------------------------------------------------
+# ADSL-1-write_data ------------------------------------------------------------
 
 cnt$adam$write_cnt(ADSL, "adsl.parquet", overwrite = TRUE)
-
-# Remove input tables
-rm(list = c("DM", "DM_VACCINE"))
 ```

@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">mighty</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9047</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9048</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -47,7 +47,7 @@
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Technical stuff</h6></li>
     <li><a class="dropdown-item" href="../articles/dev_documentation.html">Developers Documentation</a></li>
-    <li><a class="dropdown-item" href="../articles/special_components.html">Special components</a></li>
+    <li><a class="dropdown-item" href="../articles/internal_components.html">Internal components</a></li>
   </ul>
 </li>
       </ul>
@@ -80,38 +80,43 @@
 
     <section class="section level2"><h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
 </h2>
-<p>Defining an ADaM specification is something that will happen from very early in a project, where a project specification can be created. Based on this, a trial ADaM specification can be derived and prepared even before first patient first visit (FPFV). The ADaM specification is usually being work in progress throughout trial conduct, and implementations of certain rules may only be defined at a very high level. As a trial progresses, collected data in SDTM will evolve. Typically some domains will be well-defined very early, but others may be lacking out either because the setup is not finalized or data is not collected yet. There may be other reasons for SDTM changing during the lifetime of a trial, such as protocol amendments or changes to SDTM version.</p>
-<p>While specifying ADaM, certain assumptions on data can be made. When SDTM data is not available, or if some ADaM derivations can only be carried out when specific data is collected and reported in SDTM, the specifications should still be valid.</p>
-<p>In other words, there may be a mismatch between what is specified in the ADaM specifications, and what is possible to derive with the SDTM data available at any given point in time.</p>
-<p>The above are typical scenarios where ADaM template programs fail to work during conduct. On the same time, output programming relies on a stable set of ADaM data. Keeping template programs aligned with specifications and current state of data, is a tedious and time consuming task.</p>
-<p>The need to be able to execute ADaM programs even though they may not comply with the ADaM specification and the available data, is evident. Therefore Mighty offers two sets of programs to the end user</p>
+<p>ADaM specification work starts early, often before the SDTM data is complete. Some domains have data early; others are empty until later in the study.</p>
+<p>So at any point during the trial, the specification may describe more than the current SDTM data can produce. A specification written this way is still valid, but a program built from it fails when a domain or column it uses doesn’t exist yet. Keeping template programs in line with both the specification and the current data would take a lot of manual work.</p>
+<p>To deal with this, mighty can generate two sets of programs:</p>
 <ul>
-<li>Complete programs that will be working if all data is collected. These are typically those that will be run after DBL</li>
-<li>Temporary programs that will work on the current available data. These will include commented out code chunks, in case a code component cannot be executed due to missing data. They will also contain descriptions on why they are not included such that an end user can get an easy explanation of missing ADaM data.</li>
+<li>
+<strong>Complete programs</strong> that follow the full specification. They run once all SDTM domains and columns have been populated</li>
+<li>
+<strong>Executable programs</strong> that run on the data available today. Steps that can’t run are kept but commented out, with a comment above each one explaining which data is missing.</li>
 </ul></section><section class="section level2"><h2 id="types-of-missing-data">Types of missing data<a class="anchor" aria-label="anchor" href="#types-of-missing-data"></a>
 </h2>
-<p>There are 3 types of missing data:</p>
 <ol type="1">
-<li>Missing SDTM/ADaM/metadata domains</li>
-<li>Missing columns inside existing domains</li>
-<li>Missing/incomplete values inside columns</li>
+<li>Missing domains (SDTM, ADaM or metadata)</li>
+<li>Missing columns in an existing domain</li>
+<li>Missing or incomplete values in a column</li>
 </ol>
-<p>Scenarios 1 and 2 will be handled by the mighty framework, but scenario 3 needs to be handled by the code components (e.g. within a standard component or custom component).</p>
+<p>mighty handles 1 and 2. Your code components must handle 3, for example with a component that copes with <code>NA</code> values.</p>
 </section><section class="section level2"><h2 id="workflow">Workflow<a class="anchor" aria-label="anchor" href="#workflow"></a>
 </h2>
-<p>To handle missing domains and missing columns, mighty’s <code>data_context</code> will extract available domains and columns from SDTM and metadata. ADaM is not in scope as this will be build, based on the specification yaml file. The list of available data is then used by mighty, which will detect discrepancies from the specification and available data, create programs that satisfies with the specification (which will not be executable (or contain errors) due to missing data) along with programs that can be executed based on existing data, and a discrepancies list highlighting which parts of the specification cannot be implemented with the current data. Mighty.metadata may be able to incorporate this file in the specification UI to display to the user which parts of the spec can be implemented currently.</p>
-<p>Steps to Handle Missing Data:</p>
 <ol type="1">
-<li>Wish-List Specification: Users create an ADaM specification containing all desired columns and row operations, regardless of data availability.</li>
-<li>Available Data: Users provide a <code>data_context</code>, built from a <a href="https://github.com/NovoNordisk-OpenSource/connector" class="external-link"><code>connector</code></a> object, to <code>generate_adam_code(data_context = ...)</code> by which available data (SDTM and metadata) can be extracted.</li>
-<li>Dependency Generation: mighty combines the wish-list specification, and available data with corresponding code components to identify dependencies (via ancestor nodes in the topology).</li>
-<li>Code Generation: mighty generates programs in two versions:
-<ol type="a">
-<li>(Complete) programs based on the specification</li>
-<li>(Executable) programs based on the available data and the parts of the specification that supports the available data. In the code, derivations that cannot be done, are still included in the program but are out commented. Before the out commented code is a sentence describing why the code is out commented.</li>
-</ol>
+<li>
+<strong>Write the full specification.</strong> Include every column and row operation you want, whether or not the data exists yet.</li>
+<li>
+<strong>Describe the available data.</strong> Build a <code>data_context</code> from a <a href="https://github.com/NovoNordisk-OpenSource/connector" class="external-link"><code>connector</code></a> object and pass it to <code>generate_adam_code(data_context = ...)</code>. mighty reads only which tables and columns exist, not the values. ADaM domains that mighty builds itself don’t need to be in the <code>data_context</code>, because their columns come from the specifications.</li>
+<li>
+<strong>Compare the specification with the data.</strong> mighty checks every step, meaning each derivation, row operation and parameter, against the available data. A step can’t run if a domain or column it needs is missing, or if it depends on another step that can’t run.</li>
+<li>
+<strong>Generate both sets of programs.</strong> <code><a href="../reference/generate_adam_code.html">generate_adam_code()</a></code> returns:
+<ul>
+<li>
+<code>result$programs</code>: the complete programs, built from the full specification.</li>
+<li>
+<code>result$executable_programs</code>: the same programs, with every step that can’t run commented out. The comment above each step lists the missing data, and which columns can’t be created because of it. If only some of the columns a program reads are missing, the step still runs without them, and the comment lists the columns that were skipped.</li>
+</ul>
 </li>
-</ol></section><script id="quarto-html-after-body" type="application/javascript">
+</ol>
+<p>If you don’t pass a <code>data_context</code>, both sets of programs are the same.</p>
+</section><script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);

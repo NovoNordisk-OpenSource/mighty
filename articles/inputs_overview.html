@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">mighty</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9047</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9048</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -47,7 +47,7 @@
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Technical stuff</h6></li>
     <li><a class="dropdown-item" href="../articles/dev_documentation.html">Developers Documentation</a></li>
-    <li><a class="dropdown-item" href="../articles/special_components.html">Special components</a></li>
+    <li><a class="dropdown-item" href="../articles/internal_components.html">Internal components</a></li>
   </ul>
 </li>
       </ul>
@@ -80,16 +80,16 @@
 
     <section class="level2"><h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
 </h2>
-<p>mighty requires these essential input building blocks:</p>
+<p>mighty uses these inputs:</p>
 <ul>
 <li>
-<strong>ADaM specification</strong>: Domain-specific blueprints defining content requirements</li>
+<strong>ADaM specification</strong>: one YAML file per ADaM domain, describing what the dataset contains</li>
 <li>
-<strong>Framework configuration (_mighty.yml)</strong>: External dataset definitions and relationships</li>
+<strong>Framework configuration (_mighty.yml)</strong>: keys of external domains and where to find components</li>
 <li>
-<strong>Code components</strong>: Reusable, validated code blocks for complex derivations</li>
+<strong>Code components</strong>: the code for derivations, referenced from the specifications</li>
 <li>
-<strong>Study properties (_study.yml)</strong>: Study-level properties such as <code>study_id</code>, used by mighty.toolbox for define.xml generation (optional)</li>
+<strong>Study properties (_study.yml)</strong>: (optional) study-level properties such as <code>study_id</code>, used for for define.xml generation</li>
 </ul>
 <p>This modular approach separates the <em>what</em> (specifications) from the <em>how</em> (code components), enabling efficient and consistent ADaM development. By providing these building blocks, mighty takes care of organizing and rendering ADaM programs.</p>
 <p>Additionally (and optional), mighty can render programs that are executable, based on the available data:</p>
@@ -98,12 +98,14 @@
 <strong>Data Model Metadata (optional)</strong>: Metadata about available data sources (SDTM, metadata used for ADaM generation, and non-mighty ADaM datasets)</li>
 </ul></section><section class="level2"><h2 id="framework-configuration-_mighty-yml">Framework configuration (_mighty.yml)<a class="anchor" aria-label="anchor" href="#framework-configuration-_mighty-yml"></a>
 </h2>
-<p>The <code>_mighty.yml</code> file provides framework configuration required by mighty. It contains:</p>
+<p><code>_mighty.yml</code> has two sections:</p>
 <ul>
 <li>
-<strong>External data</strong>: Key variables for all external datasets relevant to ADaM domains, including SDTM, metadata (MD data sets), and ADaM tables</li>
+<code>external_data</code>: the keys of external domains (SDTM, metadata, ADaM built elsewhere). mighty uses keys to join domains. For example, when ADLB takes <code>SAFFL</code> from ADSL, the rows are matched on ADSL’s keys.</li>
+<li>
+<code>repos</code>: where mighty looks for components.</li>
 </ul>
-<p>The primary keys specified for each external dataset establish the relationships between tables by defining the columns used for joining operations. When mighty needs to combine data from multiple sources, it uses these primary keys to determine the appropriate join logic across SDTM, metadata, and ADaM data sets. See <code><a href="../articles/mighty_config.html">vignette("mighty_config")</a></code> for more details.</p>
+<p>See <code><a href="../articles/mighty_config.html">vignette("mighty_config")</a></code>.</p>
 </section><section class="level2"><h2 id="adam-specification">ADaM Specification<a class="anchor" aria-label="anchor" href="#adam-specification"></a>
 </h2>
 <p>Each ADaM domain requires its own specification that acts as a comprehensive blueprint. The specification defines:</p>
@@ -120,32 +122,29 @@
 <p>For detailed information about the ADaM specification data model and syntax, see <code><a href="../articles/adam_specification.html">vignette("adam_specification")</a></code>.</p>
 </section><section class="level2"><h2 id="code-components">Code Components<a class="anchor" aria-label="anchor" href="#code-components"></a>
 </h2>
-<p>Code components provide the implementation logic for complex derivations referenced in ADaM specifications. These pre-validated, reusable modules ensure consistency and reduce development time.</p>
-<p>The are three component sources:</p>
-<p><strong>Standard Library (mighty.standards)</strong></p>
+<p>Code components hold the code for the derivations that ADaM specifications refer to. Each component is an R script (<code>.R</code>) or a Mustache template (<code>.mustache</code>). A template has placeholders that are filled from the <code>with:</code> parameters in the specification. Specifications refer to components by name, and mighty finds them in the repositories listed under <code>repos</code> in <code>_mighty.yml</code>.</p>
+<p>There are two kinds of components:</p>
+<p><strong>User components</strong></p>
 <ul>
-<li>Standardized derivations and calculations</li>
-<li>Thoroughly tested and validated</li>
-</ul>
-<p><strong>Custom Components</strong></p>
-<ul>
-<li>Trial-specific derivations developed during study conduct</li>
-<li>Tailored to unique protocol requirements</li>
-<li>Maintained within the trial repository</li>
-</ul>
-<p><strong>Internal Components</strong></p>
-<ul>
-<li>Core functionality managed by mighty</li>
-<li>Data I/O operations and filtering</li>
-<li>Join operations based on primary keys defined in <code>_mighty.yml</code>
+<li>Supplied through the repositories listed under <code>repos</code> in <code>_mighty.yml</code>, searched in order; the first match wins</li>
+<li>Can come from a shared library (e.g. mighty.standards) or from the trial repository</li>
+<li>Referenced in the specification by <code>component: id:</code>
 </li>
-</ul></section><section class="level2"><h2 id="study-properties-_study-yml">Study properties (_study.yml)<a class="anchor" aria-label="anchor" href="#study-properties-_study-yml"></a>
+</ul>
+<p><strong>Internal components</strong></p>
+<ul>
+<li>Used by mighty itself and never referenced in a specification</li>
+<li>Read source data, set up each domain, filter rows, and write the output</li>
+<li>Join other domains using the keys defined in <code>_mighty.yml</code> or in their specifications</li>
+</ul>
+<p>See <code><a href="../articles/code_components.html">vignette("code_components")</a></code> and <code><a href="../articles/internal_components.html">vignette("internal_components")</a></code>.</p>
+</section><section class="level2"><h2 id="study-properties-_study-yml">Study properties (_study.yml)<a class="anchor" aria-label="anchor" href="#study-properties-_study-yml"></a>
 </h2>
-<p>The optional <code>_study.yml</code> file provides study-level properties. It requires a <code>study_id</code> field and supports additional properties such as <code>study_description</code>.</p>
-<p>While mighty itself does not use <code>_study.yml</code> during code generation, it is read and stored by <code><a href="https://novonordisk-opensource.github.io/mighty.metadata/reference/mighty_study.html">mighty.metadata::mighty_study()</a></code> as part of the study metadata. The file is used by mighty.toolbox when generating define.xml for regulatory submissions. If <code>_study.yml</code> is not present, mighty will display an informational message but continue without error.</p>
-</section><section class="level2"><h2 id="data-model-metadata-optional">Data Model Metadata (optional)<a class="anchor" aria-label="anchor" href="#data-model-metadata-optional"></a>
+<p>The optional <code>_study.yml</code> holds study-level properties. While mighty does not use it to generate code, it is used for define.xml. If the file is missing, mighty shows a message and continues. If it exists, it must contain a <code>study_id</code> field; otherwise mighty.metadata stops with an error.</p>
+</section><section class="level2"><h2 id="available-data-optional">Available data (optional)<a class="anchor" aria-label="anchor" href="#available-data-optional"></a>
 </h2>
-<p>When a trial is in conduct, the available data may change as a result of implementing new SDTM datasets, adding columns, creating and updating supplementary qualifiers datasets, etc. until DBL. This can happen when new data points are collected, or if the protocol is amended. Mighty produces ADaM programs that are in alignment with the ADaM specification but if underlying data sources are not compliant with these, the generated programs will not be able to execute. Therefore mighty can use data model metadata to extract code that can be executed at any given time during trial conduct. See <code><a href="../articles/missing_data_analysis.html">vignette("missing_data_analysis")</a></code> for more details.</p>
+<p>While a trial is running, the available data keeps changing until database lock: new SDTM datasets are added, columns appear in existing ones, supplemental qualifier datasets are created or updated, and protocol amendments can add new data points. The programs mighty generates always follow the full ADaM specification, so they fail if a domain or column they use does not exist yet.</p>
+<p>To get programs you can run now, pass <code><a href="../reference/generate_adam_code.html">generate_adam_code()</a></code> a <code>data_context</code> describing which SDTM and metadata tables and columns exist. mighty then returns two sets of programs: the complete ones, which follow the specification, and executable ones, which run on the current data. In the executable programs, steps that can’t run yet are commented out, with a note saying which data is missing. See <code><a href="../articles/missing_data_analysis.html">vignette("missing_data_analysis")</a></code>.</p>
 </section><script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);

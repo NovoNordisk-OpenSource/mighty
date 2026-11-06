@@ -29,20 +29,19 @@ with implementation.
 
 ### Dependency Analysis
 
-Mighty tracks column and row dependencies for every derivation,
-analyzing the dependency topology among actions to determine execution
-order. This ensures that derived variables are created in the correct
-sequence, with prerequisite calculations completed before dependent
-operations. Dependency validation alerts you when required columns are
-missing, or if cyclic dependencies are detected, to aide debugging.
+Mighty tracks column and row dependencies for every derivation and works
+out the order to run them in. This ensures that derived variables are
+created in the correct sequence, with prerequisite calculations
+completed before dependent operations. Dependency validation alerts you
+when required columns are missing, or if cyclic dependencies are
+detected, to aide debugging.
 
 ### Missing Data Analysis
 
-Identification of discrepancies between specified ADaM requirements and
-available SDTM/ADaM data, enables generation of executable programs that
-gracefully adapt to current data availability. See
-[`vignette("missing_data_analysis")`](https://novonordisk-opensource.github.io/mighty/articles/missing_data_analysis.md)
-for more details.
+If some SDTM or ADaM data doesn’t exist yet, mighty can also generate
+programs that run on the data available today, with the steps that can’t
+run commented out. See
+[`vignette("missing_data_analysis")`](https://novonordisk-opensource.github.io/mighty/articles/missing_data_analysis.md).
 
 ## Example: Deriving COMPLSFL in ADSL
 
@@ -107,8 +106,8 @@ The `id` field holds the name of the component, not a file path. Mighty
 looks it up in the component repositories listed under `repos` in
 `_mighty.yml` (see
 [`vignette("mighty_config")`](https://novonordisk-opensource.github.io/mighty/articles/mighty_config.md)).
-To use a **custom component**, add the directory that contains it to
-`repos` and refer to it by its name or file name:
+To use **your own components**, add the directory that contains them to
+`repos` and refer to each one by its name or file name:
 
 ``` yml
 # _mighty.yml
@@ -172,19 +171,24 @@ ADSL <- ADSL |> dplyr::mutate(
 
 ## How it works
 
-mighty processes three key inputs to automatically generate ADaM
-programs:
+mighty uses these inputs to generate ADaM programs:
 
-1.  **ADaM domain specifications** - Define structure and requirements
-    for analysis datasets
-2.  **Code components** - Reusable building blocks referenced in
+1.  **ADaM specifications**: one YAML file per dataset, describing its
+    columns and records
+2.  **Framework configuration (`_mighty.yml`)**: keys of the datasets
+    mighty reads, and where to find components
+3.  **Code components**: reusable building blocks referenced in
     specifications
-3.  **Data availability context** - Information about which SDTM/ADaM
-    domains and columns are currently available
+4.  **Data availability (optional)**: which SDTM/ADaM domains and
+    columns exist today, to generate programs that run on the current
+    data
 
-The package intelligently orchestrates the execution order of
-derivations, parameters, and imputations, organizing these operations
-into structured, production-ready ADaM programs.
+See
+[`vignette("inputs_overview")`](https://novonordisk-opensource.github.io/mighty/articles/inputs_overview.md)
+for details.
+
+mighty puts the derivations, parameters and imputations in the right
+order and writes them out as structured, production-ready ADaM programs.
 
 > **Note:** Code components can be sourced from mighty.standards
 > (processed via mighty.component) or defined as custom user components,
