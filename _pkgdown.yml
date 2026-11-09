@@ -1,19 +1,20 @@
+---
 url: https://novonordisk-opensource.github.io/mighty/
 template:
   bootstrap: 5
 
 articles:
-- title: "Articles"
-  navbar: Articles
-  contents:
-  - inputs_overview
-  - mighty_config
-  - adam_specification
-  - code_components
-  - connect_to_data
-  - missing_data_analysis
-- title: "Technical stuff"
-  navbar: Technical stuff
-  contents:
-  - dev_documentation
-  - special_components
+  - title: "Articles"
+    navbar: Articles
+    contents:
+      - inputs_overview
+      - mighty_config
+      - adam_specification
+      - code_components
+      - connect_to_data
+      - missing_data_analysis
+  - title: "Technical stuff"
+    navbar: Technical stuff
+    contents:
+      - dev_documentation
+      - internal_components
