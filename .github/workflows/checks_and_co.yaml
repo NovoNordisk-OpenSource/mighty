@@ -17,10 +17,10 @@ jobs:
     name: Check NN version
     permissions:
       contents: read
-    uses: NovoNordisk-OpenSource/r.workflows/.github/workflows/check_nn_versions.yaml@0e2ad584b07bb08b72b387587c50ff3e9fb4fab2 # v0.1.2
+    # TEMPORARY EXPERIMENT - do not merge: r.workflows PR #77 from fork
+    uses: domsle/r.workflows/.github/workflows/check_nn_versions.yaml@fc06aa3837aa03cf31d32ad33451b54c2ff91569
     with:
       min_lock_date: "2025-12-05"
-      use_local_setup_action: true
   pkgdown:
     name: Pkgdown site
     permissions:
