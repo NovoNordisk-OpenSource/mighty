@@ -30,7 +30,7 @@ utils::globalVariables(c(
   "program_id",
   "type",
 
-  # create_filter_domain_action variables
+  # get_pre_filter_nodes variables
   "output",
 
   # handle_*_action variables
@@ -82,7 +82,8 @@ utils::globalVariables(c(
   "column",
   "is_key",
   "is_copy",
-  "clash"
+  "clash",
+  "source_column"
 ))
 
 # Also declare the dot function and setNames if they're causing issues

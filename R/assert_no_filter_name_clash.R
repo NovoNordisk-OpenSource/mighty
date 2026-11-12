@@ -107,10 +107,12 @@ find_filter_name_clashes <- function(
   }
   own[, `:=`(
     domain = target_domain,
-    source = fifelse(
-      type == "col_compute",
-      paste0("built by component {.file ", code_id, "}"),
-      copied_from
+    source = fcase(
+      type == "col_compute"                                                       ,
+      paste0("built by component {.file ", code_id, "}")                          ,
+      type %in% c("col_rename", "col_mutate")                                     ,
+      paste0("made from ", format_column(source_column), " with {.field method}") ,
+      default = copied_from
     ),
     is_copy = type == "col_copy"
   )]
@@ -129,26 +131,31 @@ find_filter_name_clashes <- function(
 
 #' Get the domain's own columns that exist when the filter runs
 #'
-#' Keeps only `filter_outputs` produced by the domain's own col_copy or
-#' col_compute actions. The outputs can also hold other domains' columns,
-#' because `get_all_parents()` matches parents by name only.
+#' Keeps only `filter_outputs` produced by the domain's own col_copy,
+#' col_compute, col_rename or col_mutate actions. A col_rename or col_mutate
+#' output is a filter output only when the action runs before the filter.
 #'
 #' @param target_domain Character string of the domain name.
 #' @param filter_outputs Character vector of the filter_domain action's outputs.
 #' @param actions Data table of actions.
-#' @return data.table with one row per column: `column` (upper-cased), `type`
-#'   and `code_id`.
+#' @return data.table with one row per column: `column` (upper-cased), `type`,
+#'   `code_id` and `source_column` (the column a col_rename or col_mutate
+#'   action reads).
 #' @noRd
 get_filter_time_columns <- function(target_domain, filter_outputs, actions) {
   domain_actions <- actions[
-    domain == target_domain & type %in% c("col_copy", "col_compute")
+    domain == target_domain &
+      type %in% c("col_copy", "col_compute", "col_rename", "col_mutate")
   ]
   columns <- domain_actions[,
-    .(column = toupper(unlist(outputs))),
+    .(
+      column = toupper(unlist(outputs)),
+      source_column = depend_cols[[1]]$column_name[1]
+    ),
     by = .(node_id, type, code_id)
   ]
   unique(columns[column %in% toupper(filter_outputs)], by = "column")[,
-    .(column, type, code_id)
+    .(column, type, code_id, source_column)
   ]
 }
 
@@ -225,12 +232,21 @@ filter_name_clash_suggestions <- function(own_clashes, external_clashes) {
         )
       )
     }
-    if (!all(own_clashes$is_copy)) {
+    if (any(own_clashes$type == "col_compute")) {
       suggestions <- c(
         suggestions,
         paste0(
           "For a column built by a component, the filter must not need that ",
           "component, directly or through other components"
+        )
+      )
+    }
+    if (any(own_clashes$type %in% c("col_rename", "col_mutate"))) {
+      suggestions <- c(
+        suggestions,
+        paste0(
+          "For a column made with {.field method}, the filter must not need ",
+          "it, directly or through components"
         )
       )
     }

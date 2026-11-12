@@ -526,3 +526,174 @@ test_that("Domain filter absent does not add SRC_ to depend_cols", {
 
   expect_false("SRC_" %in% depend_cols$column_name)
 })
+
+# ADLB actions with col_copys USUBJID and LBSTRESN and a col_rename
+# SRCSEQ <- LBSEQ, plus `extra` actions
+rename_filter_actions <- function(extra = NULL) {
+  actions <- data.table(
+    node_id = c(
+      "ADLB-col_copy-USUBJID",
+      "ADLB-col_copy-LBSTRESN",
+      "ADLB-col_rename-SRCSEQ"
+    ),
+    code_id = c(NA_character_, NA_character_, "mighty_col_rename"),
+    type = c("col_copy", "col_copy", "col_rename"),
+    depend_cols = list(
+      data.table(column_name = "USUBJID", domain = "LB", domain_type = "sdtm"),
+      data.table(column_name = "LBSTRESN", domain = "LB", domain_type = "sdtm"),
+      data.table(column_name = "LBSEQ", domain = "ADLB", domain_type = "adam")
+    ),
+    outputs = list("USUBJID", "LBSTRESN", "SRCSEQ"),
+    depend_rows = list(NA),
+    parameters = list(NA),
+    domain = "ADLB"
+  )
+  rbind(actions, extra)
+}
+
+extra_action <- function(type, output, depends, code_id = NA_character_) {
+  data.table(
+    node_id = paste0("ADLB-", type, "-", output),
+    code_id = code_id,
+    type = type,
+    depend_cols = list(
+      data.table(column_name = depends, domain = "ADLB", domain_type = "adam")
+    ),
+    outputs = list(output),
+    depend_rows = list(NA),
+    parameters = list(NA),
+    domain = "ADLB"
+  )
+}
+
+get_filter_outputs <- function(actions, filter_depends) {
+  result <- add_filter_domain_actions(
+    actions,
+    filter_depend_cols = list(ADLB = filter_depends),
+    filter_domain = list(ADLB = NA),
+    domain_keys = list(ADLB = "USUBJID")
+  )
+  result[result$type == "filter_domain", ]$outputs[[1]]
+}
+
+test_that("Filter keeps the source column of a col_rename that runs after it", {
+  outputs <- get_filter_outputs(rename_filter_actions(), "LBSTRESN")
+
+  expect_setequal(outputs, c("USUBJID", "LBSTRESN", "LBSEQ"))
+})
+
+test_that("Filter keeps the output of a col_rename it needs, not its source", {
+  outputs <- get_filter_outputs(rename_filter_actions(), "SRCSEQ")
+
+  expect_setequal(outputs, c("USUBJID", "LBSTRESN", "SRCSEQ"))
+})
+
+test_that("Filter keeps the outputs of a col_mutate it needs and of its parents", {
+  actions <- rename_filter_actions(
+    extra_action("col_mutate", "ZCOPY", "SRCSEQ", "mighty_col_mutate")
+  )
+
+  outputs <- get_filter_outputs(actions, "ZCOPY")
+
+  expect_setequal(outputs, c("USUBJID", "LBSTRESN", "SRCSEQ", "ZCOPY"))
+})
+
+test_that("Filter keeps the parents of every column action it needs", {
+  actions <- rename_filter_actions(rbind(
+    data.table(
+      node_id = "ADLB-col_rename-ATESTCD",
+      code_id = "mighty_col_rename",
+      type = "col_rename",
+      depend_cols = list(
+        data.table(
+          column_name = "LBTESTCD",
+          domain = "ADLB",
+          domain_type = "adam"
+        )
+      ),
+      outputs = list("ATESTCD"),
+      depend_rows = list(NA),
+      parameters = list(NA),
+      domain = "ADLB"
+    ),
+    extra_action("col_compute", "A", "SRCSEQ", "a.R"),
+    extra_action("col_compute", "B", "ATESTCD", "b.R")
+  ))
+
+  outputs <- get_filter_outputs(actions, c("A", "B"))
+
+  expect_setequal(
+    outputs,
+    c("USUBJID", "LBSTRESN", "SRCSEQ", "ATESTCD", "A", "B")
+  )
+})
+
+test_that("A col_rename of a column action the filter needs runs after the filter", {
+  actions <- rename_filter_actions(rbind(
+    extra_action("col_compute", "X", "LBSTRESN", "x.R"),
+    extra_action("col_rename", "Y", "X", "mighty_col_rename")
+  ))
+
+  outputs <- get_filter_outputs(actions, "X")
+
+  expect_setequal(outputs, c("USUBJID", "LBSTRESN", "LBSEQ", "X"))
+})
+
+test_that("Filter keeps the outputs of column actions that read the source of a col_rename it needs", {
+  actions <- rename_filter_actions(rbind(
+    extra_action("col_compute", "LBSEQX", "LBSEQ", "lbseqx.R"),
+    extra_action("col_mutate", "LBSEQY", "LBSEQX", "mighty_col_mutate")
+  ))
+
+  outputs <- get_filter_outputs(actions, "SRCSEQ")
+
+  expect_setequal(outputs, c("USUBJID", "LBSTRESN", "SRCSEQ", "LBSEQX"))
+})
+
+test_that("A col_rename whose source has the name of a joined column runs before the filter", {
+  result <- add_filter_domain_actions(
+    rename_filter_actions(),
+    filter_depend_cols = list(ADLB = c("XL.LBSEQ", "XL.USUBJID")),
+    filter_domain = list(ADLB = NA),
+    domain_keys = list(ADLB = "USUBJID", XL = "USUBJID")
+  )
+
+  outputs <- result[result$type == "filter_domain", ]$outputs[[1]]
+  expect_setequal(outputs, c("USUBJID", "LBSTRESN", "SRCSEQ"))
+})
+
+test_that("A col_mutate of a column (rename whose source is listed) runs after a filter on the source", {
+  # The spec renames LBSEQ to SRCSEQ but also lists LBSEQ, so SRCSEQ is a col_mutate
+  actions <- rbind(
+    rename_filter_actions()[type == "col_copy"],
+    extra_action("col_copy", "LBSEQ", "LBSEQ"),
+    extra_action("col_mutate", "SRCSEQ", "LBSEQ", "mighty_col_mutate")
+  )
+
+  expect_setequal(
+    get_filter_outputs(actions, "LBSEQ"),
+    c("USUBJID", "LBSTRESN", "LBSEQ")
+  )
+  expect_setequal(
+    get_filter_outputs(actions, "SRCSEQ"),
+    c("USUBJID", "LBSTRESN", "LBSEQ", "SRCSEQ")
+  )
+})
+
+test_that("Error when a filter uses a col_rename source and its output", {
+  expect_snapshot(
+    get_filter_outputs(rename_filter_actions(), c("LBSEQ", "SRCSEQ")),
+    error = TRUE
+  )
+})
+
+test_that("Error when a filter uses a col_rename source and a column made from its output", {
+  actions <- rename_filter_actions(
+    extra_action("col_compute", "SRCSEQ2", "SRCSEQ", "srcseq2_01.R")
+  )
+
+  expect_error(
+    get_filter_outputs(actions, c("LBSEQ", "SRCSEQ2")),
+    "renamed column under both names"
+  )
+})

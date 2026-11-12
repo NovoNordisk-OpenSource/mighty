@@ -1,0 +1,32 @@
+# col_rename_adlb_01.yml with a base filter, without components
+id: ADLB
+label: Laboratory Analysis Dataset
+class: BASIC DATA STRUCTURE
+structure: One record per subject per parameter per analysis visit
+keys:
+  - USUBJID
+  - STUDYID
+
+population:
+  base:
+    - domain: LB
+      depends:
+        - LBSTRESN
+      filter: '!is.na(LBSTRESN)'
+  global:
+    - filter: NA
+      depends:
+        - NA
+
+columns:
+  - id: USUBJID
+
+  - id: STUDYID
+
+  - id: SRCSEQ
+    method: ADLB.LBSEQ
+
+  - id: LBSTRESN
+
+  - id: AVAL
+    method: ADLB.LBSTRESN
