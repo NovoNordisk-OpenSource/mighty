@@ -226,9 +226,8 @@ test_that("a prefix naming the second starting dataset is skipped", {
 })
 
 test_that("a column built in another dataset doesn't clash", {
-  # ADLB's OLDFL depends on ADSL.AGE2. The filter needs OLDFL, so ADSL's AGE2
-  # action is found as a parent and its output ends up in the filter outputs,
-  # but ADLB itself has no AGE2 column
+  # ADLB's OLDFL depends on ADSL.AGE2. The filter needs OLDFL, but ADLB itself
+  # has no AGE2 column
   actions <- rbind(
     adlb_base,
     clash_copy("USUBJID", "ADSL"),
@@ -251,13 +250,13 @@ test_that("a column built in another dataset doesn't clash", {
     )
   )
 
-  result <- check_filter_clash(actions, list(ADLB = c("ADSL.AGE2", "OLDFL")))
+  expect_no_error(
+    result <- check_filter_clash(actions, list(ADLB = c("ADSL.AGE2", "OLDFL")))
+  )
 
-  # Precondition: AGE2 is in the filter outputs, so the test covers the case.
-  # If get_all_parents() learns to check the domain, this no longer holds and
-  # the test can be simplified
+  # ADSL's AGE2 action is not taken as a parent of OLDFL
   filter_outputs <- result[type == "filter_domain", outputs][[1]]
-  expect_true("AGE2" %in% filter_outputs)
+  expect_false("AGE2" %in% filter_outputs)
 })
 
 test_that("filters with only bare dependencies don't clash", {
@@ -496,4 +495,61 @@ test_that("global filter on a join key of SV runs", {
 
   expect_gt(nrow(adlb), 0)
   expect_equal(unique(adlb$VISITNUM), 3)
+})
+
+test_that("global filter on SV.VISIT runs with ADLB's VISIT renamed to AVISIT", {
+  skip_if_not_installed("arrow")
+  adlb_yml <- clash_adlb_yml(
+    clash_global_population("VISIT == 'BASELINE'", "SV.VISIT"),
+    "  - id: AVISIT\n    method: ADLB.VISIT\n"
+  )
+
+  adlb <- run_clash_study(adlb_yml)
+
+  # The rename runs before the filter, so ADLB has no VISIT when SV's is joined
+  expect_gt(nrow(adlb), 0)
+  expect_equal(unique(adlb$AVISIT), "BASELINE")
+  expect_false("VISIT" %in% names(adlb))
+})
+
+test_that("global filter on SV.VISIT runs with VISIT renamed from another column (#107)", {
+  skip_if_not_installed("arrow")
+  adlb_yml <- clash_adlb_yml(
+    clash_global_population("VISIT == 'BASELINE'", "SV.VISIT"),
+    "  - id: VISIT\n    method: ADLB.LBTEST\n"
+  )
+
+  adlb <- run_clash_study(adlb_yml)
+
+  # The rename runs after the filter, so ADLB has no VISIT when SV's is joined
+  expect_gt(nrow(adlb), 0)
+  expect_false("LBTEST" %in% names(adlb))
+  expect_false(anyNA(adlb$VISIT))
+})
+
+test_that("global filter on SV.VISIT errors when the filter needs a col_mutate VISIT (#107)", {
+  adlb_yml <- clash_adlb_yml(
+    "  base:
+    - domain: LB
+      filter: NA
+      depends: [NA]
+  global:
+    - filter: VISIT == 'BASELINE'
+      depends: [SV.VISIT]
+    - filter: VISFL == 'Y'
+      depends: [VISFL]
+",
+    "  - id: LBTEST
+  - id: VISIT
+    method: ADLB.LBTEST
+  - id: VISFL
+    component:
+      id: visit_flag_01.R
+"
+  )
+
+  expect_snapshot(
+    generate_clash_study(adlb_yml, get_temp_connector_config_path()),
+    error = TRUE
+  )
 })

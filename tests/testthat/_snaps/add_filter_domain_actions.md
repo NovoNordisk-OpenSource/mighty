@@ -17,3 +17,18 @@
       * Verify the domain names are spelled correctly
       * Ensure all domains used in filters are defined in your trial metadata
 
+# Error when a filter uses a col_rename source and its output
+
+    Code
+      get_filter_outputs(rename_filter_actions(), c("LBSEQ", "SRCSEQ"))
+    Condition
+      Error:
+      ! Specification validation errors found:
+      
+      [Filter uses a renamed column under both names]
+      x Filter for ADLB uses LBSEQ, but it also needs SRCSEQ, which is LBSEQ renamed
+      
+      Suggestions:
+      * Use only the new name in the filter
+      * Or list the source column under columns to keep it as a separate column
+

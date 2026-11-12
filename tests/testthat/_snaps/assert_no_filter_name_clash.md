@@ -111,3 +111,19 @@
       * For a column built by a component, the filter must not need that component, directly or through other components
       * To filter on the dataset's own column, write it without the prefix (e.g. `VISIT`). The two columns can hold different values, so check that this is the column you mean
 
+# global filter on SV.VISIT errors when the filter needs a col_mutate VISIT (#107)
+
+    Code
+      generate_clash_study(adlb_yml, get_temp_connector_config_path())
+    Condition
+      Error:
+      ! Specification validation errors found:
+      
+      [Filter column name clash]
+      x Filter for ADLB depends on SV.VISIT, but ADLB already has a column VISIT when the filter runs (made from LBTEST with method)
+      
+      Suggestions:
+      * To filter on the other dataset's column, the dataset's column with the same name must not exist yet when the filter runs
+      * For a column made with method, the filter must not need it, directly or through components
+      * To filter on the dataset's own column, write it without the prefix (e.g. `VISIT`). The two columns can hold different values, so check that this is the column you mean
+
