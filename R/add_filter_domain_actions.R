@@ -326,18 +326,31 @@ get_pre_filter_nodes <- function(
   pre_filter_nodes <- add_parent_nodes(matching_nodes, domain_actions)
 
   # A col_rename that runs before the filter removes its source column, so
-  # the actions that read that column must run before the filter too
-  rename_sources <- get_rename_source_cols(
-    candidates[type == "col_rename" & node_id %in% pre_filter_nodes]
-  )
-  reads_source <- vapply(
-    candidates$depend_cols,
-    function(dc) any(dc$column_name %in% rename_sources),
-    logical(1)
-  )
-  source_readers <- setdiff(candidates$node_id[reads_source], pre_filter_nodes)
+  # the actions that read that column must run before the filter too. Their
+  # parents can be col_renames as well, so repeat until nothing is added
+  repeat {
+    rename_sources <- get_rename_source_cols(
+      candidates[type == "col_rename" & node_id %in% pre_filter_nodes]
+    )
+    reads_source <- vapply(
+      candidates$depend_cols,
+      function(dc) any(dc$column_name %in% rename_sources),
+      logical(1)
+    )
+    source_readers <- setdiff(
+      candidates$node_id[reads_source],
+      pre_filter_nodes
+    )
+    if (length(source_readers) == 0) {
+      break
+    }
+    pre_filter_nodes <- unique(c(
+      pre_filter_nodes,
+      add_parent_nodes(source_readers, domain_actions)
+    ))
+  }
 
-  unique(c(pre_filter_nodes, add_parent_nodes(source_readers, domain_actions)))
+  pre_filter_nodes
 }
 
 #' Add the parents of actions within a domain
@@ -405,21 +418,25 @@ get_rename_source_filter_outputs <- function(
 
 #' Check that a filter doesn't use a column both before and after its rename
 #'
-#' A col_rename action that the filter needs runs before the filter and
-#' removes its source column. The filter then can't also use the source
-#' column.
+#' A col_rename action that runs before the filter removes its source column.
+#' The filter then can't also use the source column. The col_rename runs
+#' before the filter when the filter needs its output, or when the filter
+#' joins a column with the source's name.
 #'
 #' @param actions Data table containing existing action definitions.
 #' @param target_domain Character string of the domain name.
 #' @param pre_filter_nodes Character vector of node_ids that run before the filter.
 #' @param filter_depends Character vector of filter dependency columns.
+#' @param joined_cols Character vector of columns joined in from other domains
+#'   for the filter.
 #' @return Invisible NULL. Throws a validation error if a clash is found.
 #' @noRd
 assert_no_filter_on_renamed_source <- function(
   actions,
   target_domain,
   pre_filter_nodes,
-  filter_depends
+  filter_depends,
+  joined_cols = character(0)
 ) {
   pre_filter_renames <- actions[
     type == "col_rename" &
@@ -445,17 +462,44 @@ assert_no_filter_on_renamed_source <- function(
   if (!any(is_clash)) {
     return(invisible(NULL))
   }
+  sources <- sources[is_clash]
+  renamed_to <- renamed_to[is_clash]
 
-  details <- paste0(
-    "Filter for ",
-    format_domain(target_domain),
-    " uses ",
-    format_column(sources[is_clash]),
-    ", but it also needs ",
-    format_column(renamed_to[is_clash]),
-    ", which is ",
-    format_column(sources[is_clash]),
-    " renamed"
+  # The col_rename runs before the filter because the filter needs its output,
+  # or because the filter joins a column with the source's name
+  joined_ref <- vapply(
+    sources,
+    function(source) {
+      get_joined_filter_ref(source, filter_depends, target_domain, joined_cols)
+    },
+    character(1)
+  )
+  details <- fifelse(
+    is.na(joined_ref),
+    paste0(
+      "Filter for ",
+      format_domain(target_domain),
+      " uses ",
+      format_column(sources),
+      ", but it also needs ",
+      format_column(renamed_to),
+      ", which is ",
+      format_column(sources),
+      " renamed"
+    ),
+    paste0(
+      "Filter for ",
+      format_domain(target_domain),
+      " uses ",
+      format_column(sources),
+      " and also joins ",
+      format_column_ref(joined_ref),
+      ", which has the same name, so ",
+      format_column(sources),
+      " is renamed to ",
+      format_column(renamed_to),
+      " before the filter"
+    )
   )
   throw_validation_error(
     category = "Filter uses a renamed column under both names",
@@ -465,6 +509,31 @@ assert_no_filter_on_renamed_source <- function(
       "Or list the source column under {.field columns} to keep it as a separate column"
     )
   )
+}
+
+#' Get the filter dependency that joins a column with a given name
+#'
+#' @param column Character string of a column name.
+#' @param filter_depends Character vector of filter dependency columns.
+#' @param target_domain Character string of the domain name.
+#' @param joined_cols Character vector of columns joined in from other domains
+#'   for the filter.
+#' @return The prefixed dependency (e.g. `"SV.VISIT"`), or `NA` if the filter
+#'   joins no column with that name.
+#' @noRd
+get_joined_filter_ref <- function(
+  column,
+  filter_depends,
+  target_domain,
+  joined_cols
+) {
+  if (!toupper(column) %in% toupper(joined_cols)) {
+    return(NA_character_)
+  }
+  prefixed <- filter_depends[has_domain_prefix(filter_depends)]
+  is_match <- toupper(extract_dependency_id(prefixed)) == toupper(column) &
+    toupper(extract_domain_prefix(prefixed)) != toupper(target_domain)
+  prefixed[is_match][1]
 }
 
 #' Create a single filter_domain action for one domain
@@ -503,7 +572,8 @@ create_filter_domain_action <- function(
     actions,
     target_domain,
     pre_filter_nodes,
-    domain_filter_depends
+    domain_filter_depends,
+    joined_cols
   )
 
   # Create outputs for filter_domain from three sources:
