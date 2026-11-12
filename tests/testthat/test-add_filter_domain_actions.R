@@ -662,6 +662,65 @@ test_that("A col_rename whose source has the name of a joined column runs before
   expect_setequal(outputs, c("USUBJID", "LBSTRESN", "SRCSEQ"))
 })
 
+test_that("A col_rename whose source is a join key runs after the filter", {
+  result <- add_filter_domain_actions(
+    rename_filter_actions(),
+    filter_depend_cols = list(ADLB = c("XL.LBSEQ", "XL.LBTEST")),
+    filter_domain = list(ADLB = NA),
+    domain_keys = list(ADLB = "USUBJID", XL = c("USUBJID", "LBSEQ"))
+  )
+
+  outputs <- result[result$type == "filter_domain", ]$outputs[[1]]
+  expect_setequal(outputs, c("USUBJID", "LBSTRESN", "LBSEQ"))
+})
+
+test_that("Joined filter columns leave out own and starting domain prefixes and join keys", {
+  joined <- get_joined_filter_cols(
+    filter_depends = c(
+      "SV.VISITNUM",
+      "SV.VISIT",
+      "ADLB.AVAL",
+      "LB.LBTEST",
+      "SRCSEQ",
+      NA
+    ),
+    target_domain = "ADLB",
+    base_domains = "LB",
+    domain_keys = list(SV = c("STUDYID", "USUBJID", "VISITNUM"))
+  )
+
+  expect_equal(joined, "VISIT")
+})
+
+test_that("Readers of the source of every col_rename that runs before the filter run before it", {
+  # SRCSEQ is needed, Q reads LBSEQ so it runs first, Q's parent ATESTCD then
+  # runs first too, and LBTCX reads ATESTCD's source LBTESTCD
+  actions <- rename_filter_actions(rbind(
+    extra_action("col_rename", "ATESTCD", "LBTESTCD", "mighty_col_rename"),
+    extra_action("col_compute", "Q", c("LBSEQ", "ATESTCD"), "q.R"),
+    extra_action("col_compute", "LBTCX", "LBTESTCD", "lbtcx.R")
+  ))
+
+  outputs <- get_filter_outputs(actions, "SRCSEQ")
+
+  expect_setequal(
+    outputs,
+    c("USUBJID", "LBSTRESN", "SRCSEQ", "ATESTCD", "Q", "LBTCX")
+  )
+})
+
+test_that("Error when a filter uses a col_rename source and joins a column with its name", {
+  expect_snapshot(
+    add_filter_domain_actions(
+      rename_filter_actions(),
+      filter_depend_cols = list(ADLB = c("XL.LBSEQ", "LBSEQ")),
+      filter_domain = list(ADLB = NA),
+      domain_keys = list(ADLB = "USUBJID", XL = "USUBJID")
+    ),
+    error = TRUE
+  )
+})
+
 test_that("A col_mutate of a column (rename whose source is listed) runs after a filter on the source", {
   # The spec renames LBSEQ to SRCSEQ but also lists LBSEQ, so SRCSEQ is a col_mutate
   actions <- rbind(
