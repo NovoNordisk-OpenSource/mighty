@@ -1,21 +1,23 @@
 Package: mighty
-Title: ADaM Program Generation Through Declarative Specifications
-Version: 0.0.0.9048
+Title: Generate 'CDISC' 'ADaM' Programs from Declarative Specifications
+Version: 0.0.0.9049
 Authors@R: c(
     person("Matthew", "Phelps", , "mewp@novonordisk.com", role = c("aut", "cre")),
     person("Nicolai", "Skov Johnsen", , "nosj@novonordisk.com", role = "aut"),
     person("Aksel", "Thomsen", , "oath@novonordisk.com", role = "aut"),
-    person("Michael Hedegaard", "Thomsen", , "mhzt@novonordisk.com", role = "aut")
+    person("Michael Hedegaard", "Thomsen", , "mhzt@novonordisk.com", role = "aut"),
+    person("Novo Nordisk A/S", role = "cph")
   )
-Description: Provides tools for generating ADaM programs in clinical
-    trials using a declarative approach. Users specify what data structure
-    and derivations they need through YAML-based specifications, rather
-    than writing imperative code. The package handles dependency tracking
-    between columns and rows, orchestrates code components, and
-    automatically generates executable R programs for ADaM dataset
-    creation.
+Description: Generate R programs that create Clinical Data Interchange
+    Standards Consortium ('CDISC') Analysis Data Model ('ADaM') datasets
+    for clinical trials. Users describe the dataset structure and
+    derivations in 'YAML' specifications instead of writing the code by
+    hand. The package resolves dependencies between columns and rows,
+    combines reusable code components, and writes executable R programs.
 License: Apache License (>= 2)
-URL: https://novonordisk-opensource.github.io/mighty/
+URL: https://novonordisk-opensource.github.io/mighty/,
+    https://github.com/NovoNordisk-OpenSource/mighty
+BugReports: https://github.com/NovoNordisk-OpenSource/mighty/issues
 Depends:
     R (>= 4.1)
 Imports:
@@ -26,7 +28,7 @@ Imports:
     dplyr,
     glue,
     igraph,
-    mighty.component (>= 0.1.0.9005),
+    mighty.component (>= 0.2.0),
     mighty.metadata (>= 0.2.0),
     purrr,
     R6,
@@ -43,25 +45,16 @@ Suggests:
     arrow,
     connector,
     gh,
-    knitr,
-    labelled,
     pharmaverseadam,
     pharmaversesdtm (>= 0.2.0),
-    quarto,
     remotes,
-    rmarkdown,
-    roxygen2,
     testthat (>= 3.0.0),
-    tools,
     whisker,
     withr,
     yaml
-VignetteBuilder: 
-    knitr,
-    quarto
-Remotes:
-    NovoNordisk-OpenSource/mighty.component
+Config/Needs/website: knitr, quarto, rmarkdown
 Config/roxygen2/version: 8.1.1
 Config/testthat/edition: 3
 Encoding: UTF-8
+Language: en-US
 Roxygen: list(markdown = TRUE)

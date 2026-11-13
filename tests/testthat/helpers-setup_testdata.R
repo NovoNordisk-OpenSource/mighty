@@ -44,6 +44,12 @@ setup_testdata <- function(
   remove_cols = NULL
 ) {
   testdata <- match.arg(testdata)
+  testthat::skip_if_not_installed("arrow")
+  testthat::skip_if_not_installed("connector")
+  testthat::skip_if_not_installed("pharmaversesdtm")
+  if (length(adam_domains) > 0) {
+    testthat::skip_if_not_installed("pharmaverseadam")
+  }
 
   if (testdata == "pharmaverse") {
     # copy and modify connector config

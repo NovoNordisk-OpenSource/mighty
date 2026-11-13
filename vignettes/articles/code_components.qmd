@@ -92,7 +92,7 @@ Detailed explanation of what the component does.
 ```
 
 ### `@param`
-*Only for Mustache template components* - Parameters to pass to the template, populated from the `with` section of the ADaM specification. See `vignette("adam_specification")`.
+*Only for Mustache template components* - Parameters to pass to the template, populated from the `with` section of the ADaM specification. See [ADaM specification](adam_specification.html).
 
 ```r
 #' @param domain Name of the ADaM domain
@@ -448,7 +448,7 @@ This approach may cause the same source column to be joined more than once acros
 
 # How mighty finds a component
 
-Mighty looks up the `id` of a component in the repositories listed under `repos` in `_mighty.yml`. To use your own components, add the directory that contains them to `repos`. See `vignette("mighty_config")` for the lookup rules.
+Mighty looks up the `id` of a component in the repositories listed under `repos` in `_mighty.yml`. To use your own components, add the directory that contains them to `repos`. See [Framework configuration](mighty_config.html) for the lookup rules.
 
 # Internal components
 

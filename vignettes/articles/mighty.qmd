@@ -101,7 +101,7 @@ The specification has a header describing ADSL, a `population` section saying th
 - `PLANNED_ARM`: `method: ADSL.ARM` makes a copy of `ARM` under a new name.
 - `AGE_GRP1`: `component` means it's derived by the custom component `age_group_01.R` (see next section).
 
-The `columns` list defines the final dataset, so mighty keeps only the listed columns when it writes ADSL. See `vignette("adam_specification")` for everything a specification can contain.
+The `columns` list defines the final dataset, so mighty keeps only the listed columns when it writes ADSL. See [ADaM specification](adam_specification.html) for everything a specification can contain.
 
 **adsl.yml**
 
@@ -125,7 +125,7 @@ Relative paths in `repos` are resolved against the working directory, not agains
 #| file: !expr file.path(example_dir, "components/age_group_01.R")
 ```
 
-The `#'` header tells mighty what the component needs (`@depends ADSL AGE`) and what it creates (`@outputs AGE_GRP1`). The code after `@code` is inserted into the ADSL program as it is. See `vignette("code_components")` for all tags.
+The `#'` header tells mighty what the component needs (`@depends ADSL AGE`) and what it creates (`@outputs AGE_GRP1`). The code after `@code` is inserted into the ADSL program as it is. See [Code components](code_components.html) for all tags.
 
 ## Render the ADaM program
 
@@ -169,9 +169,9 @@ Use `style = TRUE` to format the files with styler. We recommend saving the prog
 
 ## Next steps
 
-- `vignette("inputs_overview")`: all inputs mighty uses, in one place
-- `vignette("mighty_config")`: keys and component repositories in `_mighty.yml`
-- `vignette("adam_specification")`: everything a specification can contain: population, columns, rows, parameters
-- `vignette("code_components")`: how to write your own components
-- `vignette("connect_to_data")`: how the generated programs read and write data
-- `vignette("missing_data_analysis")`: generating programs that run on the data available today
+- [Inputs overview](inputs_overview.html): all inputs mighty uses, in one place
+- [Framework configuration](mighty_config.html): keys and component repositories in `_mighty.yml`
+- [ADaM specification](adam_specification.html): everything a specification can contain: population, columns, rows, parameters
+- [Code components](code_components.html): how to write your own components
+- [Connecting to data](connect_to_data.html): how the generated programs read and write data
+- [Missing data analysis](missing_data_analysis.html): generating programs that run on the data available today

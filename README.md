@@ -43,7 +43,8 @@ detected, to aide debugging.
 
 If some SDTM or ADaM data doesn’t exist yet, mighty can also generate
 programs that run on the data available today, with the steps that can’t
-run commented out. See `vignette("missing_data_analysis")`.
+run commented out. See [Missing data
+analysis](https://novonordisk-opensource.github.io/mighty/articles/missing_data_analysis.html).
 
 ## Example: Deriving COMPLSFL in ADSL
 
@@ -106,9 +107,10 @@ Code components can either be validated standard components or custom
 
 The `id` field holds the name of the component, not a file path. Mighty
 looks it up in the component repositories listed under `repos` in
-`_mighty.yml` (see `vignette("mighty_config")`). To use **your own
-components**, add the directory that contains them to `repos` and refer
-to each one by its name or file name:
+`_mighty.yml` (see [Framework
+configuration](https://novonordisk-opensource.github.io/mighty/articles/mighty_config.html)).
+To use **your own components**, add the directory that contains them to
+`repos` and refer to each one by its name or file name:
 
 ``` yml
 # _mighty.yml
@@ -124,8 +126,9 @@ repos:
 ```
 
 Custom components are R scripts (`.R`) or Mustache templates
-(`.mustache`) that adhere to a few simple rules. See
-`vignette("code_components")` for more details.
+(`.mustache`) that adhere to a few simple rules. See [Code
+components](https://novonordisk-opensource.github.io/mighty/articles/code_components.html)
+for more details.
 
 As mighty matures, more of these components will be pre-defined and
 ready for use, so fewer components would need to be defined by the user.
@@ -135,8 +138,9 @@ while
 [`mighty.component`](https://github.com/NovoNordisk-OpenSource/mighty.component)
 provides utilities for rendering both standard and custom components.
 
-See `vignette("adam_specification")` for more details on the ADaM
-Specification data model.
+See [ADaM
+specification](https://novonordisk-opensource.github.io/mighty/articles/adam_specification.html)
+for more details on the ADaM Specification data model.
 
 For now, let’s assume `der_complsfl` doesn’t exist and we have to write
 it ourselves:
@@ -181,7 +185,9 @@ mighty uses these inputs to generate ADaM programs:
     columns exist today, to generate programs that run on the current
     data
 
-See `vignette("inputs_overview")` for details.
+See [Inputs
+overview](https://novonordisk-opensource.github.io/mighty/articles/inputs_overview.html)
+for details.
 
 mighty puts the derivations, parameters and imputations in the right
 order and writes them out as structured, production-ready ADaM programs.
@@ -190,10 +196,14 @@ order and writes them out as structured, production-ready ADaM programs.
 > (processed via mighty.component) or defined as custom user components,
 > depending on project requirements.
 
-See `vignette("adam_specification")` for more details on ADaM
-specifications, `vignette("mighty_config")` for study metadata
-configuration, and `vignette("connect_to_data")` for more details on how
-source data is retrieved in the rendered programs.
+See [ADaM
+specification](https://novonordisk-opensource.github.io/mighty/articles/adam_specification.html)
+for more details on ADaM specifications, [Framework
+configuration](https://novonordisk-opensource.github.io/mighty/articles/mighty_config.html)
+for study metadata configuration, and [Connecting to
+data](https://novonordisk-opensource.github.io/mighty/articles/connect_to_data.html)
+for more details on how source data is retrieved in the rendered
+programs.
 
 ## The mighty ecosystem
 
@@ -219,9 +229,14 @@ The mighty framework consists of these complementary packages:
 
 ## Installation
 
+Install the released version from CRAN:
+
+``` r
+install.packages("mighty")
+```
+
 Install the development version from GitHub:
 
 ``` r
-# Using pak (recommended)
 pak::pak("NovoNordisk-OpenSource/mighty")
 ```
