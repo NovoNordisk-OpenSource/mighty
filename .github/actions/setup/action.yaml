@@ -1,0 +1,13 @@
+---
+name: Package specific setup
+description: Setup steps run by the r.workflows reusable workflows before R is installed
+runs:
+  using: composite
+  steps:
+    # Old lock date packages (e.g. later 1.4.4) fail to build under C23 with glibc >= 2.43 on ubuntu-latest
+    - name: Compile C code as C17 on Linux
+      if: runner.os == 'Linux'
+      shell: bash
+      run: |
+        mkdir -p ~/.R
+        echo "CC = gcc -std=gnu17" >> ~/.R/Makevars
