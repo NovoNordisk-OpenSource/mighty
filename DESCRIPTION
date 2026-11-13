@@ -47,6 +47,7 @@ Suggests:
     gh,
     pharmaverseadam,
     pharmaversesdtm (>= 0.2.0),
+    remotes,
     testthat (>= 3.0.0),
     whisker,
     withr,
