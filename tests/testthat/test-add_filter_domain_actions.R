@@ -674,6 +674,18 @@ test_that("A col_rename whose source is a join key runs after the filter", {
   expect_setequal(outputs, c("USUBJID", "LBSTRESN", "LBSEQ"))
 })
 
+test_that("A col_rename whose output is a join key of a filter's joined domain runs before the filter", {
+  result <- add_filter_domain_actions(
+    rename_filter_actions(),
+    filter_depend_cols = list(ADLB = "XL.LBTEST"),
+    filter_domain = list(ADLB = NA),
+    domain_keys = list(ADLB = "USUBJID", XL = c("USUBJID", "SRCSEQ"))
+  )
+
+  outputs <- result[result$type == "filter_domain", ]$outputs[[1]]
+  expect_setequal(outputs, c("USUBJID", "LBSTRESN", "SRCSEQ"))
+})
+
 test_that("Joined filter columns leave out own and starting domain prefixes and join keys", {
   joined <- get_joined_filter_cols(
     filter_depends = c(

@@ -553,3 +553,44 @@ test_that("global filter on SV.VISIT errors when the filter needs a col_mutate V
     error = TRUE
   )
 })
+
+# ADLB without VISITNUM under columns, so a method on VISITNUM is a col_rename
+clash_adlb_yml_no_visitnum <- function(population, columns) {
+  sub(
+    "  - id: VISITNUM\n",
+    "",
+    clash_adlb_yml(population, columns),
+    fixed = TRUE
+  )
+}
+
+test_that("filter on SV.VISIT errors when it also needs the col_rename of SV's join key VISITNUM", {
+  adlb_yml <- clash_adlb_yml_no_visitnum(
+    clash_global_population(
+      "VISIT == 'BASELINE' & AVISITN > 0",
+      "SV.VISIT, AVISITN"
+    ),
+    "  - id: AVISITN\n    method: ADLB.VISITNUM\n"
+  )
+
+  expect_snapshot(
+    generate_clash_study(adlb_yml, get_temp_connector_config_path()),
+    error = TRUE
+  )
+})
+
+test_that("col_echo joining on the source of a col_rename the filter needs runs before the filter", {
+  skip_if_not_installed("arrow")
+  adlb_yml <- clash_adlb_yml_no_visitnum(
+    clash_global_population("AVISITN > 1", "AVISITN"),
+    "  - id: AVISITN\n    method: ADLB.VISITNUM\n  - id: SVSTDTC\n    method: SV.SVSTDTC\n"
+  )
+
+  adlb <- run_clash_study(adlb_yml)
+
+  expect_gt(nrow(adlb), 0)
+  expect_gt(min(adlb$AVISITN), 1)
+  # SV has no record for some LB visits, so SVSTDTC can be missing
+  expect_true("SVSTDTC" %in% names(adlb))
+  expect_false(all(is.na(adlb$SVSTDTC)))
+})
