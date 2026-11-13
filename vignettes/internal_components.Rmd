@@ -2,16 +2,14 @@
 title: "Internal components"
 vignette: >
   %\VignetteIndexEntry{Internal components}
-  %\VignetteEngine{quarto::html}
+  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
-knitr:
-  opts_chunk:
-    collapse: true
-    comment: '#>'
+output: rmarkdown::html_vignette
 ---
 
 ```{r}
 #| include: false
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
 # `mighty.component` fetches component templates from GitHub via the
 # `gh` package. `gh` < 1.6.0 rejects the `ghs_` App-installation token
 # that CI provides, so we skip evaluation on runners pinned to an

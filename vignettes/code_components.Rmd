@@ -2,13 +2,15 @@
 title: "Code Components"
 vignette: >
   %\VignetteIndexEntry{Code Components}
-  %\VignetteEngine{quarto::html}
+  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
-knitr:
-  opts_chunk:
-    collapse: true
-    comment: '#>'
+output: rmarkdown::html_vignette
 ---
+
+```{r}
+#| include: false
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+```
 
 # Overview
 

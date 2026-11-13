@@ -2,13 +2,15 @@
 title: "ADaM Specification"
 vignette: >
   %\VignetteIndexEntry{adam_specification}
-  %\VignetteEngine{quarto::html}
+  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
-knitr:
-  opts_chunk:
-    collapse: true
-    comment: '#>'
+output: rmarkdown::html_vignette
 ---
+
+```{r}
+#| include: false
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+```
 
 # Overview
 
@@ -479,7 +481,7 @@ Consider a component that derives both a date and its imputation flag — it pro
 
 ```{r}
 #| echo: false
-#| output: false
+#| results: hide
 library(mighty)
 options(mighty.component.verbosity_level = "quiet")
 
@@ -489,7 +491,7 @@ example_dir <- system.file("examples", "overlapping_outputs", package = "mighty"
 
 # Print a file from the example study as a code block, starting at the first
 # line that matches `from`. A helper instead of an `{embed}` chunk (used in
-# mighty.qmd) because `{embed}` can only show the whole file.
+# mighty.Rmd) because `{embed}` can only show the whole file.
 show_file <- function(path, lang, from = NULL) {
   lines <- readLines(file.path(example_dir, path))
   if (!is.null(from)) {
@@ -506,7 +508,7 @@ If the same component is used twice with different parameters but both uses prod
 
 ```{r}
 #| echo: false
-#| output: asis
+#| results: asis
 show_file("study_dir/adlb.yml", "yml", from = "^columns:")
 ```
 

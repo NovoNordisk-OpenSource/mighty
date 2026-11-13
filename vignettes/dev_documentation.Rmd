@@ -2,13 +2,15 @@
 title: "Developers Documentation"
 vignette: >
   %\VignetteIndexEntry{dev_documentation}
-  %\VignetteEngine{quarto::html}
+  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
-knitr:
-  opts_chunk:
-    collapse: true
-    comment: '#>'
+output: rmarkdown::html_vignette
 ---
+
+```{r}
+#| include: false
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+```
 
 # Types of nodes
 
