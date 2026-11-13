@@ -86,6 +86,10 @@ setup_study_dir <- function(
   if (isTRUE(as.logical(Sys.getenv("CI", "false")))) {
     testthat::skip_if_not_installed("gh", "1.6.0")
   }
+  # CRAN machines may have no network access or GitHub token
+  if (any(startsWith(mighty_yml$repos, "github::"))) {
+    testthat::skip_on_cran()
+  }
 
   dir <- withr::local_tempdir(.local_envir = .local_envir)
   for (name in names(yaml_list)) {

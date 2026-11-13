@@ -12,3 +12,6 @@ withr::local_options(
   ),
   .local_envir = testthat::teardown_env()
 )
+
+# CRAN allows at most 2 cores during checks
+data.table::setDTthreads(2)
