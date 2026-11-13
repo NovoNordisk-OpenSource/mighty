@@ -36,7 +36,7 @@ assert_no_filter_name_clash <- function(
       outputs = filter_actions$outputs[[i]],
       actions = actions,
       filter_depends = filter_depend_cols[[domain]],
-      base_domains = names(unlist(filter_domain[[domain]], recursive = FALSE)),
+      base_domains = get_base_domains(filter_domain[[domain]]),
       domain_keys = domain_keys
     )
   })
@@ -107,12 +107,18 @@ find_filter_name_clashes <- function(
   }
   own[, `:=`(
     domain = target_domain,
-    source = fcase(
-      type == "col_compute"                                                       ,
-      paste0("built by component {.file ", code_id, "}")                          ,
-      type %in% c("col_rename", "col_mutate")                                     ,
-      paste0("made from ", format_column(source_column), " with {.field method}") ,
-      default = copied_from
+    source = fifelse(
+      type == "col_compute",
+      paste0("built by component {.file ", code_id, "}"),
+      fifelse(
+        type %in% c("col_rename", "col_mutate"),
+        paste0(
+          "made from ",
+          format_column(source_column),
+          " with {.field method}"
+        ),
+        copied_from
+      )
     ),
     is_copy = type == "col_copy"
   )]
