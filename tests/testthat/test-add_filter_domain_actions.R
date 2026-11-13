@@ -551,13 +551,23 @@ rename_filter_actions <- function(extra = NULL) {
   rbind(actions, extra)
 }
 
-extra_action <- function(type, output, depends, code_id = NA_character_) {
+extra_action <- function(
+  type,
+  output,
+  depends,
+  code_id = NA_character_,
+  depends_domain = "ADLB"
+) {
   data.table(
     node_id = paste0("ADLB-", type, "-", output),
     code_id = code_id,
     type = type,
     depend_cols = list(
-      data.table(column_name = depends, domain = "ADLB", domain_type = "adam")
+      data.table(
+        column_name = depends,
+        domain = depends_domain,
+        domain_type = "adam"
+      )
     ),
     outputs = list(output),
     depend_rows = list(NA),
@@ -566,11 +576,15 @@ extra_action <- function(type, output, depends, code_id = NA_character_) {
   )
 }
 
-get_filter_outputs <- function(actions, filter_depends) {
+get_filter_outputs <- function(
+  actions,
+  filter_depends,
+  filter_domain = list(ADLB = NA)
+) {
   result <- add_filter_domain_actions(
     actions,
     filter_depend_cols = list(ADLB = filter_depends),
-    filter_domain = list(ADLB = NA),
+    filter_domain = filter_domain,
     domain_keys = list(ADLB = "USUBJID")
   )
   result[result$type == "filter_domain", ]$outputs[[1]]
@@ -701,7 +715,21 @@ test_that("Joined filter columns leave out own and starting domain prefixes and 
     domain_keys = list(SV = c("STUDYID", "USUBJID", "VISITNUM"))
   )
 
-  expect_equal(joined, "VISIT")
+  expect_equal(joined, data.table(ref = "SV.VISIT", column = "VISIT"))
+})
+
+test_that("Joined filter columns are upper-cased and keep the dependency as written", {
+  joined <- get_joined_filter_cols(
+    filter_depends = c("sv.visit", "SV.VISIT"),
+    target_domain = "ADLB",
+    base_domains = "LB",
+    domain_keys = list(SV = c("STUDYID", "USUBJID", "VISITNUM"))
+  )
+
+  expect_equal(
+    joined,
+    data.table(ref = c("sv.visit", "SV.VISIT"), column = "VISIT")
+  )
 })
 
 test_that("Readers of the source of every col_rename that runs before the filter run before it", {
@@ -767,4 +795,36 @@ test_that("Error when a filter uses a col_rename source and a column made from i
     get_filter_outputs(actions, c("LBSEQ", "SRCSEQ2")),
     "renamed column under both names"
   )
+})
+
+test_that("A column action reading another dataset's column named like a col_rename source runs after the filter", {
+  # OLDFL reads ADSL's LBSEQ, not the LBSEQ that SRCSEQ renames
+  actions <- rename_filter_actions(
+    extra_action("col_compute", "OLDFL", "LBSEQ", "oldfl.R", "ADSL")
+  )
+
+  outputs <- get_filter_outputs(actions, "SRCSEQ")
+
+  expect_setequal(outputs, c("USUBJID", "LBSTRESN", "SRCSEQ"))
+})
+
+test_that("A column action reading a col_rename source through a starting dataset prefix runs before the filter", {
+  # A component with `@depends LB LBSEQ` reads the same LBSEQ that SRCSEQ renames
+  actions <- rename_filter_actions(
+    extra_action("col_compute", "LBSEQX", "LBSEQ", "lbseqx.R", "LB")
+  )
+
+  outputs <- get_filter_outputs(
+    actions,
+    "SRCSEQ",
+    filter_domain = list(ADLB = list(list(LB = NA_character_)))
+  )
+
+  expect_setequal(outputs, c("USUBJID", "LBSTRESN", "SRCSEQ", "LBSEQX"))
+})
+
+test_that("Filter columns are matched to action columns regardless of case", {
+  outputs <- get_filter_outputs(rename_filter_actions(), "srcseq")
+
+  expect_setequal(outputs, c("USUBJID", "LBSTRESN", "SRCSEQ"))
 })
