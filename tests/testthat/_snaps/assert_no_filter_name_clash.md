@@ -127,3 +127,17 @@
       * For a column made with method, the filter must not need it, directly or through components
       * To filter on the dataset's own column, write it without the prefix (e.g. `VISIT`). The two columns can hold different values, so check that this is the column you mean
 
+# filter on SV.VISIT errors when it also needs the col_rename of SV's join key VISITNUM
+
+    Code
+      generate_clash_study(adlb_yml, get_temp_connector_config_path())
+    Condition
+      Error:
+      ! Specification validation errors found:
+      
+      [Filter uses a renamed column under both names]
+      x Filter for ADLB joins SV on VISITNUM, but it also needs AVISITN, which is VISITNUM renamed, so VISITNUM is gone before the join
+      
+      Suggestions:
+      * List the source column under columns to keep it as a separate column
+
