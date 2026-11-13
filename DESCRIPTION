@@ -47,7 +47,6 @@ Suggests:
     labelled,
     pharmaverseadam,
     pharmaversesdtm (>= 0.2.0),
-    quarto,
     remotes,
     rmarkdown,
     roxygen2,
@@ -56,9 +55,7 @@ Suggests:
     whisker,
     withr,
     yaml
-VignetteBuilder: 
-    knitr,
-    quarto
+VignetteBuilder: knitr
 Remotes:
     NovoNordisk-OpenSource/mighty.component
 Config/roxygen2/version: 8.1.1
