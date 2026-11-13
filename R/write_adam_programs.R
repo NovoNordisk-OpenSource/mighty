@@ -21,19 +21,21 @@
 #' }
 #'
 #' @examples
-#' \dontrun{
-#' # Write programs without styling
-#' programs <-  list(
+#' programs <- list(
 #'   ADSL = c("library(dplyr)", "ADSL <- DM |> select(USUBJID)"),
 #'   ADAE = c("library(dplyr)", "ADAE <- AE |> filter(!is.na(AEDECOD))")
 #' )
+#' dir <- tempfile("adam")
+#' dir.create(dir)
 #'
-#' write_adam_programs(programs, dir = "output/adam")
-#' # Creates: output/adam/ADSL.R, output/adam/ADAE.R
+#' # Write programs without styling
+#' write_adam_programs(programs, dir = dir)
+#' list.files(dir)
 #'
 #' # Write with styling
-#' write_adam_programs(programs, dir = "output/adam", style = TRUE)
-#' }
+#' write_adam_programs(programs, dir = dir, style = TRUE)
+#'
+#' unlink(dir, recursive = TRUE)
 #' @export
 write_adam_programs <- function(programs, dir, style = FALSE) {
   prog_names <- names(programs)
@@ -46,5 +48,5 @@ write_adam_programs <- function(programs, dir, style = FALSE) {
       styler::style_file(file_path)
     }
   })
-  return(TRUE)
+  invisible(TRUE)
 }

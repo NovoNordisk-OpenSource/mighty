@@ -125,17 +125,16 @@ invalid
 }
 
 \examples{
-\dontrun{
-# Generate ADaM programs with full dependency checking
-result <- generate_adam_code(
-  adam_specifications = "path/to/yaml_specs_directory",
-  path_connector_config = "path/to/trial_directory/_connector.yml",
-  check_cross_domain_adam_dependencies = TRUE
-)
+\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
+# The example study fetches components from GitHub
+example_dir <- system.file("examples", "get_started", package = "mighty")
+old_wd <- setwd(example_dir)
 
-# Access generated programs
-adsl_program <- result$programs$`1_ADSL`
-executable_programs <- result$executable_programs
-}
+result <- generate_adam_code(adam_specifications = "study_dir")
 
+# Print the generated ADSL program
+cat(result$programs$`1_ADSL`, sep = "\n")
+
+setwd(old_wd)
+\dontshow{\}) # examplesIf}
 }
