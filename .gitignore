@@ -48,11 +48,9 @@ docs/
 po/*~
 .Rproj.user
 inst/doc
-**/.quarto/
 docs
 /doc/
 /Meta/
-/.quarto/
 .lintr
 
 # local lint reporters (for when running linters locally)
