@@ -229,9 +229,14 @@ The mighty framework consists of these complementary packages:
 
 ## Installation
 
+Install the released version from CRAN:
+
+``` r
+install.packages("mighty")
+```
+
 Install the development version from GitHub:
 
 ``` r
-# Using pak (recommended)
 pak::pak("NovoNordisk-OpenSource/mighty")
 ```
