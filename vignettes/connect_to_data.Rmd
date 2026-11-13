@@ -1,7 +1,7 @@
 ---
 title: "Connecting to Data"
 vignette: >
-  %\VignetteIndexEntry{connect_to_data}
+  %\VignetteIndexEntry{Connecting to Data}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 output: rmarkdown::html_vignette
