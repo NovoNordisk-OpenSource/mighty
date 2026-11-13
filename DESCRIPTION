@@ -43,24 +43,19 @@ Suggests:
     arrow,
     connector,
     gh,
-    knitr,
     labelled,
     pharmaverseadam,
     pharmaversesdtm (>= 0.2.0),
-    quarto,
     remotes,
-    rmarkdown,
     roxygen2,
     testthat (>= 3.0.0),
     tools,
     whisker,
     withr,
     yaml
-VignetteBuilder: 
-    knitr,
-    quarto
 Remotes:
     NovoNordisk-OpenSource/mighty.component
+Config/Needs/website: knitr, quarto, rmarkdown
 Config/roxygen2/version: 8.1.1
 Config/testthat/edition: 3
 Encoding: UTF-8

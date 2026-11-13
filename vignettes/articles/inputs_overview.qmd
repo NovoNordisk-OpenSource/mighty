@@ -33,7 +33,7 @@ Additionally (and optional), mighty can render programs that are executable, bas
 - `external_data`: the keys of external domains (SDTM, metadata, ADaM built elsewhere). mighty uses keys to join domains. For example, when ADLB takes `SAFFL` from ADSL, the rows are matched on ADSL's keys.
 - `repos`: where mighty looks for components.
 
-See `vignette("mighty_config")`.
+See [Framework configuration](mighty_config.html).
 
 ## ADaM Specification
 
@@ -44,7 +44,7 @@ Each ADaM domain requires its own specification that acts as a comprehensive blu
 - **Column requirements**: Both retained SDTM variables and derived variables
 - **Row operations**: Transformations such as derived parameters and imputations
 
-For detailed information about the ADaM specification data model and syntax, see `vignette("adam_specification")`.
+For detailed information about the ADaM specification data model and syntax, see [ADaM specification](adam_specification.html).
 
 ## Code Components
 
@@ -64,7 +64,7 @@ There are two kinds of components:
 - Read source data, set up each domain, filter rows, and write the output
 - Join other domains using the keys defined in `_mighty.yml` or in their specifications
 
-See `vignette("code_components")` and `vignette("internal_components")`.
+See [Code components](code_components.html) and [Internal components](internal_components.html).
 
 ## Study properties (\_study.yml)
 
@@ -74,4 +74,4 @@ The optional `_study.yml` holds study-level properties. While mighty does not us
 
 While a trial is running, the available data keeps changing until database lock: new SDTM datasets are added, columns appear in existing ones, supplemental qualifier datasets are created or updated, and protocol amendments can add new data points. The programs mighty generates always follow the full ADaM specification, so they fail if a domain or column they use does not exist yet.
 
-To get programs you can run now, pass `generate_adam_code()` a `data_context` describing which SDTM and metadata tables and columns exist. mighty then returns two sets of programs: the complete ones, which follow the specification, and executable ones, which run on the current data. In the executable programs, steps that can't run yet are commented out, with a note saying which data is missing. See `vignette("missing_data_analysis")`.
+To get programs you can run now, pass `generate_adam_code()` a `data_context` describing which SDTM and metadata tables and columns exist. mighty then returns two sets of programs: the complete ones, which follow the specification, and executable ones, which run on the current data. In the executable programs, steps that can't run yet are commented out, with a note saying which data is missing. See [Missing data analysis](missing_data_analysis.html).
