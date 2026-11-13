@@ -74,7 +74,15 @@ utils::globalVariables(c(
   "yaml_outputs",
   "code_outputs",
   "extra_outputs",
-  "overlapping"
+  "overlapping",
+
+  # assert_no_filter_name_clash variables
+  "dependency",
+  "prefix",
+  "column",
+  "is_key",
+  "is_copy",
+  "clash"
 ))
 
 # Also declare the dot function and setNames if they're causing issues
