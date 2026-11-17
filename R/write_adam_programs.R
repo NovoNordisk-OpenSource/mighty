@@ -38,7 +38,6 @@
 #' unlink(dir, recursive = TRUE)
 #' @export
 write_adam_programs <- function(programs, dir, style = FALSE) {
-  prog_names <- names(programs)
   purrr::imap(programs, function(prog_i, nm) {
     file_name <- paste0(nm, ".R")
     prog_i <- paste0(prog_i, collapse = "\n")

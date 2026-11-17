@@ -55,7 +55,7 @@ process_adam_domain <- function(domain, domain_name) {
 
   all_entries <- c(columns, rows, parameters)
 
-  result <- list(
+  list(
     columns = all_entries, # Note: 'columns' contains both columns and rows
     domain = yaml_content$id,
     keys = yaml_content$keys,
