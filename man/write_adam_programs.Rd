@@ -13,7 +13,7 @@ vector, with names used as file names (without .R extension).}
 \item{dir}{Character. Output directory path where R files will be written.}
 
 \item{style}{Logical. Whether to apply code styling using \code{\link[styler:style_file]{styler::style_file()}}.
-Default is FALSE.}
+Default is FALSE. Requires the styler package to be installed.}
 }
 \value{
 Logical. Returns TRUE invisibly upon successful completion.
@@ -43,8 +43,10 @@ dir.create(dir)
 write_adam_programs(programs, dir = dir)
 list.files(dir)
 
-# Write with styling
-write_adam_programs(programs, dir = dir, style = TRUE)
+# Write with styling (requires styler)
+if (requireNamespace("styler", quietly = TRUE)) {
+  write_adam_programs(programs, dir = dir, style = TRUE)
+}
 
 unlink(dir, recursive = TRUE)
 }

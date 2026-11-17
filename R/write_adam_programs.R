@@ -7,7 +7,7 @@
 #'   vector, with names used as file names (without .R extension).
 #' @param dir Character. Output directory path where R files will be written.
 #' @param style Logical. Whether to apply code styling using [styler::style_file()].
-#'   Default is FALSE.
+#'   Default is FALSE. Requires the styler package to be installed.
 #'
 #' @return Logical. Returns TRUE invisibly upon successful completion.
 #'
@@ -32,13 +32,19 @@
 #' write_adam_programs(programs, dir = dir)
 #' list.files(dir)
 #'
-#' # Write with styling
-#' write_adam_programs(programs, dir = dir, style = TRUE)
+#' # Write with styling (requires styler)
+#' if (requireNamespace("styler", quietly = TRUE)) {
+#'   write_adam_programs(programs, dir = dir, style = TRUE)
+#' }
 #'
 #' unlink(dir, recursive = TRUE)
 #' @export
 write_adam_programs <- function(programs, dir, style = FALSE) {
   if (style) {
+    rlang::check_installed(
+      "styler",
+      reason = "to style the generated programs."
+    )
     old_opts <- options(styler.quiet = TRUE)
     on.exit(options(old_opts), add = TRUE)
   }
