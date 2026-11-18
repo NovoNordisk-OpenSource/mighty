@@ -21,7 +21,6 @@ BugReports: https://github.com/NovoNordisk-OpenSource/mighty/issues
 Depends:
     R (>= 4.1)
 Imports:
-    assertthat,
     checkmate,
     cli,
     data.table,
