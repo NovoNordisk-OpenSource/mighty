@@ -347,7 +347,7 @@ transform_population_to_init <- function(population) {
   if (has_content(population$base)) {
     init$filter_domain <- lapply(population$base, function(x) {
       filter_values <- extract_filters_base(x)
-      setNames(list(filter_values), x$domain)
+      stats::setNames(list(filter_values), x$domain)
     })
   }
 
@@ -460,5 +460,5 @@ create_row_action_entries <- function(entries) {
   }
   row_action_key <- "" # Row actions use empty string as key
   lapply(entries, create_row_action_entry) |>
-    setNames(rep(row_action_key, length(entries)))
+    stats::setNames(rep(row_action_key, length(entries)))
 }

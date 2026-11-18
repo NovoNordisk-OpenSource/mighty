@@ -35,6 +35,7 @@ Imports:
     rlang,
     S7,
     S7schema,
+    stats,
     utils,
     visNetwork,
     zephyr

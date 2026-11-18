@@ -85,7 +85,7 @@ initialize_graph_data <- function(edges, nodes, primary_domain) {
 
   # Create domain lookup table
   node_names <- attr(adj_matrix, "dimnames")[[1]]
-  lkp_dom <- setNames(
+  lkp_dom <- stats::setNames(
     nodes$domain[match(node_names, nodes$node_id)],
     node_names
   )
