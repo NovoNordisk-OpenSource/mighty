@@ -102,17 +102,18 @@
 #'   \item Trial configuration is malformed
 #' }
 #'
-#' @examplesIf interactive()
-#' # The example study fetches components from GitHub
-#' example_dir <- system.file("examples", "get_started", package = "mighty")
+#' @examples
+#' # The example study reads its components from a local folder, so it works offline
+#' example_dir <- system.file("examples", "offline", package = "mighty")
 #' old_wd <- setwd(example_dir)
 #'
-#' result <- generate_adam_code(adam_specifications = "study_dir")
+#' result <- tryCatch(
+#'   generate_adam_code(adam_specifications = "study_dir"),
+#'   finally = setwd(old_wd)
+#' )
 #'
 #' # Print the generated ADSL program
 #' cat(result$programs$`1_ADSL`, sep = "\n")
-#'
-#' setwd(old_wd)
 #'
 #' @import data.table
 #' @export

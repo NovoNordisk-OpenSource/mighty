@@ -1,0 +1,7 @@
+external_data:
+  - id: DM
+    keys: [USUBJID, STUDYID]
+  - id: AE
+    keys: [USUBJID, STUDYID, AESEQ]
+repos:
+  - "./components"
