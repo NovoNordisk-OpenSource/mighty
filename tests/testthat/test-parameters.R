@@ -1,4 +1,5 @@
 test_that("Complex test with multiple domains and column/row operations", {
+  skip_if_not_installed("styler")
   # SETUP -------------------------------------------------------------------
 
   adam_specifications <- setup_study_from_fixtures(

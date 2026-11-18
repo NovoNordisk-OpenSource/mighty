@@ -62,6 +62,7 @@ columns:
 })
 
 test_that("Available source data makes all actions executable", {
+  skip_if_not_installed("styler")
   # SETUP -------------------------------------------------------------------
   trial_path <- withr::local_tempdir()
 
@@ -134,6 +135,7 @@ columns:
 })
 
 test_that("Missing variable in source data makes filter action non-executable", {
+  skip_if_not_installed("styler")
   # SETUP -------------------------------------------------------------------
   trial_path <- withr::local_tempdir()
 
@@ -224,6 +226,7 @@ columns:
 })
 
 test_that("Missing variable in source data with no filter impact keeps filter executable", {
+  skip_if_not_installed("styler")
   # SETUP -------------------------------------------------------------------
 
   trial_path <- withr::local_tempdir()
@@ -305,6 +308,7 @@ columns:
 })
 
 test_that("Missing variables in source data makes filter action non-executable - case with global and domain filter", {
+  skip_if_not_installed("styler")
   # SETUP -------------------------------------------------------------------
   trial_path <- withr::local_tempdir()
   yml <- "
@@ -408,6 +412,7 @@ columns:
 })
 
 test_that("Missing variable in source data makes actions executable but deactivates a predecessor", {
+  skip_if_not_installed("styler")
   # SETUP -------------------------------------------------------------------
 
   trial_path <- withr::local_tempdir()
@@ -576,6 +581,7 @@ columns:
 })
 
 test_that("Missing columns in one base domain are disregarded in other base domains", {
+  skip_if_not_installed("styler")
   #yaml file with three base domains
   # check that missing column affects other domains
   trial_path <- withr::local_tempdir()
@@ -692,6 +698,7 @@ columns:
 })
 
 test_that("Filter removes missing base domain variables and creates lineage message", {
+  skip_if_not_installed("styler")
   # SETUP -------------------------------------------------------------------
   trial_path <- withr::local_tempdir()
 

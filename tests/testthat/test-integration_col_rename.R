@@ -1,4 +1,5 @@
 test_that("col_rename generated ADLB program executes without error", {
+  skip_if_not_installed("styler")
   # SETUP -------------------------------------------------------------------
 
   adam_specifications <- setup_study_from_fixtures(

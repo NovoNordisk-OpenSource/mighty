@@ -47,7 +47,6 @@ setup_testdata <- function(
   testthat::skip_if_not_installed("arrow")
   testthat::skip_if_not_installed("connector")
   testthat::skip_if_not_installed("pharmaversesdtm")
-  testthat::skip_if_not_installed("styler")
   if (length(adam_domains) > 0) {
     testthat::skip_if_not_installed("pharmaverseadam")
   }

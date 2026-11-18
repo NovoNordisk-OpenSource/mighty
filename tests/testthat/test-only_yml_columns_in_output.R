@@ -1,4 +1,5 @@
 test_that("Only YAML-defined columns appear in the final dataset", {
+  skip_if_not_installed("styler")
   # SETUP -------------------------------------------------------------------
 
   component <- "

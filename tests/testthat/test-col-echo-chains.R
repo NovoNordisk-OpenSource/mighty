@@ -1,4 +1,5 @@
 test_that("col_echo chains work when the target column name already exists in self", {
+  skip_if_not_installed("styler")
   # Program 4 reads the ADSL that program 3 writes. On Windows the second write fails (see
   # remove_connector_write_step()), so the chain cannot run there.
   skip_on_os("windows")
