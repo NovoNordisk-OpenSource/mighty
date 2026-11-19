@@ -1,5 +1,4 @@
 test_that("Bug in cross-adam dependencies", {
-  skip_if_not_installed("styler")
   # SETUP -------------------------------------------------------------------
 
   yaml_content_adsl <- "

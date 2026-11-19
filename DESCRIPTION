@@ -36,6 +36,7 @@ Imports:
     S7,
     S7schema,
     stats,
+    styler,
     utils,
     visNetwork,
     zephyr
@@ -47,7 +48,6 @@ Suggests:
     pharmaverseadam,
     pharmaversesdtm (>= 0.2.0),
     remotes,
-    styler,
     testthat (>= 3.0.0),
     tidyr,
     whisker,

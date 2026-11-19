@@ -1,5 +1,4 @@
 test_that("Global filter and domain filter are equivalent when same filter use on each domain", {
-  skip_if_not_installed("styler")
   # ARRANGE -----------------------------------------------------------------
   path_connector_config <- withr::local_tempdir()
   mighty_yml <- "external_data:

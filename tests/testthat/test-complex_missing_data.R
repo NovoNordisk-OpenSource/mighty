@@ -1,5 +1,4 @@
 test_that("Complex test w/ missing dm_vaccine.SEX", {
-  skip_if_not_installed("styler")
   # SETUP -------------------------------------------------------------------
 
   adam_specifications <- setup_study_from_fixtures(
@@ -148,7 +147,6 @@ test_that("Complex test w/ missing dm_vaccine.SEX", {
 })
 
 test_that("Complex test w/ missing dm_vaccine.AGE and dm.SEX", {
-  skip_if_not_installed("styler")
   # SETUP -------------------------------------------------------------------
 
   adam_specifications <- setup_study_from_fixtures(
@@ -357,7 +355,6 @@ test_that("Complex test w/ missing dm_vaccine.AGE and dm.SEX", {
 })
 
 test_that("Complex test w/ missing lb.LBSTRESN", {
-  skip_if_not_installed("styler")
   # SETUP -------------------------------------------------------------------
   adam_specifications <- setup_study_from_fixtures(
     fixtures = list(
