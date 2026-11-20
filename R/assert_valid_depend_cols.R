@@ -400,7 +400,7 @@ check_adam_dependencies_within_domain <- function(
   missing_adam_deps_domain <- lapply(missing_adam_deps, function(x) {
     str_split <- strsplit(x, "\\.")[[1]]
     if (
-      toupper(str_split[1]) == toupper(domain_name) & length(str_split) == 2
+      toupper(str_split[1]) == toupper(domain_name) && length(str_split) == 2
     ) {
       str_split[2]
     }
