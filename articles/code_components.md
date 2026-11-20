@@ -124,8 +124,8 @@ Detailed explanation of what the component does.
 
 *Only for Mustache template components* - Parameters to pass to the
 template, populated from the `with` section of the ADaM specification.
-See
-[`vignette("adam_specification")`](https://novonordisk-opensource.github.io/mighty/articles/adam_specification.md).
+See [ADaM
+specification](https://novonordisk-opensource.github.io/mighty/articles/adam_specification.md).
 
 ``` r
 
@@ -552,8 +552,8 @@ once across different components. This is an accepted trade-off:
 
 Mighty looks up the `id` of a component in the repositories listed under
 `repos` in `_mighty.yml`. To use your own components, add the directory
-that contains them to `repos`. See
-[`vignette("mighty_config")`](https://novonordisk-opensource.github.io/mighty/articles/mighty_config.md)
+that contains them to `repos`. See [Framework
+configuration](https://novonordisk-opensource.github.io/mighty/articles/mighty_config.md)
 for the lookup rules.
 
 ## Internal components

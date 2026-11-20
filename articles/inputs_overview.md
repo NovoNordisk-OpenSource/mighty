@@ -34,8 +34,8 @@ executable, based on the available data:
   ADLB takes `SAFFL` from ADSL, the rows are matched on ADSL’s keys.
 - `repos`: where mighty looks for components.
 
-See
-[`vignette("mighty_config")`](https://novonordisk-opensource.github.io/mighty/articles/mighty_config.md).
+See [Framework
+configuration](https://novonordisk-opensource.github.io/mighty/articles/mighty_config.md).
 
 ## ADaM Specification
 
@@ -50,8 +50,8 @@ comprehensive blueprint. The specification defines:
   imputations
 
 For detailed information about the ADaM specification data model and
-syntax, see
-[`vignette("adam_specification")`](https://novonordisk-opensource.github.io/mighty/articles/adam_specification.md).
+syntax, see [ADaM
+specification](https://novonordisk-opensource.github.io/mighty/articles/adam_specification.md).
 
 ## Code Components
 
@@ -80,10 +80,10 @@ There are two kinds of components:
 - Join other domains using the keys defined in `_mighty.yml` or in their
   specifications
 
-See
-[`vignette("code_components")`](https://novonordisk-opensource.github.io/mighty/articles/code_components.md)
-and
-[`vignette("internal_components")`](https://novonordisk-opensource.github.io/mighty/articles/internal_components.md).
+See [Code
+components](https://novonordisk-opensource.github.io/mighty/articles/code_components.md)
+and [Internal
+components](https://novonordisk-opensource.github.io/mighty/articles/internal_components.md).
 
 ## Study properties (\_study.yml)
 
@@ -108,5 +108,6 @@ a `data_context` describing which SDTM and metadata tables and columns
 exist. mighty then returns two sets of programs: the complete ones,
 which follow the specification, and executable ones, which run on the
 current data. In the executable programs, steps that can’t run yet are
-commented out, with a note saying which data is missing. See
-[`vignette("missing_data_analysis")`](https://novonordisk-opensource.github.io/mighty/articles/missing_data_analysis.md).
+commented out, with a note saying which data is missing. See [Missing
+data
+analysis](https://novonordisk-opensource.github.io/mighty/articles/missing_data_analysis.md).

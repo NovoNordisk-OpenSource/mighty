@@ -99,8 +99,8 @@ and a `columns` list with every column of the final dataset:
   `age_group_01.R` (see next section).
 
 The `columns` list defines the final dataset, so mighty keeps only the
-listed columns when it writes ADSL. See
-[`vignette("adam_specification")`](https://novonordisk-opensource.github.io/mighty/articles/adam_specification.md)
+listed columns when it writes ADSL. See [ADaM
+specification](https://novonordisk-opensource.github.io/mighty/articles/adam_specification.md)
 for everything a specification can contain.
 
 **adsl.yml**
@@ -181,8 +181,8 @@ ADSL <- ADSL |>
 
 The `#'` header tells mighty what the component needs
 (`@depends ADSL AGE`) and what it creates (`@outputs AGE_GRP1`). The
-code after `@code` is inserted into the ADSL program as it is. See
-[`vignette("code_components")`](https://novonordisk-opensource.github.io/mighty/articles/code_components.md)
+code after `@code` is inserted into the ADSL program as it is. See [Code
+components](https://novonordisk-opensource.github.io/mighty/articles/code_components.md)
 for all tags.
 
 ### Render the ADaM program
@@ -314,16 +314,22 @@ guidelines](#study-directory-guidelines)).
 
 ### Next steps
 
-- [`vignette("inputs_overview")`](https://novonordisk-opensource.github.io/mighty/articles/inputs_overview.md):
+- [Inputs
+  overview](https://novonordisk-opensource.github.io/mighty/articles/inputs_overview.md):
   all inputs mighty uses, in one place
-- [`vignette("mighty_config")`](https://novonordisk-opensource.github.io/mighty/articles/mighty_config.md):
+- [Framework
+  configuration](https://novonordisk-opensource.github.io/mighty/articles/mighty_config.md):
   keys and component repositories in `_mighty.yml`
-- [`vignette("adam_specification")`](https://novonordisk-opensource.github.io/mighty/articles/adam_specification.md):
+- [ADaM
+  specification](https://novonordisk-opensource.github.io/mighty/articles/adam_specification.md):
   everything a specification can contain: population, columns, rows,
   parameters
-- [`vignette("code_components")`](https://novonordisk-opensource.github.io/mighty/articles/code_components.md):
+- [Code
+  components](https://novonordisk-opensource.github.io/mighty/articles/code_components.md):
   how to write your own components
-- [`vignette("connect_to_data")`](https://novonordisk-opensource.github.io/mighty/articles/connect_to_data.md):
+- [Connecting to
+  data](https://novonordisk-opensource.github.io/mighty/articles/connect_to_data.md):
   how the generated programs read and write data
-- [`vignette("missing_data_analysis")`](https://novonordisk-opensource.github.io/mighty/articles/missing_data_analysis.md):
+- [Missing data
+  analysis](https://novonordisk-opensource.github.io/mighty/articles/missing_data_analysis.md):
   generating programs that run on the data available today
