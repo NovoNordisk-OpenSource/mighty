@@ -100,11 +100,13 @@ LBDTC
 LBENDTC
 LBSEQ
 LBSEQX
+LBSEQY
 LBSTNRHI
 LBSTNRLO
 LBSTRESC
 LBSTRESN
 LBSTRESU
+LBTCX
 LBTEST
 LBTESTCD
 locf
@@ -187,6 +189,7 @@ summarise
 suppae
 suppdm
 suppds
+SVSTDTC
 Sweave
 tablename
 testdata
