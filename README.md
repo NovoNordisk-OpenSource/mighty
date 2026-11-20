@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# Overview
+# Overview <img src="man/figures/logo.png" align="right" height="139" alt="mighty logo" />
 
 The mighty framework introduces a declarative paradigm to building ADaM
 datasets, emphasizing *what you need* rather than *how to create it*.
