@@ -59,22 +59,6 @@ list.files(dir)
 
 # Write with styling
 write_adam_programs(programs, dir = dir, style = TRUE)
-#> Styling  1  files:
-#>  /tmp/RtmpXeafVY/adam1b33ddfb9ec/ADSL.R ✔ 
-#> ────────────────────────────────────────
-#> Status   Count   Legend 
-#> ✔   1   File unchanged.
-#> ℹ   0   File changed.
-#> ✖   0   Styling threw an error.
-#> ────────────────────────────────────────
-#> Styling  1  files:
-#>  /tmp/RtmpXeafVY/adam1b33ddfb9ec/ADAE.R ✔ 
-#> ────────────────────────────────────────
-#> Status   Count   Legend 
-#> ✔   1   File unchanged.
-#> ℹ   0   File changed.
-#> ✖   0   Styling threw an error.
-#> ────────────────────────────────────────
 
 unlink(dir, recursive = TRUE)
 ```
