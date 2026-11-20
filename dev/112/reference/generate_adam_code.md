@@ -176,14 +176,14 @@ The function will stop execution if:
 ``` r
 if (FALSE) { # interactive()
 # The example study fetches components from GitHub
-example_dir <- system.file("examples", "get_started", package = "mighty")
-old_wd <- setwd(example_dir)
+local({
+  old_wd <- setwd(system.file("examples", "get_started", package = "mighty"))
+  on.exit(setwd(old_wd))
 
-result <- generate_adam_code(adam_specifications = "study_dir")
+  result <- generate_adam_code(adam_specifications = "study_dir")
 
-# Print the generated ADSL program
-cat(result$programs$`1_ADSL`, sep = "\n")
-
-setwd(old_wd)
+  # Print the generated ADSL program
+  cat(result$programs$`1_ADSL`, sep = "\n")
+})
 }
 ```
