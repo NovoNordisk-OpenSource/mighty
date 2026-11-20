@@ -1,9 +1,5 @@
 ---
 title: "Internal components"
-vignette: >
-  %\VignetteIndexEntry{Internal components}
-  %\VignetteEngine{quarto::html}
-  %\VignetteEncoding{UTF-8}
 knitr:
   opts_chunk:
     collapse: true

@@ -1,9 +1,5 @@
 ---
 title: "Framework configuration (_mighty.yml)"
-vignette: >
-  %\VignetteIndexEntry{Framework configuration (_mighty.yml)}
-  %\VignetteEngine{quarto::html}
-  %\VignetteEncoding{UTF-8}
 knitr:
   opts_chunk:
     collapse: true

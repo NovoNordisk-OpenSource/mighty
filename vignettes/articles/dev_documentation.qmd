@@ -1,9 +1,5 @@
 ---
 title: "Developers Documentation"
-vignette: >
-  %\VignetteIndexEntry{dev_documentation}
-  %\VignetteEngine{quarto::html}
-  %\VignetteEncoding{UTF-8}
 knitr:
   opts_chunk:
     collapse: true
