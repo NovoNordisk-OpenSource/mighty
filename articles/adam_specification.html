@@ -370,7 +370,7 @@
 <tr class="odd">
 <td><code>depends</code></td>
 <td>Array of columns needed for global filtering</td>
-<td>Include domain prefix (e.g., <code>ADSL.SAFFL</code>) when referencing a column outside the current domain</td>
+<td>Include domain prefix (e.g., <code>ADSL.SAFFL</code>) when referencing a column of another domain. A column name without a prefix is a column of the ADaM domain being built</td>
 </tr>
 <tr class="even">
 <td><code>filter</code></td>
@@ -386,7 +386,9 @@
 <li>Listing required columns in <code>global.depends</code> with domain prefix (e.g., <code>ADSL.SAFFL</code>)</li>
 <li>Writing filter expressions that reference the columns without the prefix (e.g., <code>SAFFL == "Y"</code>)</li>
 </ol>
-<p>mighty joins the domain in automatically, using that domain’s keys: from its specification (<code>keys:</code>) if mighty builds it, such as ADSL, otherwise from <code>external_data</code> in <code>_mighty.yml</code>.</p>
+<p>mighty joins the domain in automatically, using that domain’s keys: from its specification (<code>keys:</code>) if mighty builds it, such as ADSL, otherwise from <code>external_data</code> in <code>_mighty.yml</code>. The joined columns are used for the filter and dropped after it.</p>
+<p>A column joined for a filter (global or base) can’t have the same name as a column the ADaM domain already has when the filter runs. These are the columns copied from the base domains, and the columns built by components that the filter needs. The same column name also can’t be joined from two other domains. The other domain’s primary keys are the exception. mighty stops with a validation error otherwise.</p>
+<p>For example, a filter on <code>SV.VISIT</code> can’t be combined with a <code>VISIT</code> column copied from LB. Either copy <code>VISIT</code> from SV with <code>method: SV.VISIT</code>, or filter on the ADaM domain’s own <code>VISIT</code> by writing it without the prefix. LB’s and SV’s <code>VISIT</code> can hold different values, so check which one you mean.</p>
 </section></section><section class="level2"><h3 id="simple-example">Simple example<a class="anchor" aria-label="anchor" href="#simple-example"></a>
 </h3>
 <div class="sourceCode" id="cb7"><pre class="sourceCode yml"><code class="sourceCode yaml"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">population</span><span class="kw">:</span></span>

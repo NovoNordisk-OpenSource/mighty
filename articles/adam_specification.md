@@ -239,7 +239,7 @@ filtering.
 
 | Field | Description | Notes |
 |----|----|----|
-| `depends` | Array of columns needed for global filtering | Include domain prefix (e.g., `ADSL.SAFFL`) when referencing a column outside the current domain |
+| `depends` | Array of columns needed for global filtering | Include domain prefix (e.g., `ADSL.SAFFL`) when referencing a column of another domain. A column name without a prefix is a column of the ADaM domain being built |
 | `filter` | Filter specification. Must be an R expression that can be evaluated | Applied to combined dataset. |
 
 #### Using external domains in global filters
@@ -254,7 +254,21 @@ by:
 
 mighty joins the domain in automatically, using that domain’s keys: from
 its specification (`keys:`) if mighty builds it, such as ADSL, otherwise
-from `external_data` in `_mighty.yml`.
+from `external_data` in `_mighty.yml`. The joined columns are used for
+the filter and dropped after it.
+
+A column joined for a filter (global or base) can’t have the same name
+as a column the ADaM domain already has when the filter runs. These are
+the columns copied from the base domains, and the columns built by
+components that the filter needs. The same column name also can’t be
+joined from two other domains. The other domain’s primary keys are the
+exception. mighty stops with a validation error otherwise.
+
+For example, a filter on `SV.VISIT` can’t be combined with a `VISIT`
+column copied from LB. Either copy `VISIT` from SV with
+`method: SV.VISIT`, or filter on the ADaM domain’s own `VISIT` by
+writing it without the prefix. LB’s and SV’s `VISIT` can hold different
+values, so check which one you mean.
 
 ### Simple example
 
