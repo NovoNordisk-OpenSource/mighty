@@ -57,10 +57,12 @@ A named list containing the complete ADaM program generation results:
 
 - programs:
 
-  Named list of complete R programs, one per ADaM domain. Each element
-  is a character string containing a fully executable R script. Programs
-  include all dependency-ordered actions and are ready to execute
-  independently. Names are prefixed with the required execution order.
+  Named list of complete R programs, one per run of a domain (a domain
+  is split into several programs when it depends on a domain that
+  depends on it). Each element is a character string containing a fully
+  executable R script. Programs include all dependency-ordered actions
+  and are ready to execute independently. Names are prefixed with the
+  required execution order.
 
 - program_sequence:
 
@@ -172,16 +174,16 @@ The function will stop execution if:
 ## Examples
 
 ``` r
-if (FALSE) { # \dontrun{
-# Generate ADaM programs with full dependency checking
-result <- generate_adam_code(
-  adam_specifications = "path/to/yaml_specs_directory",
-  path_connector_config = "path/to/trial_directory/_connector.yml",
-  check_cross_domain_adam_dependencies = TRUE
-)
+if (FALSE) { # interactive()
+# The example study fetches components from GitHub
+local({
+  old_wd <- setwd(system.file("examples", "get_started", package = "mighty"))
+  on.exit(setwd(old_wd))
 
-# Access generated programs
-adsl_program <- result$programs$ADSL
-executable_programs <- result$executable_programs
-} # }
+  result <- generate_adam_code(adam_specifications = "study_dir")
+
+  # Print the generated ADSL program
+  cat(result$programs$`1_ADSL`, sep = "\n")
+})
+}
 ```

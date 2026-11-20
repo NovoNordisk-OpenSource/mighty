@@ -1,17 +1,22 @@
-# mighty: ADaM Program Generation Through Declarative Specifications
+# mighty: Generate 'CDISC' 'ADaM' Programs from Declarative Specifications
 
-Provides tools for generating ADaM programs in clinical trials using a
-declarative approach. Users specify what data structure and derivations
-they need through YAML-based specifications, rather than writing
-imperative code. The package handles dependency tracking between columns
-and rows, orchestrates code components, and automatically generates
-executable R programs for ADaM dataset creation.
+Generate R programs that create Clinical Data Interchange Standards
+Consortium ('CDISC') Analysis Data Model ('ADaM') datasets for clinical
+trials. Users describe the dataset structure and derivations in 'YAML'
+specifications instead of writing the code by hand. The package resolves
+dependencies between columns and rows, combines reusable code
+components, and writes executable R programs.
 
 ## See also
 
 Useful links:
 
 - <https://novonordisk-opensource.github.io/mighty/>
+
+- <https://github.com/NovoNordisk-OpenSource/mighty>
+
+- Report bugs at
+  <https://github.com/NovoNordisk-OpenSource/mighty/issues>
 
 ## Author
 
@@ -26,3 +31,7 @@ Authors:
 - Aksel Thomsen <oath@novonordisk.com>
 
 - Michael Hedegaard Thomsen <mhzt@novonordisk.com>
+
+Other contributors:
+
+- Novo Nordisk A/S \[copyright holder\]
