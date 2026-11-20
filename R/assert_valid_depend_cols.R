@@ -58,10 +58,10 @@
 #' }
 #'
 #' @seealso
-#' [get_filter_adam_dependencies()] for extracting filter dependencies,
-#' [get_all_adam_dependencies()] for combining dependency sources,
-#' [check_adam_dependencies_cross_domain()] for cross-domain validation,
-#' [check_adam_dependencies_within_domain()] for within-domain validation
+#' `get_filter_adam_dependencies()` for extracting filter dependencies,
+#' `get_all_adam_dependencies()` for combining dependency sources,
+#' `check_adam_dependencies_cross_domain()` for cross-domain validation,
+#' `check_adam_dependencies_within_domain()` for within-domain validation
 #'
 #' @noRd
 assert_valid_depend_cols <- function(

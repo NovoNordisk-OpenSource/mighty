@@ -34,7 +34,7 @@
 #' The organization process follows these sequential steps:
 #'
 #' \subsection{1. Dependency Sorting}{
-#' Uses [sort_actions()] to create a topologically sorted execution order that:
+#' Uses `sort_actions()` to create a topologically sorted execution order that:
 #' \itemize{
 #'   \item Prioritizes ADSL (primary domain) actions early in the sequence
 #'   \item Minimizes domain switching to improve program locality
@@ -44,7 +44,7 @@
 #' }
 #'
 #' \subsection{2. Domain Grouping}{
-#' Uses [group_actions()] to organize the sorted actions into programs by:
+#' Uses `group_actions()` to organize the sorted actions into programs by:
 #' \itemize{
 #'   \item Grouping adjacent actions from the same domain
 #'   \item Maintaining dependency order within and across programs
@@ -104,10 +104,10 @@
 #' }
 #'
 #' @seealso
-#' [sort_actions()] for dependency-based action sorting,
-#' [group_actions()] for domain-based program grouping,
-#' [traverse_and_group_actions()] for the core grouping algorithm,
-#' [make_edges()] for creating dependency relationships
+#' `sort_actions()` for dependency-based action sorting,
+#' `group_actions()` for domain-based program grouping,
+#' `traverse_and_group_actions()` for the core grouping algorithm,
+#' `make_edges()` for creating dependency relationships
 #'
 #' @noRd
 organize_actions <- function(actions, edges) {

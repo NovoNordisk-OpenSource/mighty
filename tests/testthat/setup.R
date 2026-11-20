@@ -14,4 +14,5 @@ withr::local_options(
 )
 
 # CRAN allows at most 2 cores during checks
-data.table::setDTthreads(2)
+old_dt_threads <- data.table::setDTthreads(2)
+withr::defer(data.table::setDTthreads(old_dt_threads), testthat::teardown_env())

@@ -46,7 +46,7 @@
 #' loops in case of circular dependencies or other edge cases.
 #'
 #' @section Algorithm Details:
-#' The traversal process uses [traverse_and_group_actions()] to:
+#' The traversal process uses `traverse_and_group_actions()` to:
 #' \itemize{
 #'   \item Process nodes in dependency order
 #'   \item Assign hierarchical group numbers
@@ -199,7 +199,7 @@ group_actions <- function(ordered_nodes, vertices, edges) {
 #' @section Recursion Control:
 #' The function uses depth-first recursion within a single domain and node group.
 #' It stops recursion when no child nodes have all their dependencies satisfied,
-#' allowing the parent [group_actions()] function to start a new group if needed.
+#' allowing the parent `group_actions()` function to start a new group if needed.
 #'
 #' @examples
 #' \dontrun{
@@ -237,9 +237,9 @@ group_actions <- function(ordered_nodes, vertices, edges) {
 #' }
 #'
 #' @seealso
-#' [group_actions()] for the parent function that orchestrates multiple traversals,
-#' [make_edges()] for creating the dependency edge structure,
-#' [organize_actions()] for the broader action organization workflow
+#' `group_actions()` for the parent function that orchestrates multiple traversals,
+#' `make_edges()` for creating the dependency edge structure,
+#' `organize_actions()` for the broader action organization workflow
 #'
 #' @noRd
 traverse_and_group_actions <- function(

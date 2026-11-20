@@ -24,7 +24,7 @@
 #' @details
 #' Processing pipeline:
 #' \enumerate{
-#'   \item Converts UI YAML to tabular format via [convert_yml_to_data_table()]
+#'   \item Converts UI YAML to tabular format via `convert_yml_to_data_table()`
 #'   \item Extracts base actions and renders code components
 #'   \item Consolidates metadata and adds domain keys
 #'   \item Validates dependencies and cross-domain references
