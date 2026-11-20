@@ -136,7 +136,7 @@ report_issues <- function(issues) {
   })
 
   # List unconnected nodes
-  analyses_text <- setNames(
+  analyses_text <- stats::setNames(
     unlist(node_analyses),
     rep("i", length(node_analyses))
   )

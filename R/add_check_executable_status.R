@@ -74,17 +74,15 @@ add_check_executable_status <- function(actions, ui_data, data_context) {
   }
 
   # Apply assertions using the same pattern
-  assertthat::assert_that(
-    all(sapply(actions_execute$removed_outputs, validate_removed_outputs)),
-    msg = "removed_outputs contains invalid data"
-  )
-
-  assertthat::assert_that(
-    all(sapply(
+  stopifnot(
+    "removed_outputs contains invalid data" = all(sapply(
+      actions_execute$removed_outputs,
+      validate_removed_outputs
+    )),
+    "removed_depend_cols contains invalid data" = all(sapply(
       actions_execute$removed_depend_cols,
       validate_removed_depend_cols
-    )),
-    msg = "removed_depend_cols contains invalid data"
+    ))
   )
   return(list(actions = actions_execute, available_columns = available_cols))
 }

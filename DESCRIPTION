@@ -21,7 +21,6 @@ BugReports: https://github.com/NovoNordisk-OpenSource/mighty/issues
 Depends:
     R (>= 4.1)
 Imports:
-    assertthat,
     checkmate,
     cli,
     data.table,
@@ -36,6 +35,7 @@ Imports:
     rlang,
     S7,
     S7schema,
+    stats,
     styler,
     utils,
     visNetwork,
@@ -49,6 +49,7 @@ Suggests:
     pharmaversesdtm (>= 0.2.0),
     remotes,
     testthat (>= 3.0.0),
+    tidyr,
     whisker,
     withr,
     yaml

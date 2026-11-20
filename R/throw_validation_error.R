@@ -48,7 +48,7 @@ throw_validation_error <- function(category, details, suggestions) {
   checkmate::assert_character(details, min.len = 1)
   checkmate::assert_character(suggestions, min.len = 1)
 
-  suggestion_bullets <- setNames(suggestions, rep("*", length(suggestions)))
+  suggestion_bullets <- stats::setNames(suggestions, rep("*", length(suggestions)))
 
   cli::cli_abort(
     c(
