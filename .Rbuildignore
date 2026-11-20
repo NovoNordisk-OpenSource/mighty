@@ -3,7 +3,6 @@
 ^LICENSE\.md$
 ^README\.Rmd$
 ^vignettes/\.quarto$
-^vignettes/*_files$
 ^_pkgdown\.yml$
 ^docs$
 ^pkgdown$
@@ -13,8 +12,12 @@
 ^\.pre-commit-hooks\.yaml$
 ^\.github$
 ^\.vscode$
-^\CLAUDE.md
-^\.claude
-^\.lintr
-^\.jscpd.json
-^\.lycheeignore
+^CLAUDE\.md$
+^\.claude$
+^\.lintr$
+^\.jscpd\.json$
+^\.lycheeignore$
+^vignettes/articles$
+^tmp_files$
+^cran-comments\.md$
+^CRAN-SUBMISSION$
