@@ -1,9 +1,5 @@
 ---
 title: "Connecting to Data"
-vignette: >
-  %\VignetteIndexEntry{connect_to_data}
-  %\VignetteEngine{quarto::html}
-  %\VignetteEncoding{UTF-8}
 knitr:
   opts_chunk:
     collapse: true

@@ -9,12 +9,6 @@ test_that("Global filter and domain filter are equivalent when same filter use o
 repos:
   - 'github::NovoNordisk-OpenSource/mighty.standards/components'"
 
-  setup_testdata(
-    testdata = "pharmaverse",
-    test_data_path = path_connector_config,
-    sdtm_domains = c("dm", "dm_vaccine")
-  )
-
   # YAML 1 -----------------------------------------------------------------
   yml_1 <- "
 id: ADSL
@@ -45,6 +39,11 @@ columns:
     "adsl" = yml_1,
     "_mighty" = mighty_yml
   ))
+  setup_testdata(
+    testdata = "pharmaverse",
+    test_data_path = path_connector_config,
+    sdtm_domains = c("dm", "dm_vaccine")
+  )
 
   actual <- generate_adam_code(
     adam_specifications = adam_specifications,

@@ -11,12 +11,12 @@
 #' outputs are independent.
 #'
 #' @details
-#' This check runs before [assert_code_outputs_in_yaml()] so that the more
+#' This check runs before `assert_code_outputs_in_yaml()` so that the more
 #' specific "different parameter values" error is raised instead of a generic
 #' YAML/code mismatch.
 #'
 #' Only components of type `"column"` are checked, consistent with
-#' [assert_code_outputs_in_yaml()]. Row and parameter components are excluded
+#' `assert_code_outputs_in_yaml()`. Row and parameter components are excluded
 #' because their `@outputs` tag names an existing column they operate on, not a
 #' new column — so overlapping output names across parameter sets are intentional.
 #'
@@ -67,8 +67,8 @@ assert_consistent_component_params <- function(x) {
 
 #' Get column-type components
 #'
-#' Shared helper used by [assert_consistent_component_params()] and
-#' [assert_code_outputs_in_yaml()]. Filters to rows with a non-NA `code_id`
+#' Shared helper used by `assert_consistent_component_params()` and
+#' `assert_code_outputs_in_yaml()`. Filters to rows with a non-NA `code_id`
 #' and `type_from_code == "column"`, selects the requested columns plus
 #' `parameters`, and adds a `parameters_hashed` column for grouping by unique parameter values.
 #'
@@ -100,7 +100,7 @@ get_column_components <- function(x, cols) {
 #' parameter values, identifies output columns that appear under multiple
 #' parameter values. Cross-domain reuse is not flagged.
 #'
-#' @param components A `data.table` returned by [get_column_components()]
+#' @param components A `data.table` returned by `get_column_components()`
 #'   with at least `domain`, `code_id`, `outputs_from_code`, and
 #'   `parameters_hashed`.
 #' @return A `data.table` with columns `domain`, `code_id`, and `overlapping`

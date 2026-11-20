@@ -25,7 +25,7 @@
 #' Processes payload by:
 #' \itemize{
 #'   \item Parsing "domain.variable" specifications
-#'   \item Classifying domains using [classify_data_domains()]
+#'   \item Classifying domains using `classify_data_domains()`
 #'   \item Grouping variables by domain with uppercase formatting
 #'   \item Detecting self-domain references for template optimization
 #' }
@@ -87,7 +87,7 @@ make_connector_path_expr <- function(path_connector_config) {
 #' Prepare Domain-Specific Data Reading Parameters
 #'
 #' Helper function that formats domain variables for data reading templates.
-#' Called internally by [params_read_data_code()] for each domain.
+#' Called internally by `params_read_data_code()` for each domain.
 #'
 #' @param domain_data data.table with column_name and domain_type columns.
 #' @param domain_name Character. Source domain name.

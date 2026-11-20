@@ -1,9 +1,5 @@
 ---
 title: "ADaM Specification"
-vignette: >
-  %\VignetteIndexEntry{adam_specification}
-  %\VignetteEngine{quarto::html}
-  %\VignetteEncoding{UTF-8}
 knitr:
   opts_chunk:
     collapse: true

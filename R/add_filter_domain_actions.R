@@ -70,7 +70,7 @@ add_filter_domain_actions <- function(
       domain_keys
     )
   }) |>
-    setNames(domains_w_filter)
+    stats::setNames(domains_w_filter)
 
   has_domain_filter <- has_domain_level_filter(filter_domain)
 

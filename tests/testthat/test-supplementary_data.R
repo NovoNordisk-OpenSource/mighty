@@ -1,5 +1,7 @@
 test_that("Supplementary data action is placed after filter_domain when no supplementary columns are used in filters", {
   # SETUP -------------------------------------------------------------------
+  # Fixture components supp_dm_01 / supp_ae_01 call tidyr::pivot_wider()
+  skip_if_not_installed("tidyr")
 
   adam_specifications <- setup_study_from_fixtures(
     fixtures = list(
@@ -72,6 +74,8 @@ test_that("Supplementary data action is placed after filter_domain when no suppl
 
 test_that("Supp data action is placed before filter_domain when supp columns are used in filters (1 domain filter)", {
   # SETUP -------------------------------------------------------------------
+  # Fixture components supp_dm_01 / supp_ae_01 call tidyr::pivot_wider()
+  skip_if_not_installed("tidyr")
 
   adam_specifications <- setup_study_from_fixtures(
     fixtures = list(
@@ -146,6 +150,8 @@ test_that("Supp data action is placed before filter_domain when supp columns are
 
 test_that("Supp data action is placed before filter_domain when supp columns are used in filters (2 domain filters)", {
   # SETUP -------------------------------------------------------------------
+  # Fixture components supp_dm_01 / supp_ae_01 call tidyr::pivot_wider()
+  skip_if_not_installed("tidyr")
 
   adam_specifications <- setup_study_from_fixtures(
     fixtures = list(
@@ -221,6 +227,8 @@ test_that("Supp data action is placed before filter_domain when supp columns are
 
 test_that("Supp data action is placed before filter_domain when supp columns and ADSL cols are used in filters", {
   # SETUP -------------------------------------------------------------------
+  # Fixture components supp_dm_01 / supp_ae_01 call tidyr::pivot_wider()
+  skip_if_not_installed("tidyr")
 
   adam_specifications <- setup_study_from_fixtures(
     fixtures = list(

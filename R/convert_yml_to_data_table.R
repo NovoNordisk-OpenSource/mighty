@@ -37,7 +37,7 @@
 #' result <- convert_yml_to_data_table(yml_data)
 #' }
 #'
-#' @seealso [convert_yml_to_data_table_()] for the internal conversion function
+#' @seealso `convert_yml_to_data_table_()` for the internal conversion function
 #' @noRd
 convert_yml_to_data_table <- function(yml_list) {
   lapply(yml_list, function(i) {
@@ -57,7 +57,7 @@ convert_yml_to_data_table <- function(yml_list) {
 #' @param domain Character string identifying the domain name.
 #'
 #' @return A data.table with one row per column containing all the
-#'   extracted properties. See [convert_yml_to_data_table()] for
+#'   extracted properties. See `convert_yml_to_data_table()` for
 #'   column descriptions.
 #'
 #' @details

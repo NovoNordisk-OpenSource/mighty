@@ -85,5 +85,5 @@ utils::globalVariables(c(
   "clash"
 ))
 
-# Also declare the dot function and setNames if they're causing issues
-utils::globalVariables(c(".", "setNames"))
+# Also declare the dot function
+utils::globalVariables(".")

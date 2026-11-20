@@ -162,6 +162,12 @@ columns:
   - id: AGEU
 
 "
+  mighty_yml_content <- readLines(test_path("fixtures", "_mighty_sdtm.yml")) |>
+    paste(collapse = "\n")
+  ui_data <- setup_study_dir(list(
+    "adsl" = yml,
+    "_mighty" = mighty_yml_content
+  ))
   # Setup test data with dm domain but remove dm.SEX and dm.AGEU
   setup_testdata(
     testdata = "pharmaverse",
@@ -169,12 +175,6 @@ columns:
     sdtm_domains = c("dm"),
     remove_cols = data.table(domain = c("dm"), columns = c("SEX", "AGEU"))
   )
-  mighty_yml_content <- readLines(test_path("fixtures", "_mighty_sdtm.yml")) |>
-    paste(collapse = "\n")
-  ui_data <- setup_study_dir(list(
-    "adsl" = yml,
-    "_mighty" = mighty_yml_content
-  ))
   cnt <- connector::connect(get_connector_config_path(trial_path))
 
   # ACT ---------------------------------------------------------------------
@@ -254,6 +254,12 @@ columns:
 
 "
 
+  mighty_yml_content <- readLines(test_path("fixtures", "_mighty_sdtm.yml")) |>
+    paste(collapse = "\n")
+  ui_data <- setup_study_dir(list(
+    "adsl" = yml,
+    "_mighty" = mighty_yml_content
+  ))
   # Setup test data with dm domain but remove dm.AGEU
   setup_testdata(
     testdata = "pharmaverse",
@@ -261,12 +267,6 @@ columns:
     sdtm_domains = c("dm"),
     remove_cols = data.table(domain = c("dm"), columns = c("AGEU"))
   )
-  mighty_yml_content <- readLines(test_path("fixtures", "_mighty_sdtm.yml")) |>
-    paste(collapse = "\n")
-  ui_data <- setup_study_dir(list(
-    "adsl" = yml,
-    "_mighty" = mighty_yml_content
-  ))
   cnt <- connector::connect(get_connector_config_path(trial_path))
 
   # ACT ---------------------------------------------------------------------
@@ -338,6 +338,15 @@ columns:
   - id: LBTESTCD
 
 "
+  mighty_yml_content <- readLines(test_path(
+    "fixtures",
+    "_mighty_with_adsl_keys.yml"
+  )) |>
+    paste(collapse = "\n")
+  ui_data <- setup_study_dir(list(
+    "adlb" = yml,
+    "_mighty" = mighty_yml_content
+  ))
   # Setup test data with LB and ADSL domains but remove LB.LBTESTCD and ADSL.SEX
   setup_testdata(
     testdata = "pharmaverse",
@@ -349,15 +358,6 @@ columns:
       columns = c("LBTESTCD", "SEX")
     )
   )
-  mighty_yml_content <- readLines(test_path(
-    "fixtures",
-    "_mighty_with_adsl_keys.yml"
-  )) |>
-    paste(collapse = "\n")
-  ui_data <- setup_study_dir(list(
-    "adlb" = yml,
-    "_mighty" = mighty_yml_content
-  ))
   cnt <- connector::connect(get_connector_config_path(trial_path))
 
   # ACT ---------------------------------------------------------------------
@@ -438,6 +438,12 @@ columns:
 
 "
 
+  mighty_yml_content <- readLines(test_path("fixtures", "_mighty_sdtm.yml")) |>
+    paste(collapse = "\n")
+  ui_data <- setup_study_dir(list(
+    "adsl" = yml,
+    "_mighty" = mighty_yml_content
+  ))
   # Setup test data with dm domain but remove dm.SEX
   setup_testdata(
     testdata = "pharmaverse",
@@ -445,12 +451,6 @@ columns:
     sdtm_domains = c("dm"),
     remove_cols = data.table(domain = c("dm"), columns = c("SEX"))
   )
-  mighty_yml_content <- readLines(test_path("fixtures", "_mighty_sdtm.yml")) |>
-    paste(collapse = "\n")
-  ui_data <- setup_study_dir(list(
-    "adsl" = yml,
-    "_mighty" = mighty_yml_content
-  ))
   cnt <- connector::connect(get_connector_config_path(trial_path))
 
   # ACT ---------------------------------------------------------------------
@@ -534,18 +534,18 @@ columns:
 
 "
 
-  # Setup test data with dm domain but without dm_vaccine
-  setup_testdata(
-    testdata = "pharmaverse",
-    test_data_path = trial_path,
-    sdtm_domains = c("dm")
-  )
   mighty_yml_content <- readLines(test_path("fixtures", "_mighty_sdtm.yml")) |>
     paste(collapse = "\n")
   ui_data <- setup_study_dir(list(
     "adsl" = yml,
     "_mighty" = mighty_yml_content
   ))
+  # Setup test data with dm domain but without dm_vaccine
+  setup_testdata(
+    testdata = "pharmaverse",
+    test_data_path = trial_path,
+    sdtm_domains = c("dm")
+  )
   cnt <- connector::connect(get_connector_config_path(trial_path))
 
   # ACT ---------------------------------------------------------------------
@@ -614,18 +614,18 @@ columns:
 
 "
 
-  # Setup test data with sv, dm and dm_vaccine domains
-  setup_testdata(
-    testdata = "pharmaverse",
-    test_data_path = trial_path,
-    sdtm_domains = c("dm", "dm_vaccine", "sv")
-  )
   mighty_yml_content <- readLines(test_path("fixtures", "_mighty_sdtm.yml")) |>
     paste(collapse = "\n")
   ui_data <- setup_study_dir(list(
     "adsl" = yml,
     "_mighty" = mighty_yml_content
   ))
+  # Setup test data with sv, dm and dm_vaccine domains
+  setup_testdata(
+    testdata = "pharmaverse",
+    test_data_path = trial_path,
+    sdtm_domains = c("dm", "dm_vaccine", "sv")
+  )
   cnt <- connector::connect(get_connector_config_path(trial_path))
 
   # ACT ---------------------------------------------------------------------
@@ -724,14 +724,6 @@ columns:
 
 "
 
-  # Setup test data with LB and ADSL domains but remove LB.LBSTRESN
-  setup_testdata(
-    testdata = "pharmaverse",
-    test_data_path = trial_path,
-    sdtm_domains = c("lb"),
-    adam_domains = c("adsl"),
-    remove_cols = data.table(domain = c("lb"), columns = c("LBSTRESN"))
-  )
   mighty_yml_content <- readLines(test_path(
     "fixtures",
     "_mighty_with_adsl_keys.yml"
@@ -741,6 +733,14 @@ columns:
     "adlb" = yml,
     "_mighty" = mighty_yml_content
   ))
+  # Setup test data with LB and ADSL domains but remove LB.LBSTRESN
+  setup_testdata(
+    testdata = "pharmaverse",
+    test_data_path = trial_path,
+    sdtm_domains = c("lb"),
+    adam_domains = c("adsl"),
+    remove_cols = data.table(domain = c("lb"), columns = c("LBSTRESN"))
+  )
   cnt <- connector::connect(get_connector_config_path(trial_path))
 
   # ACT ---------------------------------------------------------------------
