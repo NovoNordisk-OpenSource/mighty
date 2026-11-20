@@ -128,6 +128,8 @@ notboth
 Novo
 nzchar
 OCCDS
+oldfl
+OLDFL
 PARAMCD
 Parameterizable
 PARAMVAL
@@ -200,6 +202,7 @@ uppercased
 upstr
 usethis
 USUBJID
+VISFL
 VISITNUM
 VSSEQ
 VSTESTCD
