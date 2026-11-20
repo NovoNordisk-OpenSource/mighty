@@ -20,7 +20,8 @@
 #' 1. Parses external domain references (e.g., "ADSL.SAFFL" -> domain "ADSL")
 #' 2. Looks up join keys for external domains from trial metadata
 #' 3. Builds a dependency list combining filter columns and join keys
-#' 4. Creates a filter_domain action with appropriate inputs/outputs
+#' 4. Finds the column actions the filter needs, which must run before it
+#' 5. Creates a filter_domain action with appropriate inputs/outputs
 #'
 #' Throws an error if external domains are not found in the domain_keys lookup.
 #'
@@ -61,13 +62,13 @@ add_filter_domain_actions <- function(
     domains_w_filter
   )
 
-  # Extend filter dependencies with keys required for joining external dependencies
-  filter_depend_cols_w_keys <- lapply(domains_w_filter, function(domain) {
-    build_filter_deps_with_keys(
-      domain,
-      filter_depend_cols[[domain]],
-      filter_ext_domains[[domain]],
-      domain_keys
+  filter_cols <- lapply(domains_w_filter, function(domain) {
+    get_filter_column_sets(
+      target_domain = domain,
+      filter_depends = filter_depend_cols[[domain]],
+      ext_domains = filter_ext_domains[[domain]],
+      base_domains = get_base_domains(filter_domain[[domain]]),
+      domain_keys = domain_keys
     )
   }) |>
     stats::setNames(domains_w_filter)
@@ -79,8 +80,7 @@ add_filter_domain_actions <- function(
     create_filter_domain_action(
       target_domain = domain,
       actions = actions,
-      domain_filter_depends = filter_depend_cols[[domain]],
-      filter_deps_w_keys = filter_depend_cols_w_keys[[domain]],
+      filter_cols = filter_cols[[domain]],
       has_domain_filter = has_domain_filter[[domain]]
     )
   }) |>
@@ -110,6 +110,111 @@ get_domains_with_filters <- function(filter_depend_cols) {
     logical(1)
   )
   names(which(has_filter))
+}
+
+#' Get the starting domains of a filter domain specification
+#'
+#' @param domain_filter Filter domain specification of one domain, i.e. one
+#'   element of `filter_domain`.
+#' @return Character vector of domain names, `NULL` if there are none.
+#' @noRd
+get_base_domains <- function(domain_filter) {
+  names(unlist(domain_filter, recursive = FALSE))
+}
+
+#' Get the column sets that describe what a filter needs
+#'
+#' Column names in the sets are upper-cased, so they can be compared with
+#' action columns regardless of case.
+#'
+#' @param target_domain Character string of the domain name.
+#' @param filter_depends Character vector of filter dependencies of the domain.
+#' @param ext_domains Character vector of external domain names referenced in
+#'   the filter dependencies.
+#' @param base_domains Character vector of the domain's starting domains.
+#' @param domain_keys Named list mapping domain names (uppercase) to their
+#'   key columns.
+#' @return List with:
+#'   - `own_domains`: the domain and its starting domains. A column of one of
+#'     them is the domain's own column.
+#'   - `needed`: the domain's own columns the filter needs, i.e. its bare
+#'     dependencies and the join keys for the joined domains.
+#'   - `joined`: data.table of the columns joined in from other domains, with
+#'     the prefixed dependency (`ref`) and the column name (`column`).
+#'   - `join_key_refs`: named character vector of the columns in `needed` that
+#'     are join keys but not filter dependencies. Names are the domain's
+#'     columns, values the prefixed keys of the joined domain (e.g.
+#'     `c(VISITNUM = "SV.VISITNUM")`).
+#'   - `deps_w_keys`: data.table of the filter dependencies with join keys,
+#'     see `build_filter_deps_with_keys()`.
+#' @noRd
+get_filter_column_sets <- function(
+  target_domain,
+  filter_depends,
+  ext_domains,
+  base_domains,
+  domain_keys
+) {
+  deps_w_keys <- build_filter_deps_with_keys(
+    target_domain,
+    filter_depends,
+    ext_domains,
+    domain_keys
+  )
+  own_cols <- toupper(deps_w_keys[domain == target_domain, column_name])
+  join_key_cols <- setdiff(own_cols, toupper(filter_depends))
+  # A key can belong to several joined domains; messages name the first one
+  join_keys <- deps_w_keys[
+    domain != target_domain & toupper(column_name) %in% join_key_cols
+  ][!duplicated(toupper(column_name))]
+
+  list(
+    own_domains = c(target_domain, base_domains),
+    needed = unique(own_cols),
+    joined = get_joined_filter_cols(
+      filter_depends,
+      target_domain,
+      base_domains,
+      domain_keys
+    ),
+    join_key_refs = setNames(
+      paste0(join_keys$domain, ".", join_keys$column_name),
+      toupper(join_keys$column_name)
+    ),
+    deps_w_keys = deps_w_keys
+  )
+}
+
+#' Get the columns a filter joins in from other domains
+#'
+#' Prefixes that name the domain itself or one of its starting domains, and
+#' join keys of the other domain, are left out: they don't add a new column.
+#'
+#' @param filter_depends Character vector of filter dependencies of one domain.
+#' @param target_domain Character string of the domain name.
+#' @param base_domains Character vector of the domain's starting domains.
+#' @param domain_keys Named list mapping domain names (uppercase) to their
+#'   key columns.
+#' @return data.table with one row per joined column: `ref`, the prefixed
+#'   dependency as written (e.g. `"SV.VISIT"`), and `column`, the upper-cased
+#'   column name.
+#' @noRd
+get_joined_filter_cols <- function(
+  filter_depends,
+  target_domain,
+  base_domains,
+  domain_keys
+) {
+  prefixed <- filter_depends[has_domain_prefix(filter_depends)]
+  prefixes <- toupper(extract_domain_prefix(prefixed))
+  columns <- toupper(extract_dependency_id(prefixed))
+  is_external <- !prefixes %in% toupper(c(target_domain, base_domains))
+  is_key <- vapply(
+    seq_along(prefixed),
+    function(i) columns[[i]] %in% toupper(domain_keys[[prefixes[[i]]]]),
+    logical(1)
+  )
+  unique(data.table(ref = prefixed, column = columns)[is_external & !is_key])
 }
 
 #' Parse external domain references from filter dependencies
@@ -237,48 +342,337 @@ build_filter_deps_with_keys <- function(
   dt
 }
 
-#' Get col_compute outputs needed for filtering
+#' Get column actions that must run before the filter
 #'
-#' Finds col_compute actions whose outputs are filter dependencies, then
-#' collects outputs from those actions and all their parent col_computes.
-#' Parent outputs are included because the filter_domain action needs the
-#' full dependency chain available.
+#' Finds col_compute, col_rename and col_mutate actions whose outputs the
+#' filter needs, plus all their parents within the domain. Also finds
+#' col_rename actions whose source column has the name of a column joined in
+#' for the filter. When one of them is a col_rename, the actions that read its
+#' source column are added too, with their parents, and so are col_echo
+#' actions that join on it. These actions run before the filter_domain
+#' action, so their outputs must be kept by it.
 #'
 #' @param actions Data table containing existing action definitions.
 #' @param target_domain Character string of the domain name.
-#' @param filter_depends Character vector of filter dependency columns.
-#' @return Character vector of outputs from matching col_computes and their parents.
+#' @param filter_cols List of filter column sets, see
+#'   `get_filter_column_sets()`.
+#' @return Character vector of node_ids of the matching actions and their parents.
 #' @noRd
-get_col_compute_filter_outputs <- function(
-  actions,
-  target_domain,
-  filter_depends
-) {
-  col_computes <- actions[type == "col_compute" & domain == target_domain]
-  if (nrow(col_computes) == 0) {
+get_pre_filter_nodes <- function(actions, target_domain, filter_cols) {
+  domain_actions <- actions[domain == target_domain]
+  candidates <- domain_actions[
+    type %in% c("col_compute", "col_rename", "col_mutate")
+  ]
+  if (nrow(candidates) == 0) {
     return(character(0))
   }
 
-  outputs_by_node <- col_computes[, .(output = unlist(outputs)), by = node_id]
-  matching_nodes <- outputs_by_node[output %in% filter_depends, unique(node_id)]
+  outputs_by_node <- candidates[,
+    .(output = toupper(unlist(outputs))),
+    by = node_id
+  ]
+  needed_nodes <- outputs_by_node[
+    output %in% filter_cols$needed,
+    unique(node_id)
+  ]
+
+  # A col_rename whose source has the name of a joined column must run before
+  # the filter, or the join gives two columns with that name
+  renames_joined_name <- get_reading_nodes(
+    candidates[type == "col_rename"],
+    filter_cols$joined$column,
+    filter_cols$own_domains
+  )
+
+  matching_nodes <- unique(c(needed_nodes, renames_joined_name))
   if (length(matching_nodes) == 0) {
     return(character(0))
   }
 
-  all_nodes <- c(matching_nodes, get_all_parents(matching_nodes, actions))
-  actions[node_id %in% all_nodes, unlist(outputs)]
+  pre_filter_nodes <- add_parent_nodes(matching_nodes, domain_actions)
+
+  # A col_rename that runs before the filter removes its source column, so
+  # the actions that read that column must run before the filter too. Their
+  # parents can be col_renames as well, so repeat until nothing is added.
+  # A col_echo reads the column as a join key; its other dependencies are in
+  # another domain, so it has no parents to add here
+  echoes <- domain_actions[type == "col_echo"]
+  repeat {
+    rename_sources <- candidates[
+      type == "col_rename" & node_id %in% pre_filter_nodes
+    ] |>
+      get_rename_source_cols() |>
+      toupper()
+    source_readers <- setdiff(
+      get_reading_nodes(candidates, rename_sources, filter_cols$own_domains),
+      pre_filter_nodes
+    )
+    echo_readers <- setdiff(
+      get_reading_nodes(echoes, rename_sources, filter_cols$own_domains),
+      pre_filter_nodes
+    )
+    if (length(source_readers) == 0 && length(echo_readers) == 0) {
+      break
+    }
+    pre_filter_nodes <- unique(c(
+      pre_filter_nodes,
+      add_parent_nodes(source_readers, domain_actions),
+      echo_readers
+    ))
+  }
+
+  pre_filter_nodes
+}
+
+#' Get the actions that read any of the given columns of the domain
+#'
+#' A dependency on another domain's column with the same name doesn't count.
+#'
+#' @param domain_actions Data table of the actions of one domain.
+#' @param columns Character vector of upper-cased column names.
+#' @param own_domains Character vector of the domain and its starting domains.
+#' @return Character vector of node_ids.
+#' @noRd
+get_reading_nodes <- function(domain_actions, columns, own_domains) {
+  reads <- vapply(
+    domain_actions$depend_cols,
+    function(dc) {
+      is_own <- toupper(dc$domain) %in% toupper(own_domains)
+      any(toupper(dc$column_name[is_own]) %in% columns)
+    },
+    logical(1)
+  )
+  domain_actions$node_id[reads]
+}
+
+#' Add the parents of actions within a domain
+#'
+#' @param nodes Character vector of node_ids.
+#' @param domain_actions Data table of the actions of one domain.
+#' @return Character vector of node_ids of the actions and their parents.
+#' @noRd
+add_parent_nodes <- function(nodes, domain_actions) {
+  # get_all_parents() handles one node at a time
+  parent_nodes <- lapply(
+    nodes,
+    get_all_parents,
+    actions = domain_actions
+  ) |>
+    unlist()
+  unique(c(nodes, parent_nodes))
+}
+
+#' Get source columns of col_rename actions
+#'
+#' @param rename_actions Data table of col_rename actions.
+#' @return Character vector of the columns the actions rename.
+#' @noRd
+get_rename_source_cols <- function(rename_actions) {
+  lapply(rename_actions$depend_cols, function(dc) dc$column_name) |>
+    unlist() |>
+    unique()
+}
+
+#' Get source columns of col_rename actions that run after the filter
+#'
+#' A col_rename action reads its source column from init_domain. The
+#' filter_domain action must keep that column, so the rename can run after
+#' the filter. Sources that are outputs of other actions are not included,
+#' because those actions provide them. Neither are sources that a col_rename
+#' running before the filter removes.
+#'
+#' @param actions Data table containing existing action definitions.
+#' @param target_domain Character string of the domain name.
+#' @param pre_filter_nodes Character vector of node_ids that run before the filter.
+#' @return Character vector of source columns to keep in the filter.
+#' @noRd
+get_rename_source_filter_outputs <- function(
+  actions,
+  target_domain,
+  pre_filter_nodes
+) {
+  renames <- actions[type == "col_rename" & domain == target_domain]
+  post_filter_renames <- renames[!node_id %in% pre_filter_nodes]
+  if (nrow(post_filter_renames) == 0) {
+    return(character(0))
+  }
+
+  action_outputs <- actions[
+    domain == target_domain & type != "init_domain",
+    unlist(outputs)
+  ]
+  pre_filter_sources <- get_rename_source_cols(
+    renames[node_id %in% pre_filter_nodes]
+  )
+  unavailable <- toupper(c(action_outputs, pre_filter_sources))
+  sources <- get_rename_source_cols(post_filter_renames)
+  sources[!toupper(sources) %in% unavailable]
+}
+
+#' Find the columns a filter uses both before and after their rename
+#'
+#' A col_rename action that runs before the filter removes its source column.
+#' The filter then can't also use the source column. The col_rename runs
+#' before the filter when the filter needs its output, or when the filter
+#' joins a column with the source's name.
+#'
+#' @param actions Data table containing existing action definitions.
+#' @param target_domain Character string of the domain name.
+#' @param pre_filter_nodes Character vector of node_ids that run before the filter.
+#' @param filter_cols List of filter column sets, see
+#'   `get_filter_column_sets()`.
+#' @return data.table with one row per clash: `source`, `renamed_to`, `kind`
+#'   and `ref`. `kind` is `"join_key"` when the source is a join key of a
+#'   joined domain (`ref` is the prefixed key), `"joined"` when the filter
+#'   joins a column with the source's name (`ref` is that prefixed
+#'   dependency), or `"needed"` when the filter needs the new name (`ref` is
+#'   `NA`).
+#' @noRd
+find_filter_on_renamed_source <- function(
+  actions,
+  target_domain,
+  pre_filter_nodes,
+  filter_cols
+) {
+  pre_filter_renames <- actions[
+    type == "col_rename" &
+      domain == target_domain &
+      node_id %in% pre_filter_nodes
+  ]
+  # One source per rename, paired with its new name, so not get_rename_source_cols()
+  source <- vapply(
+    pre_filter_renames$depend_cols,
+    function(dc) dc$column_name[[1]],
+    character(1)
+  )
+  renamed_to <- vapply(
+    pre_filter_renames$outputs,
+    function(out) out[[1]],
+    character(1)
+  )
+  is_clash <- toupper(source) %in% filter_cols$needed
+  source <- source[is_clash]
+  renamed_to <- renamed_to[is_clash]
+
+  join_key_ref <- unname(filter_cols$join_key_refs[toupper(source)])
+  joined_ref <- filter_cols$joined$ref[
+    match(toupper(source), filter_cols$joined$column)
+  ]
+  data.table(
+    source = source,
+    renamed_to = renamed_to,
+    kind = fifelse(
+      !is.na(join_key_ref),
+      "join_key",
+      fifelse(!is.na(joined_ref), "joined", "needed")
+    ),
+    ref = fifelse(is.na(join_key_ref), joined_ref, join_key_ref)
+  )
+}
+
+#' Check that a filter doesn't use a column both before and after its rename
+#'
+#' @inheritParams find_filter_on_renamed_source
+#' @return Invisible NULL. Throws a validation error if a clash is found.
+#' @noRd
+assert_no_filter_on_renamed_source <- function(
+  actions,
+  target_domain,
+  pre_filter_nodes,
+  filter_cols
+) {
+  clashes <- find_filter_on_renamed_source(
+    actions,
+    target_domain,
+    pre_filter_nodes,
+    filter_cols
+  )
+  if (nrow(clashes) == 0) {
+    return(invisible(NULL))
+  }
+
+  details <- vapply(
+    seq_len(nrow(clashes)),
+    function(i) format_renamed_source_clash(target_domain, clashes[i]),
+    character(1)
+  )
+  throw_validation_error(
+    category = "Filter uses a renamed column under both names",
+    details = setNames(details, rep("x", length(details))),
+    suggestions = if (all(clashes$kind == "join_key")) {
+      "List the source column under {.field columns} to keep it as a separate column"
+    } else {
+      c(
+        "Use only the new name in the filter",
+        "Or list the source column under {.field columns} to keep it as a separate column"
+      )
+    }
+  )
+}
+
+#' Format one clash found by `find_filter_on_renamed_source()`
+#'
+#' @param target_domain Character string of the domain name.
+#' @param clash One-row data.table, see `find_filter_on_renamed_source()`.
+#' @return Character string.
+#' @noRd
+format_renamed_source_clash <- function(target_domain, clash) {
+  filter <- paste0("Filter for ", format_domain(target_domain))
+  source <- format_column(clash$source)
+  renamed_to <- format_column(clash$renamed_to)
+  switch(
+    clash$kind,
+    needed = paste0(
+      filter,
+      " uses ",
+      source,
+      ", but it also needs ",
+      renamed_to,
+      ", which is ",
+      source,
+      " renamed"
+    ),
+    joined = paste0(
+      filter,
+      " uses ",
+      source,
+      " and also joins ",
+      format_column_ref(clash$ref),
+      ", which has the same name, so ",
+      source,
+      " is renamed to ",
+      renamed_to,
+      " before the filter"
+    ),
+    join_key = paste0(
+      filter,
+      " joins ",
+      format_domain(extract_domain_prefix(clash$ref)),
+      " on ",
+      source,
+      ", but it also needs ",
+      renamed_to,
+      ", which is ",
+      source,
+      " renamed, so ",
+      source,
+      " is gone before the join"
+    )
+  )
 }
 
 #' Create a single filter_domain action for one domain
 #'
 #' Assembles a filter_domain action that declares:
-#' - outputs: columns passed through from col_copy and col_compute actions
+#' - outputs: columns passed through from col_copy actions, sources of
+#'   col_rename actions that run after the filter, and outputs of column
+#'   actions the filter needs
 #' - depend_cols: columns needed from init_domain plus external filter dependencies
 #'
 #' @param target_domain Character string of the domain name.
 #' @param actions Data table containing existing action definitions.
-#' @param domain_filter_depends Character vector of filter dependency columns for this domain.
-#' @param filter_deps_w_keys data.table of filter dependencies with join keys.
+#' @param filter_cols List of filter column sets, see
+#'   `get_filter_column_sets()`.
 #' @param has_domain_filter Logical indicating if domain has base-level filters
 #'   (determines whether SRC_ column is included in dependencies).
 #' @return Single-row data.table representing the filter_domain action.
@@ -286,23 +680,36 @@ get_col_compute_filter_outputs <- function(
 create_filter_domain_action <- function(
   target_domain,
   actions,
-  domain_filter_depends,
-  filter_deps_w_keys,
+  filter_cols,
   has_domain_filter
 ) {
-  # Create outputs for filter_domain from two sources:
+  pre_filter_nodes <- get_pre_filter_nodes(actions, target_domain, filter_cols)
+  assert_no_filter_on_renamed_source(
+    actions,
+    target_domain,
+    pre_filter_nodes,
+    filter_cols
+  )
+
+  # Create outputs for filter_domain from three sources:
   # 1) outputs from all col_copys that are consumed by init_domain
-  # 2) all outputs from filter dependency col_computes
+  # 2) source columns of col_renames that run after the filter
+  # 3) all outputs from column actions the filter needs, and their parents
   col_copy_outputs <- actions[
     type == "col_copy" & domain == target_domain,
     unlist(outputs)
   ]
-  col_compute_outputs <- get_col_compute_filter_outputs(
+  rename_source_outputs <- get_rename_source_filter_outputs(
     actions,
     target_domain,
-    domain_filter_depends
+    pre_filter_nodes
   )
-  filter_domain_outputs <- c(col_copy_outputs, col_compute_outputs)
+  pre_filter_outputs <- actions[node_id %in% pre_filter_nodes, unlist(outputs)]
+  filter_domain_outputs <- c(
+    col_copy_outputs,
+    rename_source_outputs,
+    pre_filter_outputs
+  )
 
   # Create depend_cols for filter_domain
 
@@ -325,7 +732,7 @@ create_filter_domain_action <- function(
   # Collect the two sources of depend_cols
   filter_domain_dep_cols <- unique(rbind(
     inherited_depends_cols,
-    filter_deps_w_keys
+    filter_cols$deps_w_keys
   ))
 
   # Consolidate domain_filter action for domain
