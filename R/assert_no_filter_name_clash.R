@@ -171,7 +171,7 @@ format_own_clashes <- function(own_clashes) {
     own_clashes$source,
     ")"
   )
-  setNames(msg, rep("x", length(msg)))
+  stats::setNames(msg, rep("x", length(msg)))
 }
 
 #' Format one column joined in from several datasets as error details
@@ -195,7 +195,7 @@ format_external_clashes <- function(external_clashes) {
     format_column(external_clashes$column),
     " is joined in more than once"
   )
-  setNames(msg, rep("x", length(msg)))
+  stats::setNames(msg, rep("x", length(msg)))
 }
 
 #' Build suggestions for filter name clashes
