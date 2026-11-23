@@ -149,7 +149,7 @@ report_issues <- function(issues) {
 
   # Analyze what types of nodes failed to provide contextual suggestions
   has_col_compute <- any(issues$type == "col_compute")
-  has_unexpected_types <- any(!issues$type %in% c("col_compute"))
+  has_unexpected_types <- !all(issues$type %in% c("col_compute"))
 
   # Build conditional suggestions based on node types
   suggestions <- c(

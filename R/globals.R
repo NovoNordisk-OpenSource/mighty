@@ -62,11 +62,6 @@ utils::globalVariables(c(
   # update_depend_rows variables
   # (depend_rows, domain already declared above)
 
-  # vis_code_tree variables
-  "label",
-  "group",
-  "color",
-
   # assert_code_outputs_in_yaml / assert_consistent_component_params variables
   "type_from_code",
   "parameters_hashed",

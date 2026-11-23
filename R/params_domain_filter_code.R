@@ -10,7 +10,7 @@
 #'
 #' @return A named list with `domain`, `joins`, `domain_filter`, `global_filter`,
 #'   `keep_vars`, `has_keep_vars`. `domain_filter`, `global_filter`, and `keep_vars`
-#'   are `NULL` when absent — whisker treats `NULL` as falsy so those blocks are
+#'   are `NULL` when absent - whisker treats `NULL` as falsy so those blocks are
 #'   suppressed. `keep_vars` is a character vector when present. `has_keep_vars`
 #'   is a logical flag indicating whether `keep_vars` is non-empty.
 #' @noRd
@@ -46,7 +46,7 @@ params_domain_filter_code <- function(
     })
   }
 
-  has_domain_filter <- !is.null(domain_filter_) && any(!is.na(domain_filter_))
+  has_domain_filter <- !is.null(domain_filter_) && !all(is.na(domain_filter_))
 
   # Logic for domain-specific variables
   domain_filter <- if (has_domain_filter) {
@@ -59,7 +59,7 @@ params_domain_filter_code <- function(
     NULL
   }
 
-  global_filter <- if (!is.null(global_filter) && any(!is.na(global_filter))) {
+  global_filter <- if (!is.null(global_filter) && !all(is.na(global_filter))) {
     paste(global_filter, collapse = ", ")
   } else {
     NULL

@@ -89,6 +89,7 @@ setup_study_dir <- function(
   # CRAN machines may have no network access or GitHub token
   if (any(startsWith(mighty_yml$repos, "github::"))) {
     testthat::skip_on_cran()
+    testthat::skip_if_offline("api.github.com")
   }
 
   dir <- withr::local_tempdir(.local_envir = .local_envir)
