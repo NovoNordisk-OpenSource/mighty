@@ -114,7 +114,8 @@
 #'   cat(result$programs$`1_ADSL`, sep = "\n")
 #' })
 #'
-#' @import data.table
+#' @importFrom data.table := .I .N .SD as.data.table copy data.table fifelse is.data.table rbindlist rleid
+#' @importFrom data.table setcolorder setkey setnames setorder tstrsplit uniqueN
 #' @export
 generate_adam_code <- S7::new_generic(
   name = "generate_adam_code",
