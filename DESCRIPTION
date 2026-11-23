@@ -33,7 +33,7 @@ Imports:
     R6,
     rlang,
     S7,
-    S7schema,
+    S7schema (>= 0.2.1),
     stats,
     styler,
     utils,
