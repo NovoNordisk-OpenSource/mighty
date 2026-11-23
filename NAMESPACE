@@ -2,6 +2,7 @@
 
 export(generate_adam_code)
 export(write_adam_programs)
+importFrom(R6,R6Class)
 importFrom(data.table,
   ":=",
   .I,

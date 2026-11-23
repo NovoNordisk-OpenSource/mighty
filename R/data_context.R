@@ -21,6 +21,7 @@
 #'
 #' The class supports both immediate initialization with a connector or
 #' deferred initialization for flexible setup workflows.
+#' @importFrom R6 R6Class
 #' @section Initialization Patterns:
 #'
 #' **Direct initialization:**
