@@ -5,9 +5,12 @@
 #' It processes specifications, validates dependencies, creates action sequences, and
 #' renders executable R code for ADaM dataset creation.
 #'
-#' @param adam_specifications Character string. Directory path containing ADaM
-#'   specification YAML files (one per domain) and optionally a `_mighty.yml`
-#'   framework configuration file with external dataset definitions and keys.
+#' @param adam_specifications Either a character string or a
+#'   [mighty.metadata::mighty_study()] object.
+#'   A character string is the directory path containing ADaM specification
+#'   YAML files (one per domain) and optionally a `_mighty.yml` framework
+#'   configuration file with external dataset definitions and keys. It is read
+#'   with [mighty.metadata::mighty_study()].
 #' @param path_connector_config Character string. File path to the connector
 #'   configuration file. Defaults to `"_connector.yml"`, the same default as
 #'   `connector::connect()`.
@@ -21,9 +24,10 @@
 #' @param check_cross_domain_adam_dependencies Logical. If `TRUE` (default),
 #'   validates dependencies across different ADaM domains. If `FALSE`, only
 #'   validates dependencies within individual domains.
-#' @param data_context Optional list or environment providing additional context
-#'   about available data sources for executable program generation. If `NULL`,
-#'   all programs are considered potentially executable.
+#' @param data_context For internal or advanced use. Internal object describing
+#'   the data sources available for executable program generation. If `NULL`
+#'   (default), no data availability check is done, all programs are considered
+#'   executable, and `executable_programs` matches `programs`.
 #' @return A named list containing the complete ADaM program generation results:
 #'   \describe{
 #'     \item{programs}{Named list of complete R programs, one per run of a domain (a domain is split
