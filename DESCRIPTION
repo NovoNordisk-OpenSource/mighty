@@ -51,8 +51,8 @@ Suggests:
     whisker,
     withr,
     yaml
-Config/Needs/check: mighty.metadata=?source, S7schema=?source,
-    mighty.component=?source
+Config/Needs/check: standard::mighty.metadata?source, standard::S7schema?source,
+    standard::mighty.component?source
 Config/Needs/website: knitr, quarto, rmarkdown
 Config/roxygen2/version: 8.1.1
 Config/testthat/edition: 3
