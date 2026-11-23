@@ -17,7 +17,7 @@
 ^\.lintr$
 ^\.jscpd\.json$
 ^\.lycheeignore$
-^vignettes/articles$
+^vignettes$
 ^tmp_files$
 ^cran-comments\.md$
 ^CRAN-SUBMISSION$
