@@ -1,11 +1,11 @@
-# mighty: Generate 'CDISC' 'ADaM' Programs from Declarative Specifications
+# mighty: Generate CDISC ADaM Programs from Declarative Specifications
 
-Generate R programs that create Clinical Data Interchange Standards
-Consortium ('CDISC') Analysis Data Model ('ADaM') datasets for clinical
+Generate 'R' programs that create Clinical Data Interchange Standards
+Consortium (CDISC) Analysis Data Model (ADaM) datasets for clinical
 trials. Users describe the dataset structure and derivations in 'YAML'
 specifications instead of writing the code by hand. The package resolves
 dependencies between columns and rows, combines reusable code
-components, and writes executable R programs.
+components, and writes executable 'R' programs.
 
 ## See also
 

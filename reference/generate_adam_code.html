@@ -76,9 +76,12 @@ renders executable R code for ADaM dataset creation.</p>
 
 
 <dl><dt id="arg-adam-specifications">adam_specifications<a class="anchor" aria-label="anchor" href="#arg-adam-specifications"></a></dt>
-<dd><p>Character string. Directory path containing ADaM
-specification YAML files (one per domain) and optionally a <code>_mighty.yml</code>
-framework configuration file with external dataset definitions and keys.</p></dd>
+<dd><p>Either a character string or a
+<code><a href="https://novonordisk-opensource.github.io/mighty.metadata/reference/mighty_study.html">mighty.metadata::mighty_study()</a></code> object.
+A character string is the directory path containing ADaM specification
+YAML files (one per domain) and optionally a <code>_mighty.yml</code> framework
+configuration file with external dataset definitions and keys. It is read
+with <code><a href="https://novonordisk-opensource.github.io/mighty.metadata/reference/mighty_study.html">mighty.metadata::mighty_study()</a></code>.</p></dd>
 
 
 <dt id="arg-path-connector-config">path_connector_config<a class="anchor" aria-label="anchor" href="#arg-path-connector-config"></a></dt>
@@ -101,9 +104,10 @@ validates dependencies within individual domains.</p></dd>
 
 
 <dt id="arg-data-context">data_context<a class="anchor" aria-label="anchor" href="#arg-data-context"></a></dt>
-<dd><p>Optional list or environment providing additional context
-about available data sources for executable program generation. If <code>NULL</code>,
-all programs are considered potentially executable.</p></dd>
+<dd><p>For internal or advanced use. Internal object describing
+the data sources available for executable program generation. If <code>NULL</code>
+(default), no data availability check is done, all programs are considered
+executable, and <code>executable_programs</code> matches <code>programs</code>.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -178,7 +182,7 @@ and output operations for creating a specific ADaM dataset according to the
 provided specifications.</p>
     </div>
     <div class="section level2">
-    <h2 id="file-requirements">File Requirements<a class="anchor" aria-label="anchor" href="#file-requirements"></a></h2>
+    <h2 id="file-requirements">File requirements<a class="anchor" aria-label="anchor" href="#file-requirements"></a></h2>
 
 
 <ul><li><p>ADaM specification file must be a valid YAML file with ADaM
@@ -188,7 +192,7 @@ specifications following the schema defined in mighty.metadata</p></li>
 programs to execute</p></li>
 </ul></div>
     <div class="section level2">
-    <h2 id="error-handling">Error Handling<a class="anchor" aria-label="anchor" href="#error-handling"></a></h2>
+    <h2 id="error-handling">Error handling<a class="anchor" aria-label="anchor" href="#error-handling"></a></h2>
 
 
 <p>The function will stop execution if:</p><ul><li><p>ADaM specifications or trial metadata files cannot be read or are
