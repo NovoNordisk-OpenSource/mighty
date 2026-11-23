@@ -3,7 +3,7 @@ extract_actions <- function(ui_table) {
   # used for grouping
   ui_table$parameters_flat <- apply(ui_table, 1, function(row) {
     named_vector <- row[["parameters"]]
-    if (any(!is.na(named_vector))) {
+    if (!all(is.na(named_vector))) {
       paste(names(named_vector), ":", named_vector, collapse = ", ")
     } else {
       NA_character_
@@ -12,7 +12,7 @@ extract_actions <- function(ui_table) {
 
   # Group actions with code components by unique applications of code components
   actions_with_code_id <- NULL
-  if (any(!is.na(ui_table$code_id))) {
+  if (!all(is.na(ui_table$code_id))) {
     actions_with_code_id <- ui_table |>
       dplyr::filter(!is.na(code_id)) |>
       dplyr::group_by(domain, code_id, parameters_flat) |>
@@ -29,7 +29,7 @@ extract_actions <- function(ui_table) {
 
   # Extract residual actions with no code components
   actions_no_code_id <- NULL
-  if (any(is.na(ui_table$code_id))) {
+  if (anyNA(ui_table$code_id)) {
     actions_no_code_id <- ui_table |>
       dplyr::filter(is.na(code_id)) |>
       dplyr::select(

@@ -4,5 +4,5 @@
 #' @return Named logical list indicating presence of domain filters.
 #' @noRd
 has_domain_level_filter <- function(filter_domain) {
-  lapply(filter_domain, function(x) any(!is.na(unlist(x))))
+  lapply(filter_domain, function(x) !all(is.na(unlist(x))))
 }

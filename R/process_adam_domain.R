@@ -135,7 +135,7 @@ has_content <- function(x) {
   }
 
   if (is.atomic(x)) {
-    return(any(!is.na(x)))
+    return(!all(is.na(x)))
   }
 
   # Other types: treat presence as content

@@ -89,7 +89,7 @@ assert_valid_depend_cols <- function(
   )
 
   # Extract outputs from column actions prefixed with ADaM domain
-  is_column_action <- substr(actions$type, 1, 3) == "col"
+  is_column_action <- startsWith(actions$type, "col")
   outputs <- get_outputs(actions[is_column_action])
 
   # col_rename source columns are provided by init_domain (from SDTM), so
@@ -154,7 +154,7 @@ get_filter_adam_dependencies <- function(ui_yml, domain_keys) {
       # Extract column dependencies for the domain
       dep_cols_i <- filter_depends_cols[[nm]]
 
-      if (any(!is.na(dep_cols_i))) {
+      if (!all(is.na(dep_cols_i))) {
         # Identify external domains and associated dependency columns for joining
         is_external <- has_domain_prefix(dep_cols_i)
         external_domains <- dep_cols_i[is_external] |>
@@ -233,7 +233,7 @@ get_all_adam_dependencies <- function(x, filter_dep) {
 #' Get ADaM dependencies from action
 #' @noRd
 get_adam_dependencies_from_actions <- function(depend_col) {
-  if (all(!is.na(depend_col))) {
+  if (!anyNA(depend_col)) {
     # Filter for dependencies from ADaM domains
     adam_deps <- depend_col[domain_type == "adam", ]
     if (nrow(adam_deps) == 0) {
