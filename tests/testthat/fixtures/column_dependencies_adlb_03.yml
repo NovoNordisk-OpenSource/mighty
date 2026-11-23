@@ -14,7 +14,7 @@ population:
         - LBSTRESN
       filter: '!is.na(LBSTRESN)'
   global:
-    - filter: '!is.na(SEX)' 
+    - filter: '!is.na(SEX)'
       depends:
         - ADSL.SEX
     - filter: 'LBSTRESU == "fL"'
