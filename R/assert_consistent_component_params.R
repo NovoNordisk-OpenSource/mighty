@@ -18,7 +18,7 @@
 #' Only components of type `"column"` are checked, consistent with
 #' `assert_code_outputs_in_yaml()`. Row and parameter components are excluded
 #' because their `@outputs` tag names an existing column they operate on, not a
-#' new column — so overlapping output names across parameter sets are intentional.
+#' new column - so overlapping output names across parameter sets are intentional.
 #'
 #' @param x A `data.table` produced by `merge()` inside
 #'   `merge_ui_with_component_metadata()`, containing at least:

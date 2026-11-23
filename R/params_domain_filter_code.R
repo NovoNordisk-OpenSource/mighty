@@ -10,7 +10,7 @@
 #'
 #' @return A named list with `domain`, `joins`, `domain_filter`, `global_filter`,
 #'   `keep_vars`, `has_keep_vars`. `domain_filter`, `global_filter`, and `keep_vars`
-#'   are `NULL` when absent — whisker treats `NULL` as falsy so those blocks are
+#'   are `NULL` when absent - whisker treats `NULL` as falsy so those blocks are
 #'   suppressed. `keep_vars` is a character vector when present. `has_keep_vars`
 #'   is a logical flag indicating whether `keep_vars` is non-empty.
 #' @noRd

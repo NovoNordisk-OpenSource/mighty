@@ -17,7 +17,7 @@
 #' - Component outputs: `#' @outputs AGE`
 #'
 #' Use `format_qualified_column()` for ADaM REFERENCES:
-#' - ADaM dependencies: `#' @depends ADSL AGE` → stored as "ADSL.AGE"
+#' - ADaM dependencies: `#' @depends ADSL AGE` -> stored as "ADSL.AGE"
 #' - Validates domain.column format (strict = TRUE)
 #'
 #' Use `format_column_ref()` for mixed ADaM/SDTM:

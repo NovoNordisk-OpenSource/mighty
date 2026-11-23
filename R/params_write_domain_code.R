@@ -13,7 +13,7 @@
 #'
 #' @return A named list with `domain`, `file_ext`, `row_order_vars`, `keep_vars`.
 #'   When `is_final_pgm` is `FALSE`, `keep_vars` is `NULL`. `row_order_vars` is
-#'   a `,\n`-separated string, or `NULL` when no keys are defined — whisker
+#'   a `,\n`-separated string, or `NULL` when no keys are defined - whisker
 #'   treats `NULL` as falsy so the sort block is suppressed.
 #' @noRd
 params_write_domain_code <- function(

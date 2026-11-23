@@ -86,7 +86,7 @@ consolidate_metadata <- function(
     domain_i <- ui_data_updated$domain[[i]]
     source_is_col_copy <- source_col %in%
       col_copy_by_domain[domain == domain_i]$col
-    # Also downgrade if the source column is itself a declared output — a
+    # Also downgrade if the source column is itself a declared output - a
     # destructive rename would remove it, but it is still needed downstream
     source_is_also_output <- source_col %in%
       all_outputs_by_domain[domain == domain_i]$col
