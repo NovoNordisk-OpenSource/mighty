@@ -246,7 +246,6 @@ get_adam_dependencies_from_actions <- function(depend_col) {
 #' Extract outputs across all actions
 #' @description
 #' Creates fully specified column identifiers by prefixing output columns with their domain names,
-
 #' @param x data.table containing columns 'domain', 'outputs', and 'type'
 #'
 #' @returns Character vector of domain-prefixed column names in the format "domain.column_name"
