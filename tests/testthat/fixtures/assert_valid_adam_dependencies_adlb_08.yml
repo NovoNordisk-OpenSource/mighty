@@ -1,3 +1,4 @@
+---
 id: ADLB
 label: Laboratory Analysis Dataset
 class: BASIC DATA STRUCTURE
@@ -5,15 +6,14 @@ structure: One record per subject per parameter per analysis visit
 keys:
   - STUDYID
 
-
 population:
   base:
     - domain: LB
       depends:
         - LBSTRESN
-      filter: '!is.na(LBSTRESN)'
+      filter: "!is.na(LBSTRESN)"
   global:
-    - filter: '!is.na(SEX)'
+    - filter: "!is.na(SEX)"
       depends:
         - ADSL.SEX
     - filter: 'LBSTRESU == "fL"'
