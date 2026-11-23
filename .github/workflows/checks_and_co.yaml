@@ -1,5 +1,5 @@
 name: All actions
-on:
+"on":
   push:
     branches:
       - main
