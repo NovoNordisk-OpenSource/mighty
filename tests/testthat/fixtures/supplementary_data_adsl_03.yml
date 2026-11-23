@@ -12,7 +12,7 @@ population:
     - domain: DM
       depends:
         - AGEU
-      filter: '!is.na(AGEU)'
+      filter: "!is.na(AGEU)"
     - domain: DM_VACCINE
       depends:
         - EFFICACY

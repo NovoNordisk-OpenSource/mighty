@@ -12,9 +12,9 @@ population:
     - domain: AE
       depends:
         - AEBODSYS
-      filter: '!is.na(AEBODSYS)'
+      filter: "!is.na(AEBODSYS)"
   global:
-    - filter: '!is.na(SEX)'
+    - filter: "!is.na(SEX)"
       depends:
         - ADSL.SEX
     - filter: 'AETRTEM == "Y"'

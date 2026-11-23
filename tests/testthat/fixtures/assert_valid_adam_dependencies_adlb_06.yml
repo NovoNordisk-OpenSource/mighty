@@ -12,9 +12,9 @@ population:
     - domain: LB
       depends:
         - LBSTRESN
-      filter: '!is.na(LBSTRESN)'
+      filter: "!is.na(LBSTRESN)"
   global:
-    - filter: '!is.na(SEX)'
+    - filter: "!is.na(SEX)"
       depends:
         - ADSL.SEX
 

@@ -15,7 +15,7 @@ population:
         - NA
       filter: NA
   global:
-    - filter: '!is.na(SEX)'
+    - filter: "!is.na(SEX)"
       depends:
         - ADSL.SEX
 

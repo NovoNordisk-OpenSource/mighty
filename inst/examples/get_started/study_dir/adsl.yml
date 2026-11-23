@@ -10,7 +10,7 @@ population:
     - domain: DM
       depends:
         - AGE
-      filter: '!is.na(AGE)'
+      filter: "!is.na(AGE)"
   global:
     - filter: NA
       depends:
