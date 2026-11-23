@@ -31,14 +31,12 @@ Imports:
     mighty.metadata (>= 0.2.0),
     purrr,
     R6,
-    RColorBrewer,
     rlang,
     S7,
     S7schema,
     stats,
     styler,
     utils,
-    visNetwork,
     zephyr
 Suggests:
     admiral,
