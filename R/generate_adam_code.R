@@ -88,7 +88,7 @@
 #' and output operations for creating a specific ADaM dataset according to the
 #' provided specifications.
 #'
-#' @section File Requirements:
+#' @section File requirements:
 #' \itemize{
 #'   \item ADaM specification file must be a valid YAML file with ADaM
 #'     specifications following the schema defined in mighty.metadata
@@ -97,7 +97,7 @@
 #'     programs to execute
 #' }
 #'
-#' @section Error Handling:
+#' @section Error handling:
 #' The function will stop execution if:
 #' \itemize{
 #'   \item ADaM specifications or trial metadata files cannot be read or are
