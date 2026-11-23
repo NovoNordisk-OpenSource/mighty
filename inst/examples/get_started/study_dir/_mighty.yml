@@ -1,3 +1,4 @@
+---
 external_data:
   - id: DM
     keys: [USUBJID, STUDYID]

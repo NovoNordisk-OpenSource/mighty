@@ -1,3 +1,4 @@
+---
 # Based on categorization_of_action_type_adlb_01.yml, without cross-domain
 # columns to keep the integration test self-contained
 id: ADLB
