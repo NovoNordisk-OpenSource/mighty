@@ -2,6 +2,23 @@
 
 export(generate_adam_code)
 export(write_adam_programs)
-import(data.table)
-importFrom(R6,R6Class)
+importFrom(data.table,
+  ":=",
+  .I,
+  .N,
+  .SD,
+  as.data.table,
+  copy,
+  data.table,
+  fifelse,
+  is.data.table,
+  rbindlist,
+  rleid,
+  setcolorder,
+  setkey,
+  setnames,
+  setorder,
+  tstrsplit,
+  uniqueN
+)
 importFrom(rlang,.data)
