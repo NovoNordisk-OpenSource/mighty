@@ -1,3 +1,5 @@
+# Project instructions
+
 ## Commands
 
 * Run R from the console with `--quiet --vanilla`
