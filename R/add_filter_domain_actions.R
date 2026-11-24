@@ -106,7 +106,7 @@ add_filter_domain_actions <- function(
 get_domains_with_filters <- function(filter_depend_cols) {
   has_filter <- vapply(
     filter_depend_cols,
-    \(x) any(!is.na(x)),
+    \(x) !all(is.na(x)),
     logical(1)
   )
   names(which(has_filter))

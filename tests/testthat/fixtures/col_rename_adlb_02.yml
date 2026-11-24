@@ -1,3 +1,4 @@
+---
 # Minimal copy of col_rename_adlb_01.yml with SRCSEQ sourced from the true
 # SDTM base domain (LB.LBSEQ) instead of the self-referential form
 id: ADLB

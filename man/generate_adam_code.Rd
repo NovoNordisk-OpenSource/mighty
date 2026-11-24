@@ -12,9 +12,12 @@ generate_adam_code(
 )
 }
 \arguments{
-\item{adam_specifications}{Character string. Directory path containing ADaM
-specification YAML files (one per domain) and optionally a \verb{_mighty.yml}
-framework configuration file with external dataset definitions and keys.}
+\item{adam_specifications}{Either a character string or a
+\code{\link[mighty.metadata:mighty_study]{mighty.metadata::mighty_study()}} object.
+A character string is the directory path containing ADaM specification
+YAML files (one per domain) and optionally a \verb{_mighty.yml} framework
+configuration file with external dataset definitions and keys. It is read
+with \code{\link[mighty.metadata:mighty_study]{mighty.metadata::mighty_study()}}.}
 
 \item{path_connector_config}{Character string. File path to the connector
 configuration file. Defaults to \code{"_connector.yml"}, the same default as
@@ -31,9 +34,10 @@ runtime by the generated program (e.g., \code{'!expr here::here("_connector.yml"
 validates dependencies across different ADaM domains. If \code{FALSE}, only
 validates dependencies within individual domains.}
 
-\item{data_context}{Optional list or environment providing additional context
-about available data sources for executable program generation. If \code{NULL},
-all programs are considered potentially executable.}
+\item{data_context}{For internal or advanced use. Internal object describing
+the data sources available for executable program generation. If \code{NULL}
+(default), no data availability check is done, all programs are considered
+executable, and \code{executable_programs} matches \code{programs}.}
 }
 \value{
 A named list containing the complete ADaM program generation results:
@@ -102,7 +106,7 @@ Each generated program includes all necessary data transformations, derivations,
 and output operations for creating a specific ADaM dataset according to the
 provided specifications.
 }
-\section{File Requirements}{
+\section{File requirements}{
 
 \itemize{
 \item ADaM specification file must be a valid YAML file with ADaM
@@ -113,7 +117,7 @@ programs to execute
 }
 }
 
-\section{Error Handling}{
+\section{Error handling}{
 
 The function will stop execution if:
 \itemize{

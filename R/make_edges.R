@@ -206,7 +206,7 @@ create_row_dependency_edges <- function(nodes) {
 
   # Extract row dependencies from depend_rows and handle the absence of dependencies
   new_row_edges1 <-
-    if (any(!is.na(nodes$depend_rows))) {
+    if (!all(is.na(nodes$depend_rows))) {
       nodes[
         !is.na(nodes$depend_rows),
         unlist(get("depend_rows")),
