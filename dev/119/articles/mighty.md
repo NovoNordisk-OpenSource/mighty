@@ -75,6 +75,7 @@ second is a local directory with your own components.
 **\_mighty.yml**
 
 ``` yml
+---
 external_data:
   - id: DM
     keys: [USUBJID, STUDYID]
@@ -106,6 +107,7 @@ for everything a specification can contain.
 **adsl.yml**
 
 ``` yml
+---
 id: ADSL
 label: Subject Level Analysis Dataset
 class: SUBJECT LEVEL ANALYSIS DATASET
@@ -117,7 +119,7 @@ population:
     - domain: DM
       depends:
         - AGE
-      filter: '!is.na(AGE)'
+      filter: "!is.na(AGE)"
   global:
     - filter: NA
       depends:

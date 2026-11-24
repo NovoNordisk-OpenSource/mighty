@@ -1,4 +1,4 @@
-# NA
+# Project instructions
 
 ## Commands
 

@@ -21,9 +21,13 @@ generate_adam_code(
 
 - adam_specifications:
 
-  Character string. Directory path containing ADaM specification YAML
-  files (one per domain) and optionally a `_mighty.yml` framework
-  configuration file with external dataset definitions and keys.
+  Either a character string or a
+  [`mighty.metadata::mighty_study()`](https://novonordisk-opensource.github.io/mighty.metadata/reference/mighty_study.html)
+  object. A character string is the directory path containing ADaM
+  specification YAML files (one per domain) and optionally a
+  `_mighty.yml` framework configuration file with external dataset
+  definitions and keys. It is read with
+  [`mighty.metadata::mighty_study()`](https://novonordisk-opensource.github.io/mighty.metadata/reference/mighty_study.html).
 
 - path_connector_config:
 
@@ -47,9 +51,10 @@ generate_adam_code(
 
 - data_context:
 
-  Optional list or environment providing additional context about
-  available data sources for executable program generation. If `NULL`,
-  all programs are considered potentially executable.
+  For internal or advanced use. Internal object describing the data
+  sources available for executable program generation. If `NULL`
+  (default), no data availability check is done, all programs are
+  considered executable, and `executable_programs` matches `programs`.
 
 ## Value
 
@@ -150,7 +155,7 @@ Each generated program includes all necessary data transformations,
 derivations, and output operations for creating a specific ADaM dataset
 according to the provided specifications.
 
-## File Requirements
+## File requirements
 
 - ADaM specification file must be a valid YAML file with ADaM
   specifications following the schema defined in mighty.metadata
@@ -160,7 +165,7 @@ according to the provided specifications.
 - Connector configuration file path must be valid for the generated
   programs to execute
 
-## Error Handling
+## Error handling
 
 The function will stop execution if:
 

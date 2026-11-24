@@ -18,11 +18,11 @@ Source:
 [`DESCRIPTION`](https://github.com/NovoNordisk-OpenSource/mighty/blob/fix/81-rename-dropped-by-filter/DESCRIPTION)
 
 Phelps M, Skov Johnsen N, Thomsen A, Thomsen M (2026). *mighty: Generate
-'CDISC' 'ADaM' Programs from Declarative Specifications*. R package
-version 0.0.0.9050, <https://novonordisk-opensource.github.io/mighty/>.
+CDISC ADaM Programs from Declarative Specifications*. R package version
+0.0.0.9050, <https://novonordisk-opensource.github.io/mighty/>.
 
     @Manual{,
-      title = {mighty: Generate 'CDISC' 'ADaM' Programs from Declarative Specifications},
+      title = {mighty: Generate CDISC ADaM Programs from Declarative Specifications},
       author = {Matthew Phelps and Nicolai {Skov Johnsen} and Aksel Thomsen and Michael Hedegaard Thomsen},
       year = {2026},
       note = {R package version 0.0.0.9050},

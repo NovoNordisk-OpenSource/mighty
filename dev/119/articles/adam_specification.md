@@ -26,6 +26,7 @@ sections:
 Here is a complete specification, from the Get started example:
 
 ``` yml
+---
 id: ADSL
 label: Subject Level Analysis Dataset
 class: SUBJECT LEVEL ANALYSIS DATASET
@@ -37,7 +38,7 @@ population:
     - domain: DM
       depends:
         - AGE
-      filter: '!is.na(AGE)'
+      filter: "!is.na(AGE)"
   global:
     - filter: NA
       depends:
