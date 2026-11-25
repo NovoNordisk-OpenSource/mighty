@@ -473,6 +473,20 @@ as_data_context <- function(x, call = rlang::caller_env()) {
   if (inherits(x, "connectors")) {
     return(data_context$new(x))
   }
+  # connector::connect() returns this when the YAML holds several configs.
+  # It is a list of connectors objects, one per config name.
+  if (inherits(x, "nested_connectors")) {
+    config_names <- names(x)
+    example <- sprintf('data_context = cnt[["%s"]]', config_names[[1]])
+    cli::cli_abort(
+      c(
+        "{.arg data_context} must be a single {.cls connectors} object.",
+        "x" = "You supplied a {.cls nested_connectors} object with configs {.val {config_names}}.",
+        "i" = "Pick one config, e.g. {.code {example}}."
+      ),
+      call = call
+    )
+  }
   cli::cli_abort(
     c(
       "{.arg data_context} must be a {.cls connectors} object or {.code NULL}.",
