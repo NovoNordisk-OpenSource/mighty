@@ -26,3 +26,26 @@ test_that("as_data_context() rejects input that is not a connectors object", {
   expect_snapshot(as_data_context(list()), error = TRUE)
   expect_snapshot(as_data_context("_connector.yml"), error = TRUE)
 })
+
+test_that("as_data_context() asks to wrap a single connector in connectors()", {
+  skip_if_not_installed("connector")
+
+  single <- connector::connector_fs(withr::local_tempdir())
+
+  expect_snapshot(as_data_context(single), error = TRUE)
+})
+
+test_that("as_data_context() asks to pick one config from nested_connectors", {
+  skip_if_not_installed("connector")
+
+  cnt <- connector::nested_connectors(
+    study_a = connector::connectors(
+      sdtm = connector::connector_fs(withr::local_tempdir())
+    ),
+    study_b = connector::connectors(
+      sdtm = connector::connector_fs(withr::local_tempdir())
+    )
+  )
+
+  expect_snapshot(as_data_context(cnt), error = TRUE)
+})
