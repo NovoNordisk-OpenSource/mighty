@@ -487,6 +487,19 @@ as_data_context <- function(x, call = rlang::caller_env()) {
       call = call
     )
   }
+  # A single connection, e.g. from connector::connector_fs(). It has no
+  # datasource name, so mighty can't tell whether it holds SDTM, ADaM or
+  # metadata tables.
+  if (inherits(x, "Connector")) {
+    cli::cli_abort(
+      c(
+        "{.arg data_context} must be a named set of connectors, not a single connector.",
+        "x" = "You supplied a {.cls {class(x)[[1]]}} object.",
+        "i" = "Wrap it with a datasource name, e.g. {.code connector::connectors(sdtm = <your connector>)}."
+      ),
+      call = call
+    )
+  }
   cli::cli_abort(
     c(
       "{.arg data_context} must be a {.cls connectors} object or {.code NULL}.",
