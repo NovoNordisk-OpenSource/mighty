@@ -896,8 +896,16 @@ determine_available_columns <- function(data_context) {
     domain_type = character()
   )
 
-  for (domain_type in data_context$get_datasource_names()) {
-    for (domain in data_context$get_tables(domain_type)) {
+  for (datasource in data_context$get_datasource_names()) {
+    for (domain in data_context$get_tables(datasource)) {
+      # Label by table name, not datasource name, so the labels match those
+      # given to dependencies by classify_data_domains(). Names that are not
+      # valid domain names cannot be referenced by specs, so they get NA.
+      domain_type <- if (grepl("^[a-zA-Z][a-zA-Z0-9_]+$", domain$name)) {
+        classify_data_domains(domain$name)
+      } else {
+        NA_character_
+      }
       for (column_name in names(domain$variables)) {
         available_cols <- rbind(
           available_cols,

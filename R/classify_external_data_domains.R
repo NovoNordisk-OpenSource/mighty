@@ -11,7 +11,7 @@
 #' \itemize{
 #'   \item `"sdtm"` - 2-char domains, "relrec", "dm_*", "supp*"
 #'   \item `"adam"` - Names starting with "ad"
-#'   \item `"md"` - Names starting with "md"
+#'   \item `"metadata"` - Names starting with "md"
 #'   \item `NA` - Domains that don't match any recognized pattern
 #' }
 #'
@@ -46,7 +46,7 @@ classify_data_domains <- function(vector) {
     grepl("^ad", lc),
     "adam",
     grepl("^md", lc),
-    "md",
+    "metadata",
     default = NA_character_
   )
 }
