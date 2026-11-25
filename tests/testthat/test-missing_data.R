@@ -873,3 +873,101 @@ columns:
 
   expect_true(all(actual$executable_program_sequence$can_execute))
 })
+
+test_that("A connector object can be passed as data_context", {
+  # SETUP -------------------------------------------------------------------
+
+  trial_path <- withr::local_tempdir()
+
+  yml <- "
+id: ADSL
+label: Subject Level Analysis Dataset
+class: SUBJECT LEVEL ANALYSIS DATASET
+structure: One record per subject
+keys: [USUBJID]
+population:
+  base:
+    - domain: DM
+      depends:
+        - NA
+      filter: NA
+  global:
+    - filter: NA
+      depends:
+        - NA
+
+columns:
+  - id: USUBJID
+  - id: SEX
+  - id: AGE
+
+"
+  mighty_yml_content <- readLines(test_path("fixtures", "_mighty_sdtm.yml")) |>
+    paste(collapse = "\n")
+  ui_data <- setup_study_dir(list(
+    "adsl" = yml,
+    "_mighty" = mighty_yml_content
+  ))
+  # DM is missing, so the check must mark the ADSL actions as non-executable
+  setup_testdata(
+    testdata = "pharmaverse",
+    test_data_path = trial_path,
+    sdtm_domains = "vs"
+  )
+  cnt <- connector::connect(get_connector_config_path(trial_path))
+
+  # ACT ---------------------------------------------------------------------
+
+  via_connector <- generate_adam_code(
+    adam_specifications = ui_data,
+    path_connector_config = get_connector_config_path(trial_path),
+    data_context = cnt
+  )
+  via_data_context <- generate_adam_code(
+    adam_specifications = ui_data,
+    path_connector_config = get_connector_config_path(trial_path),
+    data_context = data_context$new(cnt)
+  )
+
+  # EXPECT ------------------------------------------------------------------
+
+  expect_false(any(via_connector$executable_program_sequence$can_execute))
+  expect_identical(
+    via_connector$executable_programs,
+    via_data_context$executable_programs
+  )
+})
+
+test_that("Invalid data_context fails before component repos are fetched", {
+  yml <- "
+id: ADSL
+label: Subject Level Analysis Dataset
+class: SUBJECT LEVEL ANALYSIS DATASET
+structure: One record per subject
+keys: [USUBJID]
+population:
+  base:
+    - domain: DM
+      depends:
+        - NA
+      filter: NA
+  global:
+    - filter: NA
+      depends:
+        - NA
+
+columns:
+  - id: USUBJID
+
+"
+  ui_data <- setup_study_dir(list("adsl" = yml))
+  local_mocked_bindings(
+    mighty_repos = function(...) stop("Component repos were fetched"),
+    .package = "mighty.component"
+  )
+
+  expect_snapshot(
+    generate_adam_code(adam_specifications = ui_data, data_context = list()),
+    error = TRUE
+  )
+})

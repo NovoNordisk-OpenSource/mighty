@@ -24,10 +24,13 @@
 #' @param check_cross_domain_adam_dependencies Logical. If `TRUE` (default),
 #'   validates dependencies across different ADaM domains. If `FALSE`, only
 #'   validates dependencies within individual domains.
-#' @param data_context For internal or advanced use. Internal object describing
-#'   the data sources available for executable program generation. If `NULL`
-#'   (default), no data availability check is done, all programs are considered
-#'   executable, and `executable_programs` matches `programs`.
+#' @param data_context Optional. A `connectors` object from
+#'   `connector::connect()`, used to check which SDTM and metadata tables and
+#'   columns exist. mighty reads only table and column names, not values. When
+#'   supplied, steps in `executable_programs` that can't run with the available
+#'   data are commented out. If `NULL` (default), no data availability check is
+#'   done, all programs are considered executable, and `executable_programs`
+#'   matches `programs`.
 #' @return A named list containing the complete ADaM program generation results:
 #'   \describe{
 #'     \item{programs}{Named list of complete R programs, one per run of a domain (a domain is split
@@ -40,10 +43,10 @@
 #'       metadata. Actions are ordered by dependency requirements within each domain. This
 #'       provides a detailed view of the execution plan before compilation into complete programs.}
 #'     \item{executable_programs}{Named list of programs that can be executed with the currently
-#'       available data sources (as determined by `data_context`). Structure identical to `programs`
-#'       but includes only code where all required input data is available. If `data_context`
-#'       is NULL, this will match `programs`. Used to identify which ADaM derivations can be generated
-#'       given the current data availability.}
+#'       available data (as found through `data_context`). Structure identical to `programs`, but
+#'       steps whose input data is missing are commented out, with a comment above each saying which
+#'       data is missing. If `data_context` is `NULL`, this will match `programs`. Used to identify
+#'       which ADaM derivations can be generated given the current data availability.}
 #'     \item{executable_program_sequence}{*For debugging only*. Data.table containing the action sequence for executable
 #'       programs only. Structure similar to `program_sequence` but filtered to include only actions
 #'       from code that can be executed with available data. Provides visibility into which
@@ -188,6 +191,14 @@ generate_adam_code_study <- function(
   check_cross_domain_adam_dependencies,
   data_context
 ) {
+  # Check data_context before fetching the component repos. Fetching can
+  # download repos from GitHub and is slow, so a wrong type or an unreachable
+  # data source should fail before that, not after.
+  # Errors name the exported function, not this internal one.
+  data_context <- as_data_context(
+    data_context,
+    call = quote(generate_adam_code())
+  )
   repos <- mighty.component::mighty_repos(repos = study@mighty$repos)
   ui_yml <- study |>
     purrr::imap(process_adam_domain)

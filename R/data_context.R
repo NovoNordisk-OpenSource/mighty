@@ -452,3 +452,33 @@ dc_print <- function(self, private) {
     ))
   }
 }
+
+#' Convert the `data_context` argument to a data_context object
+#'
+#' @description
+#' Lets users pass the `connectors` object they already use, instead of
+#' building the internal `data_context` class themselves.
+#'
+#' @param x `NULL`, a `connectors` object from `connector::connect()`, or a
+#'   `data_context` object.
+#' @param call The calling environment, used in the error message.
+#'
+#' @return `NULL` if `x` is `NULL`, otherwise a `data_context` object.
+#'
+#' @noRd
+as_data_context <- function(x, call = rlang::caller_env()) {
+  if (is.null(x) || inherits(x, "data_context")) {
+    return(x)
+  }
+  if (inherits(x, "connectors")) {
+    return(data_context$new(x))
+  }
+  cli::cli_abort(
+    c(
+      "{.arg data_context} must be a {.cls connectors} object or {.code NULL}.",
+      "x" = "You supplied {.obj_type_friendly {x}}.",
+      "i" = "Create one with {.code connector::connect(\"_connector.yml\")}."
+    ),
+    call = call
+  )
+}
