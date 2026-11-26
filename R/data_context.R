@@ -470,18 +470,18 @@ as_data_context <- function(x, call = rlang::caller_env()) {
   if (is.null(x) || inherits(x, "data_context")) {
     return(x)
   }
-  if (inherits(x, "connectors")) {
+  if (inherits_connector_class(x, "connectors")) {
     return(data_context$new(x))
   }
   # connector::connect() returns this when the YAML holds several configs.
   # It is a list of connectors objects, one per config name.
-  if (inherits(x, "nested_connectors")) {
+  if (inherits_connector_class(x, "nested_connectors")) {
     config_names <- names(x)
     example <- sprintf('data_context = cnt[["%s"]]', config_names[[1]])
     cli::cli_abort(
       c(
         "{.arg data_context} must be a single {.cls connectors} object.",
-        "x" = "You supplied a {.cls nested_connectors} object with configs {.val {config_names}}.",
+        "x" = "You supplied a nested connectors object with configs {.val {config_names}}.",
         "i" = "Pick one config, e.g. {.code {example}}."
       ),
       call = call
@@ -508,4 +508,20 @@ as_data_context <- function(x, call = rlang::caller_env()) {
     ),
     call = call
   )
+}
+
+#' Check for a connector class across connector versions
+#'
+#' @description
+#' connector 1.0.0 uses S3 classes (`"connectors"`). Later versions use S7
+#' classes, whose names carry the package prefix (`"connector::connectors"`).
+#'
+#' @param x Object to check.
+#' @param class Class name without the package prefix.
+#'
+#' @return `TRUE` or `FALSE`.
+#'
+#' @noRd
+inherits_connector_class <- function(x, class) {
+  inherits(x, c(class, paste0("connector::", class)))
 }
