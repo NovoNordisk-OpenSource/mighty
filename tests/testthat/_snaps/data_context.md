@@ -35,6 +35,6 @@
     Condition
       Error:
       ! `data_context` must be a single <connectors> object.
-      x You supplied a <nested_connectors> object with configs "study_a" and "study_b".
+      x You supplied a nested connectors object with configs "study_a" and "study_b".
       i Pick one config, e.g. `data_context = cnt[["study_a"]]`.
 
