@@ -452,3 +452,76 @@ dc_print <- function(self, private) {
     ))
   }
 }
+
+#' Convert the `data_context` argument to a data_context object
+#'
+#' @description
+#' Lets users pass the `connectors` object they already use, instead of
+#' building the internal `data_context` class themselves.
+#'
+#' @param x `NULL`, a `connectors` object from `connector::connect()`, or a
+#'   `data_context` object.
+#' @param call The calling environment, used in the error message.
+#'
+#' @return `NULL` if `x` is `NULL`, otherwise a `data_context` object.
+#'
+#' @noRd
+as_data_context <- function(x, call = rlang::caller_env()) {
+  if (is.null(x) || inherits(x, "data_context")) {
+    return(x)
+  }
+  if (inherits_connector_class(x, "connectors")) {
+    return(data_context$new(x))
+  }
+  # connector::connect() returns this when the YAML holds several configs.
+  # It is a list of connectors objects, one per config name.
+  if (inherits_connector_class(x, "nested_connectors")) {
+    config_names <- names(x)
+    example <- sprintf('data_context = cnt[["%s"]]', config_names[[1]])
+    cli::cli_abort(
+      c(
+        "{.arg data_context} must be a single {.cls connectors} object.",
+        "x" = "You supplied a nested connectors object with configs {.val {config_names}}.",
+        "i" = "Pick one config, e.g. {.code {example}}."
+      ),
+      call = call
+    )
+  }
+  # A single connection, e.g. from connector::connector_fs(). It has no
+  # datasource name, so mighty can't tell whether it holds SDTM, ADaM or
+  # metadata tables.
+  if (inherits(x, "Connector")) {
+    cli::cli_abort(
+      c(
+        "{.arg data_context} must be a named set of connectors, not a single connector.",
+        "x" = "You supplied a {.cls {class(x)[[1]]}} object.",
+        "i" = "Wrap it with a datasource name, e.g. {.code connector::connectors(sdtm = <your connector>)}."
+      ),
+      call = call
+    )
+  }
+  cli::cli_abort(
+    c(
+      "{.arg data_context} must be a {.cls connectors} object or {.code NULL}.",
+      "x" = "You supplied {.obj_type_friendly {x}}.",
+      "i" = "Create one with {.code connector::connect(\"_connector.yml\")}."
+    ),
+    call = call
+  )
+}
+
+#' Check for a connector class across connector versions
+#'
+#' @description
+#' connector 1.0.0 uses S3 classes (`"connectors"`). Later versions use S7
+#' classes, whose names carry the package prefix (`"connector::connectors"`).
+#'
+#' @param x Object to check.
+#' @param class Class name without the package prefix.
+#'
+#' @return `TRUE` or `FALSE`.
+#'
+#' @noRd
+inherits_connector_class <- function(x, class) {
+  inherits(x, c(class, paste0("connector::", class)))
+}

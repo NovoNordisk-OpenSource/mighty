@@ -29,10 +29,15 @@ mighty handles 1 and 2. Your code components must handle 3, for example with a c
 # Workflow
 
 1. **Write the full specification.** Include every column and row operation you want, whether or not the data exists yet.
-2. **Describe the available data.** Build a `data_context` from a [`connector`](https://github.com/NovoNordisk-OpenSource/connector) object and pass it to `generate_adam_code(data_context = ...)`. mighty reads only which tables and columns exist, not the values. ADaM domains that mighty builds itself don't need to be in the `data_context`, because their columns come from the specifications.
+2. **Describe the available data.** Pass a [`connector`](https://github.com/NovoNordisk-OpenSource/connector) object to `generate_adam_code(data_context = ...)`. mighty reads only which tables and columns exist, not the values. ADaM domains that mighty builds itself don't need to exist yet, because their columns come from the specifications.
+
+   ```r
+   cnt <- connector::connect("_connector.yml")
+   result <- generate_adam_code("study_dir", data_context = cnt)
+   ```
 3. **Compare the specification with the data.** mighty checks every step, meaning each derivation, row operation and parameter, against the available data. A step can't run if a domain or column it needs is missing, or if it depends on another step that can't run.
 4. **Generate both sets of programs.** `generate_adam_code()` returns:
    - `result$programs`: the complete programs, built from the full specification.
    - `result$executable_programs`: the same programs, with every step that can't run commented out. The comment above each step lists the missing data, and which columns can't be created because of it. If only some of the columns a program reads are missing, the step still runs without them, and the comment lists the columns that were skipped.
 
-If you don't pass a `data_context`, both sets of programs are the same.
+The check is optional. If you don't pass a `data_context`, both sets of programs are the same.

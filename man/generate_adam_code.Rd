@@ -34,10 +34,13 @@ runtime by the generated program (e.g., \code{'!expr here::here("_connector.yml"
 validates dependencies across different ADaM domains. If \code{FALSE}, only
 validates dependencies within individual domains.}
 
-\item{data_context}{For internal or advanced use. Internal object describing
-the data sources available for executable program generation. If \code{NULL}
-(default), no data availability check is done, all programs are considered
-executable, and \code{executable_programs} matches \code{programs}.}
+\item{data_context}{Optional. A \code{connectors} object from
+\code{connector::connect()}, used to check which SDTM and metadata tables and
+columns exist. mighty reads only table and column names, not values. When
+supplied, steps in \code{executable_programs} that can't run with the available
+data are commented out. If \code{NULL} (default), no data availability check is
+done, all programs are considered executable, and \code{executable_programs}
+matches \code{programs}.}
 }
 \value{
 A named list containing the complete ADaM program generation results:
@@ -52,10 +55,10 @@ rendered R code for all programs. Each row represents a single action with actio
 metadata. Actions are ordered by dependency requirements within each domain. This
 provides a detailed view of the execution plan before compilation into complete programs.}
 \item{executable_programs}{Named list of programs that can be executed with the currently
-available data sources (as determined by \code{data_context}). Structure identical to \code{programs}
-but includes only code where all required input data is available. If \code{data_context}
-is NULL, this will match \code{programs}. Used to identify which ADaM derivations can be generated
-given the current data availability.}
+available data (as found through \code{data_context}). Structure identical to \code{programs}, but
+steps whose input data is missing are commented out, with a comment above each saying which
+data is missing. If \code{data_context} is \code{NULL}, this will match \code{programs}. Used to identify
+which ADaM derivations can be generated given the current data availability.}
 \item{executable_program_sequence}{\emph{For debugging only}. Data.table containing the action sequence for executable
 programs only. Structure similar to \code{program_sequence} but filtered to include only actions
 from code that can be executed with available data. Provides visibility into which
