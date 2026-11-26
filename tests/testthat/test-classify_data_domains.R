@@ -9,13 +9,13 @@ test_that("Classifies ADaM domains correctly", {
 })
 
 test_that("Classifies metadata domains correctly", {
-  expect_equal(classify_data_domains("mdcol"), "md")
+  expect_equal(classify_data_domains("mdcol"), "metadata")
 })
 
 test_that("Classification is case insensitive", {
   expect_equal(classify_data_domains("RELREC"), "sdtm")
   expect_equal(classify_data_domains("ADSL"), "adam")
-  expect_equal(classify_data_domains("MDCOL"), "md")
+  expect_equal(classify_data_domains("MDCOL"), "metadata")
 })
 
 test_that("Unrecognized domains return NA", {
@@ -31,6 +31,6 @@ test_that("Handles vectorized input", {
   expect_equal(classify_data_domains(character(0)), character(0))
   expect_equal(
     classify_data_domains(c("lb", "ADVS", "mdcol", "foo")),
-    c("sdtm", "adam", "md", NA_character_)
+    c("sdtm", "adam", "metadata", NA_character_)
   )
 })

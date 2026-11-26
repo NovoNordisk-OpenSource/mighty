@@ -103,17 +103,10 @@ prepare_domain_data <- function(domain_data, domain_name, .self) {
     unique() |>
     sort()
 
-  data_type <- switch(
-    domain_data$domain_type[[1]],
-    sdtm = "sdtm",
-    adam = "adam",
-    md = "metadata"
-  )
-
   list(
     is_current_domain = domain_name == .self,
     domain_name = domain_name,
-    data_type = data_type,
+    data_type = domain_data$domain_type[[1]],
     keep_vars = keep_vars
   )
 }
