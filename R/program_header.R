@@ -2,8 +2,8 @@
 #'
 #' @description
 #' Builds the comment block placed at the top of every generated program. It
-#' lists the dataset the program creates, the datasets it reads, when the
-#' programs were generated and with which mighty version.
+#' lists the dataset the program creates, the datasets it reads, the
+#' programmer, when the programs were generated and with which mighty version.
 #'
 #' @param program_actions Data table with the actions of one program,
 #'   including its `read_data` action.
@@ -12,10 +12,18 @@
 #' @param n_parts Integer. Number of programs for the domain.
 #' @param generated_at POSIXct. Time the generation was started. The same
 #'   value is used for every program of one generation run.
+#' @param programmer Character. Programmer of the domain, see
+#'   [find_programmer()].
 #'
 #' @return Character string with the header, without a trailing newline.
 #' @noRd
-gen_program_header <- function(program_actions, part, n_parts, generated_at) {
+gen_program_header <- function(
+  program_actions,
+  part,
+  n_parts,
+  generated_at,
+  programmer
+) {
   domain <- program_actions$domain[[1]]
   description <- paste0("Creates the ", domain, " analysis dataset")
   if (n_parts > 1) {
@@ -36,6 +44,7 @@ gen_program_header <- function(program_actions, part, n_parts, generated_at) {
         "do not modify this generated program directly."
       )
     ),
+    format_header_field("Programmer", programmer),
     format_header_field("Generated", format_generation_time(generated_at)),
     format_header_field("Generator", paste0("mighty v", mighty_version()))
   )
@@ -109,4 +118,65 @@ generation_time <- function() {
 
 mighty_version <- function() {
   as.character(utils::packageVersion("mighty"))
+}
+
+#' Find the Programmer of a Domain
+#'
+#' @description
+#' Uses the author of the last git commit that changed the domain's
+#' specification file. Reads the repository with the gert package, so the git
+#' command line tool is not needed.
+#'
+#' Returns `"Not specified"` when the author cannot be found reliably:
+#' \itemize{
+#'   \item gert is not installed
+#'   \item the domain has no file, or the file is not in a git repository
+#'   \item the file has no commits, or has changes that are not committed
+#'   \item the repository is a shallow clone, where the last commit can show
+#'     every file as changed
+#' }
+#'
+#' @param file Character or `NULL`. Path to the domain specification file.
+#'
+#' @return Character string with the author's name.
+#' @noRd
+find_programmer <- function(file) {
+  not_specified <- "Not specified"
+  if (is.null(file) || length(file) != 1 || !file.exists(file)) {
+    return(not_specified)
+  }
+  if (!gert_available()) {
+    return(not_specified)
+  }
+  tryCatch(
+    {
+      repo <- gert::git_find(dirname(file))
+      if (file.exists(file.path(repo, ".git", "shallow"))) {
+        return(not_specified)
+      }
+      rel_file <- relative_path(file, repo)
+      if (nrow(gert::git_status(pathspec = rel_file, repo = repo)) > 0) {
+        return(not_specified)
+      }
+      head <- gert::git_stat_files(rel_file, repo = repo)$head
+      if (length(head) != 1 || is.na(head)) {
+        return(not_specified)
+      }
+      author <- gert::git_commit_info(head, repo = repo)$author
+      # Drop the e-mail address from "Name <email>"
+      sub("\\s*<[^>]*>$", "", author)
+    },
+    error = function(e) not_specified
+  )
+}
+
+relative_path <- function(file, root) {
+  file <- normalizePath(file, winslash = "/")
+  root <- normalizePath(root, winslash = "/")
+  substring(file, nchar(root) + 2)
+}
+
+# Wrapper so tests can simulate gert not being installed
+gert_available <- function() {
+  requireNamespace("gert", quietly = TRUE)
 }

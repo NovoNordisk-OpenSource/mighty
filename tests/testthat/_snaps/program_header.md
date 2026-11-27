@@ -1,7 +1,8 @@
 # gen_program_header creates the full header
 
     Code
-      cat(gen_program_header(actions, part = 1, n_parts = 1, generated_at = fixed_time))
+      cat(gen_program_header(actions, part = 1, n_parts = 1, generated_at = fixed_time,
+        programmer = "Jane Doe"))
     Output
       # ******************************************************************************
       # Description:   Creates the ADSL analysis dataset.
@@ -10,6 +11,7 @@
       # Usage notes:   Generated from the Mighty study specification.
       #                Modify the specification or source components and regenerate;
       #                do not modify this generated program directly.
+      # Programmer:    Jane Doe
       # Generated:     2026-11-27T13:03:12Z
       # Generator:     mighty v9.9.9
       # ******************************************************************************
@@ -26,6 +28,7 @@
       # Usage notes:   Generated from the Mighty study specification.
       #                Modify the specification or source components and regenerate;
       #                do not modify this generated program directly.
+      # Programmer:    Jane Doe
       # Generated:     2026-11-27T13:03:12Z
       # Generator:     mighty v9.9.9
       # ******************************************************************************
@@ -37,6 +40,7 @@
       # Usage notes:   Generated from the Mighty study specification.
       #                Modify the specification or source components and regenerate;
       #                do not modify this generated program directly.
+      # Programmer:    Jane Doe
       # Generated:     2026-11-27T13:03:12Z
       # Generator:     mighty v9.9.9
       # ******************************************************************************
@@ -48,6 +52,7 @@
       # Usage notes:   Generated from the Mighty study specification.
       #                Modify the specification or source components and regenerate;
       #                do not modify this generated program directly.
+      # Programmer:    Jane Doe
       # Generated:     2026-11-27T13:03:12Z
       # Generator:     mighty v9.9.9
       # ******************************************************************************

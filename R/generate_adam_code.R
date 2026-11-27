@@ -192,6 +192,7 @@ generate_adam_code_study <- function(
 ) {
   # One timestamp for the whole run, so all program headers show the same time
   generated_at <- generation_time()
+  programmers <- vapply(study, \(x) find_programmer(x@file), character(1))
   repos <- mighty.component::mighty_repos(repos = study@mighty$repos)
   ui_yml <- study |>
     purrr::imap(process_adam_domain)
@@ -255,11 +256,16 @@ generate_adam_code_study <- function(
   )
   return(
     list(
-      programs = compile_into_programs(actions_08_code, generated_at),
+      programs = compile_into_programs(
+        actions_08_code,
+        generated_at,
+        programmers
+      ),
       program_sequence = actions_08_code,
       executable_programs = compile_into_programs(
         actions_08_available_data,
-        generated_at
+        generated_at,
+        programmers
       ),
       executable_program_sequence = actions_07_check$actions,
       edges = edges,

@@ -82,6 +82,7 @@ fcase
 fifelse
 filesystem
 FPFV
+gert
 getenv
 grepl
 groupname

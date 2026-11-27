@@ -273,7 +273,7 @@ add_hash <- function(text) {
 }
 
 
-compile_into_programs <- function(actions, generated_at) {
+compile_into_programs <- function(actions, generated_at, programmers) {
   program_blocs <- actions |>
     split(by = "program_id")
   program_domains <- program_blocs |>
@@ -297,7 +297,8 @@ compile_into_programs <- function(actions, generated_at) {
       program_actions = program_blocs[[i]],
       part = parts[[i]],
       n_parts = n_parts[[i]],
-      generated_at = generated_at
+      generated_at = generated_at,
+      programmer = programmer_of(program_domains[[i]], programmers)
     )
     # Only the first program's code starts without a blank line; drop it so
     # every header is followed by exactly one blank line
@@ -305,6 +306,15 @@ compile_into_programs <- function(actions, generated_at) {
   })
   names(programs) <- program_names
   return(programs)
+}
+
+programmer_of <- function(domain, programmers) {
+  programmer <- unname(programmers[domain])
+  if (length(programmer) != 1 || is.na(programmer)) {
+    "Not specified"
+  } else {
+    programmer
+  }
 }
 
 collapse_code <- function(program_i) {
