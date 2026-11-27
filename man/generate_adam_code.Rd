@@ -46,7 +46,9 @@ A named list containing the complete ADaM program generation results:
 into several programs when it depends on a domain that depends on it). Each element
 is a character string containing a fully executable R script. Programs include all
 dependency-ordered actions and are ready to execute independently.
-Names are prefixed with the required execution order.}
+Names are prefixed with the required execution order. Each program starts with a header
+that lists the dataset it creates, the datasets it reads, the time the generation was
+started and the mighty version. All programs from one call share the same time.}
 \item{program_sequence}{\emph{For debugging only}. Data.table containing the complete action sequence with fully
 rendered R code for all programs. Each row represents a single action with action
 metadata. Actions are ordered by dependency requirements within each domain. This

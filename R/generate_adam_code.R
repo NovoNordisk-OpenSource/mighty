@@ -34,7 +34,9 @@
 #'       into several programs when it depends on a domain that depends on it). Each element
 #'       is a character string containing a fully executable R script. Programs include all
 #'       dependency-ordered actions and are ready to execute independently.
-#'       Names are prefixed with the required execution order.}
+#'       Names are prefixed with the required execution order. Each program starts with a header
+#'       that lists the dataset it creates, the datasets it reads, the time the generation was
+#'       started and the mighty version. All programs from one call share the same time.}
 #'     \item{program_sequence}{*For debugging only*. Data.table containing the complete action sequence with fully
 #'       rendered R code for all programs. Each row represents a single action with action
 #'       metadata. Actions are ordered by dependency requirements within each domain. This
@@ -188,6 +190,8 @@ generate_adam_code_study <- function(
   check_cross_domain_adam_dependencies,
   data_context
 ) {
+  # One timestamp for the whole run, so all program headers show the same time
+  generated_at <- generation_time()
   repos <- mighty.component::mighty_repos(repos = study@mighty$repos)
   ui_yml <- study |>
     purrr::imap(process_adam_domain)
@@ -251,9 +255,12 @@ generate_adam_code_study <- function(
   )
   return(
     list(
-      programs = compile_into_programs(actions_08_code),
+      programs = compile_into_programs(actions_08_code, generated_at),
       program_sequence = actions_08_code,
-      executable_programs = compile_into_programs(actions_08_available_data),
+      executable_programs = compile_into_programs(
+        actions_08_available_data,
+        generated_at
+      ),
       executable_program_sequence = actions_07_check$actions,
       edges = edges,
       actions = actions_configuration$actions,

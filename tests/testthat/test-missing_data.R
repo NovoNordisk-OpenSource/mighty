@@ -59,6 +59,14 @@ columns:
   # empty string or starts as a comment
   code_lines <- strsplit(actual$executable_programs[[1]], "\\n")[[1]]
   expect_true(all(grepl("^#.*", code_lines) | code_lines == ""))
+
+  # The header still lists the missing dataset, marked as not available
+  expect_match(actual$programs[[1]], "# Input:         DM\n", fixed = TRUE)
+  expect_match(
+    actual$executable_programs[[1]],
+    "# Input:         DM (not available)\n",
+    fixed = TRUE
+  )
 })
 
 test_that("Available source data makes all actions executable", {

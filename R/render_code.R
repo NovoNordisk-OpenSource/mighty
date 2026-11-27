@@ -273,15 +273,36 @@ add_hash <- function(text) {
 }
 
 
-compile_into_programs <- function(actions) {
+compile_into_programs <- function(actions, generated_at) {
   program_blocs <- actions |>
     split(by = "program_id")
-  program_names <- program_blocs |>
+  program_domains <- program_blocs |>
     vapply(\(x) unique(x$domain), FUN.VALUE = character(1L))
-  program_names <- paste0(seq_along(program_names), "_", program_names)
+  program_names <- paste0(seq_along(program_domains), "_", program_domains)
 
-  programs <- program_blocs |>
-    lapply(collapse_code)
+  # Position of each program among the programs of its domain
+  parts <- stats::ave(
+    seq_along(program_domains),
+    program_domains,
+    FUN = seq_along
+  )
+  n_parts <- stats::ave(
+    seq_along(program_domains),
+    program_domains,
+    FUN = length
+  )
+
+  programs <- lapply(seq_along(program_blocs), function(i) {
+    header <- gen_program_header(
+      program_actions = program_blocs[[i]],
+      part = parts[[i]],
+      n_parts = n_parts[[i]],
+      generated_at = generated_at
+    )
+    # Only the first program's code starts without a blank line; drop it so
+    # every header is followed by exactly one blank line
+    paste0(header, "\n\n", sub("^\n+", "", collapse_code(program_blocs[[i]])))
+  })
   names(programs) <- program_names
   return(programs)
 }
